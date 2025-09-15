@@ -1,5 +1,5 @@
 #org: omatunnus
-service: chat-proto
+service: synerra-backend
 frameworkVersion: '4'
 
 provider:
@@ -8,8 +8,7 @@ provider:
   region: eu-north-1
   environment:
     CONNECTION_DB_TABLE: ${self:service}-connectionTable
-    CHAT_HISTORY_TABLE: ${self:service}-chatHistoryTable
-    USER_TABLE: ${self:service}-userTable
+    MAIN_TABLE: ${self:service}-mainTable
     USER_POOL_ID: { Ref: UserPool } # cogniton user pool
     USER_CLIENT_ID: { Ref: UserClient } # cogniton client id
   iamRoleStatements:
@@ -20,13 +19,13 @@ provider:
         - 'dynamodb:DeleteItem'
         - 'dynamodb:Scan'
         - 'dynamodb:Query'
+        - 'dynamodb:UpdateItem'
         - cognito-idp:AdminInitiateAuth
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminSetUserPassword
       Resource:
         - Fn::GetAtt: [ConnectionTable, Arn]
-        - Fn::GetAtt: [ChatHistoryTable, Arn]
-        - Fn::GetAtt: [UserTable, Arn]
+        - Fn::GetAtt: [MainTable, Arn]
         - !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}
     - Effect: 'Allow'
       Action:
@@ -62,35 +61,51 @@ provider:
 
 functions:
   loginUser: # sisäänkirjautuminen
-    handler: user/login.handler
+    handler: src/user/login.handler
     events:
       - httpApi:
           path: /user/login
           method: post
 
   signupUser: # rekisteröityminen
-    handler: user/signup.handler
+    handler: src/user/signup.handler
     events:
       - httpApi:
           path: /user/signup
           method: post
 
   getUsers:
-    handler: user/getUsers.handler
+    handler: src/user/getUsers.handler
     events:
       - httpApi:
           path: /user
           method: get
 
+  getUserById:
+    handler: src/user/getUserById.handler
+    events:
+      - httpApi:
+          path: /user/{userId}
+          method: get
+
+  updateUsers:
+    handler: src/user/updateUserById.handler
+    events:
+      - httpApi:
+          path: /user/update/{userId}
+          method: put
+          authorizer: PrivateAuthorizer
+
   privateAPI: # suojattu funktio ja reitti
-    handler: user/private.handler
+    handler: src/user/private.handler
     events:
       - httpApi:
           path: /user/private
           method: post
           authorizer: PrivateAuthorizer # suojaus
+
   connectHandler:
-    handler: handlers.connectHandler
+    handler: src/handlers.connectHandler
     events:
       - websocket:
           route: $connect
@@ -99,37 +114,37 @@ functions:
             identitySource: 'route.request.querystring.Auth'
 
   disconnectHandler:
-    handler: handlers.disconnectHandler
+    handler: src/handlers.disconnectHandler
     events:
       - websocket:
           route: $disconnect
 
   defaultHandler:
-    handler: handlers.defaultHandler
+    handler: src/handlers.defaultHandler
     events:
       - websocket:
           route: $default
 
   sendmessageHandler:
-    handler: sendmessage.handler
+    handler: src/sendmessage.handler
     events:
       - websocket:
           route: sendmessage
 
   enterroomHandler:
-    handler: enterroom.handler
+    handler: src/enterroom.handler
     events:
       - websocket:
           route: enterroom
 
   exitroomHandler:
-    handler: exitroom.handler
+    handler: src/exitroom.handler
     events:
       - websocket:
           route: exitroom
 
   authHandler:
-    handler: handlers.auth
+    handler: src/handlers.auth
 
 resources:
   Resources:
@@ -172,40 +187,43 @@ resources:
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
 
-    ChatHistoryTable:
+    MainTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:service}-chatHistoryTable
+        TableName: ${self:service}-mainTable
         AttributeDefinitions:
           - AttributeName: PK
             AttributeType: S
           - AttributeName: SK
+            AttributeType: S
+          - AttributeName: GSI1PK
+            AttributeType: S
+          - AttributeName: GSI1SK
+            AttributeType: S
+          - AttributeName: GSI2PK
+            AttributeType: S
+          - AttributeName: GSI2SK
             AttributeType: S
         KeySchema:
           - AttributeName: PK
             KeyType: HASH
           - AttributeName: SK
             KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: OnlineStatusIndex
+            KeySchema:
+              - AttributeName: GSI1PK
+                KeyType: HASH
+              - AttributeName: GSI1SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: LanguageIndex
+            KeySchema:
+              - AttributeName: GSI2PK
+                KeyType: HASH
+              - AttributeName: GSI2SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
-        TimeToLiveSpecification:
-          AttributeName: ttl
-          Enabled: false
-
-    UserTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:service}-userTable
-        AttributeDefinitions:
-          - AttributeName: PK
-            AttributeType: S
-          - AttributeName: SK
-            AttributeType: S
-        KeySchema:
-          - AttributeName: PK
-            KeyType: HASH
-          - AttributeName: SK
-            KeyType: RANGE
-        BillingMode: PAY_PER_REQUEST
-        TimeToLiveSpecification:
-          AttributeName: ttl
-          Enabled: false

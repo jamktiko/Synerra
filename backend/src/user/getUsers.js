@@ -4,19 +4,32 @@ const AWS = require('aws-sdk');
 
 const docClient = new AWS.DynamoDB.DocumentClient();
 
+// Exports the handler
 module.exports.handler = async () => {
   try {
     const params = {
-      TableName: process.env.USER_TABLE,
+      TableName: process.env.MAIN_TABLE,
+      // Filters items to include the ones that have the pk starting with USER# and sk set as PROFILE
+      FilterExpression: 'begins_with(PK, :userPrefix) AND SK = :profile',
+      ExpressionAttributeValues: {
+        ':userPrefix': 'USER#',
+        ':profile': 'PROFILE',
+      },
     };
 
+    // Scans the dynamodb with given params
     const result = await docClient.scan(params).promise();
 
-    // Now result.Items already have plain JS types
+    // Sorts and separates the db result for clean and readable return
     const users = result.Items.map((item) => ({
-      userId: item.userId || null,
-      email: item.email || null,
-      createdAt: item.createdAt || null,
+      userId: item.UserId || null,
+      username: item.Username || null,
+      email: item.Email || null,
+      createdAt: item.CreatedAt
+        ? new Date(item.CreatedAt * 1000).toISOString()
+        : null,
+      reputation: item.Reputation || null,
+      online: item.Online || false,
     }));
 
     return sendResponse(200, users);
