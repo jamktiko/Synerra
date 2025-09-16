@@ -80,6 +80,7 @@ module.exports.handler = async (event) => {
       SK: 'PROFILE',
       UserId: userId,
       Email: email,
+      GSI3PK: 'USER', //required for username begins-with search
       CreatedAt: now,
     };
 

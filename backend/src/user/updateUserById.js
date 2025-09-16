@@ -1,8 +1,10 @@
 const AWS = require('aws-sdk');
 const { sendResponse } = require('../helpers');
-
-//Create DynamoDb document-client
-const docClient = new AWS.DynamoDB.DocumentClient();
+const { doccli } = require('../ddbconn');
+const {
+  DynamoDBDocumentClient,
+  UpdateCommand,
+} = require('@aws-sdk/lib-dynamodb');
 
 module.exports.handler = async (event) => {
   try {
@@ -15,7 +17,13 @@ module.exports.handler = async (event) => {
     //eventin body
     const body = JSON.parse(event.body);
     //fields that are allowed to be updated
-    const allowedFields = ['username', 'profilePicUrl', 'bio', 'languages'];
+    const allowedFields = [
+      'username',
+      'profilePicUrl',
+      'bio',
+      'languages',
+      'games',
+    ];
 
     //variables for ddb update
     let updateExp = []; // pieces of update expression
@@ -57,7 +65,7 @@ module.exports.handler = async (event) => {
     };
 
     //update the table via document client update-method
-    const result = await docClient.update(params).promise();
+    const result = await doccli.send(new UpdateCommand(params));
     return sendResponse(200, result.Attributes);
   } catch (err) {
     console.error(err);

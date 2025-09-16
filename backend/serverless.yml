@@ -26,6 +26,18 @@ provider:
       Resource:
         - Fn::GetAtt: [ConnectionTable, Arn]
         - Fn::GetAtt: [MainTable, Arn]
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [MainTable, Arn]
+              - '/index/UsernameIndex' # GSI
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [MainTable, Arn]
+              - '/index/OnlineStatusIndex'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [MainTable, Arn]
+              - '/index/LanguageIndex'
         - !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}
     - Effect: 'Allow'
       Action:
@@ -88,6 +100,13 @@ functions:
           path: /user/{userId}
           method: get
 
+  getUserByName:
+    handler: src/user/getUserByName.handler
+    events:
+      - httpApi:
+          path: /user/username/{username}
+          method: get
+
   updateUsers:
     handler: src/user/updateUserById.handler
     events:
@@ -95,6 +114,12 @@ functions:
           path: /user/update/{userId}
           method: put
           authorizer: PrivateAuthorizer
+  filterUsers:
+    handler: src/user/filterUsers.handler
+    events:
+      - httpApi:
+          path: /user/filter
+          method: post
 
   privateAPI: # suojattu funktio ja reitti
     handler: src/user/private.handler
@@ -204,6 +229,10 @@ resources:
             AttributeType: S
           - AttributeName: GSI2SK
             AttributeType: S
+          - AttributeName: GSI3PK
+            AttributeType: S
+          - AttributeName: Username
+            AttributeType: S
         KeySchema:
           - AttributeName: PK
             KeyType: HASH
@@ -223,6 +252,14 @@ resources:
               - AttributeName: GSI2PK
                 KeyType: HASH
               - AttributeName: GSI2SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: UsernameIndex
+            KeySchema:
+              - AttributeName: GSI3PK
+                KeyType: HASH
+              - AttributeName: Username
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL

@@ -1,40 +1,34 @@
-const { DynamoDBClient, ScanCommand } = require('@aws-sdk/client-dynamodb');
-const { sendResponse } = require('../helpers');
 const AWS = require('aws-sdk');
+const { QueryCommand } = require('@aws-sdk/lib-dynamodb');
+const { sendResponse } = require('../helpers');
 
-const docClient = new AWS.DynamoDB.DocumentClient();
+const { doccli } = require('../ddbconn');
 
-// Exports the handler
-module.exports.handler = async () => {
+module.exports.handler = async (event) => {
   try {
+    //Parameters for the DynamoDb query
     const params = {
-      TableName: process.env.MAIN_TABLE,
-      // Filters items to include the ones that have the pk starting with USER# and sk set as PROFILE
-      FilterExpression: 'begins_with(PK, :userPrefix) AND SK = :profile',
+      TableName: process.env.MAIN_TABLE, //correct table from the environmental variables
+      IndexName: 'UsernameIndex', // Global secondary index that holds all the users
+      KeyConditionExpression: 'GSI3PK = :pk',
+      // Fetch only items where the GSI3PK equals USER
       ExpressionAttributeValues: {
-        ':userPrefix': 'USER#',
-        ':profile': 'PROFILE',
+        ':pk': 'USER', // only user items
       },
     };
+    //sends the query to DynamoDb
+    const result = await doccli.send(new QueryCommand(params));
 
-    // Scans the dynamodb with given params
-    const result = await docClient.scan(params).promise();
-
-    // Sorts and separates the db result for clean and readable return
-    const users = result.Items.map((item) => ({
-      userId: item.UserId || null,
-      username: item.Username || null,
-      email: item.Email || null,
-      createdAt: item.CreatedAt
-        ? new Date(item.CreatedAt * 1000).toISOString()
-        : null,
-      reputation: item.Reputation || null,
-      online: item.Online || false,
-    }));
-
-    return sendResponse(200, users);
+    // successful response, status code 200
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ users: result.Items }),
+    };
   } catch (err) {
     console.error(err);
-    return sendResponse(500, { message: 'Failed to fetch users' });
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: 'Failed to fetch users' }),
+    };
   }
 };

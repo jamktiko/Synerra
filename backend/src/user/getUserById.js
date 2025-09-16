@@ -1,7 +1,8 @@
 const AWS = require('aws-sdk');
 const { sendResponse } = require('../helpers');
+const { GetCommand } = require('@aws-sdk/lib-dynamodb');
 
-const docClient = new AWS.DynamoDB.DocumentClient();
+const { doccli } = require('../ddbconn');
 
 module.exports.handler = async (event) => {
   try {
@@ -22,7 +23,7 @@ module.exports.handler = async (event) => {
     };
 
     // DynamoDB get command with the parameters
-    const result = await docClient.get(params).promise();
+    const result = await doccli.send(new GetCommand(params));
 
     if (!result.Item) {
       return sendResponse(404, { message: 'User not found' });
