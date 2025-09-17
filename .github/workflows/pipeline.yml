@@ -54,7 +54,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Deploy frontend to S3
-        run: aws s3 sync dist/frontend s3://synerra-frontend --delete
+        run: aws s3 sync dist/frontend/ s3://synerra-frontend --delete
 
       - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DIST_ID }} --paths "/*"
@@ -77,6 +77,7 @@ jobs:
         run: |
           cd backend
           npm ci
+        # ci = clean install
 
       - name: Install Serverless Framework
         run: npm install -g serverless@4
@@ -88,4 +89,3 @@ jobs:
         run: |
           cd backend
           npx serverless deploy
-        # ci = clean install
