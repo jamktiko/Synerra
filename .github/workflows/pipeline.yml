@@ -37,11 +37,14 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install frontend deps & build
+      - name: Install frontend dependencies & build
         run: |
           cd frontend
           npm ci
           npm run build -- --configuration production
+
+      - name: Check dist folder
+        run: ls -R frontend/dist/frontend
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -70,10 +73,16 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install backend deps & deploy
+      - name: Install backend dependencies
         run: |
           cd backend
-          npm ci 
-          npx serverless deploy
+          npm ci
 
+      - name: Login to Serverless
+        run: npx serverless login --token ${{ secrets.SERVERLESS_ACCESS_KEY }}
+
+      - name: Deploy backend
+        run: |
+          cd backend
+          npx serverless deploy
         # ci = clean install
