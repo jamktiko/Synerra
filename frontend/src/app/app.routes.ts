@@ -9,7 +9,13 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
-    children: [{ path: 'dashboard', component: DashboardPageComponent }],
+    children: [
+      {
+        path: 'dashboard',
+        component: DashboardPageComponent,
+        pathMatch: 'full',
+      },
+    ],
   },
   {
     path: '',
