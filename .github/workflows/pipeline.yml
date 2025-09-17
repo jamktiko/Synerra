@@ -44,7 +44,7 @@ jobs:
           npm run build -- --configuration production
 
       - name: Check dist folder
-        run: ls -R frontend/dist/frontend
+        run: ls -R dist/frontend
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
