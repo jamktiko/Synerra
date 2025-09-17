@@ -78,8 +78,11 @@ jobs:
           cd backend
           npm ci
 
+      - name: Install Serverless Framework
+        run: npm install -g serverless@4
+
       - name: Login to Serverless
-        run: npx serverless login --token ${{ secrets.SERVERLESS_ACCESS_KEY }}
+        run: serverless login --token ${{ secrets.SERVERLESS_ACCESS_KEY }}
 
       - name: Deploy backend
         run: |
