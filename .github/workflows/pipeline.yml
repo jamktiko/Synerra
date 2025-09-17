@@ -44,7 +44,7 @@ jobs:
           npm run build -- --configuration production
 
       - name: Check dist folder
-        run: ls -R dist/frontend
+        run: ls -R frontend/dist/frontend
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -54,7 +54,9 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Deploy frontend to S3
-        run: aws s3 sync dist/frontend/ s3://synerra-frontend --delete
+        run: |
+          cd frontend
+          aws s3 sync dist/frontend/ s3://synerra-frontend --delete
 
       - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DIST_ID }} --paths "/*"
@@ -64,6 +66,8 @@ jobs:
     needs: changes
     if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
+    env:
+      SLS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -81,9 +85,6 @@ jobs:
 
       - name: Install Serverless Framework
         run: npm install -g serverless@4
-
-      - name: Login to Serverless
-        run: serverless login --token ${{ secrets.SERVERLESS_ACCESS_KEY }}
 
       - name: Deploy backend
         run: |
