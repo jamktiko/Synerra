@@ -21,7 +21,7 @@ jobs:
     steps:
       # Clones the repo into the workflow runner so that all the jobs can access the code. VERY ESSENTIAL
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v4
+      - uses: dorny/paths-filter@v3
         id: filter
         with:
           # Checks for changes in the listed folders with paths-filter@v4.
