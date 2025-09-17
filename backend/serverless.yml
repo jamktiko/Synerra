@@ -1,4 +1,6 @@
-#org: omatunnus
+org: jamk1
+app: synerra-backend
+
 service: synerra-backend
 frameworkVersion: '4'
 
