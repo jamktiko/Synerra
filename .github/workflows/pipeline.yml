@@ -67,7 +67,7 @@ jobs:
     if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
     env:
-      SLS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+      SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
