@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const BASE_URL = process.env.BASE_URL;
 
-export const handler = async (event) => {
+module.exports.handler = async (event) => {
   try {
     //Extract HTTP-method
     const method = event.requestContext.http.method;
