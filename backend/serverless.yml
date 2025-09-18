@@ -13,8 +13,10 @@ provider:
     MAIN_TABLE: ${self:service}-mainTable
     USER_POOL_ID: { Ref: UserPool } # cogniton user pool
     USER_CLIENT_ID: { Ref: UserClient } # cogniton client id
-    BASE_URL: ${cf:${self:service}-${sls:stage}.HttpApiUrl}
-    WSS_URL: ${cf:${self:service}-${sls:stage}.WebSocketApiUrl}
+    BASE_URL:
+      Fn::Sub: 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com'
+    WSS_URL:
+      Fn::Sub: 'wss://${WebsocketsApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}'
   iamRoleStatements:
     - Effect: 'Allow'
       Action:
