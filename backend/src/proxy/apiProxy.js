@@ -9,11 +9,13 @@ module.exports.handler = async (event) => {
       event.requestContext?.http?.method || // HTTP API v2
       event.httpMethod || // REST API v1
       'GET'; // default fallback
+    console.log(method);
     //Extract request-path
     const path = (event.rawPath || event.path || '').replace('/api', '');
-
+    console.log(path);
     //Gets headers
     const headers = event.headers || {};
+    console.log(headers);
 
     //Parse request body if there is one
     let body = null;
@@ -24,6 +26,7 @@ module.exports.handler = async (event) => {
         return { statusCode: 400, body: 'Invalid JSON body' };
       }
     }
+    console.log(body);
 
     // Forward request to actual backend using Axios
     const response = await axios({
@@ -33,6 +36,7 @@ module.exports.handler = async (event) => {
       data: body, //Passes request body
     });
 
+    console.log(response);
     //Returns backend response to the client
     return {
       statusCode: response.status,
