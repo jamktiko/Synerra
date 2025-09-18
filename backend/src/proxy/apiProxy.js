@@ -5,13 +5,25 @@ const BASE_URL = process.env.BASE_URL;
 module.exports.handler = async (event) => {
   try {
     //Extract HTTP-method
-    const method = event.requestContext.http.method;
+    const method =
+      event.requestContext?.http?.method || // HTTP API v2
+      event.httpMethod || // REST API v1
+      'GET'; // default fallback
     //Extract request-path
-    const path = event.rawPath.replace('/api', '');
-    //Parse request body if there is one
-    const body = event.body ? JSON.parse(event.body) : null;
+    const path = (event.rawPath || event.path || '').replace('/api', '');
+
     //Gets headers
     const headers = event.headers || {};
+
+    //Parse request body if there is one
+    let body = null;
+    if (event.body) {
+      try {
+        body = JSON.parse(event.body);
+      } catch (err) {
+        return { statusCode: 400, body: 'Invalid JSON body' };
+      }
+    }
 
     // Forward request to actual backend using Axios
     const response = await axios({
