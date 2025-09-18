@@ -13,6 +13,8 @@ provider:
     MAIN_TABLE: ${self:service}-mainTable
     USER_POOL_ID: { Ref: UserPool } # cogniton user pool
     USER_CLIENT_ID: { Ref: UserClient } # cogniton client id
+    BASE_URL: ${cf:${self:service}-${sls:stage}.HttpApiUrl}
+    WSS_URL: ${cf:${self:service}-${sls:stage}.WebSocketApiUrl}
   iamRoleStatements:
     - Effect: 'Allow'
       Action:
@@ -122,6 +124,12 @@ functions:
       - httpApi:
           path: /user/filter
           method: post
+  apiProxy:
+    handler: src/proxy/apiProxy.handler
+    events:
+      - httpApi:
+          path: /api/{proxy+}
+          method: ANY
 
   privateAPI: # suojattu funktio ja reitti
     handler: src/user/private.handler
@@ -266,3 +274,15 @@ resources:
             Projection:
               ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
+
+Outputs:
+  HttpApiUrl:
+    Value:
+      Fn::Sub: 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com'
+    Export:
+      Name: ${self:service}-HttpApiUrl
+  WebSocketApiUrl:
+    Value:
+      Fn::Sub: 'wss://${WebsocketsApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}'
+    Export:
+      Name: ${self:service}-WebSocketApiUrl
