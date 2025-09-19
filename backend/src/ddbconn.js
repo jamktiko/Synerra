@@ -27,4 +27,4 @@ const doccli = DynamoDBDocumentClient.from(ddbcli, {
 });
 
 // exportataan dynamodbclient ja documentclient -oliot
-module.exports = { doccli };
+module.exports = { doccli, ddbcli };

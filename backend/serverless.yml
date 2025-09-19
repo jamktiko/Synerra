@@ -26,6 +26,7 @@ provider:
         - cognito-idp:AdminInitiateAuth
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminSetUserPassword
+        - 'cognito-idp:AdminDeleteUser'
       Resource:
         - Fn::GetAtt: [ConnectionTable, Arn]
         - Fn::GetAtt: [MainTable, Arn]
@@ -41,6 +42,10 @@ provider:
             - ''
             - - Fn::GetAtt: [MainTable, Arn]
               - '/index/LanguageIndex'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [MainTable, Arn]
+              - '/index/GamesIndex'
         - !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}
     - Effect: 'Allow'
       Action:
@@ -122,6 +127,37 @@ functions:
     events:
       - httpApi:
           path: /user/filter
+          method: post
+  deleteUser:
+    handler: src/user/deleteUser.handler
+    events:
+      - httpApi:
+          path: /user/delete/{userId}
+          method: delete
+  addGame:
+    handler: src/games/addGame.handler
+    events:
+      - httpApi:
+          path: /games/add
+          method: post
+          authorizer: PrivateAuthorizer
+  listGames:
+    handler: src/games/listGames.handler
+    events:
+      - httpApi:
+          path: /games
+          method: get
+  deleteGame:
+    handler: src/games/deleteGame.handler
+    events:
+      - httpApi:
+          path: /games/delete/{gameId}
+          method: delete
+  filterGames:
+    handler: src/games/filterGames.handler
+    events:
+      - httpApi:
+          path: /games/filter
           method: post
 
   privateAPI: # suojattu funktio ja reitti
@@ -236,6 +272,10 @@ resources:
             AttributeType: S
           - AttributeName: Username
             AttributeType: S
+          - AttributeName: GSI4PK
+            AttributeType: S
+          - AttributeName: Name
+            AttributeType: S
         KeySchema:
           - AttributeName: PK
             KeyType: HASH
@@ -263,6 +303,14 @@ resources:
               - AttributeName: GSI3PK
                 KeyType: HASH
               - AttributeName: Username
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: GamesIndex
+            KeySchema:
+              - AttributeName: GSI4PK
+                KeyType: HASH
+              - AttributeName: Name
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
