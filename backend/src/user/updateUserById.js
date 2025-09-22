@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const { sendResponse } = require('../helpers');
+const { sendResponse, verifyUser } = require('../helpers');
 const { doccli } = require('../ddbconn');
 const {
   DynamoDBDocumentClient,
@@ -8,11 +8,10 @@ const {
 
 module.exports.handler = async (event) => {
   try {
-    //get the userId from the url
-    const userId = event.pathParameters?.userId;
-    if (!userId) {
-      return sendResponse(400, { message: 'userId is required in path' });
-    }
+    console.log('Full event:', JSON.stringify(event, null, 2));
+    console.log('Auth claims:', event.requestContext?.authorizer);
+
+    const userId = verifyUser(event);
 
     //eventin body
     const body = JSON.parse(event.body);
@@ -62,6 +61,8 @@ module.exports.handler = async (event) => {
       // Only fields included in the request body are here.
       ReturnValues: 'ALL_NEW',
       // return the updated item and send it back to the client
+
+      ConditionExpression: 'attribute_exists(PK) AND attribute_exists(SK)', //ensures that the item exists
     };
 
     //update the table via document client update-method

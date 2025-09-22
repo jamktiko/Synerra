@@ -134,6 +134,7 @@ functions:
       - httpApi:
           path: /user/delete/{userId}
           method: delete
+          authorizer: PrivateAuthorizer
   addGame:
     handler: src/games/addGame.handler
     events:
@@ -153,12 +154,27 @@ functions:
       - httpApi:
           path: /games/delete/{gameId}
           method: delete
+          authorizer: PrivateAuthorizer
   filterGames:
     handler: src/games/filterGames.handler
     events:
       - httpApi:
           path: /games/filter
+          method: get
+  userGame:
+    handler: src/relations/userGame.handler
+    events:
+      - httpApi:
+          path: /relations/usergame/{gameId}
           method: post
+          authorizer: PrivateAuthorizer
+  deleteUserGame:
+    handler: src/relations/deleteUserGame.handler
+    events:
+      - httpApi:
+          path: /relations/deletegame/{gameId}
+          method: delete
+          authorizer: PrivateAuthorizer
 
   privateAPI: # suojattu funktio ja reitti
     handler: src/user/private.handler
