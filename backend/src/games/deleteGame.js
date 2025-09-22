@@ -1,11 +1,16 @@
 const AWS = require('aws-sdk');
-const { sendResponse } = require('../helpers');
+const { sendResponse, verifyAdmin } = require('../helpers');
 const { DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 //DynamoDb document client import
 const { doccli } = require('../ddbconn');
 
 module.exports.handler = async (event) => {
   try {
+    const { isAdmin, userId } = verifyAdmin(event);
+
+    if (!isAdmin) {
+      return sendResponse(403, { message: 'Admin privileges required' });
+    }
     // Gets the gameId from the url
     const gameId = event.pathParameters?.gameId;
 

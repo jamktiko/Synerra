@@ -1,13 +1,18 @@
 const { v4: uuidv4 } = require('uuid');
 const { PutCommand } = require('@aws-sdk/lib-dynamodb');
 const { doccli, ddbclient } = require('../ddbconn');
-const { sendResponse, validateInput } = require('../helpers');
+const { sendResponse, validateInput, verifyAdmin } = require('../helpers');
 
 // Table name from environment
 const MAIN_TABLE = process.env.MAIN_TABLE;
 
 module.exports.handler = async (event) => {
   try {
+    const { isAdmin, userId } = verifyAdmin(event);
+
+    if (!isAdmin) {
+      return sendResponse(403, { message: 'Admin privileges required' });
+    }
     let body;
 
     // Case 1: event.body exists (typical for POST with raw JSON)
