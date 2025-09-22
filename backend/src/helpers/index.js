@@ -16,7 +16,6 @@ const sendResponse = (statusCode, body) => {
   };
   return response;
 };
-// Inputin validointi, jota voisi hieman kehittää
 const validateInput = (data) => {
   const body = JSON.parse(data);
   const { email, password } = body;
@@ -27,7 +26,49 @@ const validateInput = (data) => {
   }
 };
 
+// Verifies that users can only update their own information, not others
+const verifyUser = (event) => {
+  // Get the authenticated userId from JWT claims
+  const authUserId = event.requestContext?.authorizer?.jwt?.claims?.sub;
+  const userId = event.pathParameters?.userId;
+
+  // If the user is an admin, skip other user verifications
+  const { isAdmin } = verifyAdmin(event);
+  if (isAdmin) {
+    return userId;
+  }
+
+  if (!authUserId) {
+    throw new Error('Unauthorized');
+  }
+  if (!userId) {
+    throw new Error('userId is required');
+  }
+  if (authUserId !== userId) {
+    throw new Error('Forbidden: cannot delete another user');
+  }
+
+  return userId;
+};
+
+// Verifies that the user belongs to admins-cognito user-group
+const verifyAdmin = (event) => {
+  const claims = event.requestContext?.authorizer?.jwt?.claims;
+
+  if (!claims || !claims.sub) {
+    throw new Error('Unauthorized');
+  }
+
+  const userId = claims.sub;
+  const groups = claims['cognito:groups'] || [];
+  const isAdmin = groups.includes('admins');
+
+  return { userId, isAdmin };
+};
+
 module.exports = {
   sendResponse,
   validateInput,
+  verifyUser,
+  verifyAdmin,
 };

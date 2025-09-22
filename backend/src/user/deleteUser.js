@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 //DynamoDb document client import
 const { doccli } = require('../ddbconn');
 //helper imports
-const { sendResponse } = require('../helpers');
+const { sendResponse, verifyUser } = require('../helpers');
 //Query and Delete command imports
 const { QueryCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 //Cognito imports
@@ -21,10 +21,11 @@ const cognitoClient = new CognitoIdentityProviderClient({
 // Handler export
 module.exports.handler = async (event) => {
   try {
-    const userId = event.pathParameters?.userId; //User id from the url
-    if (!userId) {
-      return sendResponse(400, { message: 'userId is required' }); //user id required
-    }
+    console.log('Full event:', JSON.stringify(event, null, 2));
+    console.log('Auth claims:', event.requestContext?.authorizer);
+
+    //verifies that the user is deleting his own profile
+    const userId = verifyUser(event);
 
     console.log('Deleting userId:', userId);
 
@@ -36,7 +37,7 @@ module.exports.handler = async (event) => {
     };
 
     const queryResult = await doccli.send(new QueryCommand(queryParams)); // Sends the query to DynamoDb
-    const userItem = queryResult.Items?.[0]; // Take the first item to get the user’s email
+    const userItem = queryResult.Items?.find((item) => item.SK === 'PROFILE');
     if (!userItem) {
       return sendResponse(404, { message: 'User not found in DB' }); // Return HTTP 404 if no user was found in DynamoDB
     }
