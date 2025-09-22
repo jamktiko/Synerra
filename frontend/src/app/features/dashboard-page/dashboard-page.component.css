@@ -2,3 +2,23 @@ h1 {
   font-family: var(--font-title);
   font-size: 100px;
 }
+
+.layout {
+  display: grid;
+  grid-template-columns: 200px 1fr 250px; /* left / middle / right */
+  height: 100vh;
+}
+
+app-navbar {
+  background: #222;
+  color: white;
+}
+
+app-dashboard {
+  background: #f5f5f5;
+}
+
+body {
+  height: 100%;
+  overflow: hidden; /* prevent page scroll */
+}
