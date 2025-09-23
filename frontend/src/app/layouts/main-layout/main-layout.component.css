@@ -1,0 +1,12 @@
+.layout {
+  display: grid;
+  grid-template-columns: 10% 1fr 80%; /* left / middle / right */
+  height: 100vh;
+  background-image: url("/assets/images/background.webp");
+}
+
+app-navbar {
+  width: 200px;
+  background: #222;
+  color: #fff;
+}
