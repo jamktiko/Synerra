@@ -1,5 +1,5 @@
 .social-floating-navbar {
-  width: 145%;
+  width: 100%;
   max-width: 100vw; /* prevent horizontal overflow */
   height: 90vh; /* 90% of viewport height */
   position: relative;

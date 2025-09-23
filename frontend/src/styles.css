@@ -64,9 +64,14 @@ body {
   font-size: var(--fs-xs);
   line-height: var(--line-normal);
   color: var(--color-text-default);
-  background: var(--color-background);
 }
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
 h1,
 .text-h1 {
   font-family: var(--font-title);
