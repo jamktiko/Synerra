@@ -1,56 +1,44 @@
-<div>
-  <nav class="navigation-big">
+<nav class="navigation">
+  <!-- Top -->
+  <div class="top-section">
+    <img class="logo" src="assets/images/synerraLogoBig.png" alt="Synerra Logo" />
 
-
-    <!-- Logo ja käyttäjäprofiili -->
-    <div class="top-logo">
-      <img [src]="'assets/svg/logo_big.svg'" alt="Logo">
-
-      <!-- User profile card -->
-      <div class="user-profile-card-big">
-        <img src="assets/svg/account.svg" class="account-icon" alt="Account image">
+    <div class="user-profile">
+      <img class="avatar" src="assets/svg/Acount.svg" alt="User account" />
+      <div class="user-info">
+        <span class="user-name">User</span>
+        <span class="user-email">Email address</span>
       </div>
     </div>
+  </div>
 
+  <div class="divider"></div>
 
-    <!-- Navigointipainikkeet -->
+  <!-- Nav -->
+  <div class="nav-links">
+    <button class="nav-btn" routerLink="/dashboard">
+      <img src="assets/svg/Home.svg" alt="Home icon" />
+      <span>Home</span>
+    </button>
+    <button class="nav-btn">
+      <img src="assets/svg/Gamepad.svg" alt="Games icon" />
+      <span>Games</span>
+    </button>
+    <button class="nav-btn" routerLink="/social">
+      <img src="assets/svg/NoMessage.svg" alt="Messages icon" />
+      <span>Social</span>
+    </button>
+    <button class="nav-btn">
+      <img src="assets/svg/Settings.svg" alt="Settings icon" />
+      <span>Settings</span>
+    </button>
+  </div>
 
-    <div class="main-buttons">
-      <div class="linebreak-horizontal">
-        <div class="linebreak-horizontal-child"></div>
-      </div>
-
-      <div class="navigation-links">
-        <div class="nav-button">
-        </div>
-
-        <div class="games-button">
-          <img src="assets/svg/games.svg" alt="Games icon" class="home-icon">
-          <div class="painike">Games</div>
-        </div>
-
-        <div class="social-button">
-          <img src="assets/svg/chat.svg" alt="Chat icon" class="home-icon">
-          <div class="painike">Social</div>
-        </div>
-
-        <div class="settings-button">
-          <img src="assets/svg/settings.svg" alt="Settings icon" class="home-icon">
-          <div class="painike">Settings</div>
-        </div>
-      </div>
-
-      <div class="linebreak-horizontal">
-        <div class="linebreak-horizontal-child"></div>
-      </div>
-    </div>
-
-
-    <!-- Logout -->
-
-    <div class="logout-button">
-      <img src="assets/svg/logout.svg" alt="Logout icon" class="home-icon">
-      <div class="painike">Logout</div>
-    </div>
-  </nav>
-</div>
+  <!-- Bottom -->
+  <div class="bottom-section">
+    <button class="nav-btn" routerLink="/login">
+      <img src="assets/svg/Logout.svg" alt="Logout icon" />
+      <span>Logout</span>
+    </button>
+  </div>
+</nav>
