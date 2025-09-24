@@ -1,12 +1,17 @@
 .layout {
   display: grid;
-  grid-template-columns: 10% 1fr 80%; /* left / middle / right */
+  grid-template-columns: 20% 60% 20%;
   height: 100vh;
   background-image: url("/assets/images/background.webp");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-app-navbar {
-  width: 200px;
-  background: #222;
-  color: #fff;
+.navbar {
+  grid-column: 1;
+}
+
+.main {
+  grid-column: 2 / span 2; /* spans middle and right if needed */
 }
