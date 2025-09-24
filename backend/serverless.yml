@@ -183,15 +183,29 @@ functions:
     handler: src/relations/friendRequest.handler
     events:
       - httpApi:
-          path: /relations/friendrequest
+          path: /friends/friendrequest
           method: post
           authorizer: PrivateAuthorizer
   deleteFriend:
     handler: src/relations/deleteFriend.handler
     events:
       - httpApi:
-          path: /relations/deletefriend
+          path: /friends/deletefriend
           method: delete
+          authorizer: PrivateAuthorizer
+  getFriends:
+    handler: src/relations/getFriends.handler
+    events:
+      - httpApi:
+          path: /friends/get
+          method: get
+          authorizer: PrivateAuthorizer
+  getRequests:
+    handler: src/relations/getRequests.handler
+    events:
+      - httpApi:
+          path: /friends/requests
+          method: get
           authorizer: PrivateAuthorizer
   uploadProfilePicture:
     handler: src/profile-picture/upload.handler
