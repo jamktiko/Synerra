@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
 import { DashboardPageComponent } from './features/dashboard-page/dashboard-page.component';
 import { LoginPageComponent } from './features/login-page/login-page.component';
-import { SigninPageComponent } from './features/signin-page/signin-page.component';
+import { SignupPageComponent } from './features/signup-page/signup-page.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+import { ProfileCreationPageComponent } from './features/profile-creation-page/profile-creation-page.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { SocialBarComponent } from './features/dashboard-page/social-bar/social-bar.component';
 
@@ -31,7 +32,8 @@ export const routes: Routes = [
     component: AuthLayoutComponent,
     children: [
       { path: 'login', component: LoginPageComponent },
-      { path: 'signin', component: SigninPageComponent },
+      { path: 'signup', component: SignupPageComponent },
+      { path: 'profile-creation', component: ProfileCreationPageComponent },
     ],
   },
   { path: '**', redirectTo: 'dashboard' },
