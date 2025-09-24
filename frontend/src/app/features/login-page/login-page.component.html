@@ -1,6 +1,47 @@
-<!-- <p>login-page works!</p>
+<div class="container-opaque">
 
-<input [(ngModel)]="emailInput" placeholder="Email" />
-<input [(ngModel)]="passwordInput" placeholder="password" />
 
-<button (click)="login()">Login</button> -->
+  <!-- Vasemman puolen sisältö -->
+
+  <div class="left-column">
+    <img src="assets/svg/logo_big.svg" alt="Synerra logo" class="logo-big" />
+
+    <div class="welcome-block">
+      <h1>Welcome to Synerra</h1>
+      <p class="text-sm-18">
+        Find teammates, reduce toxicity, enjoy the game.
+      </p>
+    </div>
+  </div>
+
+
+  <!-- Pystysuuntainen jakaja kortin sisällä -->
+
+  <div class="v-divider" aria-hidden="true"></div>
+
+
+  <!-- Oikean puolen sisältö -->
+
+  <div class="right-column">
+    <div class="login-frame">
+      <app-button label="Login with Steam" icon="Steam" variant="default" size="large"></app-button>
+
+      <app-button label="Login with Google" icon="Google" variant="default" size="large"></app-button>
+
+      <app-button label="Login with Epic Games" icon="EpicGames" variant="default" size="large"></app-button>
+
+      <app-button label="Login with Email" icon="Mail" variant="default" size="large"></app-button>
+
+      <div class="linebreak">
+        <div class="linebreak-child"></div>
+        <div class="painike">or</div>
+        <div class="linebreak-child"></div>
+      </div>
+
+      <b class="text-sm-bold">Already part of the team?</b>
+      <app-button label="Signup" variant="highlight" size="large"></app-button>
+    </div>
+  </div>
+
+
+</div>

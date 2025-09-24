@@ -1,0 +1,33 @@
+<!-- KÄYTTÖOHJEET
+ 
+Default
+<app-button label="Painike" variant="default"></app-button>
+
+Hover
+<app-button label="Painike" variant="default" state="hover"></app-button>
+
+Active
+<app-button label="Painike" variant="default" state="active"></app-button>
+
+Highlight
+<app-button label="Painike" variant="highlight"></app-button>
+
+Ikoni
+<app-button label="Painike" variant="default" icon="steam"></app-button>
+
+Suuri koko
+<app-button label="Painike" variant="highlight" size="large"></app-button>
+
+-->
+
+
+<button class="btn 
+    btn-{{ variant }} 
+    {{ state ? 'btn-' + state : '' }} 
+    {{ size ? 'btn-' + size : '' }}
+    {{ fullWidth ? 'btn-full' : '' }}">
+  <ng-container *ngIf="icon">
+    <img [src]="'assets/svg/' + icon + '.svg'" alt="{{ icon }} icon" class="btn-icon" />
+  </ng-container>
+  {{ label }}
+</button>

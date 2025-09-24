@@ -1,0 +1,92 @@
+/* Kortti */
+.container-opaque {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 32px;
+  padding: 80px;
+  background: var(--color-background);
+  border: 1px solid #565656;
+  border-radius: 8px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  height: auto;
+}
+
+/* Vasemman palstan sisältö */
+.left-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0;
+  gap: 40px;
+  text-align: left;
+  color: var(--color-text-default);
+  font-family: var(--font-title);
+}
+
+.logo-big {
+  max-width: 220px;
+}
+
+.welcome-block h1 {
+  font-size: var(--fs-h1);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-title);
+}
+
+.welcome-block p {
+  color: var(--color-text-dark);
+}
+
+.v-divider {
+  width: 1px;
+  background: #404040;
+  align-self: stretch;
+  margin-block: 24px;
+  border-radius: 1px;
+}
+
+/* Oikea palsta */
+.right-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+}
+
+.login-frame {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+/* Linebreak */
+.linebreak {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+.linebreak-child {
+  flex: 1;
+  height: 1px;
+  background: var(--color-gray-v1);
+}
+.painike {
+  font-size: var(--fs-sm-18);
+  color: #ccc;
+}
+
+/* Responsiivisuus */
+@media (max-width: 900px) {
+  .container-opaque {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 50px;
+  }
+  .v-divider {
+    display: none;
+  }
+}
