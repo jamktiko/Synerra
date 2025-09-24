@@ -1,0 +1,29 @@
+<div class="social-floating">
+  <!-- Header -->
+  <div class="header">
+    <div class="social-text">Social</div>
+    <div class="linebreak-horizontal-child"></div>
+  </div>
+
+  <!-- Players online -->
+  <div class="chatrooms-sum-wrapper">
+    <div class="chatrooms-sum">
+      <b class="my-chatrooms-container">
+        <span>PLAYERS ONLINE - </span>
+        <span class="sum">{{ players.length }}</span>
+      </b>
+    </div>
+  </div>
+
+  <!-- Player list -->
+  <div class="friends-container">
+    <div class="players">
+      <div class="player-card" *ngFor="let player of players">
+        <img class="acount-icon" [src]="player.avatar" alt="Player Avatar" />
+        <div class="player-name">{{ player.name }}</div>
+        <div class="status">
+          <img class="online-icon" [src]="player.statusIcon" alt="Online Status" />
+        </div>
+      </div>
+    </div>
+  </div>

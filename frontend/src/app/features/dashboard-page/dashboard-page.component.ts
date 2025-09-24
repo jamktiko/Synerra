@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SocialBarComponent } from './social-bar/social-bar.component';
+import { SocialBarComponent } from '../social-bar/social-bar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 @Component({
