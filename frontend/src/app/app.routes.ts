@@ -33,7 +33,11 @@ export const routes: Routes = [
     children: [
       { path: 'login', component: LoginPageComponent },
       { path: 'signup', component: SignupPageComponent },
-      { path: 'profile-creation', component: ProfileCreationPageComponent },
+      {
+        path: 'profile-creation',
+        component: ProfileCreationPageComponent,
+        canActivate: [AuthGuard],
+      },
     ],
   },
   { path: '**', redirectTo: 'dashboard' },

@@ -1,17 +1,31 @@
 .navigation {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start;
   position: fixed;
+  top: 0;
+  left: 0;
   width: 16rem;
   height: 100vh;
   background-color: #1b1b1b;
-  border-right: 1px solid #8e8e8e;
   border-radius: 0 8px 8px 0;
   padding: 1rem;
   box-sizing: border-box;
   font-family: Inter, sans-serif;
   color: #a9a9a9;
+}
+
+/* Gradient border only on right */
+.navigation::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0; /* stick to right edge */
+  width: 1px; /* thickness of the border */
+  height: 100%;
+  background: var(--color-gray-v2);
+  border-radius: 0 8px 8px 0; /* match nav rounding */
+  pointer-events: none;
 }
 
 /* Top section */
@@ -106,8 +120,11 @@
 }
 
 .divider {
-  border: none;
-  height: 1px;
-  background: var(--color-gray-v2);
-  margin: 1rem 0;
+  display: block;
+  width: 80%;
+  height: 1px !important;
+  background: var(--color-gray-v2) !important;
+  margin: 1rem 0 !important;
+  opacity: 1 !important; /* 1 auto nii menee */
+  flex-shrink: 0; /* don’t collapse in flexbox */
 }
