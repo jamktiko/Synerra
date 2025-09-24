@@ -1,0 +1,173 @@
+/* ===== Button base ===== */
+
+.btn {
+  --btn-radius: 8px;
+  --btn-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--btn-radius);
+  font-weight: var(--font-weight-medium);
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-main);
+  font-size: var(--fs-sm-18);
+  border: 1px solid transparent;
+  outline: none;
+
+  /* moderni “elevated” varjo + sulavat siirtymät */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  transition: transform 160ms var(--btn-ease), box-shadow 220ms var(--btn-ease),
+    background 200ms ease, filter 200ms ease, border-color 200ms ease;
+
+  will-change: transform, box-shadow, filter;
+  transform: translateZ(0); /* GPU */
+}
+
+/* Yläkiillon kevyt “glass” -overlay */
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0) 40%
+  );
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+}
+
+/* Liukuva kiiltoviiva (shine sweep) */
+.btn::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(
+    70deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.28) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(-100%) rotate(0.001deg);
+  opacity: 0;
+  transition: transform 900ms var(--btn-ease), opacity 200ms ease;
+  pointer-events: none;
+}
+
+/* Hover: hieman isompi, pehmeämpi varjo, shine liukuu yli */
+.btn:hover {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset;
+}
+.btn:hover::after {
+  transform: translateX(320%);
+  opacity: 0.9;
+}
+
+/* Painaessa “uppoaa” sisäänpäin (neumorphic-inset) */
+.btn:active {
+  transform: translateY(0) scale(0.985);
+  box-shadow: inset 0 6px 14px rgba(0, 0, 0, 0.45),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08), 0 3px 8px rgba(0, 0, 0, 0.25);
+  filter: brightness(0.98);
+}
+.btn:active::after {
+  opacity: 0;
+}
+
+/* Näppäimistöfokus: kontrastinen rengas (WCAG) */
+.btn:focus-visible {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.14),
+    0 0 0 4px var(--accent-color, #ff6a2b), 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* Disabled */
+.btn:disabled,
+.btn.btn-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+
+/* ===== Variants ===== */
+
+.btn-default {
+  color: var(--color-text-color, #e9e9e9);
+  background: linear-gradient(180deg, #2b2b2b 0%, #1f1f1f 100%);
+  border-color: var(--color-border, #3a3a3a);
+}
+.btn-default:hover {
+  background: linear-gradient(180deg, #323232 0%, #222 100%);
+  border-color: #4a4a4a;
+}
+.btn-default:active {
+  background: linear-gradient(180deg, #242424 0%, #1b1b1b 100%);
+}
+
+/* Highlight / CTA — käytä tokeniasi, fallbackina oranssi gradientti */
+.btn-highlight {
+  color: var(--color-text-color, #fff);
+  background: var(
+    --color-orange-gradient,
+    linear-gradient(180deg, #ff7a3e 0%, #e34b0e 100%)
+  );
+  border-color: rgba(255, 122, 62, 0.4);
+}
+.btn-highlight:hover {
+  /* hieman kirkkaampi ja lämpimämpi */
+  background: linear-gradient(180deg, #ff8a54 0%, #e05212 100%);
+  border-color: rgba(255, 138, 84, 0.6);
+}
+.btn-highlight:active {
+  background: linear-gradient(180deg, #e56f3a 0%, #c3430d 100%);
+}
+
+/* ===== Sizes ===== */
+
+.btn-small {
+  font-size: 0.875rem;
+  padding: 0.5rem 0.9rem;
+}
+.btn-medium {
+  font-size: 1rem;
+  padding: 0.6rem 1.2rem;
+}
+.btn-large {
+  font-size: 1.125rem;
+  padding: 1rem 1.5rem;
+}
+
+/* Täysleveä */
+.btn-full {
+  width: 100%;
+}
+
+/* Ikoni koko 24px tokenin mukaan */
+.btn-icon {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+}
+
+/* Motion: kun käyttäjä vähentää animaatiota, hidastetaan ja poistetaan sweep */
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btn::after {
+    transition-duration: 0ms;
+  }
+  .btn:hover::after {
+    opacity: 0;
+    transform: none;
+  }
+}
