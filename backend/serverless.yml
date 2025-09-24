@@ -13,6 +13,7 @@ provider:
     MAIN_TABLE: ${self:service}-mainTable
     USER_POOL_ID: { Ref: UserPool } # cogniton user pool
     USER_CLIENT_ID: { Ref: UserClient } # cogniton client id
+    PFP_BUCKET: synerra-pfp
 
   iamRoleStatements:
     - Effect: 'Allow'
@@ -27,6 +28,8 @@ provider:
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminSetUserPassword
         - 'cognito-idp:AdminDeleteUser'
+        - s3:PutObject
+        - s3:GetObject
       Resource:
         - Fn::GetAtt: [ConnectionTable, Arn]
         - Fn::GetAtt: [MainTable, Arn]
@@ -47,6 +50,7 @@ provider:
             - - Fn::GetAtt: [MainTable, Arn]
               - '/index/GamesIndex'
         - !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}
+        - arn:aws:s3:::synerra-pfp/profile-pictures/*
     - Effect: 'Allow'
       Action:
         - 'execute-api:ManageConnections'
@@ -174,6 +178,34 @@ functions:
       - httpApi:
           path: /relations/deletegame/{gameId}
           method: delete
+          authorizer: PrivateAuthorizer
+  friendRequest:
+    handler: src/relations/friendRequest.handler
+    events:
+      - httpApi:
+          path: /relations/friendrequest
+          method: post
+          authorizer: PrivateAuthorizer
+  deleteFriend:
+    handler: src/relations/deleteFriend.handler
+    events:
+      - httpApi:
+          path: /relations/deletefriend
+          method: delete
+          authorizer: PrivateAuthorizer
+  uploadProfilePicture:
+    handler: src/profile-picture/upload.handler
+    events:
+      - httpApi:
+          path: /users/profile-picture/upload
+          method: post
+          authorizer: PrivateAuthorizer
+  giveReputation:
+    handler: src/relations/giveRep.handler
+    events:
+      - httpApi:
+          path: /relations/reputation
+          method: post
           authorizer: PrivateAuthorizer
 
   privateAPI: # suojattu funktio ja reitti
