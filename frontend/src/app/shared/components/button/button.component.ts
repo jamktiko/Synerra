@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 type ButtonVariant = 'default' | 'highlight';
 type ButtonState = 'active' | 'disabled';
@@ -11,7 +12,7 @@ type IconPosition = 'left' | 'right';
   selector: 'app-button',
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.css'],
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
 })
 export class ButtonComponent {
   @Input() label: string = '';
@@ -20,6 +21,7 @@ export class ButtonComponent {
   @Input() state?: ButtonState;
   @Input() size: ButtonSize = 'medium';
   @Input() iconPosition: IconPosition = 'left';
+  @Input() routerLink?: string;
 
   private _fullWidth = false;
 

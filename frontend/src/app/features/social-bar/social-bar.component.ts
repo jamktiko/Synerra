@@ -32,7 +32,7 @@ export class SocialBarComponent {
     {
       name: 'Player 2',
       avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
+      statusIcon: 'assets/svg/status/online.svg',
     },
     {
       name: 'Player 3',

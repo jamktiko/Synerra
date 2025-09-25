@@ -11,7 +11,6 @@ import { AuthStore } from '../stores/auth.store';
 })
 export class AuthService {
   private apiUrl = environment.AWS_USER_URL;
-  private tokenKey = 'auth_token';
 
   constructor(
     private http: HttpClient,
@@ -19,7 +18,15 @@ export class AuthService {
     private authStore: AuthStore,
   ) {}
 
-  signin() {}
+  signup(credentials: { email: string; password: string }): Observable<any> {
+    return this.http
+      .post<{ token: string }>(`${this.apiUrl}/signup`, credentials)
+      .pipe(
+        tap((res) => {
+          console.log(res);
+        }),
+      );
+  }
 
   login(credentials: { email: string; password: string }): Observable<any> {
     return this.http
