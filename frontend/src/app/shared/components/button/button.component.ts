@@ -21,6 +21,7 @@ export class ButtonComponent {
   @Input() state?: ButtonState;
   @Input() size: ButtonSize = 'medium';
   @Input() iconPosition: IconPosition = 'left';
+  @Input() routerLink?: string;
 
   private _fullWidth = false;
 
