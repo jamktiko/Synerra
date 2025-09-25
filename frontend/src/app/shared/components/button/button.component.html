@@ -12,22 +12,31 @@ Active
 Highlight
 <app-button label="Painike" variant="highlight"></app-button>
 
-Ikoni
-<app-button label="Painike" variant="default" icon="steam"></app-button>
+Ikoni vasemmalla (default)
+<app-button label="Login with Google" icon="Google"></app-button>
+
+Ikoni oikealla
+<app-button label="Next Step" icon="ArrowRight" iconPosition="right"></app-button>
 
 Suuri koko
 <app-button label="Painike" variant="highlight" size="large"></app-button>
 
 -->
 
-
-<button class="btn 
-               btn-{{ variant }} 
-               {{ state ? 'btn-' + state : '' }} 
-               {{ size ? 'btn-' + size : '' }}
-               {{ fullWidth ? 'btn-full' : '' }}" [routerLink]="routerLink || null">
-  <ng-container *ngIf="icon">
+<button class="btn" [class.btn-default]="variant === 'default'" [class.btn-highlight]="variant === 'highlight'"
+  [class.btn-small]="size === 'small'" [class.btn-medium]="size === 'medium'" [class.btn-large]="size === 'large'"
+  [class.btn-full]="fullWidth" [class.btn-left]="align === 'left'" [class.btn-active]="state === 'active'"
+  [class.btn-icon-right]="iconPosition === 'right'" [attr.aria-disabled]="state === 'disabled' ? true : null"
+  [disabled]="state === 'disabled'">
+  <!-- Ikoni vasemmalla -->
+  <ng-container *ngIf="icon && iconPosition === 'left'">
     <img [src]="'assets/svg/' + icon + '.svg'" alt="{{ icon }} icon" class="btn-icon" />
   </ng-container>
-  {{ label }}
+
+  <span class="btn-label">{{ label }}</span>
+
+  <!-- Ikoni oikealla -->
+  <ng-container *ngIf="icon && iconPosition === 'right'">
+    <img [src]="'assets/svg/' + icon + '.svg'" alt="{{ icon }} icon" class="btn-icon" />
+  </ng-container>
 </button>
