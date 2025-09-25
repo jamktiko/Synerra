@@ -1,1 +1,4 @@
 <p>find-players works!</p>
+<div *ngFor="let user of users | async">
+  {{ user.Username }} - {{ user.Email }}
+</div>
