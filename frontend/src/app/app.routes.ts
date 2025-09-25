@@ -10,6 +10,7 @@ import { SocialBarComponent } from './features/social-bar/social-bar.component';
 import { FindPlayersComponent } from './features/find-players/find-players.component';
 import { ChooseGamePageComponent } from './features/choose-game-page/choose-game-page.component';
 import { EmailLoginPageComponent } from './features/email-login-page/email-login-page.component';
+import { SocialPageComponent } from './features/social-page/social-page.component';
 
 export const routes: Routes = [
   {
@@ -25,7 +26,7 @@ export const routes: Routes = [
       {
         path: 'social',
         canActivate: [AuthGuard],
-        component: SocialBarComponent,
+        component: SocialPageComponent,
       },
       {
         path: 'find-players',

@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-social-menu',
   imports: [],
   templateUrl: './social-menu.component.html',
-  styleUrl: './social-menu.component.css'
+  styleUrl: './social-menu.component.css',
 })
-export class SocialMenuComponent {
-
-}
+export class SocialMenuComponent {}
