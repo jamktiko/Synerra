@@ -1,16 +1,16 @@
-// user.model.ts
+// Interface and example data:
 export interface User {
-  PK: string; // e.g., "USER#b0ac990c-a021-7002-788b-4d5c2f912fa9"
-  SK: string; // e.g., "PROFILE"
-  AverageReputation?: number; // optional, e.g., 60
+  PK: string; // "USER#b0ac990c-a021-7002-788b-4d5c2f912fa9"
+  SK: string; // "PROFILE"
+  AverageReputation?: number; //60
   CreatedAt?: number; // optional timestamp
-  Email?: string;
-  Bio?: string;
-  GSI3PK?: string; // e.g., "USER"
-  ProfilePicture?: string; // URL to S3
-  ReputationCount?: number;
+  Email?: string; // test@test.fi
+  Bio?: string; // Tykki pelaaja, tulkaa pelaa
+  GSI3PK?: string; // "USER"
+  ProfilePicture?: string; // https://synerra-pfp.s3.eu-north-1.amazonaws.com/profile-pictures/b05cf97c-a041-7006-921d-af77cf1abab8/testmanpfp
+  ReputationCount?: number; // 2
   Reputations?: Record<string, any>; // Map of reputation data
-  UserId?: string;
-  Username?: string;
-  Languages?: string[];
+  UserId?: string; // b0ac990c-a021-7002-788b-4d5c2f912fa9"
+  Username?: string; // TestMan
+  Languages?: string[]; // [ru, fi]
 }

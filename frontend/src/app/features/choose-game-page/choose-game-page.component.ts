@@ -1,11 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { GameService } from '../../core/services/game.service';
+import { CommonModule } from '@angular/common';
+import { Game } from '../../core/interfaces/game.model'; // add if you have a model
+import { GameCardComponent } from './game-card/game-card.component';
 
 @Component({
   selector: 'app-choose-game-page',
-  imports: [],
+  imports: [CommonModule, GameCardComponent],
   templateUrl: './choose-game-page.component.html',
-  styleUrl: './choose-game-page.component.css'
+  styleUrl: './choose-game-page.component.css',
 })
-export class ChooseGamePageComponent {
+export class ChooseGamePageComponent implements OnInit {
+  games: Game[] = [];
 
+  constructor(private gameService: GameService) {}
+
+  ngOnInit() {
+    this.loadgames();
+  }
+
+  loadgames() {
+    this.gameService.listGames().subscribe({
+      next: (res) => {
+        this.games = res;
+        console.log('games:', res);
+      },
+      error: (err) => {
+        console.error('Failed to load games', err);
+      },
+    });
+  }
 }
