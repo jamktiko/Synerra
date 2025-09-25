@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 type ButtonVariant = 'default' | 'highlight';
 type ButtonState = 'active' | 'disabled';
@@ -39,6 +39,14 @@ export class ButtonComponent {
   }
 
   @Input() align: ButtonAlign = 'center';
+
+  constructor(private router: Router) {}
+
+  navigate() {
+    if (this.routerLink && this.state !== 'disabled') {
+      this.router.navigate([this.routerLink]);
+    }
+  }
 
   private coerceBoolean(v: any): boolean {
     return v === '' || v === true || v === 'true' || v === 'on';

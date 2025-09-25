@@ -27,7 +27,7 @@ Suuri koko
   [class.btn-small]="size === 'small'" [class.btn-medium]="size === 'medium'" [class.btn-large]="size === 'large'"
   [class.btn-full]="fullWidth" [class.btn-left]="align === 'left'" [class.btn-active]="state === 'active'"
   [class.btn-icon-right]="iconPosition === 'right'" [attr.aria-disabled]="state === 'disabled' ? true : null"
-  [disabled]="state === 'disabled'" [routerLink]="state !== 'disabled' ? routerLink : null">
+  [disabled]="state === 'disabled'" (click)="navigate()">
   <!-- Ikoni vasemmalla -->
   <ng-container *ngIf="icon && iconPosition === 'left'">
     <img [src]="'assets/svg/' + icon + '.svg'" alt="{{ icon }} icon" class="btn-icon" />

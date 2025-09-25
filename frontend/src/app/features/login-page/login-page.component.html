@@ -18,10 +18,10 @@
         align="left"></app-button>
 
       <app-button label="Login with Epic Games" icon="EpicGames" variant="default" size="large" [fullWidth]="true"
-        [routerLink]="'/login/email'" align="left"></app-button>
-
-      <app-button label="Login with Email" icon="Mail" variant="default" size="large" [fullWidth]="true"
         align="left"></app-button>
+
+      <app-button label="Login with Email" icon="Mail" variant="default" size="large" [fullWidth]="true" align="left"
+        [routerLink]="'/login/email'"></app-button>
 
       <div class="linebreak">
         <div class="linebreak-child"></div>
@@ -31,7 +31,8 @@
 
       <div class="already text-sm-bold">Don't have friends yet??</div>
 
-      <app-button label="Signup" variant="highlight" size="large" [fullWidth]="true" align="center"></app-button>
+      <app-button label="Signup" variant="highlight" size="large" [fullWidth]="true" align="center"
+        [routerLink]="'/signup'"></app-button>
     </div>
   </div>
 </div>
