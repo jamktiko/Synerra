@@ -20,11 +20,11 @@
       <img src="assets/svg/Home.svg" alt="Home icon" />
       <span>Home</span>
     </button>
-    <button class="nav-btn" routerLink="/find-players">
+    <button class="nav-btn" routerLink="/dashboard/find-players">
       <img src=" assets/svg/Gamepad.svg" alt="Games icon" />
       <span>Games</span>
     </button>
-    <button class="nav-btn" routerLink="/social">
+    <button class="nav-btn" routerLink="/dashboard/social">
       <img src="assets/svg/NoMessage.svg" alt="Messages icon" />
       <span>Social</span>
     </button>
@@ -32,6 +32,8 @@
       <img src="assets/svg/Settings.svg" alt="Settings icon" />
       <span>Settings</span>
     </button>
+    <app-button label="Login with Email" icon="Mail" variant="default" size="small" align="left"
+      [routerLink]="'/login/email'"></app-button>
   </div>
 
   <!-- Bottom -->

@@ -1,1 +1,34 @@
-<p>social-menu works!</p>
+<div class="users-list">
+  <div class="header">
+    <input type="text" placeholder="Search..." />
+    <button>Online</button>
+    <button>All</button>
+    <button>Add Friend</button>
+  </div>
+
+  <hr />
+
+  <div class="users">
+    <div class="user-card" *ngFor="let user of users">
+      <img [src]="user.avatar" class="avatar" alt="avatar" />
+      <div class="info">
+        <div class="name">{{ user.name }}</div>
+        <div class="message">{{ user.lastMessage }}</div>
+      </div>
+      <div class="actions">...</div>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="group-chats">
+    <h3>Group Chat</h3>
+    <div class="user-card" *ngFor="let room of rooms">
+      <img [src]="room.avatar" class="avatar" alt="room avatar" />
+      <div class="info">
+        <div class="name">{{ room.name }}</div>
+      </div>
+      <div class="actions">...</div>
+    </div>
+  </div>
+</div>
