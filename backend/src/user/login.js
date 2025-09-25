@@ -35,6 +35,8 @@ module.exports.handler = async (event) => {
     return sendResponse(200, {
       message: 'Success',
       token: response.AuthenticationResult.IdToken,
+      refreshToken: response.AuthenticationResult.RefreshToken,
+      accessToken: response.AuthenticationResult.AccessToken,
     });
   } catch (error) {
     const message = error.message ? error.message : 'Internal server error';

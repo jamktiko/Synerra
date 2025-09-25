@@ -97,7 +97,6 @@ functions:
       - httpApi:
           path: /user/signup
           method: post
-
   getUsers:
     handler: src/user/getUsers.handler
     events:
