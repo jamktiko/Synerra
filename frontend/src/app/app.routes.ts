@@ -7,6 +7,9 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { ProfileCreationPageComponent } from './features/profile-creation-page/profile-creation-page.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { SocialBarComponent } from './features/social-bar/social-bar.component';
+import { FindPlayersComponent } from './features/find-players/find-players.component';
+import { ChooseGamePageComponent } from './features/choose-game-page/choose-game-page.component';
+import { EmailLoginPageComponent } from './features/email-login-page/email-login-page.component';
 
 export const routes: Routes = [
   {
@@ -23,7 +26,16 @@ export const routes: Routes = [
         path: 'social',
         canActivate: [AuthGuard],
         component: SocialBarComponent,
-        pathMatch: 'full',
+      },
+      {
+        path: 'find-players',
+        canActivate: [AuthGuard],
+        component: FindPlayersComponent,
+      },
+      {
+        path: 'choose-game',
+        canActivate: [AuthGuard],
+        component: ChooseGamePageComponent,
       },
     ],
   },
@@ -32,6 +44,7 @@ export const routes: Routes = [
     component: AuthLayoutComponent,
     children: [
       { path: 'login', component: LoginPageComponent },
+      { path: 'login/email', component: EmailLoginPageComponent },
       { path: 'signup', component: SignupPageComponent },
       {
         path: 'profile-creation',

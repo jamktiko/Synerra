@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChooseGameComponent } from './choose-game.component';
+import { SocialMenuComponent } from './social-menu.component';
 
-describe('ChooseGameComponent', () => {
-  let component: ChooseGameComponent;
-  let fixture: ComponentFixture<ChooseGameComponent>;
+describe('SocialMenuComponent', () => {
+  let component: SocialMenuComponent;
+  let fixture: ComponentFixture<SocialMenuComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ChooseGameComponent]
+      imports: [SocialMenuComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ChooseGameComponent);
+    fixture = TestBed.createComponent(SocialMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

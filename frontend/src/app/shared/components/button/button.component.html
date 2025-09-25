@@ -22,10 +22,10 @@ Suuri koko
 
 
 <button class="btn 
-    btn-{{ variant }} 
-    {{ state ? 'btn-' + state : '' }} 
-    {{ size ? 'btn-' + size : '' }}
-    {{ fullWidth ? 'btn-full' : '' }}">
+               btn-{{ variant }} 
+               {{ state ? 'btn-' + state : '' }} 
+               {{ size ? 'btn-' + size : '' }}
+               {{ fullWidth ? 'btn-full' : '' }}" [routerLink]="routerLink || null">
   <ng-container *ngIf="icon">
     <img [src]="'assets/svg/' + icon + '.svg'" alt="{{ icon }} icon" class="btn-icon" />
   </ng-container>

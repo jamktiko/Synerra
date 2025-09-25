@@ -4,27 +4,27 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-signup-page',
+  selector: 'app-email-login-page',
   imports: [CommonModule, FormsModule],
-  templateUrl: './signup-page.component.html',
-  styleUrl: './signup-page.component.css',
+  templateUrl: './email-login-page.component.html',
+  styleUrl: './email-login-page.component.css',
 })
-export class SignupPageComponent {
+export class EmailLoginPageComponent {
   emailInput: string = '';
   passwordInput: string = '';
 
   constructor(private authService: AuthService) {}
 
-  signup() {
+  login() {
     const credentials = {
       email: this.emailInput,
       password: this.passwordInput,
     };
     this.passwordInput = '';
-    this.authService.signup(credentials).subscribe({
+    this.authService.login(credentials).subscribe({
       next: (res) => {
         this.emailInput = '';
-        console.log('Signup success:', res);
+        console.log('Login success:', res);
       },
     });
   }
