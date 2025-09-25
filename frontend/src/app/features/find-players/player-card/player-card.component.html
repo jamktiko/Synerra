@@ -1,1 +1,13 @@
-<p>player-card works!</p>
+<div class="card">
+  <img [src]="user.ProfilePicture" class="card-img-top" alt="Profile picture" />
+  <div class="card-body">
+    <h5 class="card-title">{{ user.Username }}</h5>
+    <p class="card-text">{{ user.Email }}</p>
+    <p class="card-text">{{ user.CreatedAt }}</p>
+    <p class="card-text">{{ user.Bio }}</p>
+    <p class="card-text">{{ user.Languages }}</p>
+
+
+
+  </div>
+</div>
