@@ -21,20 +21,19 @@ export const routes: Routes = [
         path: 'dashboard',
         canActivate: [AuthGuard],
         component: DashboardPageComponent,
-        pathMatch: 'full',
       },
       {
-        path: 'social',
+        path: 'dashboard/social',
         canActivate: [AuthGuard],
         component: SocialPageComponent,
       },
       {
-        path: 'find-players',
+        path: 'dashboard/find-players',
         canActivate: [AuthGuard],
         component: FindPlayersComponent,
       },
       {
-        path: 'choose-game',
+        path: 'dashboard/choose-game',
         canActivate: [AuthGuard],
         component: ChooseGamePageComponent,
       },
@@ -44,7 +43,7 @@ export const routes: Routes = [
     path: '',
     component: AuthLayoutComponent,
     children: [
-      { path: 'login', component: LoginPageComponent },
+      { path: 'login', component: LoginPageComponent, pathMatch: 'full' },
       { path: 'login/email', component: EmailLoginPageComponent },
       { path: 'signup', component: SignupPageComponent },
       {
