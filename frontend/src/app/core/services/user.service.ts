@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environment';
 import { User } from '../interfaces/user.model';
+import { AuthStore } from '../stores/auth.store';
 
 @Injectable({
   providedIn: 'root',
@@ -10,10 +11,13 @@ import { User } from '../interfaces/user.model';
 export class UserService {
   private apiUrl = environment.AWS_USER_URL;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authStore: AuthStore) {}
 
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiUrl}/user`);
+  getUsers(): Observable<any> {
+    const token = this.authStore.getToken();
+    return this.http.get(`${this.apiUrl}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
   }
 
   getUserById(userId: string): Observable<any> {
