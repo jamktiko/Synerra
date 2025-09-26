@@ -5,7 +5,7 @@
   width: 16rem;
   height: 90vh;
   border-radius: 8px;
-  background-color: #1b1b1b; /* inner box */
+  background-color: var(--color-background);
   padding: 1rem 1.875rem 0 1rem;
   display: flex;
   flex-direction: column;
@@ -145,7 +145,7 @@
 .friends-container,
 .chatroom-items {
   scrollbar-width: thin;
-  scrollbar-color: #333 #1b1b1b;
+  scrollbar-color: #1b1b1b var(--color-background);
 }
 
 .sum {
