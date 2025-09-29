@@ -14,6 +14,7 @@ interface User {
   styleUrl: './social-menu.component.css',
 })
 export class SocialMenuComponent {
+  activeTab: 'users' | 'groups' = 'users';
   users: User[] = [
     {
       name: 'Alice',

@@ -6,8 +6,10 @@
   left: 0;
   width: 16rem;
   height: 100vh;
-  background-color: var(--color-background);
-  padding: 2rem 0;
+  background: var(--color-background);
+
+  border-radius: 0 8px 8px 0;
+  padding: 1rem;
   box-sizing: border-box;
   font-family: Inter, sans-serif;
   color: var(--color-text-dark);
