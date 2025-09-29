@@ -155,23 +155,6 @@
   left: 100%;
 }
 
-.nav-btn::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 60%;
-  width: 2px;
-  background: var(
-    --color-orange-gradient,
-    linear-gradient(180deg, #ff7a3e 0%, #e34b0e 100%)
-  );
-  border-radius: 0 2px 2px 0;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
 .nav-btn:hover::after,
 .nav-btn.active::after {
   opacity: 1;
