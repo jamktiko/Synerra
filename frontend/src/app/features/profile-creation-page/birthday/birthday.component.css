@@ -1,0 +1,239 @@
+.modal-frame {
+  background-color: var(--color-background);
+  color: var(--color-text-default);
+  width: 100%;
+  max-height: 671px;
+  overflow: hidden;
+  display: flex;
+  align-items: center; /* pystysuunta */
+  justify-content: center; /* vaakasuunta */
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background:
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
+    /* varsinainen reuna*/ var(--color-gray-v1) border-box;
+}
+
+.inner-frame {
+  width: 100%;
+  padding: 0 154px;
+  gap: 1rem;
+  flex-direction: column;
+  align-items: center; /* pystysuunta */
+  justify-content: center; /* vaakasuunta */
+}
+
+.modal-header {
+  border: hidden;
+  padding-bottom: 0;
+  justify-content: center;
+}
+
+.modal-body {
+  padding: 0;
+}
+
+.modal-footer {
+  border: hidden;
+  padding: 0, 1rem;
+  justify-content: center;
+  gap: 43px;
+  margin-bottom: 10rem;
+}
+
+.progress {
+  margin-top: 10rem;
+  justify-content: center;
+  gap: 5px;
+  background-color: var(--color-background);
+  height: fit-content;
+}
+.knowledgeText {
+  text-align: center;
+}
+
+.hint {
+  color: var(--color-text-dark);
+  padding-top: 1.2rem;
+}
+
+.done {
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  padding: 3px;
+  border-radius: 50%;
+}
+
+.step {
+  color: var(--color-primary);
+  border: 1px solid var(--color-text-dark);
+  padding: 3px;
+  border-radius: 50%;
+}
+
+.nextStep {
+  color: var(--color-primary);
+  font-size: 30px;
+  height: fit-content;
+}
+
+.form-control {
+  border: 2px solid transparent;
+  border-radius: 6px;
+  color: var(--color-text-dark);
+  outline: none;
+  text-transform: uppercase;
+
+  /* border */
+  background:
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
+    /* varsinainen reuna*/ var(--color-gray-v1) border-box;
+}
+
+.form-control::placeholder {
+  color: var(--color-text-dark);
+  padding-left: 5px;
+  padding-right: 5px;
+}
+/* Kalenterikuva */
+.form-control[type="date"] {
+  color-scheme: dark;
+}
+
+.form-control:focus {
+  box-shadow: none;
+}
+
+/*Checkbox css*/
+/* From Uiverse.io by Tsiangana */
+
+/*Oma säätö*/
+.checkbox-frame {
+  display: flex;
+  flex-direction: row;
+  scroll-behavior: smooth;
+  overflow-x: auto;
+  max-width: 100%;
+  gap: 2rem;
+
+  scrollbar-color: var(--color-background) var(--color-background);
+  scrollbar-width: thin;
+}
+.checkbox-frame:hover {
+  scrollbar-color: var(--color-text-dark) var(--color-background);
+}
+
+.checkbox-container {
+  display: flex;
+  background: transparent;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+.ios-checkbox {
+  --checkbox-size: 18px;
+  --checkbox-color: #3b82f6;
+  --checkbox-bg: #dbeafe;
+  --checkbox-border: #93c5fd;
+
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ios-checkbox input {
+  display: none;
+}
+
+.checkbox-wrapper {
+  position: relative;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  border-radius: 4px;
+  transition: transform 0.2s ease;
+}
+
+.checkbox-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  border: 2px solid var(--color-text-dark);
+  background: var(--color-background);
+  transition: all 0.2s ease;
+}
+
+.checkbox-text {
+  padding: 0 0rem 0.2rem 0.5rem;
+}
+
+.checkbox-icon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 80%;
+  height: 80%;
+  color: white;
+  transform: scale(0);
+  transition: all 0.2s ease;
+}
+
+.check-path {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  transition: stroke-dashoffset 0.3s ease 0.1s;
+}
+
+/* Checked State */
+.ios-checkbox input:checked + .checkbox-wrapper .checkbox-bg {
+  background: var(--checkbox-color);
+  border-color: var(--checkbox-color);
+}
+
+.ios-checkbox input:checked + .checkbox-wrapper .checkbox-icon {
+  transform: scale(1);
+}
+
+.ios-checkbox input:checked + .checkbox-wrapper .check-path {
+  stroke-dashoffset: 0;
+}
+
+/* Hover Effects */
+.ios-checkbox:hover .checkbox-wrapper {
+  transform: scale(1.05);
+}
+
+/* Active Animation */
+.ios-checkbox:active .checkbox-wrapper {
+  transform: scale(0.95);
+}
+
+/* Focus Styles */
+.ios-checkbox input:focus + .checkbox-wrapper .checkbox-bg {
+  box-shadow: 0 0 0 4px var(--checkbox-bg);
+}
+
+.ios-checkbox.red {
+  --checkbox-color: var(--color-primary);
+  --checkbox-bg: #fee2e2;
+  --checkbox-border: #fca5a5;
+}
+
+/* Animation */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.ios-checkbox input:checked + .checkbox-wrapper {
+  animation: bounce 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

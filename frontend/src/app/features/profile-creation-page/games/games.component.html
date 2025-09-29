@@ -1,10 +1,45 @@
-<div class="modal-header">
-  <h5>Step 3: Games</h5>
-</div>
-<div class="modal-body">
-  <input [(ngModel)]="profile.games" placeholder="Favorite games (comma separated)" class="form-control" />
-</div>
-<div class="modal-footer">
-  <button class="btn btn-secondary" (click)="back()">Back</button>
-  <button class="btn btn-success" (click)="finish()">Finish</button>
+<div class="modal-frame">
+  <div class="inner-frame">
+    <!--Header-->
+    <div class="modal-header">
+      <h1 class="text-h1">Top games on Synerra</h1>
+    </div>
+
+    <div class="hint">
+      <h2 class="text-md-medium">Select the ones you play or enjoy</h2>
+    </div>
+
+    <div class="modal-body">
+      <!--
+      <input
+        [(ngModel)]="profile.games"
+        placeholder="Favorite games (comma separated)"
+        class="form-control"
+      />
+      -->
+
+      <div class="gameCards">
+        <div class="card">
+          <img
+            style="width: 100%; height: 100%"
+            src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/CS2_Cover_Art.jpg/250px-CS2_Cover_Art.jpg"
+          />
+        </div>
+        <div class="card">Tähän peli2 kuva</div>
+        <div class="card">Tähän peli3 kuva</div>
+        <div class="card">Tähän peli4 kuva</div>
+      </div>
+    </div>
+
+    <div class="hint">
+      <h2 class="text-md-medium">
+        You may skip this step, and add them later from a wider selection
+      </h2>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="back()">Back</button>
+      <button class="btn btn-success" (click)="finish()">Finish</button>
+    </div>
+  </div>
 </div>
