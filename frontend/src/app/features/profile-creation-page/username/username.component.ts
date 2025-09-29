@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-username',
-  imports: [FormsModule],
+  imports: [FormsModule, ButtonComponent],
   templateUrl: './username.component.html',
   styleUrl: './username.component.css',
 })
