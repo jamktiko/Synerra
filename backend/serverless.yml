@@ -14,6 +14,7 @@ provider:
     USER_POOL_ID: { Ref: UserPool } # cogniton user pool
     USER_CLIENT_ID: { Ref: UserClient } # cogniton client id
     PFP_BUCKET: synerra-pfp
+    SECRET_NAME: arn:aws:secretsmanager:eu-north-1:810251959934:secret:GameApiSecrets-lyqEj3
 
   iamRoleStatements:
     - Effect: 'Allow'
@@ -56,6 +57,11 @@ provider:
         - 'execute-api:ManageConnections'
       Resource:
         - 'arn:aws:execute-api:*:*:**/@connections/*'
+    - Effect: 'Allow'
+      Action:
+        - 'secretsmanager:GetSecretValue'
+      Resource:
+        - 'arn:aws:secretsmanager:eu-north-1:810251959934:secret:GameApiSecrets-*'
   httpApi:
     cors:
       allowedOrigins:
