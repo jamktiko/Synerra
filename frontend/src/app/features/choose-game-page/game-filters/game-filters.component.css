@@ -1,18 +1,16 @@
-.games-container {
+.filters-container {
   position: relative; /* required for ::before absolute positioning */
   background-color: var(--color-background);
   border-radius: 15px;
   z-index: 10000;
-  max-width: 100%;
   overflow: hidden; /* ensures pseudo-element stays within */
+  margin-bottom: 50px;
   align-items: center;
-  justify-content: center;
-  display: grid;
-  grid-template-columns: repeat(4, 200px);
-  gap: 30px;
+  text-align: center;
+  width: 100%;
 }
 
-.games-container::before {
+.filters-container::before {
   content: "";
   position: absolute;
   inset: 0; /* covers entire element */
@@ -30,30 +28,41 @@
   pointer-events: none; /* don’t block clicks */
 }
 
-.layout {
+.input-container {
   display: flex;
-  height: 100vh;
+  justify-content: center; /* centers horizontally */
+  align-items: center; /* centers vertically */
+  position: relative;
+  height: 100%; /* make sure container has height */
+  width: 100%;
+}
+.filters {
+  display: flex;
+  position: relative;
+  align-items: center;
   justify-content: center;
-  position: relative;
-  flex-wrap: wrap; /* allows items to wrap to next row */
-  justify-content: flex-start; /* align items starting from left */
-  align-items: flex-start;
 }
 
-.mid-container {
-  margin-left: 1.5%;
-  margin-right: 1.5%;
-  margin-top: 3.6%;
-  position: relative;
-  display: flex; /* enables flexbox */
-  justify-content: flex-start;
-  flex-direction: column;
-  align-items: stretch;
-  height: 100vh; /* full viewport height */
-  width: 75%;
+input {
+  margin: 10px;
+  width: 70%;
+  height: 40px;
+  background-color: var(--color-background);
+  color: var(--color-text-default);
+  border-radius: 8px;
 }
 
-.social-floating {
-  z-index: 10001;
-  margin-left: 100px;
+select {
+  margin: 20px;
+  width: 200px;
+  margin-bottom: 20px;
+  height: 35px;
+  background-color: var(--color-background);
+  color: var(--color-text-default);
+  border-radius: 8px;
+}
+
+.games-heading {
+  margin-top: 20px;
+  color: var(--color-text-default);
 }
