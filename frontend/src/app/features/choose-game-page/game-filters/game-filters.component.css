@@ -1,0 +1,68 @@
+.filters-container {
+  position: relative; /* required for ::before absolute positioning */
+  background-color: var(--color-background);
+  border-radius: 15px;
+  z-index: 10000;
+  overflow: hidden; /* ensures pseudo-element stays within */
+  margin-bottom: 50px;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.filters-container::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* covers entire element */
+  border-radius: 15px;
+  padding: 1px; /* thickness of gradient border */
+  background: var(--color-gray-v2);
+
+  /* Mask for gradient border */
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+
+  pointer-events: none; /* don’t block clicks */
+}
+
+.input-container {
+  display: flex;
+  justify-content: center; /* centers horizontally */
+  align-items: center; /* centers vertically */
+  position: relative;
+  height: 100%; /* make sure container has height */
+  width: 100%;
+}
+.filters {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+
+input {
+  margin: 10px;
+  width: 70%;
+  height: 40px;
+  background-color: var(--color-background);
+  color: var(--color-text-default);
+  border-radius: 8px;
+}
+
+select {
+  margin: 20px;
+  width: 200px;
+  margin-bottom: 20px;
+  height: 35px;
+  background-color: var(--color-background);
+  color: var(--color-text-default);
+  border-radius: 8px;
+}
+
+.games-heading {
+  margin-top: 20px;
+  color: var(--color-text-default);
+}

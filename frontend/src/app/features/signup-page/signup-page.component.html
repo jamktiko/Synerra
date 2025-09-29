@@ -1,1 +1,10 @@
-<p>signup-page works!</p>
+<div>
+  <h2>Signup</h2>
+
+  <form (ngSubmit)="signup()">
+    <input type="email" [(ngModel)]="emailInput" name="email" placeholder="Email" />
+    <input type="password" [(ngModel)]="passwordInput" name="password" placeholder="Password" />
+
+    <button type="submit">Signup</button>
+  </form>
+</div>

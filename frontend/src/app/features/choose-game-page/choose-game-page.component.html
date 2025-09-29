@@ -1,0 +1,12 @@
+<div class="layout">
+  <div class="mid-container">
+    <app-game-filters></app-game-filters>
+
+    <div class="games-container">
+      <app-game-card *ngFor="let game of games" [game]="game"></app-game-card>
+    </div>
+  </div>
+  <div class="social-floating">
+    <app-social-bar></app-social-bar>
+  </div>
+</div>

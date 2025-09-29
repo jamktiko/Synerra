@@ -6,7 +6,11 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { ProfileCreationPageComponent } from './features/profile-creation-page/profile-creation-page.component';
 import { AuthGuard } from './core/guards/auth.guard';
-import { SocialBarComponent } from './features/dashboard-page/social-bar/social-bar.component';
+import { SocialBarComponent } from './features/social-bar/social-bar.component';
+import { FindPlayersComponent } from './features/find-players/find-players.component';
+import { ChooseGamePageComponent } from './features/choose-game-page/choose-game-page.component';
+import { EmailLoginPageComponent } from './features/email-login-page/email-login-page.component';
+import { SocialPageComponent } from './features/social-page/social-page.component';
 
 export const routes: Routes = [
   {
@@ -17,13 +21,21 @@ export const routes: Routes = [
         path: 'dashboard',
         canActivate: [AuthGuard],
         component: DashboardPageComponent,
-        pathMatch: 'full',
       },
       {
-        path: 'social',
+        path: 'dashboard/social',
         canActivate: [AuthGuard],
-        component: SocialBarComponent,
-        pathMatch: 'full',
+        component: SocialPageComponent,
+      },
+      {
+        path: 'dashboard/find-players',
+        canActivate: [AuthGuard],
+        component: FindPlayersComponent,
+      },
+      {
+        path: 'dashboard/choose-game',
+        canActivate: [AuthGuard],
+        component: ChooseGamePageComponent,
       },
     ],
   },
@@ -31,9 +43,14 @@ export const routes: Routes = [
     path: '',
     component: AuthLayoutComponent,
     children: [
-      { path: 'login', component: LoginPageComponent },
+      { path: 'login', component: LoginPageComponent, pathMatch: 'full' },
+      { path: 'login/email', component: EmailLoginPageComponent },
       { path: 'signup', component: SignupPageComponent },
-      { path: 'profile-creation', component: ProfileCreationPageComponent },
+      {
+        path: 'profile-creation',
+        component: ProfileCreationPageComponent,
+        canActivate: [AuthGuard],
+      },
     ],
   },
   { path: '**', redirectTo: 'dashboard' },

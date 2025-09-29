@@ -1,1 +1,3 @@
-<p>find-players works!</p>
+<div *ngFor="let user of users">
+  <app-player-card [user]="user"></app-player-card>
+</div>

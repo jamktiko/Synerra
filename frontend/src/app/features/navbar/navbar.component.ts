@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 interface NavItem {
   label: string;
@@ -10,23 +11,23 @@ interface NavItem {
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink],
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css', '../../../styles.css'],
+  styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent {
   user = {
     name: 'User',
     email: 'Email address',
-    avatar: 'account.svg',
+    avatar: 'svg/Acount.svg',
   };
 
   navItems: NavItem[] = [
-    { label: 'Home', icon: 'home.svg', route: '/home' },
-    { label: 'Games', icon: 'game.svg', route: '/games' },
-    { label: 'Social', icon: 'chat.svg', route: '/social' },
-    { label: 'Settings', icon: 'settings.svg', route: '/settings' },
+    { label: 'Home', icon: 'Home.svg', route: '/dashboard' },
+    { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/find-players' },
+    { label: 'Social', icon: 'NoMessage.svg', route: '/dashboard/social' },
+    { label: 'Settings', icon: 'Settings.svg', route: '/dashboard/settings' },
   ];
 
-  logout = { label: 'Logout', icon: 'logout.svg', route: '/logout' };
+  logout = { label: 'Logout', icon: 'Logout.svg', route: '/login' };
 }

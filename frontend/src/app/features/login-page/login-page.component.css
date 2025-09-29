@@ -1,0 +1,156 @@
+.container-opaque {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 32px;
+  padding: 5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+
+  /* Gradienttireuna */
+  background: linear-gradient(var(--color-background), var(--color-background))
+      padding-box,
+    linear-gradient(180deg, #404040 0%, #6b6b6b 100%) border-box;
+  border: 1px solid transparent;
+  max-width: 1000px;
+}
+
+/* Vasemman palstan sisältö */
+.left-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  color: var(--color-text-default);
+  padding: 0;
+}
+
+.logo-big {
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+}
+
+.welcome-block h1 {
+  font-size: var(--fs-h1);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-title);
+  margin: 0;
+}
+
+.welcome-block p {
+  color: var(--color-text-dark);
+  font-size: var(--fs-sm);
+  margin-top: 1.2rem;
+}
+
+/* Oikea palsta */
+.right-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Login-frame asetukset */
+.login-frame {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.login-frame > app-button {
+  display: block;
+  margin-inline: auto;
+  width: 85%;
+}
+.login-frame > app-button .btn {
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: flex-start;
+  padding-left: 1.25rem;
+}
+
+/* Linebreaks + Dividers */
+.linebreak {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.linebreak-child {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(88, 88, 88, 0.3) 10%,
+    rgba(88, 88, 88, 0.6) 25%,
+    rgba(88, 88, 88, 0.8) 50%,
+    rgba(88, 88, 88, 0.6) 75%,
+    rgba(88, 88, 88, 0.3) 90%,
+    transparent 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border-radius: 1px;
+}
+
+.v-divider {
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(88, 88, 88, 0.3) 10%,
+    rgba(88, 88, 88, 0.6) 25%,
+    rgba(88, 88, 88, 0.8) 50%,
+    rgba(88, 88, 88, 0.6) 75%,
+    rgba(88, 88, 88, 0.3) 90%,
+    transparent 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  align-self: stretch;
+  margin-block: 24px;
+  border-radius: 1px;
+}
+
+.teksti {
+  font-size: var(--fs-sm-18);
+  color: var(--color-text-default);
+  text-align: center;
+}
+
+.cta-text {
+  text-align: center;
+  margin-top: 6px;
+  margin-bottom: 2px;
+  align-self: center;
+  width: 100%;
+}
+
+/* Responsiivisuus */
+@media (max-width: 900px) {
+  .container-opaque {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-block: 48px;
+    padding-inline: 28px;
+  }
+
+  .welcome-block {
+    margin-bottom: 28px;
+  }
+  .v-divider {
+    display: none;
+  }
+
+  .login-frame {
+    gap: 12px;
+  }
+}

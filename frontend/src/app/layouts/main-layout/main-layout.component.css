@@ -1,17 +1,31 @@
+/* Fixed background version */
 .layout {
   display: grid;
   grid-template-columns: 20% 60% 20%;
+  width: 100%;
+  min-height: 100vh; /* ensure it covers the viewport */
+  position: relative; /* for pseudo-element */
+}
+
+.layout::before {
+  content: "";
+  position: fixed; /* keeps it stationary while scrolling */
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 100vh;
   background-image: url("/assets/images/background.webp");
   background-size: cover;
-  background-repeat: no-repeat;
   background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1; /* behind the content */
 }
 
+/* Grid areas */
 .navbar {
   grid-column: 1;
 }
 
 .main {
-  grid-column: 2 / span 2; /* spans middle and right if needed */
+  grid-column: 2 / span 2;
 }
