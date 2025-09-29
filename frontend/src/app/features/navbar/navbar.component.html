@@ -1,46 +1,38 @@
 <nav class="navigation">
-  <!-- Top -->
+  <!-- Top Section -->
   <div class="top-section">
-    <img class="logo" src="assets/images/synerraLogoBig.png" alt="Synerra Logo" />
+    <div class="logo-container">
+      <img class="logo" src="assets/images/synerraLogoBig.png" alt="Synerra Logo" />
+    </div>
 
     <div class="user-profile">
-      <img class="avatar" src="assets/svg/Acount.svg" alt="User account" />
+      <img class="avatar" [src]="'assets/' + user.avatar" alt="User avatar" />
       <div class="user-info">
-        <span class="user-name">User</span>
-        <span class="user-email">Email address</span>
+        <span class="user-name">{{ user.name }}</span>
+        <span class="user-email">{{ user.email }}</span>
       </div>
     </div>
   </div>
 
   <div class="divider"></div>
 
-  <!-- Nav -->
+  <!-- Nav Links -->
   <div class="nav-links">
-    <button class="nav-btn" routerLink="/dashboard">
-      <img src="assets/svg/Home.svg" alt="Home icon" />
-      <span>Home</span>
-    </button>
-    <button class="nav-btn" routerLink="/dashboard/find-players">
-      <img src=" assets/svg/Gamepad.svg" alt="Games icon" />
-      <span>Games</span>
-    </button>
-    <button class="nav-btn" routerLink="/dashboard/social">
-      <img src="assets/svg/NoMessage.svg" alt="Messages icon" />
-      <span>Social</span>
-    </button>
-    <button class="nav-btn">
-      <img src="assets/svg/Settings.svg" alt="Settings icon" />
-      <span>Settings</span>
-    </button>
-    <app-button label="Login with Email" icon="Mail" variant="default" size="small" align="left"
-      [routerLink]="'/login/email'"></app-button>
+    <a *ngFor="let item of navItems" class="nav-btn" [routerLink]="item.route" routerLinkActive="active"
+      [routerLinkActiveOptions]="{exact: true}">
+      <img [src]="'assets/svg/' + item.icon" alt="{{ item.label }} icon" />
+      <span>{{ item.label }}</span>
+    </a>
   </div>
 
-  <!-- Bottom -->
+  <!-- Bottom Section -->
   <div class="bottom-section">
-    <button class="nav-btn" routerLink="/login">
-      <img src="assets/svg/Logout.svg" alt="Logout icon" />
-      <span>Logout</span>
-    </button>
+
+    <div class="divider"></div>
+
+    <a class="nav-btn logout-btn" [routerLink]="logout.route">
+      <img [src]="'assets/svg/' + logout.icon" alt="{{ logout.label }} icon" />
+      <span>{{ logout.label }}</span>
+    </a>
   </div>
 </nav>

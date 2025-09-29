@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 
-type ButtonVariant = 'default' | 'highlight';
+type ButtonVariant = 'default' | 'highlight' | 'sidebar';
 type ButtonState = 'active' | 'disabled';
 type ButtonSize = 'small' | 'medium' | 'large';
 type ButtonAlign = 'left' | 'center';
