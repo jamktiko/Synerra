@@ -1,5 +1,5 @@
 const { doccli } = require('../ddbconn');
-const { QueryCommand } = require('@aws-sdk/lib-dynamodb');
+const { QueryCommand, BatchGetCommand } = require('@aws-sdk/lib-dynamodb');
 const { sendResponse } = require('../helpers');
 
 const MAIN_TABLE = process.env.MAIN_TABLE;
@@ -27,28 +27,29 @@ module.exports.handler = async (event) => {
     // Extract friend userIds
     const friends = result.Items.map((item) => item.SK.replace('FRIEND#', ''));
 
-    if (friends.length === 0) return sendResponse(200, { users: [] });
-
-    // Fetch user data for each friend from GSI
-    const usersData = [];
-    for (const id of friends) {
-      const userResult = await doccli.send(
-        new QueryCommand({
-          TableName: MAIN_TABLE,
-          IndexName: 'UsernameIndex',
-          KeyConditionExpression: 'GSI3PK = :pk AND SK = :sk',
-          ExpressionAttributeValues: {
-            ':pk': 'USER',
-            ':sk': `USER#${id}`,
-          },
-        })
-      );
-      if (userResult.Items.length > 0) usersData.push(userResult.Items[0]);
+    if (friends.length === 0) {
+      return sendResponse(200, { users: [] });
     }
+
+    // BatchGet all friend user data in a single call
+    const keys = friends.map((id) => ({
+      PK: `USER#${id}`,
+      SK: 'PROFILE',
+    }));
+
+    const batch = await doccli.send(
+      new BatchGetCommand({
+        RequestItems: {
+          [MAIN_TABLE]: {
+            Keys: keys,
+          },
+        },
+      })
+    );
 
     return sendResponse(200, {
       message: 'Friends data retrieved',
-      users: usersData,
+      users: batch.Responses[MAIN_TABLE] || [],
     });
   } catch (err) {
     console.error('Get friends data error:', err);
