@@ -16,7 +16,7 @@ module.exports.handler = async (event) => {
 
     // Parse body (expects gameId)
     const body = JSON.parse(event.body || '{}');
-    const { gameId } = body;
+    const { gameId, gameName } = body;
 
     if (!gameId) {
       return sendResponse(400, { message: 'gameId is required' });
@@ -53,6 +53,21 @@ module.exports.handler = async (event) => {
         UpdateExpression: 'ADD Popularity :inc', // Increment popularity
         ExpressionAttributeValues: { ':inc': 1 },
         ReturnValues: 'UPDATED_NEW', // Return the updated popularity value
+      })
+    );
+
+    // update the user's main item to store played games
+    await doccli.send(
+      new UpdateCommand({
+        TableName: MAIN_TABLE,
+        Key: { PK: `USER#${authUserId}`, SK: 'PROFILE' }, // main user item
+        UpdateExpression:
+          'SET PlayedGames = list_append(if_not_exists(PlayedGames, :empty), :newGame)',
+        ExpressionAttributeValues: {
+          ':newGame': [{ gameId, gameName }],
+          ':empty': [],
+        },
+        ReturnValues: 'UPDATED_NEW',
       })
     );
 

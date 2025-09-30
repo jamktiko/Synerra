@@ -25,6 +25,7 @@ provider:
         - 'dynamodb:Scan'
         - 'dynamodb:Query'
         - 'dynamodb:UpdateItem'
+        - 'dynamodb:BatchGetItem'
         - cognito-idp:AdminInitiateAuth
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminSetUserPassword
@@ -174,7 +175,7 @@ functions:
     handler: src/relations/userGame.handler
     events:
       - httpApi:
-          path: /relations/usergame/{gameId}
+          path: /relations/usergame
           method: post
           authorizer: PrivateAuthorizer
   deleteUserGame:
