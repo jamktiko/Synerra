@@ -1,13 +1,15 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GameService } from '../../../core/services/game.service';
 import { Game } from '../../../core/interfaces/game.model';
 import { CommonModule } from '@angular/common';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-player-filters',
   standalone: true, // if you want to use standalone components
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule],
   templateUrl: './player-filters.component.html',
   styleUrls: ['./player-filters.component.css'],
 })
@@ -21,6 +23,7 @@ export class PlayerFiltersComponent implements OnInit {
     onlineStatus: '',
     games: [] as string[],
   };
+  searchControl = new FormControl('');
 
   availableLanguages = [
     { value: 'en', label: 'English' },
@@ -35,6 +38,16 @@ export class PlayerFiltersComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadGames();
+    // Watch the search input with debounce
+    this.searchControl.valueChanges
+      .pipe(
+        debounceTime(500), // wait 400ms after typing stops
+        distinctUntilChanged() // only trigger if value changed
+      )
+      .subscribe((username) => {
+        this.filters.username = username ?? '';
+        this.onFilterChange();
+      });
   }
 
   onFilterChange() {

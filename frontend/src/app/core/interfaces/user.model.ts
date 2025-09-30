@@ -17,7 +17,7 @@ export interface User {
 }
 
 export interface UserFilters {
-  username?: string;
+  username?: string | null;
   onlineStatus?: string;
   languages?: string[];
   games?: string[];
