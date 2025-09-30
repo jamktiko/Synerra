@@ -1,0 +1,15 @@
+.chatElement {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--color-background);
+  border-radius: 8px;
+  color: #fff;
+  font-family: Inter, sans-serif;
+
+  width: 160%; /* 40% wider */
+  max-height: 94vh; /* lock height to viewport */
+  overflow-y: hidden; /* scroll if overflowing */
+}

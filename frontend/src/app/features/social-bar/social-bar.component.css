@@ -76,6 +76,7 @@
 .player-card {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.812rem;
   height: 3rem;
   width: 100%;
@@ -84,9 +85,17 @@
   box-sizing: border-box;
 }
 
+.player-name {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .acount-icon {
   width: 2.5rem;
   height: 100%;
+  border-radius: 50%;
 }
 
 .status {

@@ -10,7 +10,7 @@
     <div class="chatrooms-sum">
       <b class="my-chatrooms-container">
         <span>PLAYERS ONLINE - </span>
-        <span class="sum">{{ players.length }}</span>
+        <span class="sum">{{ users.length }}</span>
       </b>
     </div>
   </div>
@@ -18,11 +18,11 @@
   <!-- Player list -->
   <div class="friends-container">
     <div class="players">
-      <div class="player-card" *ngFor="let player of players">
-        <img class="acount-icon" [src]="player.avatar" alt="Player Avatar" />
-        <div class="player-name">{{ player.name }}</div>
+      <div class="player-card" *ngFor="let user of users" (click)="userClicked(user.Username)">
+        <img class="acount-icon" [src]="user.ProfilePicture" alt="Player Avatar" />
+        <div class="player-name">{{ user.Username }}</div>
         <div class="status">
-          <img class="online-icon" [src]="player.statusIcon" alt="Online Status" />
+          <!-- <img class="online-icon" [src]="user.statusIcon" alt="Online Status" /> -->
         </div>
       </div>
     </div>
