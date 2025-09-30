@@ -27,15 +27,33 @@ module.exports.handler = async (event) => {
     // Extract friend userIds
     const friends = result.Items.map((item) => item.SK.replace('FRIEND#', ''));
 
+    if (friends.length === 0) return sendResponse(200, { users: [] });
+
+    // Fetch user data for each friend from GSI
+    const usersData = [];
+    for (const id of friends) {
+      const userResult = await doccli.send(
+        new QueryCommand({
+          TableName: MAIN_TABLE,
+          IndexName: 'UsernameIndex',
+          KeyConditionExpression: 'GSI3PK = :pk AND SK = :sk',
+          ExpressionAttributeValues: {
+            ':pk': 'USER',
+            ':sk': `USER#${id}`,
+          },
+        })
+      );
+      if (userResult.Items.length > 0) usersData.push(userResult.Items[0]);
+    }
+
     return sendResponse(200, {
-      message: 'Friends retrieved successfully',
-      count: friends.length,
-      friends,
+      message: 'Friends data retrieved',
+      users: usersData,
     });
   } catch (err) {
-    console.error('Get friends error:', err);
+    console.error('Get friends data error:', err);
     return sendResponse(500, {
-      message: 'Failed to fetch friends',
+      message: 'Failed to fetch friends data',
       error: err.message,
     });
   }
