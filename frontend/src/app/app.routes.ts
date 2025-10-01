@@ -11,6 +11,7 @@ import { FindPlayersComponent } from './features/find-players/find-players.compo
 import { ChooseGamePageComponent } from './features/choose-game-page/choose-game-page.component';
 import { EmailLoginPageComponent } from './features/email-login-page/email-login-page.component';
 import { SocialPageComponent } from './features/social-page/social-page.component';
+import { ChatPageComponent } from './features/chat-page/chat-page.component';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,12 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         component: SocialPageComponent,
       },
+      {
+        path: 'dashboard/social/:id',
+        canActivate: [AuthGuard],
+        component: ChatPageComponent,
+      },
+
       {
         path: 'dashboard/find-players',
         canActivate: [AuthGuard],

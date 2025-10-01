@@ -1,0 +1,63 @@
+.users-container {
+  position: relative; /* required for ::before absolute positioning */
+  background-color: var(--color-background);
+  border-radius: 15px;
+  z-index: 100;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, 200px);
+  gap: 30px;
+}
+
+.users-container::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* covers entire element */
+  border-radius: 15px;
+  padding: 1px; /* thickness of gradient border */
+  background: var(--color-gray-v2);
+
+  /* Mask for gradient border */
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+
+  pointer-events: none; /* don’t block clicks */
+}
+
+.layout {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  position: relative;
+  flex-wrap: wrap; /* allows items to wrap to next row */
+  justify-content: flex-start; /* align items starting from left */
+  align-items: flex-start;
+}
+
+.mid-container {
+  margin-left: 1.5%;
+  margin-right: 1.5%;
+  margin-top: 3.6%;
+  position: relative;
+  display: flex; /* enables flexbox */
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: stretch;
+  height: 100vh; /* full viewport height */
+  width: 75%;
+  z-index: 100;
+}
+
+.social-floating {
+  z-index: 10001;
+  margin-left: 100px;
+}
+
+.filter-component {
+  z-index: 10000000;
+}
