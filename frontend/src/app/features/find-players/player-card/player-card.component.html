@@ -1,13 +1,28 @@
-<div class="card">
-  <img [src]="user.ProfilePicture" class="card-img-top" alt="Profile picture" />
-  <div class="card-body">
-    <h5 class="card-title">{{ user.Username }}</h5>
-    <p class="card-text">{{ user.Email }}</p>
-    <p class="card-text">{{ user.CreatedAt }}</p>
-    <p class="card-text">{{ user.Bio }}</p>
-    <p class="card-text">{{ user.Languages }}</p>
+<div class="cards-grid">
+  <div class="card">
+    <div class="card-img-wrapper" (click)="onProfile()" role="button" tabindex="0" (keydown.enter)="onProfile()"
+      [attr.aria-label]="'Open profile of ' + user.Username" data-tooltip="View player profile">
+      <img [src]="user.ProfilePicture" class="card-img-top" alt="Profile picture" />
+    </div>
 
+    <!-- Kortin sisältö -->
+    <div class="card-body">
+      <p class="user-name">{{ user.Username }}</p>
+      <p class="bio-text">{{ user.Bio }}</p>
+      <div class="divider"></div>
+      <p class="languages">{{ user.Languages }}</p>
 
-
+      <!-- Nappien ryhmittely -->
+      <div class="card-actions">
+        <button class="btn btn-primary" (click)="onInvite()">
+          <img src="/assets/svg/Messages/NoMessage.svg" alt="" class="btn-icon" />
+          <span>Send Message</span>
+        </button>
+        <button class="btn btn-success" (click)="onAddFriend()">
+          <img src="/assets/svg/Plus_icon.svg" alt="" class="btn-icon" />
+          <span>Add Friend</span>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
