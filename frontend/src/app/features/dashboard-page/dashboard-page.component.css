@@ -18,4 +18,5 @@ body {
 }
 app-dashboard {
   flex: 1;
+  overflow-x: hidden;
 }

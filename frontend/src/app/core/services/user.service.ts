@@ -21,7 +21,18 @@ export class UserService {
   getUsers(): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.get(`${this.apiUrl}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+  }
+
+  getMe(): Observable<any> {
+    const token = this.authStore.getToken();
+    return this.http.get(`${this.meUrl}/me`, {
+      headers: {
+        Authorization: `${token}`,
+      },
     });
   }
 
@@ -35,19 +46,45 @@ export class UserService {
   }
 
   getUserById(userId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user/${userId}`);
+    const token = this.authStore.getToken();
+    return this.http.get(`${this.apiUrl}/${userId}`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
   }
 
   getUserByUsername(username: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/username/${username}`);
+    const token = this.authStore.getToken();
+    const normalizedUsername = username.toLowerCase();
+    console.log(normalizedUsername);
+    return this.http.get(`${this.apiUrl}/username/${normalizedUsername}`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
   }
 
   updateUser(userId: string, data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/user/update/${userId}`, data);
+    const token = this.authStore.getToken();
+    return this.http.put(
+      `${this.apiUrl}/update/${userId}`,
+      {
+        headers: {
+          Authorization: `${token}`,
+        },
+      },
+      data
+    );
   }
 
   deleteUser(userId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/user/delete/${userId}`);
+    const token = this.authStore.getToken();
+    return this.http.delete(`${this.apiUrl}/delete/${userId}`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
   }
 
   filterUsers(filters: {
