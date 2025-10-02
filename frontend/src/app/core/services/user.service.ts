@@ -36,15 +36,6 @@ export class UserService {
     });
   }
 
-  getMe(): Observable<any> {
-    const token = this.authStore.getToken();
-    return this.http.get(`${this.meUrl}/me`, {
-      headers: {
-        Authorization: `${token}`,
-      },
-    });
-  }
-
   getUserById(userId: string): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.get(`${this.apiUrl}/${userId}`, {
@@ -74,7 +65,7 @@ export class UserService {
           Authorization: `${token}`,
         },
       },
-      data
+      data,
     );
   }
 
