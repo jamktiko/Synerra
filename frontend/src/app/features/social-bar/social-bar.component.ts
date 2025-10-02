@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FriendService } from '../../core/services/friend.service';
 import { User } from '../../core/interfaces/user.model';
+import { ChatService } from '../../core/services/chat.service';
 
 @Component({
   selector: 'app-social-bar',
@@ -12,7 +13,10 @@ import { User } from '../../core/interfaces/user.model';
 export class SocialBarComponent {
   users: User[] = [];
 
-  constructor(private friendService: FriendService) {}
+  constructor(
+    private friendService: FriendService,
+    private chatService: ChatService,
+  ) {}
 
   ngOnInit() {
     this.loadUsers();
@@ -30,7 +34,7 @@ export class SocialBarComponent {
     });
   }
 
-  userClicked(name: any) {
-    console.log(name);
+  userClicked(userId: any) {
+    this.chatService.startChat([userId]);
   }
 }
