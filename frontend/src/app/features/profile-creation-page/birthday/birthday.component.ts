@@ -1,10 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-birthday',
-  imports: [FormsModule],
+  imports: [FormsModule, ButtonComponent, NgbDropdownModule],
   templateUrl: './birthday.component.html',
   styleUrl: './birthday.component.css',
 })

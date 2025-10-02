@@ -1,2 +1,54 @@
-<p>profile-creation-page works!</p>
-<button class="btn btn-primary" (click)="start()">Create Profile</button>
+<div class="container-opaque">
+  <!--Leftcolumn alkaa-->
+  <div class="left-column">
+    <div class="speechBubbleFrame">
+      <img
+        src="assets/svg/logo_big.svg"
+        style="width: 100%"
+        class="logoFrame"
+      />
+
+      <div class="headFrameL">
+        <h2 class="text-lg-bold">Welcome to Synerra!</h2>
+      </div>
+
+      <div class="bubbleFrame">
+        <h2 class="text-sm">Almost ready to go!</h2>
+      </div>
+    </div>
+
+    <div class="linebreak linebreak2">
+      <div class="linebreak-child"></div>
+    </div>
+
+    <div class="footerFrame">
+      <h2 class="text-xs">Find teammates, reduce toxicity, enjoy the game.</h2>
+    </div>
+  </div>
+  <!--Leftcolumn päättyy-->
+  <div class="v-divider" aria-hidden="true"></div>
+  <!--Rightcolumn alkaa-->
+  <div class="right-column">
+    <div class="headFrameR">
+      <h2 class="text-sm-18" style="color: var(--color-text-dark)">
+        Next step
+      </h2>
+      <h2 class="text-h2-medium">Create Profile</h2>
+      <h2 class="text-sm-18">Start Creating your profile!</h2>
+    </div>
+    <div class="linebreak">
+      <div class="linebreak-child"></div>
+    </div>
+    <div class="footerButton">
+      <app-button
+        label="Create Profile"
+        variant="highlight"
+        (click)="start()"
+      ></app-button>
+      <!-- Vanaha buttoni
+      <button class="btn btn-primary" (click)="start()">Create Profile</button>
+      -->
+    </div>
+  </div>
+  <!--Rightcolumn päättyy-->
+</div>

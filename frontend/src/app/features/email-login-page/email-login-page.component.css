@@ -1,0 +1,98 @@
+.main-frame {
+  color: var(--color-text-default);
+  width: 100%;
+  max-width: 60rem;
+  height: 32rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center; /* pystysuunta */
+  justify-content: center; /* vaakasuunta */
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background:
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
+    /* varsinainen reuna*/ var(--color-gray-v1) border-box;
+  padding: 0 100px;
+  gap: 30px;
+  opacity: 0.9;
+  flex-direction: column;
+
+  min-height: 22rem;
+}
+
+.inputHeadings {
+  padding-top: 1.2rem;
+}
+
+input {
+  width: 400px;
+  padding: 0.6rem 0 0.6rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--color-text-default);
+  outline: none;
+
+  /* border */
+  background:
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
+    /* varsinainen reuna*/ var(--color-gray-v1) border-box;
+}
+
+input::placeholder {
+  color: var(--color-text-dark);
+}
+
+input:focus {
+  box-shadow: none;
+
+  background: linear-gradient(var(--color-background), var(--color-background))
+      padding-box,
+    var(--color-orange-gradient) border-box;
+
+  transform: scale(1.01);
+}
+
+.headFrame {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttonFrame {
+  padding: 1rem 0 0 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+/*Breakpointit*/
+
+@media (max-width: 600px) {
+  .main-frame {
+    padding: 32px;
+    gap: 24px;
+    max-width: 680px;
+  }
+  .inputHeadings,
+  .buttonFrame {
+    max-width: 520px;
+  }
+  input {
+    max-width: 520px;
+  }
+}
+@media (max-width: 500px) {
+  .main-frame {
+    scale: 0.95;
+  }
+}
+
+@media (max-height: 551.33px) {
+  .main-frame {
+    scale: 0.9;
+  }
+}

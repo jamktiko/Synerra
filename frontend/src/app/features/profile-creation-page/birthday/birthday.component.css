@@ -1,8 +1,7 @@
 .modal-frame {
-  background-color: var(--color-background);
   color: var(--color-text-default);
-  width: 100%;
-  max-height: 671px;
+
+  height: 40rem;
   overflow: hidden;
   display: flex;
   align-items: center; /* pystysuunta */
@@ -13,15 +12,8 @@
     /* sisäpinta */ linear-gradient(var(--color-background))
       padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
-}
 
-.inner-frame {
-  width: 100%;
-  padding: 0 154px;
-  gap: 1rem;
   flex-direction: column;
-  align-items: center; /* pystysuunta */
-  justify-content: center; /* vaakasuunta */
 }
 
 .modal-header {
@@ -32,18 +24,17 @@
 
 .modal-body {
   padding: 0;
+  flex: 0;
 }
 
 .modal-footer {
   border: hidden;
-  padding: 0, 1rem;
+  padding: 2rem 0 0 0;
   justify-content: center;
   gap: 43px;
-  margin-bottom: 10rem;
 }
 
 .progress {
-  margin-top: 10rem;
   justify-content: center;
   gap: 5px;
   background-color: var(--color-background);
@@ -51,11 +42,12 @@
 }
 .knowledgeText {
   text-align: center;
+  padding: 0 4rem 0 4rem;
 }
 
 .hint {
   color: var(--color-text-dark);
-  padding-top: 1.2rem;
+  padding-top: 2rem;
 }
 
 .done {
@@ -79,7 +71,8 @@
 }
 
 .form-control {
-  border: 2px solid transparent;
+  width: 20rem;
+  border: 1px solid transparent;
   border-radius: 6px;
   color: var(--color-text-dark);
   outline: none;
@@ -106,35 +99,69 @@
   box-shadow: none;
 }
 
+.btn {
+  width: 20rem;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/*dropdownit*/
+.d-inline-block {
+  padding: 0;
+}
+
+.btn-outline-primary {
+  color: var(--color-text-dark);
+  border: 1px solid transparent;
+  background:
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
+    /* varsinainen reuna*/ var(--color-gray-v1) border-box;
+}
+.btn-outline-primary:active {
+  border: 1px solid transparent;
+  background:
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
+    /* varsinainen reuna*/ var(--color-gray-v1) border-box;
+}
+.btn-outline-primary:focus {
+  color: var(--color-text-default);
+  border: 1px solid transparent;
+  background:
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
+    /* varsinainen reuna*/ var(--color-orange-gradient) border-box;
+}
+
+.dropBox {
+  max-height: 6.2rem;
+  overflow-y: auto;
+  width: 20rem;
+  color: var(--color-text-default);
+  border: 1px solid transparent;
+  column-gap: 2rem;
+
+  background:
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
+    /* varsinainen reuna*/ var(--color-gray-v1) border-box;
+}
+
 /*Checkbox css*/
 /* From Uiverse.io by Tsiangana */
 
-/*Oma säätö*/
-.checkbox-frame {
+/*Tämä on oma säätö*/
+.checkboxWithTextFrame {
   display: flex;
-  flex-direction: row;
-  scroll-behavior: smooth;
-  overflow-x: auto;
-  max-width: 100%;
-  gap: 2rem;
-
-  scrollbar-color: var(--color-background) var(--color-background);
-  scrollbar-width: thin;
-}
-.checkbox-frame:hover {
-  scrollbar-color: var(--color-text-dark) var(--color-background);
-}
-
-.checkbox-container {
-  display: flex;
-  background: transparent;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  width: 10rem;
+  padding: 0 0 0 0.6rem;
 }
 
 .ios-checkbox {
-  --checkbox-size: 18px;
+  --checkbox-size: 20px;
   --checkbox-color: #3b82f6;
   --checkbox-bg: #dbeafe;
   --checkbox-border: #93c5fd;
@@ -236,4 +263,20 @@
 
 .ios-checkbox input:checked + .checkbox-wrapper {
   animation: bounce 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 991px) {
+  .progress {
+    display: none;
+  }
+}
+
+@media (max-width: 575px) {
+  .modal-body,
+  .modal-footer {
+    width: 20rem;
+  }
+  .text-h1 {
+    scale: 0.8;
+  }
 }
