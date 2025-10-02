@@ -1,51 +1,58 @@
 <div class="modal-frame">
-  <div class="inner-frame">
-    <!--Progressbar-->
-    <div class="progress">
-      <div class="done">
-        <img src="assets/svg/Acount.svg" alt="step1" />
-      </div>
-      <div class="nextStep">></div>
-      <div class="done">
-        <img src="assets/svg/Birthday.svg" alt="step2" />
-      </div>
-      <div class="nextStep">></div>
-      <div class="step">
-        <img src="assets/svg/Thumb.svg" alt="step3" />
-      </div>
+  <!--Progressbar-->
+  <div class="progress">
+    <div class="done">
+      <img src="assets/svg/Acount.svg" alt="step1" />
+    </div>
+    <div class="nextStep">></div>
+    <div class="done">
+      <img src="assets/svg/Birthday.svg" alt="step2" />
+    </div>
+    <div class="nextStep">></div>
+    <div class="step">
+      <img src="assets/svg/Thumb.svg" alt="step2" />
+    </div>
+  </div>
+
+  <!--Header-->
+  <div class="modal-header">
+    <h1 class="text-h1">Almost done!</h1>
+  </div>
+  <!--Body-->
+  <div class="knowledgeText">
+    <h2 class="text-sm-18">
+      We use this only to verify your age and keep the community safe. Your
+      birthday is only used to verify your age and will not be shared.
+    </h2>
+  </div>
+  <div class="modal-body">
+    <div class="hint">
+      <h2 class="text-sm-18">Enter your date of birth</h2>
+    </div>
+    <input
+      type="date"
+      [(ngModel)]="profile.birthday"
+      class="form-control text-sm-18"
+    />
+
+    <div class="hint">
+      <h2 class="text-sm-18">Choose your language</h2>
     </div>
 
-    <!--Header-->
-    <div class="modal-header">
-      <h1 class="text-h1">Almost done!</h1>
-    </div>
-    <!--Body-->
-    <div class="knowledgeText">
-      <h2 class="text-sm-18">
-        We use this only to verify your age and keep the community safe. Your
-        birthday is only used to verify your age and will not be shared.
-      </h2>
-    </div>
-    <div class="modal-body">
-      <div class="hint">
-        <h2 class="text-sm-18">Enter your date of birth</h2>
-      </div>
-      <input
-        type="date"
-        [(ngModel)]="profile.birthday"
-        class="form-control text-sm-18"
-      />
-
-      <div class="hint">
-        <h2 class="text-sm-18">Choose your language</h2>
-      </div>
-
-      <!--Checkboxs-->
-
-      <div class="checkbox-frame">
-        <!--Oma frame tämä ylempi-->
-
-        <div class="checkbox-container">
+    <!--Dropdown-->
+    <div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
+      <button
+        type="button"
+        class="btn btn-outline-primary me-2"
+        id="dropdownManual"
+        ngbDropdownAnchor
+        (focus)="myDrop.open()"
+      >
+        Select language
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownManual" class="dropBox">
+        <!--<button ngbDropdownItem class="">Action - 1</button>-->
+        <li class="checkboxWithTextFrame">
           <label class="ios-checkbox red">
             <input type="checkbox" />
             <div class="checkbox-wrapper">
@@ -58,15 +65,15 @@
                   stroke-width="3"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                ></path>
+                />
               </svg>
             </div>
           </label>
-          <!--Language text-->
           <div class="checkbox-text"><h2 class="text-xs">English</h2></div>
-        </div>
+        </li>
 
-        <div class="checkbox-container">
+        <!--toinen kieli-->
+        <li class="checkboxWithTextFrame">
           <label class="ios-checkbox red">
             <input type="checkbox" />
             <div class="checkbox-wrapper">
@@ -79,106 +86,72 @@
                   stroke-width="3"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                ></path>
+                />
               </svg>
             </div>
           </label>
-          <!--Language text-->
-          <div class="checkbox-text"><h2 class="text-xs">German</h2></div>
-        </div>
-
-        <div class="checkbox-container">
-          <label class="ios-checkbox red">
-            <input type="checkbox" />
-            <div class="checkbox-wrapper">
-              <div class="checkbox-bg"></div>
-              <svg class="checkbox-icon" viewBox="0 0 24 24" fill="none">
-                <path
-                  class="check-path"
-                  d="M4 12L10 18L20 6"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-              </svg>
-            </div>
-          </label>
-          <!--Language text-->
-          <div class="checkbox-text"><h2 class="text-xs">French</h2></div>
-        </div>
-
-        <div class="checkbox-container">
-          <label class="ios-checkbox red">
-            <input type="checkbox" />
-            <div class="checkbox-wrapper">
-              <div class="checkbox-bg"></div>
-              <svg class="checkbox-icon" viewBox="0 0 24 24" fill="none">
-                <path
-                  class="check-path"
-                  d="M4 12L10 18L20 6"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-              </svg>
-            </div>
-          </label>
-          <!--Language text-->
-          <div class="checkbox-text"><h2 class="text-xs">Dutch</h2></div>
-        </div>
-
-        <div class="checkbox-container">
-          <label class="ios-checkbox red">
-            <input type="checkbox" />
-            <div class="checkbox-wrapper">
-              <div class="checkbox-bg"></div>
-              <svg class="checkbox-icon" viewBox="0 0 24 24" fill="none">
-                <path
-                  class="check-path"
-                  d="M4 12L10 18L20 6"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-              </svg>
-            </div>
-          </label>
-          <!--Language text-->
-          <div class="checkbox-text"><h2 class="text-xs">Italian</h2></div>
-        </div>
-
-        <div class="checkbox-container">
-          <label class="ios-checkbox red">
-            <input type="checkbox" />
-            <div class="checkbox-wrapper">
-              <div class="checkbox-bg"></div>
-              <svg class="checkbox-icon" viewBox="0 0 24 24" fill="none">
-                <path
-                  class="check-path"
-                  d="M4 12L10 18L20 6"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-              </svg>
-            </div>
-          </label>
-          <!--Language text-->
           <div class="checkbox-text"><h2 class="text-xs">Finnish</h2></div>
-        </div>
+        </li>
 
-        <!--Checkbox container ends!-->
-      </div>
+        <li class="checkboxWithTextFrame">
+          <label class="ios-checkbox red">
+            <input type="checkbox" />
+            <div class="checkbox-wrapper">
+              <div class="checkbox-bg"></div>
+              <svg class="checkbox-icon" viewBox="0 0 24 24" fill="none">
+                <path
+                  class="check-path"
+                  d="M4 12L10 18L20 6"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+          </label>
+          <div class="checkbox-text"><h2 class="text-xs">Russian</h2></div>
+        </li>
 
-      <!--Footer-->
-      <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="back()">Back</button>
-        <button class="btn btn-primary" (click)="next()">Next</button>
+        <li class="checkboxWithTextFrame">
+          <label class="ios-checkbox red">
+            <input type="checkbox" />
+            <div class="checkbox-wrapper">
+              <div class="checkbox-bg"></div>
+              <svg class="checkbox-icon" viewBox="0 0 24 24" fill="none">
+                <path
+                  class="check-path"
+                  d="M4 12L10 18L20 6"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+          </label>
+          <div class="checkbox-text"><h2 class="text-xs">Italian</h2></div>
+        </li>
       </div>
+    </div>
+    <!--Dropdown päättyy-->
+
+    <!--Footer-->
+    <div class="modal-footer">
+      <!-- <button class="btn btn-secondary" (click)="back()">Back</button>
+      <button class="btn btn-primary" (click)="next()">Next</button> -->
+      <app-button
+        label="Back"
+        icon="ArrowKey/LeftArrow"
+        (click)="back()"
+      ></app-button>
+      <app-button
+        label="Next"
+        variant="highlight"
+        iconPosition="right"
+        icon="ArrowKey/RightArrow"
+        (click)="next()"
+      ></app-button>
     </div>
   </div>
 </div>

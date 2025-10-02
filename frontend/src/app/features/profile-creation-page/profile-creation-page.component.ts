@@ -3,11 +3,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BirthdayComponent } from './birthday/birthday.component';
 import { UsernameComponent } from './username/username.component';
 import { GamesComponent } from './games/games.component';
+import { ButtonComponent } from '../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-profile-creation-page',
   templateUrl: './profile-creation-page.component.html',
   styleUrls: ['./profile-creation-page.component.css'],
+  imports: [ButtonComponent],
 })
 export class ProfileCreationPageComponent {
   constructor(private modalService: NgbModal) {}
