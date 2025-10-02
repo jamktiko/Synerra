@@ -15,12 +15,15 @@ module.exports.handler = async (event) => {
   console.log('SendMessage triggered');
   //extract websocket connection id from from request
   const connectionId = event.requestContext.connectionId;
+  const userId = event.requestContext.authorizer?.sub;
 
   //extract message payload from client request body
-  const msg = JSON.parse(event.body).data;
+  let { senderId, roomId, message, timestamp, senderUsername } = JSON.parse(
+    event.body
+  ).data;
 
   // find roomId for this connection first
-  let roomId;
+
   try {
     //paremeters for the scan
     const scanParams = {
@@ -44,20 +47,19 @@ module.exports.handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify('Internal server error') };
   }
 
-  // Save message to chat history table
-  const pk = `room#${roomId}`; //partition key
-  const sk = `message#${Date.now()}`; //sort key
-
   try {
     await doccli.send(
       new PutCommand({
         TableName: process.env.MAIN_TABLE, // main application table from environmental variables
         Item: {
-          PK: pk,
-          SK: sk,
-          SenderId: connectionId, //sender
-          Content: msg, // the message
-          Timestamp: Date.now(), //for ordering
+          PK: `room#${roomId}`, // room#<roomId>
+          SK: `message#${timestamp}`, // message#<timestamp>
+          ConnectionId: connectionId,
+          SenderId: senderId, // used for MessagesBySender GSI
+          Content: message,
+          Timestamp: timestamp, // used for MessagesBySender GSI
+          RoomId: roomId, // optional can help with other queries
+          SenderUsername: senderUsername,
         },
       })
     );
@@ -97,7 +99,12 @@ module.exports.handler = async (event) => {
           await agmac.send(
             new PostToConnectionCommand({
               ConnectionId: connectionId,
-              Data: msg,
+              Data: JSON.stringify({
+                senderId,
+                message,
+                timestamp,
+                senderUsername,
+              }),
             })
           );
         } catch (err) {

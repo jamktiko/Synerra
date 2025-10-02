@@ -58,3 +58,33 @@
   background-color: var(--color-background);
   border: 1px solid #8e8e8e;
 }
+
+.game-row-container {
+  overflow-x: auto; /* enable horizontal scroll */
+  overflow-y: hidden; /* hide vertical scroll */
+  padding: 10px 0;
+  white-space: nowrap; /* prevent wrapping */
+}
+
+.game-row {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+
+  /* Key fixes for Netflix-style horizontal scroll */
+  flex-wrap: nowrap; /* prevent wrapping */
+  align-items: flex-start; /* align cards to top */
+}
+.game-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.game-row::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+app-dashboard-card {
+  flex: 0 0 auto; /* do not grow or shrink, keep natural width */
+  width: 180px; /* or whatever fixed width you want for the card */
+}

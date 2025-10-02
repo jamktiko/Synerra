@@ -26,6 +26,7 @@ provider:
         - 'dynamodb:Query'
         - 'dynamodb:UpdateItem'
         - 'dynamodb:BatchGetItem'
+        - 'dynamodb:TransactWriteItems'
         - cognito-idp:AdminInitiateAuth
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminSetUserPassword
@@ -42,6 +43,10 @@ provider:
         - Fn::Join:
             - ''
             - - Fn::GetAtt: [MainTable, Arn]
+              - '/index/UsernameLowerIndex'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [MainTable, Arn]
               - '/index/OnlineStatusIndex'
         - Fn::Join:
             - ''
@@ -51,6 +56,14 @@ provider:
             - ''
             - - Fn::GetAtt: [MainTable, Arn]
               - '/index/GamesIndex'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [MainTable, Arn]
+              - '/index/UserRooms'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [MainTable, Arn]
+              - '/index/MessagesBySender'
         - !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}
         - arn:aws:s3:::synerra-pfp/profile-pictures/*
     - Effect: 'Allow'
@@ -111,6 +124,14 @@ functions:
           path: /user
           method: get
 
+  getMe:
+    handler: src/user/me.handler
+    events:
+      - httpApi:
+          path: /me
+          method: get
+          authorizer: PrivateAuthorizer
+
   getUserById:
     handler: src/user/getUserById.handler
     events:
@@ -124,6 +145,7 @@ functions:
       - httpApi:
           path: /user/username/{username}
           method: get
+          authorizer: PrivateAuthorizer
 
   updateUsers:
     handler: src/user/updateUserById.handler
@@ -204,6 +226,13 @@ functions:
     events:
       - httpApi:
           path: /friends/get
+          method: get
+          authorizer: PrivateAuthorizer
+  getMessages:
+    handler: src/getMessages.handler
+    events:
+      - httpApi:
+          path: /messages/{roomId}
           method: get
           authorizer: PrivateAuthorizer
   getRequests:
@@ -344,6 +373,16 @@ resources:
             AttributeType: S
           - AttributeName: Name
             AttributeType: S
+          - AttributeName: UserId # GSI partition key
+            AttributeType: S
+          - AttributeName: RoomId # GSI sort key (optional)
+            AttributeType: S
+          - AttributeName: SenderId # GSI partition key
+            AttributeType: S
+          - AttributeName: Timestamp # GSI sort key
+            AttributeType: N
+          - AttributeName: Username_Lower
+            AttributeType: S
         KeySchema:
           - AttributeName: PK
             KeyType: HASH
@@ -379,6 +418,30 @@ resources:
               - AttributeName: GSI4PK
                 KeyType: HASH
               - AttributeName: Name
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: UserRooms
+            KeySchema:
+              - AttributeName: UserId
+                KeyType: HASH
+              - AttributeName: RoomId
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: MessagesBySender
+            KeySchema:
+              - AttributeName: SenderId
+                KeyType: HASH
+              - AttributeName: Timestamp
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: UsernameLowerIndex
+            KeySchema:
+              - AttributeName: GSI3PK
+                KeyType: HASH
+              - AttributeName: Username_Lower
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
