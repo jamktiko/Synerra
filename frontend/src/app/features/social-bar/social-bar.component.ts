@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FriendService } from '../../core/services/friend.service';
+import { User } from '../../core/interfaces/user.model';
+import { ChatService } from '../../core/services/chat.service';
 
 @Component({
   selector: 'app-social-bar',
@@ -8,126 +11,30 @@ import { Component } from '@angular/core';
   styleUrls: ['./social-bar.component.css', '../../../styles.css'],
 })
 export class SocialBarComponent {
-  players = [
-    {
-      name: 'Player 1',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 2',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 3',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 1, player2',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 2',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/status/online.svg',
-    },
-    {
-      name: 'Player 3',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 1',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 2',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 3',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 1',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 2',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 3',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 1',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 2',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 3',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 1',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 2',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 3',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 1',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 2',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 3',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 1',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 2',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-    {
-      name: 'Player 3',
-      avatar: 'assets/svg/Acount.svg',
-      statusIcon: 'assets/svg/online.svg',
-    },
-  ];
+  users: User[] = [];
+
+  constructor(
+    private friendService: FriendService,
+    private chatService: ChatService,
+  ) {}
+
+  ngOnInit() {
+    this.loadUsers();
+  }
+
+  loadUsers() {
+    this.friendService.getFriends().subscribe({
+      next: (res) => {
+        this.users = res.users;
+        console.log('Users:', res.users);
+      },
+      error: (err) => {
+        console.error('Failed to load users', err);
+      },
+    });
+  }
+
+  userClicked(userId: any) {
+    this.chatService.startChat([userId]);
+  }
 }

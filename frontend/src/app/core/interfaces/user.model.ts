@@ -13,4 +13,12 @@ export interface User {
   UserId?: string; // b0ac990c-a021-7002-788b-4d5c2f912fa9"
   Username?: string; // TestMan
   Languages?: string[]; // [ru, fi]
+  PlayedGames?: { gameId: string; gameName: string }[]; // [{gameName:'Valorant',gameId:'asfiphqwiphgiåqhå'}]
+}
+
+export interface UserFilters {
+  username?: string | null;
+  onlineStatus?: string;
+  languages?: string[];
+  games?: string[];
 }

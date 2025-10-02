@@ -5,7 +5,7 @@ const { sendResponse } = require('../helpers');
 module.exports.handler = async (event) => {
   try {
     //get the username from the event url
-    const username = event.pathParameters?.username;
+    const username = event.pathParameters?.username.toLowerCase();
 
     //if no username is provided
     if (!username) {
@@ -14,16 +14,16 @@ module.exports.handler = async (event) => {
 
     //Parameters for the DynamoDb query
     const params = {
-      TableName: process.env.MAIN_TABLE, //correct table from the environmental variables
-      IndexName: 'UsernameIndex', // Global secondary index that holds all the users
+      TableName: process.env.MAIN_TABLE,
+      IndexName: 'UsernameLowerIndex',
       KeyConditionExpression:
-        'GSI3PK = :pk AND begins_with(Username, :username)', //Begins with query from all the users
+        'GSI3PK = :pk AND begins_with(Username_Lower, :username)',
       ExpressionAttributeValues: {
-        ':pk': 'USER', //value for the Global Secondary Index partition key
-        ':username': username, // username used for the search
+        ':pk': 'USER',
+        ':username': username,
       },
     };
-    // send the query to DynamoDb
+
     const data = await doccli.send(new QueryCommand(params));
 
     // If the query finds no matching users

@@ -1,0 +1,39 @@
+<!-- player-filters.component.html -->
+<div class="filters-container">
+  <h2>Browse Users</h2>
+  <input type="text" [formControl]="searchControl" placeholder="Search by username" />
+  <div class="filters">
+    <select [(ngModel)]="filters.onlineStatus">
+      <option value="">Any status</option>
+      <option value="online">Online</option>
+      <option value="offline">Offline</option>
+    </select>
+
+    <div class="checkbox-collapsible">
+      <button type="button" (click)="showLanguages = !showLanguages">
+        Select Languages ▾
+      </button>
+      <div *ngIf="showLanguages" class="checkbox-list">
+        <label *ngFor="let lang of availableLanguages" class="checkbox-item">
+          <input type="checkbox" [value]="lang.value" (change)="onLanguageToggle($event, lang.value)"
+            [checked]="filters.languages.includes(lang.value)" />
+          {{ lang.label }}
+        </label>
+      </div>
+    </div>
+
+    <div class="checkbox-collapsible">
+      <button type="button" (click)="showGames = !showGames">
+        Select Games ▾
+      </button>
+      <div *ngIf="showGames" class="checkbox-list">
+        <label *ngFor="let game of games" class="checkbox-item">
+          <input type="checkbox" [value]="game.PK.replace('GAME#', '')"
+            (change)="onGameToggle($event, game.PK.replace('GAME#', ''))"
+            [checked]="filters.games.includes(game.PK.replace('GAME#', ''))" />
+          {{ game.Name }} ({{ game.Popularity || 0 }})
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

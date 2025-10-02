@@ -1,0 +1,142 @@
+.chatElement {
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  background: var(--color-background);
+  border-radius: 8px;
+  padding: 1rem;
+  color: #fff;
+  font-family: Inter, sans-serif;
+  width: 260%;
+}
+
+.headframe {
+  display: grid;
+  grid-template-columns: 10% 75% 15%; /* left | center | right */
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--color-background);
+  border-radius: 8px;
+  gap: 1rem;
+  text-align: center;
+
+  /* Background image */
+  background-image: url("/assets/images/chatHeadFrame.png");
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #fff; /* text color on top of image */
+}
+
+.avatarframe-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.chatheading {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.headerButton button {
+  all: unset; /* remove default button styles */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.headerButton img {
+  width: 1rem;
+  height: 1rem;
+}
+
+.headerButton button:active {
+  transform: scale(0.85); /* shrink to 85% on press */
+}
+
+.chat-log {
+  flex: 1;
+  overflow-y: auto;
+  margin: 1rem 0;
+  padding-right: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chats {
+  flex: 1;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sentMessage,
+.receivedMessage {
+  max-width: 60%; /* cap width */
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+/* Your messages (right side) */
+.sentMessage {
+  background: rgba(58, 58, 58, 0.5);
+  align-self: flex-end;
+  border-radius: 8px 8px 0px 8px;
+}
+
+/* Other user's messages (left side) */
+.receivedMessage {
+  background: rgba(58, 58, 58, 0.5);
+  align-self: flex-start; /* LEFT */
+  border-radius: 8px 8px 8px 0px;
+  border: 2px solid var(--color-primary);
+}
+
+.receivedMessageWrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.messageAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-top: 1%;
+}
+
+/* Input row */
+.chat-input {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #8e8e8e;
+  background: #1e1e1e;
+  color: #fff;
+}
+
+.chat-input input:focus {
+  border-color: var(--color-primary); /* or any color you want */
+  outline: none; /* remove default blue outline */
+}
+
+.chat-input button {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  cursor: pointer;
+}
