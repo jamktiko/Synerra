@@ -4,29 +4,16 @@
     <input type="text" id="gamesearch" name="gamesearch" placeholder="Search for game...">
   </div>
   <div class="filters">
-    <select id="game-genre" name="game-genre">
+    <select (change)="onGenreChange($event)" id="game-genre" name="game-genre">
       <option value="">Select a category</option>
       <option value="shooter">Shooter</option>
       <option value="moba">Moba</option>
       <option value="br">Battle Royale</option>
+      <option value="other">Other</option>
     </select>
-    <select id="game-genre" name="game-genre">
-      <option value="">Select a category</option>
-      <option value="shooter">Shooter</option>
-      <option value="moba">Moba</option>
-      <option value="br">Battle Royale</option>
-    </select>
-    <select id="game-genre" name="game-genre">
-      <option value="">Select a category</option>
-      <option value="shooter">Shooter</option>
-      <option value="moba">Moba</option>
-      <option value="br">Battle Royale</option>
-    </select>
-    <select id="game-genre" name="game-genre">
-      <option value="">Select a category</option>
-      <option value="shooter">Shooter</option>
-      <option value="moba">Moba</option>
-      <option value="br">Battle Royale</option>
-    </select>
+    <button (click)="onToggleSort()">
+      Sort by Popularity
+    </button>
+
   </div>
 </div>

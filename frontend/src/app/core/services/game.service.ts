@@ -11,21 +11,31 @@ export class GameService {
   constructor(private http: HttpClient, private authStore: AuthStore) {}
 
   addGame(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/games/add`, data);
+    const token = this.authStore.getToken();
+    return this.http.post(`${this.baseUrl}/add`, data, {
+      headers: { Authorization: `${token}` },
+    });
   }
 
   listGames(): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.get(`${this.baseUrl}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `${token}` },
     });
   }
 
   deleteGame(gameId: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/games/delete/${gameId}`);
+    const token = this.authStore.getToken();
+    return this.http.delete(`${this.baseUrl}/delete/${gameId}`, {
+      headers: { Authorization: `${token}` },
+    });
   }
 
   filterGames(params: any): Observable<any> {
-    return this.http.get(`${this.baseUrl}/games/filter`, { params });
+    const token = this.authStore.getToken();
+    return this.http.get(`${this.baseUrl}/filter`, {
+      params,
+      headers: { Authorization: `${token}` },
+    });
   }
 }
