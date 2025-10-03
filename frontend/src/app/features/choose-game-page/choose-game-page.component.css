@@ -10,25 +10,26 @@
   display: grid;
   grid-template-columns: repeat(4, 200px);
   gap: 30px;
+  overflow-y: auto;
 }
 
-.games-container::before {
+/* .games-container::before {
   content: "";
   position: absolute;
-  inset: 0; /* covers entire element */
+  inset: 0; 
   border-radius: 15px;
-  padding: 1px; /* thickness of gradient border */
+  padding: 1px;
   background: var(--color-gray-v2);
 
-  /* Mask for gradient border */
+
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
 
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
 
-  pointer-events: none; /* don’t block clicks */
-}
+  pointer-events: none; 
+} */
 
 .layout {
   display: flex;

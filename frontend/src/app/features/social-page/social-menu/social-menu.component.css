@@ -137,7 +137,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem;
-  background: #262626;
+  background: var(--color-background);
   border-radius: 8px;
 }
 
@@ -191,7 +191,7 @@
 
 /* Optional: set your own active tab highlight */
 .nav-tabs .nav-link.active {
-  background-color: #141414; /* match your dark theme */
+  background: var(--color-background);
   color: #e8341d;
   border: none;
 }
@@ -207,7 +207,7 @@
 
 /* Optional: set your own active tab highlight */
 .nav-tabs .nav-link.active {
-  background-color: #141414; /* match your dark theme */
+  background: var(--color-background);
   color: #e8341d;
   border: none;
 }
@@ -223,7 +223,7 @@
 
 /* Optional: set your own active tab highlight */
 .nav-tabs .nav-link.active {
-  background-color: #141414; /* match your dark theme */
+  background: var(--color-background);
   color: #e8341d;
   border: none;
 }

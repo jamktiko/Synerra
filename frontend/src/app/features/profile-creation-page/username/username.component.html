@@ -1,48 +1,46 @@
 <div class="modal-frame">
-  <div class="inner-frame">
-    <!--Progressbar-->
-    <div class="progress">
-      <div class="done"><img src="assets/svg/Acount.svg" alt="step1" /></div>
-      <div class="nextStep">></div>
-      <div class="step">
-        <img src="assets/svg/Birthday.svg" alt="step2" />
-      </div>
-      <div class="nextStep">></div>
-      <div class="step">
-        <img src="assets/svg/Thumb.svg" alt="step3" />
-      </div>
+  <!--Progressbar-->
+  <div class="progress">
+    <div class="done"><img src="assets/svg/Acount.svg" alt="step1" /></div>
+    <div class="nextStep">></div>
+    <div class="step">
+      <img src="assets/svg/Birthday.svg" alt="step2" />
     </div>
+    <div class="nextStep">></div>
+    <div class="step">
+      <img src="assets/svg/Thumb.svg" alt="step2" />
+    </div>
+  </div>
 
-    <!--Header-->
-    <div class="modal-header">
-      <h1 class="text-h1">Create Your Profile</h1>
-    </div>
+  <!--Header-->
+  <div class="modal-header">
+    <h1 class="text-h1">Create Your Profile</h1>
+  </div>
 
-    <!--Body-->
-    <div class="modal-body">
-      <h2 class="text-sm-bold">Choose your username</h2>
-      <input
-        [(ngModel)]="profile.username"
-        placeholder="Username"
-        class="form-control"
-      />
-    </div>
+  <!--Body-->
+  <div class="modal-body">
+    <h2 class="text-sm-bold">Choose your username</h2>
+    <input
+      [(ngModel)]="profile.username"
+      placeholder="Username"
+      class="form-control"
+    />
+  </div>
 
-    <!--The Hint-->
-    <div class="hint">
-      <h2 class="text-sm">Hint: 3-25 characters. Allowed: A-Z, a-z, 0-9,_</h2>
-    </div>
-    <!--Footer-->
-    <div class="modal-footer">
-      <!--<button class="btn btn-primary" (click)="next()">Next</button>-->
-      <app-button label="Back" icon="ArrowKey/LeftArrow"></app-button>
-      <app-button
-        label="Next"
-        variant="highlight"
-        iconPosition="right"
-        icon="ArrowKey/RightArrow"
-        (click)="next()"
-      ></app-button>
-    </div>
+  <!--The Hint-->
+  <div class="hint">
+    <h2 class="text-sm">Hint: 3-25 characters. Allowed: A-Z, a-z, 0-9,_</h2>
+  </div>
+  <!--Footer-->
+  <div class="modal-footer">
+    <!--<button class="btn btn-primary" (click)="next()">Next</button>-->
+    <app-button label="Back" icon="ArrowKey/LeftArrow"></app-button>
+    <app-button
+      label="Next"
+      variant="highlight"
+      iconPosition="right"
+      icon="ArrowKey/RightArrow"
+      (click)="next()"
+    ></app-button>
   </div>
 </div>

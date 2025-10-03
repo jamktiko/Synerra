@@ -32,15 +32,21 @@ module.exports.handler = async (event) => {
     //loops through the field to create update expression
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
-        // only include fields actually sent
         const attrName = `#${field}`;
         const attrValue = `:${field}`;
         updateExp.push(`${attrName} = ${attrValue}`);
-        expAttrNames[attrName] = field.charAt(0).toUpperCase() + field.slice(1); // match DynamoDB attribute
+        expAttrNames[attrName] = field.charAt(0).toUpperCase() + field.slice(1); // DynamoDB attribute
+
         expAttrValues[attrValue] = body[field];
+
+        // Add lowercase username field automatically if username is updated
+        if (field === 'username') {
+          updateExp.push('#username_lower = :username_lower');
+          expAttrNames['#username_lower'] = 'Username_Lower';
+          expAttrValues[':username_lower'] = body[field].toLowerCase();
+        }
       }
     }
-
     // if no field in the request return 400
     if (updateExp.length === 0) {
       return sendResponse(400, { message: 'No fields to update' });

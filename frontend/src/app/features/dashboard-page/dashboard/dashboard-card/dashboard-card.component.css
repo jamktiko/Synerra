@@ -1,0 +1,27 @@
+.card {
+  width: 200px;
+  margin: 10px;
+  display: inline-block;
+  vertical-align: top;
+  background: #1f1f1f;
+  border-radius: 10px;
+  text-align: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: var(--color-text-default);
+  max-height: 400px;
+  min-height: 340px;
+  margin-top: 25px;
+}
+.card-img-top {
+  width: 100%;
+  height: 250px; /* fixed height */
+  object-fit: cover; /* keeps aspect ratio, fills box */
+  border-radius: 8px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}

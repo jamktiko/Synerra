@@ -1,10 +1,47 @@
-<div>
-  <h2>Login</h2>
+<div class="main-frame">
+  <!--Tässä sisältö-->
+  <div class="headFrame">
+    <h2 class="text-xl-light">Login with email</h2>
+  </div>
 
-  <form (ngSubmit)="login()">
-    <input type="email" [(ngModel)]="emailInput" name="email" placeholder="Email" />
-    <input type="password" [(ngModel)]="passwordInput" name="password" placeholder="Password" />
+  <div class="formFrame">
+    <form (ngSubmit)="login()">
+      <div class="inputHeadings">
+        <h2 class="text-sm">Email</h2>
+      </div>
 
-    <button type="submit">Login</button>
-  </form>
+      <input
+        type="email"
+        [(ngModel)]="emailInput"
+        name="email"
+        placeholder="example@email.com"
+        class="text-xs"
+      />
+
+      <div class="inputHeadings">
+        <h2 class="text-sm">Password</h2>
+      </div>
+
+      <input
+        type="password"
+        [(ngModel)]="passwordInput"
+        name="password"
+        placeholder="**********"
+        class="text-xs"
+      />
+
+      <div class="buttonFrame">
+        <app-button
+          label="Back"
+          variant="default"
+          [routerLink]="'/login/'"
+        ></app-button>
+        <app-button
+          label="Login"
+          variant="highlight"
+          type="submit"
+        ></app-button>
+      </div>
+    </form>
+  </div>
 </div>

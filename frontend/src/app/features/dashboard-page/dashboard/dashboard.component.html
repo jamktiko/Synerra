@@ -6,120 +6,21 @@
   </header>
 
   <!-- Favorite Games -->
-  <section class="your-favorite-games">
-    <div class="section-title">Your Favorite Games</div>
-    <div class="games-grid">
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
+  <section class="favorite-games">
+    <div class="section-title">Favorite games</div>
+    <div class="game-row-container">
+      <div class="game-row">
+        <app-dashboard-card *ngFor="let game of filteredGames" [game]="game"></app-dashboard-card>
       </div>
     </div>
   </section>
 
   <!-- Popular Games -->
   <section class="popular-games">
-    <div class="section-title">Popular Games</div>
-    <div class="games-grid">
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-    </div>
-    <div class="section-title">Popular Games</div>
-    <div class="games-grid">
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-    </div>
-    <div class="section-title">Popular Games</div>
-    <div class="games-grid">
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-    </div>
-    <div class="section-title">Popular Games</div>
-    <div class="games-grid">
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-    </div>
-    <div class="section-title">Popular Games</div>
-    <div class="games-grid">
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-    </div>
-    <div class="section-title">Popular Games</div>
-    <div class="games-grid">
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-    </div>
-    <div class="section-title">Popular Games</div>
-    <div class="games-grid">
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-    </div>
-    <div class="section-title">Popular Games</div>
-    <div class="games-grid">
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
-      </div>
-      <div class="game-card">
-        <div class="game-card-inner"></div>
+    <div class="section-title">Popular games</div>
+    <div class="game-row-container">
+      <div class="game-row">
+        <app-dashboard-card *ngFor="let game of sortedGames" [game]="game"></app-dashboard-card>
       </div>
     </div>
   </section>

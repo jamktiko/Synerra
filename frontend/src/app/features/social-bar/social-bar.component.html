@@ -18,7 +18,7 @@
   <!-- Player list -->
   <div class="friends-container">
     <div class="players">
-      <div class="player-card" *ngFor="let user of users" (click)="userClicked(user.Username)">
+      <div class="player-card" *ngFor="let user of users" (click)="userClicked(user.UserId)">
         <img class="acount-icon" [src]="user.ProfilePicture" alt="Player Avatar" />
         <div class="player-name">{{ user.Username }}</div>
         <div class="status">
