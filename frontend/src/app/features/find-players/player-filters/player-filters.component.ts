@@ -1,109 +1,124 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { GameService } from '../../../core/services/game.service';
 import { Game } from '../../../core/interfaces/game.model';
-import { CommonModule } from '@angular/common';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+
+type DropdownKey = 'languages' | 'games' | 'status';
 
 @Component({
   selector: 'app-player-filters',
-  standalone: true, // if you want to use standalone components
-  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './player-filters.component.html',
   styleUrls: ['./player-filters.component.css'],
 })
 export class PlayerFiltersComponent implements OnInit {
   games: Game[] = [];
-  showGames = false;
-  showLanguages = false;
+
   filters = {
     username: '',
     languages: [] as string[],
     onlineStatus: '',
     games: [] as string[],
   };
+
   searchControl = new FormControl('');
+  openDropdown: DropdownKey | null = null;
+  // LISÄTTY: Muuttuja valitun statuksen tekstille
+  selectedStatusLabel: string = 'Any status';
 
   availableLanguages = [
     { value: 'en', label: 'English' },
     { value: 'fi', label: 'Finnish' },
-    { value: 'sv', label: 'Swedish' },
     { value: 'ru', label: 'Russian' },
-  ];
+    { value: 'sv', label: 'Swedish' },
+  ].sort((a, b) => a.label.localeCompare(b.label));
 
-  @Output() filtersChanged = new EventEmitter<any>();
+  @Output() filtersChanged = new EventEmitter<typeof this.filters>();
 
   constructor(private gameService: GameService) {}
 
   ngOnInit(): void {
     this.loadGames();
-    // Watch the search input with debounce
+
     this.searchControl.valueChanges
-      .pipe(
-        debounceTime(500), // wait 400ms after typing stops
-        distinctUntilChanged() // only trigger if value changed
-      )
+      .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((username) => {
-        this.filters.username = username ?? '';
+        this.filters.username = (username ?? '').trim();
         this.onFilterChange();
       });
   }
 
-  onFilterChange() {
-    this.filtersChanged.emit(this.filters); // emit current filters up to parent
-  }
-
-  loadGames() {
+  private loadGames(): void {
     this.gameService.listGames().subscribe({
       next: (res) => {
-        this.games = res; // assuming backend returns { games: [...] }
-
-        console.log('Games loaded:', this.games);
+        this.games = Array.isArray(res)
+          ? res.sort((a, b) => a.Name.localeCompare(b.Name))
+          : [];
       },
       error: (err) => {
         console.error('Failed to load games', err);
+        this.games = [];
       },
     });
   }
 
-  onLanguagesChange(event: Event) {
-    const selectedOptions = Array.from(
-      (event.target as HTMLSelectElement).selectedOptions
-    ).map((opt: any) => opt.value);
-
-    this.filters.languages = selectedOptions;
-    this.onFilterChange();
+  onFilterChange(): void {
+    this.filtersChanged.emit({ ...this.filters });
   }
 
-  onGamesChange(event: Event) {
-    const selectedOptions = Array.from(
-      (event.target as HTMLSelectElement).selectedOptions
-    ).map((opt) => opt.value);
-
-    this.filters.games = selectedOptions;
-    this.onFilterChange();
+  toggleDropdown(type: DropdownKey): void {
+    this.openDropdown = this.openDropdown === type ? null : type;
   }
 
-  onGameToggle(event: Event, gameId: string) {
-    const checked = (event.target as HTMLInputElement).checked;
-    if (checked) {
-      if (!this.filters.games.includes(gameId)) this.filters.games.push(gameId);
+  // PÄIVITETTY: Asettaa myös label-tekstin
+  onStatusChange(value: string): void {
+    this.filters.onlineStatus = value;
+    if (value === 'online') {
+      this.selectedStatusLabel = 'Online';
+    } else if (value === 'offline') {
+      this.selectedStatusLabel = 'Offline';
     } else {
-      this.filters.games = this.filters.games.filter((g) => g !== gameId);
+      this.selectedStatusLabel = 'Any status';
     }
     this.onFilterChange();
+    this.openDropdown = null;
   }
 
-  onLanguageToggle(event: Event, lang: string) {
+  onLanguageToggle(event: Event, lang: string): void {
     const checked = (event.target as HTMLInputElement).checked;
-    if (checked) {
-      if (!this.filters.languages.includes(lang)) {
-        this.filters.languages.push(lang);
-      }
-    } else {
-      this.filters.languages = this.filters.languages.filter((l) => l !== lang);
-    }
+    this.filters.languages = checked
+      ? [...this.filters.languages, lang]
+      : this.filters.languages.filter((l) => l !== lang);
     this.onFilterChange();
+  }
+
+  onGameToggle(event: Event, gameId: string): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.filters.games = checked
+      ? [...this.filters.games, gameId]
+      : this.filters.games.filter((g) => g !== gameId);
+    this.onFilterChange();
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleOutsideClick(event: MouseEvent): void {
+    const t = event.target as HTMLElement;
+    if (!t.closest('.checkbox-collapsible')) {
+      this.openDropdown = null;
+    }
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscape(): void {
+    this.openDropdown = null;
   }
 }
