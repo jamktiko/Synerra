@@ -7,14 +7,22 @@ import { AuthStore } from '../stores/auth.store';
 @Injectable({ providedIn: 'root' })
 export class GameService {
   private baseUrl = environment.AWS_GAMES_URL;
+  private addUrl = environment.AWS_BASE_URL;
 
   constructor(private http: HttpClient, private authStore: AuthStore) {}
 
-  addGame(data: any): Observable<any> {
+  // Add a game for a user
+  addGame(gameId: string, gameName: string): Observable<any> {
     const token = this.authStore.getToken();
-    return this.http.post(`${this.baseUrl}/add`, data, {
-      headers: { Authorization: `${token}` },
-    });
+    return this.http.post(
+      `${this.addUrl}/relations/usergame`,
+      { gameId, gameName },
+      {
+        headers: {
+          Authorization: `${token}`,
+        },
+      }
+    );
   }
 
   listGames(): Observable<any> {
@@ -36,6 +44,17 @@ export class GameService {
     return this.http.get(`${this.baseUrl}/filter`, {
       params,
       headers: { Authorization: `${token}` },
+    });
+  }
+
+  getUserByUsername(gameName: string): Observable<any> {
+    const token = this.authStore.getToken();
+    const normalizedGameName = gameName.toLowerCase();
+    console.log(normalizedGameName);
+    return this.http.get(`${this.baseUrl}/${normalizedGameName}`, {
+      headers: {
+        Authorization: `${token}`,
+      },
     });
   }
 }

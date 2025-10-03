@@ -22,6 +22,12 @@ export class ChooseGamePageComponent implements OnInit {
   filteredGames: Game[] = [];
   descending = true; // default sort order
 
+  // For search input from child component
+  searchText: string = '';
+
+  // For selected genre
+  selectedGenre: string = '';
+
   constructor(private gameService: GameService) {}
 
   // calls the function on init
@@ -43,12 +49,11 @@ export class ChooseGamePageComponent implements OnInit {
     });
   }
 
-  selectedGenre: string = '';
-
-  // when the filters are changed set the selected genre and sort
-  onFilterChanged(genre: string) {
-    this.selectedGenre = genre;
-    this.applyFiltersAndSort();
+  // when the filters are changed set the selected genre, search and sort
+  onFilterChanged(filters: { genre: string; search: string }) {
+    this.selectedGenre = filters.genre; // genre filter
+    this.searchText = filters.search; // search filter
+    this.applyFiltersAndSort(); // apply combined filters
   }
 
   //toggles sort order popularity desc/asc
@@ -58,20 +63,31 @@ export class ChooseGamePageComponent implements OnInit {
   }
 
   //applies both the filters and sorts
+  //applies both the filters and sorts
   applyFiltersAndSort() {
     // Filter first
     let result = [...this.games];
+
+    // Genre filter
     if (this.selectedGenre) {
       result = result.filter(
         (game) => game.Genre?.toLowerCase() === this.selectedGenre.toLowerCase()
       );
     }
 
-    // Then sort
+    // Search filter (begins-with, lowercase)
+    if (this.searchText) {
+      const searchLower = this.searchText.toLowerCase();
+      result = result.filter(
+        (game) => game.Name?.toLowerCase().startsWith(searchLower) ?? false
+      ); // safely handle undefined Name
+    }
+
+    // Then sort by popularity
     result.sort((a, b) =>
       this.descending
-        ? b.Popularity - a.Popularity
-        : a.Popularity - b.Popularity
+        ? (b.Popularity ?? 0) - (a.Popularity ?? 0)
+        : (a.Popularity ?? 0) - (b.Popularity ?? 0)
     );
 
     this.filteredGames = result;

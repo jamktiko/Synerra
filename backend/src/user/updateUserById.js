@@ -22,6 +22,7 @@ module.exports.handler = async (event) => {
       'bio',
       'languages',
       'games',
+      'birthday',
     ];
 
     //variables for ddb update

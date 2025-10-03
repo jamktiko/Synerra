@@ -4,6 +4,9 @@ import { BirthdayComponent } from './birthday/birthday.component';
 import { UsernameComponent } from './username/username.component';
 import { GamesComponent } from './games/games.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
+import { User } from '../../core/interfaces/user.model';
+import { UserService } from '../../core/services/user.service';
+import { OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-profile-creation-page',
@@ -11,9 +14,17 @@ import { ButtonComponent } from '../../shared/components/button/button.component
   styleUrls: ['./profile-creation-page.component.css'],
   imports: [ButtonComponent],
 })
-export class ProfileCreationPageComponent {
-  constructor(private modalService: NgbModal) {}
+export class ProfileCreationPageComponent implements OnInit {
+  profile: Partial<User> = {};
 
+  constructor(
+    private modalService: NgbModal,
+    private userService: UserService
+  ) {}
+
+  ngOnInit(): void {}
+
+  // Modals step by steps controls the data being passed from modal to the next
   async start() {
     try {
       // Step 1: Username
