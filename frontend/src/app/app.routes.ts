@@ -12,6 +12,7 @@ import { ChooseGamePageComponent } from './features/choose-game-page/choose-game
 import { EmailLoginPageComponent } from './features/email-login-page/email-login-page.component';
 import { SocialPageComponent } from './features/social-page/social-page.component';
 import { ChatPageComponent } from './features/chat-page/chat-page.component';
+import { ProfilePageComponent } from './features/profile-page/profile-page.component';
 
 export const routes: Routes = [
   {
@@ -43,6 +44,11 @@ export const routes: Routes = [
         path: 'dashboard/choose-game',
         canActivate: [AuthGuard],
         component: ChooseGamePageComponent,
+      },
+      {
+        path: 'dashboard/profile',
+        canActivate: [AuthGuard],
+        component: ProfilePageComponent,
       },
     ],
   },

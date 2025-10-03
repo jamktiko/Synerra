@@ -1,32 +1,38 @@
 .users-container {
-  position: relative; /* required for ::before absolute positioning */
-  background-color: var(--color-background);
-  border-radius: 15px;
-  z-index: 100;
-  max-width: 100%;
-  align-items: center;
-  justify-content: center;
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(4, 200px);
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 15px;
+  padding: 30px;
+  background: var(--color-background);
+  border-radius: 16px;
+  box-sizing: border-box;
+  z-index: 100;
+  border: 1px solid rgba(58, 58, 58, 0.8);
 }
 
 .users-container::before {
   content: "";
   position: absolute;
-  inset: 0; /* covers entire element */
-  border-radius: 15px;
-  padding: 1px; /* thickness of gradient border */
-  background: var(--color-gray-v2);
+  inset: 0;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(58, 58, 58, 0) 0%,
+    rgba(58, 58, 58, 0.8) 15%,
+    rgba(58, 58, 58, 1) 30%,
+    rgba(58, 58, 58, 1) 70%,
+    rgba(58, 58, 58, 0.8) 85%,
+    rgba(58, 58, 58, 0) 100%
+  );
 
-  /* Mask for gradient border */
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
-
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
 
-  pointer-events: none; /* don’t block clicks */
+  pointer-events: none;
 }
 
 .layout {
@@ -34,8 +40,8 @@
   height: 100vh;
   justify-content: center;
   position: relative;
-  flex-wrap: wrap; /* allows items to wrap to next row */
-  justify-content: flex-start; /* align items starting from left */
+  flex-wrap: wrap;
+  justify-content: flex-start;
   align-items: flex-start;
 }
 
@@ -44,11 +50,11 @@
   margin-right: 1.5%;
   margin-top: 3.6%;
   position: relative;
-  display: flex; /* enables flexbox */
+  display: flex;
   justify-content: flex-start;
   flex-direction: column;
   align-items: stretch;
-  height: 100vh; /* full viewport height */
+  height: 100vh;
   width: 75%;
   z-index: 100;
 }

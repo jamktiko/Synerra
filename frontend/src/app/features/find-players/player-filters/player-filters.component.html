@@ -1,39 +1,77 @@
-<!-- player-filters.component.html -->
 <div class="filters-container">
-  <h2>Browse Users</h2>
-  <input type="text" [formControl]="searchControl" placeholder="Search by username" />
-  <div class="filters">
-    <select [(ngModel)]="filters.onlineStatus">
-      <option value="">Any status</option>
-      <option value="online">Online</option>
-      <option value="offline">Offline</option>
-    </select>
+  <h2>Find Your Teammates</h2>
 
+  <div class="search-wrapper">
+    <img src="assets/svg/Search_icon.svg" alt="Search" class="search-icon" />
+    <input type="search" name="playerSearch" [formControl]="searchControl" placeholder="Search by username"
+      autocomplete="off" spellcheck="false" inputmode="search" class="search-input" aria-label="Search by username" />
+  </div>
+
+  <div class="filters" role="region" aria-label="Filters">
+
+    <!-- STATUS -->
     <div class="checkbox-collapsible">
-      <button type="button" (click)="showLanguages = !showLanguages">
+      <!-- PÄIVITETTY: Teksti on nyt dynaaminen -->
+      <button type="button" (click)="toggleDropdown('status')" [attr.aria-expanded]="openDropdown === 'status'"
+        aria-haspopup="true">
+        {{ selectedStatusLabel }} ▾
+      </button>
+
+      <div *ngIf="openDropdown === 'status'" class="checkbox-list animate-fade" role="menu">
+        <label class="checkbox-item" (click)="$event.stopPropagation()">
+          <input type="radio" name="status" (change)="onStatusChange('')" [checked]="!filters.onlineStatus" />
+          <span class="item-text">Any status</span>
+        </label>
+
+        <label class="checkbox-item" (click)="$event.stopPropagation()">
+          <input type="radio" name="status" (change)="onStatusChange('online')"
+            [checked]="filters.onlineStatus === 'online'" />
+          <span class="item-text">Online</span>
+        </label>
+
+        <label class="checkbox-item" (click)="$event.stopPropagation()">
+          <input type="radio" name="status" (change)="onStatusChange('offline')"
+            [checked]="filters.onlineStatus === 'offline'" />
+          <span class="item-text">Offline</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- KIELET -->
+    <div class="checkbox-collapsible">
+      <button type="button" (click)="toggleDropdown('languages')" [attr.aria-expanded]="openDropdown === 'languages'"
+        aria-haspopup="true">
         Select Languages ▾
       </button>
-      <div *ngIf="showLanguages" class="checkbox-list">
+
+      <div *ngIf="openDropdown === 'languages'" class="checkbox-list animate-fade" role="menu"
+        (click)="$event.stopPropagation()">
         <label *ngFor="let lang of availableLanguages" class="checkbox-item">
           <input type="checkbox" [value]="lang.value" (change)="onLanguageToggle($event, lang.value)"
             [checked]="filters.languages.includes(lang.value)" />
-          {{ lang.label }}
+          <span class="item-text">{{ lang.label }}</span>
         </label>
       </div>
     </div>
 
+    <!-- PELIT -->
     <div class="checkbox-collapsible">
-      <button type="button" (click)="showGames = !showGames">
+      <button type="button" (click)="toggleDropdown('games')" [attr.aria-expanded]="openDropdown === 'games'"
+        aria-haspopup="true">
         Select Games ▾
       </button>
-      <div *ngIf="showGames" class="checkbox-list">
+
+      <div *ngIf="openDropdown === 'games'" class="checkbox-list animate-fade" role="menu"
+        (click)="$event.stopPropagation()">
         <label *ngFor="let game of games" class="checkbox-item">
-          <input type="checkbox" [value]="game.PK.replace('GAME#', '')"
-            (change)="onGameToggle($event, game.PK.replace('GAME#', ''))"
-            [checked]="filters.games.includes(game.PK.replace('GAME#', ''))" />
-          {{ game.Name }} ({{ game.Popularity || 0 }})
+          <input type="checkbox" [value]="game.PK.replace('GAME#','')"
+            (change)="onGameToggle($event, game.PK.replace('GAME#','') || '')"
+            [checked]="filters.games.includes(game.PK.replace('GAME#','') || '')" />
+          <span class="item-text">{{ game.Name }}</span>
+          <span class="item-count">({{ game.Popularity || 0 }})</span>
         </label>
       </div>
     </div>
+
   </div>
 </div>

@@ -1,16 +1,22 @@
-<!-- KÄYTTÖOHJEET
- 
-Default
+<!-- ===== KÄYTTÖOHJEET =====
+
+Default nappi
 <app-button label="Painike" variant="default"></app-button>
 
-Highlight
+Highlight tila nappi
 <app-button label="Painike" variant="default" state="highlight"></app-button>
 
-Active
+Active tila nappi
 <app-button label="Painike" variant="default" state="active"></app-button>
 
-Highlight
+Highlight nappi
 <app-button label="Painike" variant="highlight"></app-button>
+
+Sidebar nappi
+<app-button label="Sidebar" variant="sidebar"></app-button>
+
+Sidebar nappi valittuna / aktiivinen
+<app-button label="Sidebar aktiivinen" variant="sidebar" state="active"></app-button>
 
 Ikoni vasemmalla (default)
 <app-button label="Login with Google" icon="Google"></app-button>
@@ -18,31 +24,34 @@ Ikoni vasemmalla (default)
 Ikoni oikealla
 <app-button label="Next Step" icon="ArrowRight" iconPosition="right"></app-button>
 
-Suuri koko
+Suuri nappi
 <app-button label="Painike" variant="highlight" size="large"></app-button>
 
--->
+Täysleveä nappi
+<app-button label="Täysleveä nappi" variant="highlight" size="large" [fullWidth]="true"></app-button>
+ -->
+
+
+<!-- ===== NAPPIKOMPONENTTI ===== -->
 
 <button class="btn" [class.btn-default]="variant === 'default'" [class.btn-highlight]="variant === 'highlight'"
   [class.btn-sidebar]="variant === 'sidebar'" [class.btn-sidebar-active]="variant === 'sidebar' && state === 'active'"
   [class.btn-small]="size === 'small'" [class.btn-medium]="size === 'medium'" [class.btn-large]="size === 'large'"
-  [class.btn-full]="fullWidth" [class.btn-left]="align === 'left'" [class.btn-active]="state === 'active'"
-  [class.btn-icon-right]="iconPosition === 'right'" [attr.aria-disabled]="state === 'disabled' ? true : null"
-  [disabled]="state === 'disabled'" (click)="navigate()">
-
+  [class.btn-full]="fullWidth" [class.btn-left]="iconPosition === 'left'"
+  [class.btn-icon-right]="iconPosition === 'right'" [class.btn-active]="state === 'active'"
+  [attr.aria-disabled]="state === 'disabled' ? true : null" [disabled]="state === 'disabled'" (click)="navigate()">
 
   <!-- Ikoni vasemmalla -->
-
   <ng-container *ngIf="icon && iconPosition === 'left'">
     <img [src]="'assets/svg/' + icon + '.svg'" alt="{{ icon }} icon" class="btn-icon" />
   </ng-container>
 
+  <!-- Nappiteksti -->
   <span class="btn-label">{{ label }}</span>
 
-
   <!-- Ikoni oikealla -->
-
   <ng-container *ngIf="icon && iconPosition === 'right'">
     <img [src]="'assets/svg/' + icon + '.svg'" alt="{{ icon }} icon" class="btn-icon" />
   </ng-container>
+
 </button>
