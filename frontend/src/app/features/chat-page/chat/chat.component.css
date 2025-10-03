@@ -8,6 +8,37 @@
   color: #fff;
   font-family: Inter, sans-serif;
   width: 260%;
+  position: relative; /* needed for ::before to align */
+  z-index: 0; /* so inner content sits above outline */
+}
+
+.chatElement::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* cover full element */
+  border-radius: 8px;
+  padding: 1px; /* thickness of gradient border */
+  background: linear-gradient(
+    180deg,
+    #8e8e8e,
+    #5d5c5c 25%,
+    #515050 50%,
+    #5d5c5c 75%,
+    #8e8e8e
+  );
+  z-index: -1;
+
+  /* Mask to create gradient outline only */
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+
+  pointer-events: none; /* don’t block clicks */
 }
 
 .headframe {
@@ -60,7 +91,6 @@
   flex: 1;
   overflow-y: auto;
   margin: 1rem 0;
-  padding-right: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -72,31 +102,27 @@
   padding-left: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 }
 
 .sentMessage,
 .receivedMessage {
-  max-width: 60%; /* cap width */
+  max-width: 100%;
   padding: 0.5rem 0.75rem;
   font-size: 0.95rem;
   line-height: 1.4;
   word-wrap: break-word;
 }
 
-/* Your messages (right side) */
 .sentMessage {
   background: rgba(58, 58, 58, 0.5);
   align-self: flex-end;
   border-radius: 8px 8px 0px 8px;
 }
 
-/* Other user's messages (left side) */
 .receivedMessage {
   background: rgba(58, 58, 58, 0.5);
-  align-self: flex-start; /* LEFT */
+  align-self: flex-start;
   border-radius: 8px 8px 8px 0px;
-  border: 2px solid var(--color-primary);
 }
 
 .receivedMessageWrapper {

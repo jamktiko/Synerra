@@ -12,7 +12,7 @@ export class ChatService {
   private ws: WebSocket | null = null;
   private token: string | null = null;
   private uri: string = '';
-  private currentRoomId = null;
+  private currentRoomId: string | null = null;
 
   // Sets up a Behavioral Subject for frontend to keep track of the current chat logs
   private logMessagesSubject = new BehaviorSubject<ChatMessage[]>([]);
@@ -28,25 +28,46 @@ export class ChatService {
   }
 
   // This starts the whole websocket process
-  startChat(targetUserId: string[]) {
+  // Needs either targetRoomId or [targetUserId]. not both, not none.
+  async startChat(targetUserId?: string[], targetRoomId?: string) {
     // If there is an active roomId when opening websocket connection, the previous connection closes
-    if (this.currentRoomId) {
-      console.log('POISTUU');
-      this.exitRoom(this.currentRoomId);
+    if (this.ws && this.ws.readyState !== WebSocket.CLOSED) {
+      console.warn(
+        'Existing WebSocket detected. Closing it before starting a new one.',
+      );
+      await this.exitRoom(this.currentRoomId ?? '');
     }
+
     return new Promise<void>((resolve, reject) => {
       this.ws = new WebSocket(this.uri); // Creates new websocket connection
 
       // Activates when a successful connection between server and client has been made
       this.ws.onopen = () => {
+        this.logMessagesSubject.next([]);
         // Sends a message
         this.addLog({
           senderId: 'system',
           senderUsername: 'system',
           message: 'Connected to server',
+          profilePicture: 'assets/svg/Acount.svg',
         });
-        // Tells the server that the user wants to create/enter a chatroom with the userIds in the [targetUserId]
-        this.ws!.send(JSON.stringify({ action: 'enterroom', targetUserId }));
+
+        // Tells the server to create/enter a room with either targetUserIds or chatRoomId, depending on how the startChat() was called.
+        if (targetUserId && !targetRoomId) {
+          this.ws!.send(
+            JSON.stringify({
+              action: 'enterroom',
+              targetUserId,
+            }),
+          );
+        } else if (targetRoomId && !targetUserId) {
+          this.ws!.send(
+            JSON.stringify({
+              action: 'enterroom',
+              targetRoomId,
+            }),
+          );
+        }
         console.log('Websocket connection successful');
       };
 
@@ -82,12 +103,19 @@ export class ChatService {
           senderId: 'system',
           senderUsername: 'system',
           message: 'Connection closed',
+          profilePicture: 'assets/svg/Acount.svg',
         });
     });
   }
 
   // Sends a message to the websocket server
-  sendMessage(msg: string, userId: string, userName: string, roomId: string) {
+  sendMessage(
+    msg: string,
+    userId: string,
+    userName: string,
+    profilePicture: string,
+    roomId: string,
+  ) {
     // If no websocket connection or message, it breaks.
     if (!this.ws || !msg) {
       console.log('returning ', this.ws, msg);
@@ -100,6 +128,7 @@ export class ChatService {
       data: {
         senderId: userId,
         senderUsername: userName,
+        profilePicture: profilePicture,
         roomId,
         message: msg,
         timestamp: Date.now(),
@@ -112,19 +141,33 @@ export class ChatService {
   }
 
   // Closes the whole websocket connection
-  exitRoom(roomId: string) {
-    // Checks that there is an active websocket connection
-    if (!this.ws) return;
-    // Tells the server to close the connection and do the whole closing process
-    this.ws.send(JSON.stringify({ action: 'exitroom', data: roomId }));
-    // Closes the connection between the client and the server
-    this.ws.close();
-    // Nulls the websocket for new future connections
-    this.ws = null;
+  async exitRoom(roomId: string): Promise<void> {
+    return new Promise((resolve) => {
+      if (!this.ws) return resolve();
+
+      // This activates last, after the websocket closes (ws.close)
+      this.ws.onclose = () => {
+        this.ws = null;
+        this.currentRoomId = null;
+        this.logMessagesSubject.next([]);
+        resolve();
+      };
+
+      if (roomId) {
+        this.ws.send(JSON.stringify({ action: 'exitroom', data: roomId }));
+      }
+
+      this.ws.close();
+    });
   }
 
   // Adds a received message to the behavioral subject for showing it for the user in frontend.
-  addLog(msg: { senderId: string; senderUsername: string; message: string }) {
+  addLog(msg: {
+    senderId: string;
+    senderUsername: string;
+    message: string;
+    profilePicture: string;
+  }) {
     const current = this.logMessagesSubject.getValue();
     this.logMessagesSubject.next([...current, msg]);
   }

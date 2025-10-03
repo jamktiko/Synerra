@@ -3,7 +3,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../shared/components/button/button.component';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup-page',
@@ -14,9 +14,12 @@ import { RouterLink } from '@angular/router';
 export class SignupPageComponent {
   emailInput: string = '';
   passwordInput: string = '';
-  confirmPasswordInput: string = ''; //Tämän lisäsin //
+  confirmPasswordInput: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   signup() {
     if (this.passwordInput !== this.confirmPasswordInput) {
@@ -34,6 +37,7 @@ export class SignupPageComponent {
       next: (res) => {
         this.emailInput = '';
         console.log('Signup success:', res);
+        this.router.navigate(['/dashboard']);
       },
     });
   }
