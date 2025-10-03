@@ -3,11 +3,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../shared/components/button/button.component';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
+  standalone: true,
   selector: 'app-email-login-page',
-  imports: [CommonModule, FormsModule, ButtonComponent, RouterLink],
+  imports: [CommonModule, FormsModule, ButtonComponent],
   templateUrl: './email-login-page.component.html',
   styleUrl: './email-login-page.component.css',
 })
@@ -15,7 +16,10 @@ export class EmailLoginPageComponent {
   emailInput: string = '';
   passwordInput: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   login() {
     const credentials = {
@@ -27,6 +31,7 @@ export class EmailLoginPageComponent {
       next: (res) => {
         this.emailInput = '';
         console.log('Login success:', res);
+        this.router.navigate(['/dashboard']);
       },
     });
   }

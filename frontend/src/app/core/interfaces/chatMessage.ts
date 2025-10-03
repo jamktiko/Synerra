@@ -4,4 +4,5 @@ export interface ChatMessage {
   senderId: string;
   senderUsername: string;
   message: string;
+  profilePicture: string;
 }
