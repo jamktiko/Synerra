@@ -18,9 +18,8 @@ module.exports.handler = async (event) => {
   const userId = event.requestContext.authorizer?.sub;
 
   //extract message payload from client request body
-  let { senderId, roomId, message, timestamp, senderUsername } = JSON.parse(
-    event.body
-  ).data;
+  let { senderId, roomId, message, timestamp, senderUsername, profilePicture } =
+    JSON.parse(event.body).data;
 
   // find roomId for this connection first
 
@@ -60,6 +59,7 @@ module.exports.handler = async (event) => {
           Timestamp: timestamp, // used for MessagesBySender GSI
           RoomId: roomId, // optional can help with other queries
           SenderUsername: senderUsername,
+          ProfilePicture: profilePicture,
         },
       })
     );
@@ -104,6 +104,7 @@ module.exports.handler = async (event) => {
                 message,
                 timestamp,
                 senderUsername,
+                profilePicture,
               }),
             })
           );

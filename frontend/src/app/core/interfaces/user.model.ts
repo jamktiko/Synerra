@@ -14,6 +14,7 @@ export interface User {
   Username?: string; // TestMan
   Languages?: string[]; // [ru, fi]
   PlayedGames?: { gameId: string; gameName: string }[]; // [{gameName:'Valorant',gameId:'asfiphqwiphgiåqhå'}]
+  Birthday?: Date;
 }
 
 export interface UserFilters {
@@ -21,4 +22,13 @@ export interface UserFilters {
   onlineStatus?: string;
   languages?: string[];
   games?: string[];
+}
+
+export interface Country {
+  languages?: { [code: string]: string };
+}
+
+export interface Language {
+  code: string;
+  name: string;
 }

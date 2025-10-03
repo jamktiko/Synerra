@@ -59,6 +59,10 @@ provider:
         - Fn::Join:
             - ''
             - - Fn::GetAtt: [MainTable, Arn]
+              - '/index/GameNameLowerIndex'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [MainTable, Arn]
               - '/index/UserRooms'
         - Fn::Join:
             - ''
@@ -180,6 +184,13 @@ functions:
       - httpApi:
           path: /games
           method: get
+  gameByName:
+    handler: src/games/gameByName.handler
+    events:
+      - httpApi:
+          path: /games/{gamename}
+          method: get
+          authorizer: PrivateAuthorizer
   deleteGame:
     handler: src/games/deleteGame.handler
     events:
@@ -383,6 +394,8 @@ resources:
             AttributeType: N
           - AttributeName: Username_Lower
             AttributeType: S
+          - AttributeName: Name_lower
+            AttributeType: S
         KeySchema:
           - AttributeName: PK
             KeyType: HASH
@@ -442,6 +455,14 @@ resources:
               - AttributeName: GSI3PK
                 KeyType: HASH
               - AttributeName: Username_Lower
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: GameNameLowerIndex
+            KeySchema:
+              - AttributeName: GSI4PK
+                KeyType: HASH
+              - AttributeName: Name_lower
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
