@@ -1,6 +1,10 @@
 const { doccli } = require('../ddbconn');
 const { sendResponse } = require('../helpers');
-const { PutCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
+const {
+  PutCommand,
+  DeleteCommand,
+  GetCommand,
+} = require('@aws-sdk/lib-dynamodb');
 
 const MAIN_TABLE = process.env.MAIN_TABLE;
 
@@ -27,6 +31,16 @@ module.exports.handler = async (event) => {
       });
     }
 
+    const userData = await doccli.send(
+      new GetCommand({
+        TableName: MAIN_TABLE,
+        Key: { PK: `USER#${authUserId}`, SK: 'PROFILE' }, // or whatever SK you use for user profiles
+      })
+    );
+
+    const senderUsername = userData.Item?.Username || 'Unknown';
+    const senderPfp = userData.Item?.ProfilePicture || 'Unknown';
+
     //Timestamp
     const timestamp = Math.floor(Date.now() / 1000);
 
@@ -40,6 +54,9 @@ module.exports.handler = async (event) => {
         Relation: 'FRIEND_REQUEST', // Relation type
         Status: 'PENDING', // Initial status
         CreatedAt: timestamp, // Timestamp
+        SenderUsername: senderUsername, // Sender
+        SenderPicture: senderPfp, //pfp of the sender
+        SenderId: authUserId, //senders userId
       };
 
       // Writes the friend request to DynamoDb, fails if it already exists

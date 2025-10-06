@@ -11,7 +11,7 @@ import { forkJoin, map } from 'rxjs';
 })
 export class UserService {
   private apiUrl = environment.AWS_USER_URL;
-  private meUrl = environment.AWS_BASE_URL;
+  private baseUrl = environment.AWS_BASE_URL;
 
   constructor(private http: HttpClient, private authStore: AuthStore) {}
 
@@ -26,7 +26,7 @@ export class UserService {
 
   getMe(): Observable<any> {
     const token = this.authStore.getToken();
-    return this.http.get(`${this.meUrl}/me`, {
+    return this.http.get(`${this.baseUrl}/me`, {
       headers: {
         Authorization: `${token}`,
       },
@@ -110,5 +110,23 @@ export class UserService {
         return filterRes.users;
       })
     );
+  }
+
+  getUnreadMessages(): Observable<any> {
+    const token = this.authStore.getToken();
+    return this.http.get(`${this.baseUrl}/messages/unread`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+  }
+
+  markRoomMessagesAsRead(roomId: string): Observable<any> {
+    const token = this.authStore.getToken();
+    return this.http.delete(`${this.baseUrl}/rooms/${roomId}/unreads`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
   }
 }
