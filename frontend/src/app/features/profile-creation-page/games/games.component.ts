@@ -74,6 +74,7 @@ export class GamesComponent implements OnInit {
       },
       error: (err) => console.error('Failed to load user info', err),
     });
+    this.modalRef.close();
   }
   back() {
     this.modalRef.dismiss('back');

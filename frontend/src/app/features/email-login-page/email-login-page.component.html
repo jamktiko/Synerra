@@ -10,37 +10,17 @@
         <h2 class="text-sm">Email</h2>
       </div>
 
-      <input
-        type="email"
-        [(ngModel)]="emailInput"
-        name="email"
-        placeholder="example@email.com"
-        class="text-xs"
-      />
+      <input type="email" [(ngModel)]="emailInput" name="email" placeholder="example@email.com" class="text-xs" />
 
       <div class="inputHeadings">
         <h2 class="text-sm">Password</h2>
       </div>
 
-      <input
-        type="password"
-        [(ngModel)]="passwordInput"
-        name="password"
-        placeholder="**********"
-        class="text-xs"
-      />
+      <input type="password" [(ngModel)]="passwordInput" name="password" placeholder="**********" class="text-xs" />
 
       <div class="buttonFrame">
-        <app-button
-          label="Back"
-          variant="default"
-          [routerLink]="'/login/'"
-        ></app-button>
-        <app-button
-          label="Login"
-          variant="highlight"
-          type="submit"
-        ></app-button>
+        <app-button label="Back" variant="default" [routerLink]="'/login/'"></app-button>
+        <app-button label="Login" variant="highlight" type="submit"></app-button>
       </div>
     </form>
   </div>

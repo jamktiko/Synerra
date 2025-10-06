@@ -26,7 +26,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private chatService: ChatService,
-    private userService: UserService,
+    private userService: UserService
   ) {
     // Links the message observable to the chatService messages for reactive updating
     this.messages$ = this.chatService.logMessages$;
@@ -47,6 +47,15 @@ export class ChatComponent implements OnInit, OnDestroy {
       },
     });
     this.chatService.startChat(undefined, this.roomId);
+
+    this.userService.markRoomMessagesAsRead(this.roomId).subscribe({
+      next: (res) => {
+        console.log(`Messages in room ${this.roomId} marked as read`, res);
+      },
+      error: (err) => {
+        console.error('Failed to mark messages as read', err);
+      },
+    });
   }
 
   ngOnDestroy() {
@@ -62,7 +71,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.loggedInUser.UserId,
       this.loggedInUser.Username,
       this.loggedInUser.ProfilePicture,
-      this.roomId,
+      this.roomId
     );
     // Clears the input slot
     this.messageText = '';

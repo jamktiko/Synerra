@@ -10,16 +10,13 @@ import { AuthStore } from '../stores/auth.store';
 export class FriendService {
   private baseUrl = environment.AWS_FRIENDS_URL;
 
-  constructor(
-    private http: HttpClient,
-    private authStore: AuthStore,
-  ) {}
+  constructor(private http: HttpClient, private authStore: AuthStore) {}
 
   sendFriendRequest(targetUserId: string): Observable<any> {
     const jwt = this.authStore.getToken();
 
     return this.http.post(
-      `${this.baseUrl}/friends/friendrequest`,
+      `${this.baseUrl}/friendrequest`,
       {
         targetUserId,
         action: 'SEND',
@@ -28,7 +25,7 @@ export class FriendService {
         headers: {
           Authorization: `${jwt}`,
         },
-      },
+      }
     );
   }
 
@@ -36,7 +33,7 @@ export class FriendService {
     const jwt = this.authStore.getToken();
 
     return this.http.post(
-      `${this.baseUrl}/friends/friendrequest`,
+      `${this.baseUrl}/friendrequest`,
       {
         targetUserId,
         action: 'ACCEPT',
@@ -45,7 +42,7 @@ export class FriendService {
         headers: {
           Authorization: `${jwt}`,
         },
-      },
+      }
     );
   }
 
@@ -53,7 +50,7 @@ export class FriendService {
     const jwt = this.authStore.getToken();
 
     return this.http.post(
-      `${this.baseUrl}/friends/friendrequest`,
+      `${this.baseUrl}/friendrequest`,
       {
         targetUserId,
         action: 'DECLINE',
@@ -62,7 +59,7 @@ export class FriendService {
         headers: {
           Authorization: `${jwt}`,
         },
-      },
+      }
     );
   }
 
@@ -70,12 +67,12 @@ export class FriendService {
     const jwt = this.authStore.getToken();
 
     return this.http.delete(
-      `${this.baseUrl}/friends/deletefriend?targetUserId=${targetUserId}`,
+      `${this.baseUrl}/deletefriend?targetUserId=${targetUserId}`,
       {
         headers: {
           Authorization: `${jwt}`,
         },
-      },
+      }
     );
   }
 
@@ -91,7 +88,7 @@ export class FriendService {
   getPendingRequests(): Observable<any> {
     const jwt = this.authStore.getToken();
 
-    return this.http.get(`${this.baseUrl}/friends/requests`, {
+    return this.http.get(`${this.baseUrl}/requests`, {
       headers: {
         Authorization: `${jwt}`,
       },
