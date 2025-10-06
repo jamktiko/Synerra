@@ -28,6 +28,8 @@ export class BirthdayComponent {
     { code: 'pt', name: 'Portuguese' },
     { code: 'ru', name: 'Russian' },
     { code: 'ja', name: 'Japanese' },
+    { code: 'fi', name: 'Finnish' },
+    { code: 'sv', name: 'Swedish' },
   ];
   selectedLanguages: string[] = [];
 

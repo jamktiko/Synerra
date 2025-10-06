@@ -7,3 +7,17 @@ export interface ChatMessage {
   profilePicture: string;
   timestamp: number;
 }
+
+export interface UnreadMessage {
+  SenderId: string;
+  GSI1PK: string;
+  Timestamp: number;
+  ProfilePicture: string;
+  RoomId: string;
+  MessageId: number;
+  Content: string;
+  SK: string;
+  SenderUsername: string;
+  PK: string;
+  GSI1SK: string;
+}

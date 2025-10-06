@@ -8,10 +8,16 @@ import { FormsModule } from '@angular/forms';
 import { User } from '../../../core/interfaces/user.model';
 import { UserStore } from '../../../core/stores/user.store';
 import { ChatService } from '../../../core/services/chat.service';
+import { NotificationsComponent } from '../../notifications/notifications.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [DashboardCardComponent, CommonModule, FormsModule],
+  imports: [
+    DashboardCardComponent,
+    CommonModule,
+    FormsModule,
+    NotificationsComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -74,5 +80,22 @@ export class DashboardComponent implements OnInit {
     console.log('Filtered games', this.filteredGames);
     // Optional: sort by popularity
     this.filteredGames.sort((a, b) => b.Popularity - a.Popularity);
+  }
+
+  showNotifications = false;
+  unreadCount = 0;
+
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+
+    // Optionally, load unread count when opening
+    if (this.showNotifications) {
+      this.userService.getUnreadMessages().subscribe({
+        next: (messages) => {
+          this.unreadCount = messages.length;
+        },
+        error: (err) => console.error(err),
+      });
+    }
   }
 }

@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ChatMessage } from '../../../core/interfaces/chatMessage';
 import { UserStore } from '../../../core/stores/user.store';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-chat',
@@ -27,6 +28,7 @@ export class ChatComponent implements OnDestroy {
     private route: ActivatedRoute,
     private chatService: ChatService,
     private userStore: UserStore,
+    private userService: UserService,
   ) {
     // Links the message observable to the chatService messages for reactive updating
     this.messages$ = this.chatService.logMessages$;
@@ -46,6 +48,17 @@ export class ChatComponent implements OnDestroy {
         console.log('LOGGEDINUSER', this.loggedInUser);
         this.chatService.startChat(undefined, this.roomId);
       }
+    });
+  }
+
+  ngOnInit() {
+    this.userService.markRoomMessagesAsRead(this.roomId).subscribe({
+      next: (res) => {
+        console.log(`Messages in room ${this.roomId} marked as read`, res);
+      },
+      error: (err) => {
+        console.error('Failed to mark messages as read', err);
+      },
     });
   }
 

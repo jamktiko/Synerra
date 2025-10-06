@@ -63,11 +63,57 @@ module.exports.handler = async (event) => {
         },
       })
     );
-    console.log('Message saved to DynamoDB:', msg);
+    console.log('Message saved to DynamoDB:', message);
   } catch (err) {
     console.error('Error saving message to DynamoDB:', err);
   }
+  // 🔹 NEW ----------------------
+  // 3. Create unread markers for offline recipients
+  // ----------------------
+  let allParticipants = [];
+  let membershipData;
+  try {
+    console.log('Fetching membershipdata');
+    // Fetch all members of the room
+    membershipData = await doccli.send(
+      new QueryCommand({
+        TableName: process.env.MAIN_TABLE,
+        IndexName: 'RoomMembersIndex',
+        KeyConditionExpression: 'RoomId = :rid',
+        ExpressionAttributeValues: { ':rid': roomId },
+        ProjectionExpression: 'UserId',
+      })
+    );
+    allParticipants = membershipData.Items.map((i) => i.UserId).filter(
+      (uid) => uid !== senderId // exclude sender
+    );
+    console.log('All participants', allParticipants);
 
+    await Promise.all(
+      allParticipants.map((uid) =>
+        doccli.send(
+          new PutCommand({
+            TableName: process.env.MAIN_TABLE,
+            Item: {
+              PK: `USER#${uid}`, // partition key for user
+              SK: `UNREAD#${timestamp}`, // sort key for unread message
+              MessageId: timestamp,
+              RoomId: roomId,
+              SenderId: senderId,
+              SenderUsername: senderUsername,
+              Content: message,
+              ProfilePicture: profilePicture,
+              GSI1PK: `USER#${uid}`, // 🔹 key for UnreadMessagesIndex
+              GSI1SK: `UNREAD#${timestamp}`, // 🔹 key for UnreadMessagesIndex
+              Timestamp: timestamp,
+            },
+          })
+        )
+      )
+    );
+  } catch (err) {
+    console.error('Error creating unread markers:', err);
+  }
   // Setup API Gateway management client
   const domain = event.requestContext.domainName; // domain of websocket api
   const stage = event.requestContext.stage; // deployment stage

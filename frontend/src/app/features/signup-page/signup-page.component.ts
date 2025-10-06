@@ -16,10 +16,7 @@ export class SignupPageComponent {
   passwordInput: string = '';
   confirmPasswordInput: string = '';
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   signup() {
     if (this.passwordInput !== this.confirmPasswordInput) {
@@ -32,12 +29,33 @@ export class SignupPageComponent {
       email: this.emailInput,
       password: this.passwordInput,
     };
-    this.passwordInput = '';
+
     this.authService.signup(credentials).subscribe({
       next: (res) => {
-        this.emailInput = '';
         console.log('Signup success:', res);
-        this.router.navigate(['/dashboard']);
+        this.login(); // login automatically after signup
+        this.passwordInput = '';
+        this.emailInput = '';
+        this.router.navigate(['/profile-creation']);
+      },
+    });
+  }
+
+  login() {
+    const credentials = {
+      email: this.emailInput,
+      password: this.passwordInput,
+    };
+
+    this.passwordInput = '';
+
+    this.authService.login(credentials).subscribe({
+      next: (res) => {
+        console.log('Login success:', res);
+        this.emailInput = '';
+      },
+      error: (err) => {
+        console.error('Login failed:', err);
       },
     });
   }
