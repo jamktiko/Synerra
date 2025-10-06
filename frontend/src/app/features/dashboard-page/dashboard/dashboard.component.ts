@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { User } from '../../../core/interfaces/user.model';
 import { UserStore } from '../../../core/stores/user.store';
 import { ChatService } from '../../../core/services/chat.service';
+import { UserService } from '../../../core/services/user.service';
 import { NotificationsComponent } from '../../notifications/notifications.component';
 
 @Component({
@@ -31,6 +32,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private gameService: GameService,
     private userStore: UserStore,
+    private userService: UserService,
   ) {
     // Sets up a reactive watcher that updates user
     effect(() => {
