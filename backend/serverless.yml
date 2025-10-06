@@ -505,3 +505,10 @@ resources:
             Projection:
               ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
+plugins:
+  - serverless-prune-plugin
+
+custom:
+  prune:
+    automatic: true # cleans up automatically after deploy
+    number: 3
