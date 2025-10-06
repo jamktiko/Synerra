@@ -50,6 +50,7 @@ export class ChatService {
           senderUsername: 'system',
           message: 'Connected to server',
           profilePicture: 'assets/svg/Acount.svg',
+          timestamp: Date.now(),
         });
 
         // Tells the server to create/enter a room with either targetUserIds or chatRoomId, depending on how the startChat() was called.
@@ -104,6 +105,7 @@ export class ChatService {
           senderUsername: 'system',
           message: 'Connection closed',
           profilePicture: 'assets/svg/Acount.svg',
+          timestamp: Date.now(),
         });
     });
   }
@@ -167,6 +169,7 @@ export class ChatService {
     senderUsername: string;
     message: string;
     profilePicture: string;
+    timestamp: number;
   }) {
     const current = this.logMessagesSubject.getValue();
     this.logMessagesSubject.next([...current, msg]);

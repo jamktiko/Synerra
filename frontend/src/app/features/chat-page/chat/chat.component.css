@@ -7,9 +7,10 @@
   padding: 1rem;
   color: #fff;
   font-family: Inter, sans-serif;
-  width: 260%;
-  position: relative; /* needed for ::before to align */
-  z-index: 0; /* so inner content sits above outline */
+  width: 100vh;
+  max-width: 100vh;
+  position: relative;
+  z-index: 0;
 }
 
 .chatElement::before {
@@ -97,11 +98,12 @@
 }
 
 .chats {
-  flex: 1;
   padding-right: 1rem;
   padding-left: 1rem;
   display: flex;
   flex-direction: column;
+  flex: none;
+  margin-bottom: 1%;
 }
 
 .sentMessage,
@@ -110,7 +112,8 @@
   padding: 0.5rem 0.75rem;
   font-size: 0.95rem;
   line-height: 1.4;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap; /* keep line breaks but wrap long words */
 }
 
 .sentMessage {
@@ -123,6 +126,12 @@
   background: rgba(58, 58, 58, 0.5);
   align-self: flex-start;
   border-radius: 8px 8px 8px 0px;
+}
+
+.sentMessageWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
 }
 
 .receivedMessageWrapper {
@@ -165,4 +174,11 @@
   background: var(--color-primary);
   color: #fff;
   cursor: pointer;
+}
+
+.timestamp {
+  font-size: 0.75rem; /* smaller text */
+  color: #aaa; /* light gray */
+  margin-top: 0.25rem; /* small spacing below bubble */
+  text-align: right; /* align to right for sent, optional */
 }

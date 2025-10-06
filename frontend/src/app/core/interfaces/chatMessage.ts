@@ -5,4 +5,5 @@ export interface ChatMessage {
   senderUsername: string;
   message: string;
   profilePicture: string;
+  timestamp: number;
 }

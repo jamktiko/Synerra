@@ -1,6 +1,8 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { User } from '../../core/interfaces/user.model';
+import { UserStore } from '../../core/stores/user.store';
 
 interface NavItem {
   label: string;
@@ -19,11 +21,7 @@ export class NavbarComponent implements OnInit {
   isCollapsed = false;
   private hasUserPreference = false;
 
-  user = {
-    name: 'User',
-    email: 'Email address',
-    avatar: 'svg/Acount.svg',
-  };
+  user: User | null = null;
 
   navItems: NavItem[] = [
     { label: 'Home', icon: 'Home.svg', route: '/dashboard' },
@@ -33,6 +31,16 @@ export class NavbarComponent implements OnInit {
   ];
 
   logout = { label: 'Logout', icon: 'Logout.svg', route: '/login' };
+
+  constructor(private userStore: UserStore) {
+    // Sets up a reactive watcher that updates user
+    effect(() => {
+      const user = this.userStore.user();
+      if (user) {
+        this.user = user;
+      }
+    });
+  }
 
   ngOnInit(): void {
     const saved = localStorage.getItem('navbarCollapsed');

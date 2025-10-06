@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, effect } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChatService } from '../../../core/services/chat.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { UserService } from '../../../core/services/user.service';
 import { ChatMessage } from '../../../core/interfaces/chatMessage';
+import { UserStore } from '../../../core/stores/user.store';
 
 @Component({
   selector: 'app-chat',
@@ -15,7 +15,7 @@ import { ChatMessage } from '../../../core/interfaces/chatMessage';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatComponent implements OnDestroy {
   roomId: string = '';
   loggedInUser: any;
   // Sets an observable for the showing chat messages
@@ -26,27 +26,27 @@ export class ChatComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private chatService: ChatService,
-    private userService: UserService,
+    private userStore: UserStore,
   ) {
     // Links the message observable to the chatService messages for reactive updating
     this.messages$ = this.chatService.logMessages$;
     console.log('MESSAAGE ', this.messages$);
-  }
 
-  ngOnInit() {
-    // Gets the current roomId from the url social/:id
-    this.roomId = this.route.snapshot.paramMap.get('id') || '';
-    // Gets data about the logged-in user from the backend with JWT (mainly for the username)
-    this.userService.getMe().subscribe({
-      next: (res) => {
-        this.loggedInUser = res;
-        console.log('User info:', this.loggedInUser);
-      },
-      error: (err) => {
-        console.error('Failed to fetch user info:', err);
-      },
+    // Gets the roomId from the current url
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) {
+      return;
+    }
+    this.roomId = id;
+
+    effect(() => {
+      const user = this.userStore.user();
+      if (user) {
+        this.loggedInUser = user;
+        console.log('LOGGEDINUSER', this.loggedInUser);
+        this.chatService.startChat(undefined, this.roomId);
+      }
     });
-    this.chatService.startChat(undefined, this.roomId);
   }
 
   ngOnDestroy() {
