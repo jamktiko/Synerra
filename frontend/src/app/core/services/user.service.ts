@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../environment';
 import { User } from '../interfaces/user.model';
 import { AuthStore } from '../stores/auth.store';
@@ -12,6 +12,9 @@ import { forkJoin, map } from 'rxjs';
 export class UserService {
   private apiUrl = environment.AWS_USER_URL;
   private baseUrl = environment.AWS_BASE_URL;
+
+  private unreadsSubject = new BehaviorSubject<any[]>([]);
+  unreads$ = this.unreadsSubject.asObservable();
 
   constructor(private http: HttpClient, private authStore: AuthStore) {}
 
@@ -114,19 +117,33 @@ export class UserService {
 
   getUnreadMessages(): Observable<any> {
     const token = this.authStore.getToken();
-    return this.http.get(`${this.baseUrl}/messages/unread`, {
-      headers: {
-        Authorization: `${token}`,
-      },
-    });
+    return this.http
+      .get(`${this.baseUrl}/messages/unread`, {
+        headers: { Authorization: `${token}` },
+      })
+      .pipe(
+        tap((res: any) => {
+          this.unreadsSubject.next(res); // 🟢 Push to stream
+        })
+      );
+  }
+
+  // 🟢 Added: Manual refresh method (can be called by polling or WebSocket)
+  refreshUnreads() {
+    this.getUnreadMessages().subscribe();
   }
 
   markRoomMessagesAsRead(roomId: string): Observable<any> {
     const token = this.authStore.getToken();
-    return this.http.delete(`${this.baseUrl}/rooms/${roomId}/unreads`, {
-      headers: {
-        Authorization: `${token}`,
-      },
-    });
+    return this.http
+      .delete(`${this.baseUrl}/rooms/${roomId}/unreads`, {
+        headers: { Authorization: `${token}` },
+      })
+      .pipe(
+        tap(() => {
+          // 🟢 Re-fetch unreads after marking read
+          this.refreshUnreads();
+        })
+      );
   }
 }
