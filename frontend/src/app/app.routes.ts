@@ -15,6 +15,8 @@ import { ChatPageComponent } from './features/chat-page/chat-page.component';
 import { ProfilePageComponent } from './features/profile-page/profile-page.component';
 
 export const routes: Routes = [
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+
   {
     path: '',
     component: MainLayoutComponent,

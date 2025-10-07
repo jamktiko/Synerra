@@ -15,6 +15,7 @@ export class UserStore {
   }
 
   getUser(): User | null {
+    console.log(this.user);
     return this.user();
   }
 }

@@ -95,6 +95,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  /* remove justify-content */
 }
 
 .chats {
@@ -176,9 +177,16 @@
   cursor: pointer;
 }
 
-.timestamp {
+.sentTimestamp {
   font-size: 0.75rem; /* smaller text */
   color: #aaa; /* light gray */
   margin-top: 0.25rem; /* small spacing below bubble */
   text-align: right; /* align to right for sent, optional */
+}
+
+.receivedTimestamp {
+  font-size: 0.75rem; /* smaller text */
+  color: #aaa; /* light gray */
+  margin-top: 0.25rem; /* small spacing below bubble */
+  text-align: left; /* align to right for sent, optional */
 }

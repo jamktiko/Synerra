@@ -1,11 +1,13 @@
 // This file handles the whole frontend chat logic
 
-import { Injectable } from '@angular/core';
+import { Injectable, effect } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../../environment';
 import { AuthStore } from '../stores/auth.store';
+import { UserStore } from '../stores/user.store';
 import { BehaviorSubject } from 'rxjs';
 import { ChatMessage } from '../interfaces/chatMessage';
+import { User } from '../interfaces/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
@@ -13,18 +15,24 @@ export class ChatService {
   private token: string | null = null;
   private uri: string = '';
   private currentRoomId: string | null = null;
+  private loggedInUser: User | null = null;
 
   // Sets up a Behavioral Subject for frontend to keep track of the current chat logs
-  private logMessagesSubject = new BehaviorSubject<ChatMessage[]>([]);
+  public logMessagesSubject = new BehaviorSubject<ChatMessage[]>([]);
   // Observable for the chat logs, so components can see the chat logs reactively. $-sign is commonly used for telling that a variable is an observable.
   logMessages$ = this.logMessagesSubject.asObservable();
 
   constructor(
     private authStore: AuthStore,
+    private userStore: UserStore,
     private router: Router,
   ) {
     this.token = this.authStore.getToken();
     this.uri = `${environment.WSS_URL}?Auth=${this.token}`; // AWS wss url
+
+    effect(() => {
+      this.loggedInUser = this.userStore.user();
+    });
   }
 
   // This starts the whole websocket process
@@ -124,6 +132,10 @@ export class ChatService {
       return;
     }
 
+    if (!this.loggedInUser) {
+      console.log('Not logged in');
+    }
+
     // Gathering all the data that is being sent to the server
     const payload = {
       action: 'sendmessage',
@@ -137,9 +149,23 @@ export class ChatService {
       },
     };
 
+    // Own object for the message that shows for the user immediately
+    const message = {
+      senderId: userId,
+      senderUsername: userName,
+      message: msg,
+      profilePicture,
+      timestamp: Date.now(),
+    };
+
     console.log('Sending structured message:', payload);
     // sends the data to the websocket server
     this.ws.send(JSON.stringify(payload));
+
+    // Gets the current websocket chatlog and adds the new message there
+    // (immediately after sending the message to the server, not waiting for the addLog to catch it for more responsive user experience)
+    const current = this.logMessagesSubject.getValue();
+    this.logMessagesSubject.next([...current, message]);
   }
 
   // Closes the whole websocket connection
@@ -171,7 +197,15 @@ export class ChatService {
     profilePicture: string;
     timestamp: number;
   }) {
-    const current = this.logMessagesSubject.getValue();
-    this.logMessagesSubject.next([...current, msg]);
+    // If the message was sent by the loggedInUser,
+    // it will not be added to the showing chatlog as the message was already added there by sendMessage().
+    if (msg.senderId !== this.loggedInUser?.UserId) {
+      console.log('ei oo sama');
+      console.log(msg.senderId, this.loggedInUser?.UserId);
+      const current = this.logMessagesSubject.getValue();
+      this.logMessagesSubject.next([...current, msg]);
+    } else {
+      console.log('ON SAMA LÄJHETTÖAA');
+    }
   }
 }
