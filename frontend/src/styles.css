@@ -6,11 +6,10 @@
 
 :root {
   /* Font families */
-  --font-main:
-    "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  --font-title:
-    "Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Arial,
+  --font-main: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial,
     sans-serif;
+  --font-title: "Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto,
+    Arial, sans-serif;
 
   /* Font weights */
   --font-weight-light: 300;
@@ -227,4 +226,19 @@ h2,
 * {
   scrollbar-width: thin; /* "auto" or "thin" */
   scrollbar-color: var(--color-primary) #141414; /* thumb, track */
+}
+
+/* säätö modal ikkunoille*/
+
+.modal-dialog {
+  height: 100%;
+  max-width: 50rem;
+  width: 100%; /* pitää sisällön skaalautuvana */
+  margin: auto; /*Keskitys*/
+}
+
+@media (max-height: 675px) {
+  .modal-dialog {
+    scale: 0.825;
+  }
 }
