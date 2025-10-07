@@ -59,11 +59,23 @@ provider:
         - Fn::Join:
             - ''
             - - Fn::GetAtt: [MainTable, Arn]
+              - '/index/GameNameLowerIndex'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [MainTable, Arn]
               - '/index/UserRooms'
         - Fn::Join:
             - ''
             - - Fn::GetAtt: [MainTable, Arn]
               - '/index/MessagesBySender'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [MainTable, Arn]
+              - '/index/RoomMembersIndex'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [MainTable, Arn]
+              - '/index/UnreadMessagesIndex'
         - !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}
         - arn:aws:s3:::synerra-pfp/profile-pictures/*
     - Effect: 'Allow'
@@ -180,6 +192,13 @@ functions:
       - httpApi:
           path: /games
           method: get
+  gameByName:
+    handler: src/games/gameByName.handler
+    events:
+      - httpApi:
+          path: /games/{gamename}
+          method: get
+          authorizer: PrivateAuthorizer
   deleteGame:
     handler: src/games/deleteGame.handler
     events:
@@ -241,6 +260,20 @@ functions:
       - httpApi:
           path: /friends/requests
           method: get
+          authorizer: PrivateAuthorizer
+  getUnreadMsg:
+    handler: src/user/unreadMessages.handler
+    events:
+      - httpApi:
+          path: /messages/unread
+          method: get
+          authorizer: PrivateAuthorizer
+  deleteUnreads:
+    handler: src/user/deleteUnreads.handler
+    events:
+      - httpApi:
+          path: /rooms/{roomId}/unreads
+          method: delete
           authorizer: PrivateAuthorizer
   uploadProfilePicture:
     handler: src/profile-picture/upload.handler
@@ -383,6 +416,8 @@ resources:
             AttributeType: N
           - AttributeName: Username_Lower
             AttributeType: S
+          - AttributeName: Name_lower
+            AttributeType: S
         KeySchema:
           - AttributeName: PK
             KeyType: HASH
@@ -445,4 +480,35 @@ resources:
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
+          - IndexName: GameNameLowerIndex
+            KeySchema:
+              - AttributeName: GSI4PK
+                KeyType: HASH
+              - AttributeName: Name_lower
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: UnreadMessagesIndex
+            KeySchema:
+              - AttributeName: GSI1PK
+                KeyType: HASH
+              - AttributeName: GSI1SK
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: RoomMembersIndex
+            KeySchema:
+              - AttributeName: RoomId
+                KeyType: HASH
+              - AttributeName: UserId
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
+plugins:
+  - serverless-prune-plugin
+
+custom:
+  prune:
+    automatic: true # cleans up automatically after deploy
+    number: 3

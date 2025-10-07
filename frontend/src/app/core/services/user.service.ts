@@ -11,12 +11,9 @@ import { forkJoin, map } from 'rxjs';
 })
 export class UserService {
   private apiUrl = environment.AWS_USER_URL;
-  private meUrl = environment.AWS_BASE_URL;
+  private baseUrl = environment.AWS_BASE_URL;
 
-  constructor(
-    private http: HttpClient,
-    private authStore: AuthStore,
-  ) {}
+  constructor(private http: HttpClient, private authStore: AuthStore) {}
 
   getUsers(): Observable<any> {
     const token = this.authStore.getToken();
@@ -29,7 +26,7 @@ export class UserService {
 
   getMe(): Observable<any> {
     const token = this.authStore.getToken();
-    return this.http.get(`${this.meUrl}/me`, {
+    return this.http.get(`${this.baseUrl}/me`, {
       headers: {
         Authorization: `${token}`,
       },
@@ -59,13 +56,13 @@ export class UserService {
   updateUser(userId: string, data: any): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.put(
-      `${this.apiUrl}/update/${userId}`,
+      `${this.apiUrl}/update/${userId}`, // URL
+      data, // body
       {
         headers: {
-          Authorization: `${token}`,
+          Authorization: `${token}`, // add "Bearer " if using JWT
         },
-      },
-      data,
+      }
     );
   }
 
@@ -111,7 +108,25 @@ export class UserService {
         }
         // Otherwise just return filtered results
         return filterRes.users;
-      }),
+      })
     );
+  }
+
+  getUnreadMessages(): Observable<any> {
+    const token = this.authStore.getToken();
+    return this.http.get(`${this.baseUrl}/messages/unread`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+  }
+
+  markRoomMessagesAsRead(roomId: string): Observable<any> {
+    const token = this.authStore.getToken();
+    return this.http.delete(`${this.baseUrl}/rooms/${roomId}/unreads`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
   }
 }

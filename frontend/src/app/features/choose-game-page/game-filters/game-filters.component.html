@@ -1,7 +1,7 @@
 <div class="filters-container">
   <h2 class="games-heading">Browse Games</h2>
   <div class="input-container">
-    <input type="text" id="gamesearch" name="gamesearch" placeholder="Search for game...">
+    <input type="text" [formControl]="searchControl" placeholder="Search by game..." />
   </div>
   <div class="filters">
     <select (change)="onGenreChange($event)" id="game-genre" name="game-genre">

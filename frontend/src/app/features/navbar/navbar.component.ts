@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -15,7 +15,10 @@ interface NavItem {
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
+  isCollapsed = false;
+  private hasUserPreference = false;
+
   user = {
     name: 'User',
     email: 'Email address',
@@ -30,4 +33,45 @@ export class NavbarComponent {
   ];
 
   logout = { label: 'Logout', icon: 'Logout.svg', route: '/login' };
+
+  ngOnInit(): void {
+    const saved = localStorage.getItem('navbarCollapsed');
+    if (saved !== null) {
+      this.isCollapsed = saved === 'true';
+      this.hasUserPreference = true;
+    } else if (typeof window !== 'undefined' && window.innerWidth < 600) {
+      // Ensikäynnillä pienillä näytöillä voit halutessasi aloittaa collapsedina
+      this.isCollapsed = true;
+    }
+  }
+
+  toggleCollapse(): void {
+    this.isCollapsed = !this.isCollapsed;
+    this.hasUserPreference = true;
+    localStorage.setItem('navbarCollapsed', String(this.isCollapsed));
+  }
+
+  // Pikanäppäin: Ctrl/Cmd + B togglaa navin
+  @HostListener('window:keydown', ['$event'])
+  onKeydown(e: KeyboardEvent) {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
+      e.preventDefault();
+      this.toggleCollapse();
+    }
+  }
+
+  // Responsiivisuus: kun käyttäjällä ei ole omaa preferenssiä, voidaan pienen näytön tulla collapsed-tilaan
+  @HostListener('window:resize')
+  onResize() {
+    if (!this.hasUserPreference) {
+      if (window.innerWidth < 600) this.isCollapsed = true;
+      // ei pakoteta takaisin expanded-tilaan, jos käyttäjä on tottunut collapsediin
+    }
+  }
+
+  onUserClick(): void {
+    // TODO: lisää reitti tai avaa käyttäjävalikko
+    // Esim: this.router.navigate(['/dashboard/account']);
+    console.log('User button clicked');
+  }
 }

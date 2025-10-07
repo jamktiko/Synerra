@@ -26,7 +26,7 @@ module.exports.handler = async (event) => {
     };
 
     const data = await doccli.send(new QueryCommand(queryParams));
-
+    //11
     console.log(`Found ${data.Items.length} messages`);
     return {
       statusCode: 200,
