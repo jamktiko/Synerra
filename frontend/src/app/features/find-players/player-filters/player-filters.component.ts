@@ -2,6 +2,7 @@ import {
   Component,
   EventEmitter,
   HostListener,
+  Input,
   OnInit,
   Output,
 } from '@angular/core';
@@ -43,12 +44,19 @@ export class PlayerFiltersComponent implements OnInit {
   ].sort((a, b) => a.label.localeCompare(b.label));
 
   @Output() filtersChanged = new EventEmitter<typeof this.filters>();
-
+  @Input() preSelectedGame: string | null = null;
   constructor(private gameService: GameService) {}
 
   ngOnInit(): void {
     this.loadGames();
-
+    if (this.preSelectedGame) {
+      //  Push the pre-selected game into the filters.games array if not already present
+      console.log('PRESELECTED:', this.preSelectedGame);
+      if (!this.filters.games) this.filters.games = [];
+      if (!this.filters.games.includes(this.preSelectedGame)) {
+        this.filters.games.push(this.preSelectedGame);
+      }
+    }
     this.searchControl.valueChanges
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((username) => {

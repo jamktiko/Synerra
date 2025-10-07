@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FriendService } from '../../core/services/friend.service';
 import { User } from '../../core/interfaces/user.model';
 import { ChatService } from '../../core/services/chat.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-social-bar',
@@ -11,28 +12,41 @@ import { ChatService } from '../../core/services/chat.service';
   styleUrls: ['./social-bar.component.css', '../../../styles.css'],
 })
 export class SocialBarComponent {
-  users: User[] = [];
+  users$: Observable<User[]>;
 
   constructor(
     private friendService: FriendService,
-    private chatService: ChatService,
-  ) {}
+    private chatService: ChatService
+  ) {
+    this.users$ = this.friendService.friends$;
+  }
 
   ngOnInit() {
-    this.loadUsers();
+    // Subscribe first to catch updates
+    this.friendService.friends$.subscribe((friends) => {
+      console.log('Reactive friends:', friends);
+    });
+
+    // Trigger initial fetch after subscription
+    this.friendService.getFriends().subscribe({
+      next: (res) => console.log('Initial fetch complete', res),
+      error: (err) => console.error(err),
+    });
+    console.log(this.users$);
   }
 
-  loadUsers() {
-    this.friendService.getFriends().subscribe({
-      next: (res) => {
-        this.users = res.users;
-        console.log('Users:', res.users);
-      },
-      error: (err) => {
-        console.error('Failed to load users', err);
-      },
-    });
-  }
+  //VANHA LOAD USERS
+  // loadUsers() {
+  //   this.friendService.getFriends().subscribe({
+  //     next: (res) => {
+  //       this.users = res.users;
+  //       console.log('Users:', res.users);
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to load users', err);
+  //     },
+  //   });
+  // }
 
   userClicked(userId: any) {
     this.chatService.startChat([userId]);
