@@ -1,11 +1,11 @@
 // Interface for a chat message object, that is sent to the websocket server.
 
 export interface ChatMessage {
-  senderId: string;
-  senderUsername: string;
-  message: string;
-  profilePicture: string;
-  timestamp: number;
+  SenderId: string;
+  SenderUsername: string;
+  Content: string;
+  ProfilePicture: string;
+  Timestamp: number;
 }
 
 export interface UnreadMessage {

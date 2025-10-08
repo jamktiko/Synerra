@@ -54,11 +54,11 @@ export class ChatService {
         this.logMessagesSubject.next([]);
         // Sends a message
         this.addLog({
-          senderId: 'system',
-          senderUsername: 'system',
-          message: 'Connected to server',
-          profilePicture: 'assets/svg/Acount.svg',
-          timestamp: Date.now(),
+          SenderId: 'system',
+          SenderUsername: 'system',
+          Content: 'Connected to server',
+          ProfilePicture: 'assets/svg/Acount.svg',
+          Timestamp: Date.now(),
         });
 
         // Tells the server to create/enter a room with either targetUserIds or chatRoomId, depending on how the startChat() was called.
@@ -109,26 +109,26 @@ export class ChatService {
       // Sends a message to the user when the websocket connection is cut.
       this.ws.onclose = () =>
         this.addLog({
-          senderId: 'system',
-          senderUsername: 'system',
-          message: 'Connection closed',
-          profilePicture: 'assets/svg/Acount.svg',
-          timestamp: Date.now(),
+          SenderId: 'system',
+          SenderUsername: 'system',
+          Content: 'Connection closed',
+          ProfilePicture: 'assets/svg/Acount.svg',
+          Timestamp: Date.now(),
         });
     });
   }
 
   // Sends a message to the websocket server
   sendMessage(
-    msg: string,
+    content: string,
     userId: string,
     userName: string,
     profilePicture: string,
     roomId: string,
   ) {
     // If no websocket connection or message, it breaks.
-    if (!this.ws || !msg) {
-      console.log('returning ', this.ws, msg);
+    if (!this.ws || !content) {
+      console.log('returning ', this.ws, content);
       return;
     }
 
@@ -140,22 +140,22 @@ export class ChatService {
     const payload = {
       action: 'sendmessage',
       data: {
-        senderId: userId,
-        senderUsername: userName,
-        profilePicture: profilePicture,
-        roomId,
-        message: msg,
-        timestamp: Date.now(),
+        SenderId: userId,
+        SenderUsername: userName,
+        ProfilePicture: profilePicture,
+        RoomId: roomId,
+        Content: content,
+        Timestamp: Date.now(),
       },
     };
 
-    // Own object for the message that shows for the user immediately
+    // Own object for the message that shows for the frontend user immediately
     const message = {
-      senderId: userId,
-      senderUsername: userName,
-      message: msg,
-      profilePicture,
-      timestamp: Date.now(),
+      SenderId: userId,
+      SenderUsername: userName,
+      Content: content,
+      ProfilePicture: profilePicture,
+      Timestamp: Date.now(),
     };
 
     console.log('Sending structured message:', payload);
@@ -191,17 +191,17 @@ export class ChatService {
 
   // Adds a received message to the behavioral subject for showing it for the user in frontend.
   addLog(msg: {
-    senderId: string;
-    senderUsername: string;
-    message: string;
-    profilePicture: string;
-    timestamp: number;
+    SenderId: string;
+    SenderUsername: string;
+    Content: string;
+    ProfilePicture: string;
+    Timestamp: number;
   }) {
     // If the message was sent by the loggedInUser,
     // it will not be added to the showing chatlog as the message was already added there by sendMessage().
-    if (msg.senderId !== this.loggedInUser?.UserId) {
+    if (msg.SenderId !== this.loggedInUser?.UserId) {
       console.log('ei oo sama');
-      console.log(msg.senderId, this.loggedInUser?.UserId);
+      console.log(msg.SenderId, this.loggedInUser?.UserId);
       const current = this.logMessagesSubject.getValue();
       this.logMessagesSubject.next([...current, msg]);
     } else {
