@@ -22,21 +22,20 @@ module.exports.handler = async (event) => {
     JSON.parse(event.body).data;
   // find roomId for this connection first
 
+  // Get the correct room with connectionid
   try {
-    //paremeters for the scan
-    const scanParams = {
-      //get the correct table with environmental variables
+    const queryParams = {
       TableName: process.env.CONNECTION_DB_TABLE,
-      ProjectionExpression: 'roomId, connectionId', //fetch needed attributes
-      FilterExpression: 'connectionId = :cid', // find matching connectionId
+      IndexName: 'ConnectionIdIndex',
+      KeyConditionExpression: 'connectionId = :cid',
       ExpressionAttributeValues: { ':cid': connectionId },
+      ProjectionExpression: 'roomId, connectionId',
     };
 
-    const data = await doccli.send(new ScanCommand(scanParams));
+    const data = await doccli.send(new QueryCommand(queryParams));
 
     if (data.Items && data.Items.length > 0) {
-      console.log('DATA.ITEMS', data.Items);
-      RoomId = data.Items[0].roomId; //extract roomid if found
+      RoomId = data.Items[0].roomId;
     } else {
       console.warn('No matching room found for connectionId');
       return { statusCode: 404, body: JSON.stringify('Room not found') };
@@ -71,6 +70,7 @@ module.exports.handler = async (event) => {
   //  Create unread markers for offline recipients
   let allParticipants = [];
   let membershipData;
+  console.log('Querying RoomMembersIndex for RoomId:', RoomId);
   try {
     console.log('Fetching membershipdata');
     // Fetching all members of the room
@@ -78,7 +78,7 @@ module.exports.handler = async (event) => {
       new QueryCommand({
         TableName: process.env.MAIN_TABLE,
         IndexName: 'RoomMembersIndex',
-        KeyConditionExpression: 'roomId = :rid',
+        KeyConditionExpression: 'RoomId = :rid',
         ExpressionAttributeValues: { ':rid': RoomId },
         ProjectionExpression: 'UserId',
       })
@@ -102,8 +102,8 @@ module.exports.handler = async (event) => {
               SenderUsername,
               Content,
               ProfilePicture,
-              GSI1PK: `USER#${uid}`, // 🔹 key for UnreadMessagesIndex
-              GSI1SK: `UNREAD#${Timestamp}`, // 🔹 key for UnreadMessagesIndex
+              GSI1PK: `USER#${uid}`, //key for UnreadMessagesIndex
+              GSI1SK: `UNREAD#${Timestamp}`, // key for UnreadMessagesIndex
               Timestamp,
             },
           })

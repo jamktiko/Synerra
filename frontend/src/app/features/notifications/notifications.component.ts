@@ -39,7 +39,7 @@ export class NotificationsComponent implements OnInit {
     this.userService.unreads$.subscribe((res) => {
       this.unreads = res;
       this.unreads = res.filter((msg) => msg.Relation !== 'FRIEND_REQUEST');
-      console.log('UNREADIT', this.unreads);
+      console.log('UNREADIT', this.unreads, res);
     });
   }
 

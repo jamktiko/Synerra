@@ -76,6 +76,10 @@ provider:
             - ''
             - - Fn::GetAtt: [MainTable, Arn]
               - '/index/UnreadMessagesIndex'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [ConnectionTable, Arn]
+              - '/index/ConnectionIdIndex'
         - !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}
         - arn:aws:s3:::synerra-pfp/profile-pictures/*
     - Effect: 'Allow'
@@ -379,6 +383,13 @@ resources:
             KeyType: HASH
           - AttributeName: connectionId
             KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: ConnectionIdIndex
+            KeySchema:
+              - AttributeName: connectionId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
 
     MainTable:
