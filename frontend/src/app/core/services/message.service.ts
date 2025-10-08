@@ -1,4 +1,3 @@
-// message.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -15,6 +14,7 @@ export class MessageService {
     private authStore: AuthStore,
   ) {}
 
+  // Gets the message history of a chatRoom.
   getMessages(roomId: string): Observable<ChatMessage[]> {
     const token = this.authStore.getToken();
     return this.http.get<ChatMessage[]>(`${this.baseUrl}/${roomId}`, {
