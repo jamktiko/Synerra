@@ -41,7 +41,9 @@ export class NavbarComponent implements OnInit {
       }
     });
   }
-
+  // get user(): User | null {
+  //   return this.userStore.user();
+  // }
   ngOnInit(): void {
     const saved = localStorage.getItem('navbarCollapsed');
     if (saved !== null) {
