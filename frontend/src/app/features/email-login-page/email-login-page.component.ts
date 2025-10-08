@@ -26,7 +26,7 @@ export class EmailLoginPageComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private userService: UserService,
-    private userStore: UserStore
+    private userStore: UserStore,
   ) {
     effect(() => {
       const user = this.userStore.user();
@@ -47,7 +47,7 @@ export class EmailLoginPageComponent implements OnInit {
       },
     });
   }
-  login() {
+  async login() {
     const credentials = {
       email: this.emailInput,
       password: this.passwordInput,

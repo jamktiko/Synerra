@@ -82,7 +82,6 @@ export class ChatService {
 
       // Activates when the websocket server sends a message
       this.ws.onmessage = (e) => {
-        console.log('JOS TÄÄ NÄKYY NII HERRANJUMALA');
         console.log('Message: ', e);
 
         try {
