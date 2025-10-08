@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { User, UserFilters } from '../../core/interfaces/user.model'; // add if you have a model
@@ -8,6 +8,7 @@ import { PlayerFiltersComponent } from './player-filters/player-filters.componen
 import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
+import { UserStore } from '../../core/stores/user.store';
 
 @Component({
   selector: 'app-find-players',
@@ -26,11 +27,21 @@ export class FindPlayersComponent implements OnInit {
   filteredUsers: User[] = [];
   initialGameFilter: any;
   preSelectedGame: string | null = null;
+  user: User | null = null;
 
   constructor(
     private userService: UserService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private userStore: UserStore
+  ) {
+    // Sets up a reactive watcher that updates user
+    effect(() => {
+      const user = this.userStore.user();
+      if (user) {
+        this.user = user;
+      }
+    });
+  }
 
   ngOnInit() {
     // pass the selected game to make the checkbox selected
@@ -114,7 +125,16 @@ export class FindPlayersComponent implements OnInit {
         })
       )
       .subscribe({
-        next: (combinedUsers) => (this.users = combinedUsers), // overwrite list shown
+        next: (combinedUsers) => {
+          // Remove the logged-in user
+          if (this.user) {
+            combinedUsers = combinedUsers.filter(
+              (u: User) => u.PK !== this.user?.PK
+            );
+          }
+
+          this.users = combinedUsers;
+        },
         error: (err) => console.error('Error fetching users', err),
       });
   }

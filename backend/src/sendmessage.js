@@ -20,7 +20,6 @@ module.exports.handler = async (event) => {
   //extract message payload from client request body
   let { SenderId, RoomId, Content, Timestamp, SenderUsername, ProfilePicture } =
     JSON.parse(event.body).data;
-
   // find roomId for this connection first
 
   try {
@@ -36,6 +35,7 @@ module.exports.handler = async (event) => {
     const data = await doccli.send(new ScanCommand(scanParams));
 
     if (data.Items && data.Items.length > 0) {
+      console.log('DATA.ITEMS', data.Items);
       RoomId = data.Items[0].roomId; //extract roomid if found
     } else {
       console.warn('No matching room found for connectionId');
@@ -68,19 +68,17 @@ module.exports.handler = async (event) => {
     console.error('Error saving message to DynamoDB:', err);
   }
 
-  // 🔹 NEW ----------------------
-  // 3. Create unread markers for offline recipients
-  // ----------------------
+  //  Create unread markers for offline recipients
   let allParticipants = [];
   let membershipData;
   try {
     console.log('Fetching membershipdata');
-    // Fetch all members of the room
+    // Fetching all members of the room
     membershipData = await doccli.send(
       new QueryCommand({
         TableName: process.env.MAIN_TABLE,
         IndexName: 'RoomMembersIndex',
-        KeyConditionExpression: 'RoomId = :rid',
+        KeyConditionExpression: 'roomId = :rid',
         ExpressionAttributeValues: { ':rid': RoomId },
         ProjectionExpression: 'UserId',
       })
@@ -138,12 +136,12 @@ module.exports.handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify('Internal server error') };
   }
 
-  // Broadcast message to all connections
+  console.log('connections, ', connections);
   try {
     await Promise.all(
       connections.map(async ({ connectionId }) => {
         try {
-          //send message to each connection via websocket
+          //sends message to each connection via websocket
           await agmac.send(
             new PostToConnectionCommand({
               ConnectionId: connectionId,
@@ -163,7 +161,7 @@ module.exports.handler = async (event) => {
             await doccli.send(
               new DeleteCommand({
                 TableName: process.env.CONNECTION_DB_TABLE,
-                Key: { roomId: RoomId, connectionId },
+                Key: { RoomId, connectionId },
               })
             );
           } else {

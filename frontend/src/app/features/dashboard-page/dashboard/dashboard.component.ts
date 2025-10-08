@@ -32,7 +32,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private gameService: GameService,
     private userStore: UserStore,
-    private userService: UserService,
+    private userService: UserService
   ) {
     // Sets up a reactive watcher that updates user
     effect(() => {
@@ -82,22 +82,5 @@ export class DashboardComponent implements OnInit {
     console.log('Filtered games', this.filteredGames);
     // Optional: sort by popularity
     this.filteredGames.sort((a, b) => b.Popularity - a.Popularity);
-  }
-
-  showNotifications = false;
-  unreadCount = 0;
-
-  toggleNotifications() {
-    this.showNotifications = !this.showNotifications;
-
-    // Optionally, load unread count when opening
-    if (this.showNotifications) {
-      this.userService.getUnreadMessages().subscribe({
-        next: (messages) => {
-          this.unreadCount = messages.length;
-        },
-        error: (err) => console.error(err),
-      });
-    }
   }
 }
