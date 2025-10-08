@@ -146,11 +146,11 @@ module.exports.handler = async (event) => {
             new PostToConnectionCommand({
               ConnectionId: connectionId,
               Data: JSON.stringify({
-                senderId,
-                message,
-                timestamp,
-                senderUsername,
-                profilePicture,
+                SenderId: senderId,
+                Content: message,
+                Timestamp: timestamp,
+                SenderUsername: senderUsername,
+                ProfilePicture: profilePicture,
               }),
             })
           );
