@@ -83,20 +83,21 @@ export class ChatService {
       // Activates when the websocket server sends a message
       this.ws.onmessage = (e) => {
         console.log('Message: ', e);
+
         try {
           // Parses the message to usable form
           const msg = JSON.parse(e.data);
-          this.currentRoomId = msg.roomId;
+          this.currentRoomId = msg.RoomId;
           // The backend sends 2 kind of messages. The first type is sent when the user joins a new room.
           // The second type is sent when the user sends a message inside of a room.
           // If the e.data has senderId and message on it, it means that the received action is a message being sent.
-          if (msg.senderId && msg.message) {
+          if (msg.SenderId && msg.Content) {
             // Uses addLog to show the received message in the frontend
             this.addLog(msg);
             // If the e.data has roomId on it, it means that the received action is about joining a new room.
-          } else if (msg.roomId) {
+          } else if (msg.RoomId) {
             // Routes the user to the new room in frontend
-            this.router.navigate(['/dashboard/social', msg.roomId]);
+            this.router.navigate(['/dashboard/social', msg.RoomId]);
           }
         } catch (err) {
           console.error('Failed to parse message', e.data);
@@ -140,11 +141,11 @@ export class ChatService {
     const payload = {
       action: 'sendmessage',
       data: {
-        SenderId: userId,
-        SenderUsername: userName,
-        ProfilePicture: profilePicture,
-        RoomId: roomId,
-        Content: content,
+        userId,
+        userName,
+        profilePicture,
+        roomId,
+        content,
         Timestamp: Date.now(),
       },
     };
