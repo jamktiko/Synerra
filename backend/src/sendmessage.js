@@ -18,7 +18,7 @@ module.exports.handler = async (event) => {
   const userId = event.requestContext.authorizer?.sub;
 
   //extract message payload from client request body
-  let { senderId, roomId, message, timestamp, senderUsername, profilePicture } =
+  let { SenderId, RoomId, Content, Timestamp, SenderUsername, ProfilePicture } =
     JSON.parse(event.body).data;
   // find roomId for this connection first
 
@@ -51,19 +51,19 @@ module.exports.handler = async (event) => {
       new PutCommand({
         TableName: process.env.MAIN_TABLE, // main application table from environmental variables
         Item: {
-          PK: `room#${roomId}`, // room#<roomId>
-          SK: `message#${timestamp}`, // message#<timestamp>
+          PK: `room#${RoomId}`, // room#<roomId>
+          SK: `message#${Timestamp}`, // message#<timestamp>
           ConnectionId: connectionId,
-          SenderId: senderId, // used for MessagesBySender GSI
-          Content: message,
-          Timestamp: timestamp, // used for MessagesBySender GSI
-          RoomId: roomId, // optional can help with other queries
-          SenderUsername: senderUsername,
-          ProfilePicture: profilePicture,
+          SenderId, // used for MessagesBySender GSI
+          Content,
+          Timestamp, // used for MessagesBySender GSI
+          RoomId, // optional can help with other queries
+          SenderUsername,
+          ProfilePicture,
         },
       })
     );
-    console.log('Message saved to DynamoDB:', message);
+    console.log('Message saved to DynamoDB:', Content);
   } catch (err) {
     console.error('Error saving message to DynamoDB:', err);
   }
@@ -84,7 +84,7 @@ module.exports.handler = async (event) => {
       })
     );
     allParticipants = membershipData.Items.map((i) => i.UserId).filter(
-      (uid) => uid !== senderId // exclude sender
+      (uid) => uid !== SenderId // exclude sender
     );
     console.log('All participants', allParticipants);
 
@@ -95,16 +95,16 @@ module.exports.handler = async (event) => {
             TableName: process.env.MAIN_TABLE,
             Item: {
               PK: `USER#${uid}`, // partition key for user
-              SK: `UNREAD#${timestamp}`, // sort key for unread message
-              MessageId: timestamp,
-              RoomId: roomId,
-              SenderId: senderId,
-              SenderUsername: senderUsername,
-              Content: message,
-              ProfilePicture: profilePicture,
+              SK: `UNREAD#${Timestamp}`, // sort key for unread message
+              MessageId: Timestamp,
+              RoomId,
+              SenderId,
+              SenderUsername,
+              Content,
+              ProfilePicture,
               GSI1PK: `USER#${uid}`, // 🔹 key for UnreadMessagesIndex
-              GSI1SK: `UNREAD#${timestamp}`, // 🔹 key for UnreadMessagesIndex
-              Timestamp: timestamp,
+              GSI1SK: `UNREAD#${Timestamp}`, // 🔹 key for UnreadMessagesIndex
+              Timestamp,
             },
           })
         )
@@ -113,6 +113,7 @@ module.exports.handler = async (event) => {
   } catch (err) {
     console.error('Error creating unread markers:', err);
   }
+
   // Setup API Gateway management client
   const domain = event.requestContext.domainName; // domain of websocket api
   const stage = event.requestContext.stage; // deployment stage
@@ -126,7 +127,7 @@ module.exports.handler = async (event) => {
       TableName: process.env.CONNECTION_DB_TABLE,
       ProjectionExpression: 'roomId, connectionId',
       KeyConditionExpression: 'roomId = :rid', //Query by roomID
-      ExpressionAttributeValues: { ':rid': roomId },
+      ExpressionAttributeValues: { ':rid': RoomId },
     };
     const data = await doccli.send(new QueryCommand(queryParams));
     connections = data.Items; //all connections in chat room
@@ -145,11 +146,11 @@ module.exports.handler = async (event) => {
             new PostToConnectionCommand({
               ConnectionId: connectionId,
               Data: JSON.stringify({
-                senderId,
-                message,
-                timestamp,
-                senderUsername,
-                profilePicture,
+                SenderId,
+                Content,
+                Timestamp,
+                SenderUsername,
+                ProfilePicture,
               }),
             })
           );
