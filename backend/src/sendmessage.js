@@ -18,7 +18,7 @@ module.exports.handler = async (event) => {
   const userId = event.requestContext.authorizer?.sub;
 
   //extract message payload from client request body
-  let { SenderId, RoomId, Content, Timestamp, SenderUsername, ProfilePicture } =
+  let { senderId, roomId, message, timestamp, senderUsername, profilePicture } =
     JSON.parse(event.body).data;
 
   // find roomId for this connection first
@@ -36,7 +36,7 @@ module.exports.handler = async (event) => {
     const data = await doccli.send(new ScanCommand(scanParams));
 
     if (data.Items && data.Items.length > 0) {
-      RoomId = data.Items[0].roomId; //extract roomid if found
+      roomId = data.Items[0].roomId; //extract roomid if found
     } else {
       console.warn('No matching room found for connectionId');
       return { statusCode: 404, body: JSON.stringify('Room not found') };
@@ -51,23 +51,22 @@ module.exports.handler = async (event) => {
       new PutCommand({
         TableName: process.env.MAIN_TABLE, // main application table from environmental variables
         Item: {
-          PK: `room#${RoomId}`, // room#<roomId>
-          SK: `message#${Timestamp}`, // message#<timestamp>
+          PK: `room#${roomId}`, // room#<roomId>
+          SK: `message#${timestamp}`, // message#<timestamp>
           ConnectionId: connectionId,
-          SenderId, // used for MessagesBySender GSI
-          Content,
-          Timestamp, // used for MessagesBySender GSI
-          RoomId, // optional can help with other queries
-          SenderUsername,
-          ProfilePicture,
+          SenderId: senderId, // used for MessagesBySender GSI
+          Content: message,
+          Timestamp: timestamp, // used for MessagesBySender GSI
+          RoomId: roomId, // optional can help with other queries
+          SenderUsername: senderUsername,
+          ProfilePicture: profilePicture,
         },
       })
     );
-    console.log('Message saved to DynamoDB:', Content);
+    console.log('Message saved to DynamoDB:', message);
   } catch (err) {
     console.error('Error saving message to DynamoDB:', err);
   }
-
   // 🔹 NEW ----------------------
   // 3. Create unread markers for offline recipients
   // ----------------------
@@ -81,12 +80,12 @@ module.exports.handler = async (event) => {
         TableName: process.env.MAIN_TABLE,
         IndexName: 'RoomMembersIndex',
         KeyConditionExpression: 'RoomId = :rid',
-        ExpressionAttributeValues: { ':rid': RoomId },
+        ExpressionAttributeValues: { ':rid': roomId },
         ProjectionExpression: 'UserId',
       })
     );
     allParticipants = membershipData.Items.map((i) => i.UserId).filter(
-      (uid) => uid !== SenderId // exclude sender
+      (uid) => uid !== senderId // exclude sender
     );
     console.log('All participants', allParticipants);
 
@@ -97,16 +96,16 @@ module.exports.handler = async (event) => {
             TableName: process.env.MAIN_TABLE,
             Item: {
               PK: `USER#${uid}`, // partition key for user
-              SK: `UNREAD#${Timestamp}`, // sort key for unread message
-              MessageId: Timestamp,
-              RoomId,
-              SenderId,
-              SenderUsername,
-              Content,
-              ProfilePicture,
+              SK: `UNREAD#${timestamp}`, // sort key for unread message
+              MessageId: timestamp,
+              RoomId: roomId,
+              SenderId: senderId,
+              SenderUsername: senderUsername,
+              Content: message,
+              ProfilePicture: profilePicture,
               GSI1PK: `USER#${uid}`, // 🔹 key for UnreadMessagesIndex
-              GSI1SK: `UNREAD#${Timestamp}`, // 🔹 key for UnreadMessagesIndex
-              Timestamp,
+              GSI1SK: `UNREAD#${timestamp}`, // 🔹 key for UnreadMessagesIndex
+              Timestamp: timestamp,
             },
           })
         )
@@ -115,7 +114,6 @@ module.exports.handler = async (event) => {
   } catch (err) {
     console.error('Error creating unread markers:', err);
   }
-
   // Setup API Gateway management client
   const domain = event.requestContext.domainName; // domain of websocket api
   const stage = event.requestContext.stage; // deployment stage
@@ -129,7 +127,7 @@ module.exports.handler = async (event) => {
       TableName: process.env.CONNECTION_DB_TABLE,
       ProjectionExpression: 'roomId, connectionId',
       KeyConditionExpression: 'roomId = :rid', //Query by roomID
-      ExpressionAttributeValues: { ':rid': RoomId },
+      ExpressionAttributeValues: { ':rid': roomId },
     };
     const data = await doccli.send(new QueryCommand(queryParams));
     connections = data.Items; //all connections in chat room
@@ -148,11 +146,11 @@ module.exports.handler = async (event) => {
             new PostToConnectionCommand({
               ConnectionId: connectionId,
               Data: JSON.stringify({
-                SenderId,
-                Content,
-                Timestamp,
-                SenderUsername,
-                ProfilePicture,
+                senderId,
+                message,
+                timestamp,
+                senderUsername,
+                profilePicture,
               }),
             })
           );
@@ -163,7 +161,7 @@ module.exports.handler = async (event) => {
             await doccli.send(
               new DeleteCommand({
                 TableName: process.env.CONNECTION_DB_TABLE,
-                Key: { roomId: RoomId, connectionId },
+                Key: { roomId, connectionId },
               })
             );
           } else {
