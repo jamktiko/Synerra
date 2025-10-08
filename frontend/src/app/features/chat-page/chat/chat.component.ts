@@ -67,6 +67,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+    // Gets the chat history of a room and adds it to the chat messages$, that holds the chatlogs
     this.messageService.getMessages(this.roomId).subscribe({
       next: (messages) => {
         console.log('yhistääÄÄÄä', messages);
