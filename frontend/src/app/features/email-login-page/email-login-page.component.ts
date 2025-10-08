@@ -57,26 +57,31 @@ export class EmailLoginPageComponent implements OnInit {
 
     this.authService.login(credentials).subscribe({
       next: (res) => {
-        console.log('Login success:', res, this.user);
+        console.log('Login success:', res);
         this.emailInput = '';
+
+        // Fetch the user after successful login
         this.userService.getMe().subscribe({
-          next: (res) => {
-            this.userStore.setUser(res);
-            console.log('USER: ', res);
+          next: (user) => {
+            this.userStore.setUser(user);
+            this.user = user;
+            console.log('Loaded user:', user);
+
+            // Navigate based on updated user
+            if (user.Username) {
+              this.router.navigate(['/dashboard']);
+            } else {
+              this.router.navigate(['/profile-creation']);
+            }
           },
-          error: (err) => console.error('Error loading users', err),
+          error: (err) => {
+            console.error('Error loading user after login:', err);
+            this.router.navigate(['/profile-creation']);
+          },
         });
-        if (this.user?.Username) {
-          // User already has a username -> go to dashboard
-          this.router.navigate(['/dashboard']);
-        } else {
-          // No username yet -> go to profile creation
-          this.router.navigate(['/profile-creation']);
-        }
       },
       error: (err) => {
-        console.error('Error fetching user after login:', err);
-        this.router.navigate(['/profile-creation']);
+        console.error('Login error:', err);
       },
     });
   }
