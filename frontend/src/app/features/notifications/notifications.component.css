@@ -19,11 +19,11 @@
 .notification-bell svg {
   width: 24px;
   height: 24px;
-  color: #f0f0f0;
+  color: var(--color-text-default);
 }
 
 .notification-bell:hover svg {
-  color: #1e90ff;
+  color: var(--color-highlight);
   transition: color 0.2s ease;
 }
 
@@ -32,8 +32,8 @@
   position: absolute;
   top: 4px;
   right: 4px;
-  background: #ff3b30;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-text-default);
   font-size: 12px;
   font-weight: bold;
   border-radius: 50%;
@@ -47,8 +47,9 @@
 /* Dropdown */
 .notifications-dropdown {
   position: absolute;
-  top: 100%; /* suoraan bellin alapuolelle */
-  right: 0; /* oikea reuna bellin kohdalle */
+  top: 100%;
+  right: 0;
+  border: 1px solid var(--color-primary);
   background: #1e1e1e;
   border-radius: 8px;
   padding: 8px 0;
@@ -78,7 +79,7 @@
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #555;
+  border: 1px solid var(--color-text-dark);
   flex-shrink: 0;
 }
 
@@ -87,7 +88,7 @@
   flex-direction: column;
   flex: 1;
   overflow: hidden;
-  text-align: left; /* vasemmalle tasattu sisältö */
+  text-align: left;
 }
 
 .notification-item .sender {
@@ -101,7 +102,7 @@
 
 .notification-item .content {
   font-size: 13px;
-  color: #ddd;
+  color: var(--color-text-default);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

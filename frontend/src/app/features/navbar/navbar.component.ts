@@ -72,7 +72,6 @@ export class NavbarComponent implements OnInit {
     this.collapsedChange.emit(this.isCollapsed);
   }
 
-  @HostListener('window:scroll', [])
   @HostListener('window:resize', [])
   checkAutoCollapse() {
     if (this.hasUserPreference) return;

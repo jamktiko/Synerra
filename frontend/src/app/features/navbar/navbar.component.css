@@ -265,23 +265,22 @@
 }
 
 /* Hover */
-
 .nav-btn:hover img {
   opacity: 1;
-  filter: grayscale(0) brightness(1.2);
+  filter: grayscale(1) brightness(1.8);
 }
 
 /* Active / Hover */
 .nav-btn:hover,
 .nav-btn.active {
-  background: rgba(58, 58, 58, 0.5);
-  color: var(--color-text-default) !important;
+  background: rgba(100, 100, 105, 0.5);
+  color: var(--color-text-default);
   transform: scale(1.02);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(34, 34, 34, 0.15);
 }
 
 .nav-btn.active span {
-  color: var(--color-text-default) !important;
+  color: var(--color-text-default);
   font-weight: var(--font-weight-medium);
 }
 
