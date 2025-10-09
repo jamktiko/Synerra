@@ -1,10 +1,9 @@
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
   justify-content: center;
-  width: 100%;
-  margin-top: 12px;
+  gap: 20px;
+  margin-top: 20px;
 }
 
 .filters-container,
@@ -14,14 +13,14 @@
 }
 
 .filters-container {
-  position: relative;
-  background: var(--color-background);
-  border-radius: 16px;
-  margin: 0 auto 40px;
-  padding: 28px 24px 36px;
-  max-width: 960px;
+  background: var(--color-dark-gradient);
+  border-radius: 20px;
+  margin: 2rem auto 60px;
+  padding: 40px 32px 48px;
+  max-width: 1080px;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
 }
 
 .filters-container h2 {
@@ -53,8 +52,8 @@
 /* Haku-kenttä */
 .search-wrapper {
   position: relative;
-  width: 61.5%;
-  max-width: 200px;
+  width: 80%;
+  max-width: 280px;
   margin: 0 auto 20px;
 }
 
@@ -84,6 +83,11 @@
   outline: none;
   border-color: var(--color-orange-400, #f2680d);
   background: rgba(40, 40, 40, 0.95);
+}
+
+.search-input::placeholder {
+  color: var(--color-text-dark);
+  font-style: italic;
 }
 
 input,
@@ -236,30 +240,27 @@ select {
 }
 
 /* responsiivisuus */
+
 @media (max-width: 920px) {
   .filters {
     grid-template-columns: 1fr;
     gap: 12px;
     padding: 0 8px;
   }
+
+  .filters .checkbox-collapsible:nth-child(3) .checkbox-list {
+    width: 100%;
+    left: 0;
+    transform: none;
+  }
+
   .search-input {
     width: 100%;
   }
   .checkbox-list {
     min-width: auto;
     width: 100%;
-  }
-}
-
-@media (max-width: 920px) {
-  .filters {
-    grid-template-columns: 1fr;
-  }
-
-  .filters .checkbox-collapsible:nth-child(3) .checkbox-list {
-    width: 100%;
     left: 0;
-    transform: none;
   }
 }
 
@@ -272,4 +273,23 @@ select {
   .search-input {
     max-width: 100%;
   }
+}
+
+@media (max-width: 700px) {
+  .search-wrapper {
+    max-width: 90%;
+  }
+
+  .search-input {
+    font-size: 0.9rem;
+  }
+
+  .search-input::placeholder {
+    content: "search";
+  }
+}
+
+/* Dropdownien sivuttaisrullauksen esto */
+.checkbox-list {
+  overflow-x: hidden;
 }

@@ -7,13 +7,10 @@
   display: flex;
   align-items: center; /* pystysuunta */
   justify-content: center; /* vaakasuunta */
-  border-radius: 8px;
-  border: 1px solid transparent;
-  background:
-    /* sisäpinta */ linear-gradient(var(--color-background))
-      padding-box,
-    /* varsinainen reuna*/ var(--color-gray-v1) border-box;
-
+  border-radius: 18px;
+  background: var(--color-gray);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
+  border: 1px solid rgba(58, 58, 58, 1);
   padding: 0 100px;
   gap: 20px;
   flex-direction: column;

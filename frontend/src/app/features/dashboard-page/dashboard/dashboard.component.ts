@@ -9,16 +9,10 @@ import { User } from '../../../core/interfaces/user.model';
 import { UserStore } from '../../../core/stores/user.store';
 import { ChatService } from '../../../core/services/chat.service';
 import { UserService } from '../../../core/services/user.service';
-import { NotificationsComponent } from '../../notifications/notifications.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [
-    DashboardCardComponent,
-    CommonModule,
-    FormsModule,
-    NotificationsComponent,
-  ],
+  imports: [DashboardCardComponent, CommonModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })

@@ -1,18 +1,19 @@
-<div class="cards-grid">
-  <div class="card">
-    <div class="card-img-wrapper" (click)="onProfile()" role="button" tabindex="0" (keydown.enter)="onProfile()"
-      [attr.aria-label]="'Open profile of ' + user.Username" data-tooltip="View player profile">
-      <img [src]="user.ProfilePicture" class="card-img-top" alt="Profile picture" />
+<div class="card">
+  <div class="card-body">
+    <!-- Vasen sarake -->
+    <div class="card-left">
+      <div class="card-img-wrapper" (click)="onProfile()" role="button" tabindex="0" (keydown.enter)="onProfile()"
+        [attr.aria-label]="'Open profile of ' + user.Username" data-tooltip="View player profile">
+        <img [src]="user.ProfilePicture" class="card-img-top" alt="Profile picture" />
+      </div>
+      <p class="user-name">{{ user.Username }}</p>
     </div>
 
-    <!-- Kortin sisältö -->
-    <div class="card-body">
-      <p class="user-name">{{ user.Username }}</p>
+    <!-- Oikea sarake -->
+    <div class="card-right">
       <p class="bio-text">{{ user.Bio }}</p>
       <div class="divider"></div>
-      <p class="languages">{{ user.Languages }}</p>
-
-      <!-- Nappien ryhmittely -->
+      <p class="languages" *ngIf="user.Languages">{{ user.Languages }}</p>
       <div class="card-actions">
         <button class="btn btn-primary" (click)="SendMsg(user.UserId)">
           <img src="/assets/svg/Messages/NoMessage.svg" alt="" class="btn-icon" />
