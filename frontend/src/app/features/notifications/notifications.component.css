@@ -1,53 +1,6 @@
-.notification-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 16px; /* more spacing */
-  gap: 12px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  overflow: visible; /* make sure content isn't clipped */
-}
-
-.notification-item:hover {
-  background: #2a2a2a;
-}
-
-.notification-item .avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid #555;
-  flex-shrink: 0; /* prevent shrinking */
-}
-
-.notification-item .message-info {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
-}
-
-.notification-item .sender {
-  font-weight: 600;
-  font-size: 14px;
-  color: #f0f0f0; /* very light text for dark background */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.notification-item .content {
-  font-size: 13px;
-  color: #ddd; /* slightly lighter so it's readable */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .notification-wrapper {
   position: relative;
-  display: inline-block;
+  display: flex;
 }
 
 .notification-bell {
@@ -62,29 +15,106 @@
   justify-content: center;
 }
 
+/* Bell SVG */
 .notification-bell svg {
   width: 24px;
   height: 24px;
-  color: #f0f0f0; /* light color for dark theme */
+  color: #f0f0f0;
 }
 
 .notification-bell:hover svg {
-  color: #1e90ff; /* hover color */
+  color: #1e90ff;
   transition: color 0.2s ease;
 }
 
+/* Badge */
 .badge {
   position: absolute;
   top: 4px;
   right: 4px;
-  background: #ff3b30; /* bright red */
+  background: #ff3b30;
   color: white;
   font-size: 12px;
   font-weight: bold;
   border-radius: 50%;
   padding: 2px 6px;
-  line-height: 1;
   min-width: 18px;
   text-align: center;
+  line-height: 1;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Dropdown */
+.notifications-dropdown {
+  position: absolute;
+  top: 100%; /* suoraan bellin alapuolelle */
+  right: 0; /* oikea reuna bellin kohdalle */
+  background: #1e1e1e;
+  border-radius: 8px;
+  padding: 8px 0;
+  width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+/* Notifications sisäpuoli vasemmalle tasattu */
+.notification-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.notification-item:hover {
+  background: #2a2a2a;
+}
+
+.notification-item .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #555;
+  flex-shrink: 0;
+}
+
+.notification-item .message-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  text-align: left; /* vasemmalle tasattu sisältö */
+}
+
+.notification-item .sender {
+  font-weight: 600;
+  font-size: 14px;
+  color: #f0f0f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notification-item .content {
+  font-size: 13px;
+  color: #ddd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.friend-actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 8px;
+}
+
+.empty-msg {
+  padding: 12px 16px;
+  color: var(--color-text-dark);
+  text-align: left;
 }

@@ -1,16 +1,13 @@
 <div class="notification-wrapper">
   <button class="notification-bell" (click)="toggleDropdown()">
-    <!-- Bell SVG -->
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
       <path
         d="M8 16a2 2 0 0 0 1.985-1.75H6.015A2 2 0 0 0 8 16zm.104-14a4.002 4.002 0 0 1 3.978 3.001c.12.388.23.833.327 1.342.14.688.21 1.293.21 1.92v2.5l.9 1.2a.5.5 0 0 1-.4.8H3.861a.5.5 0 0 1-.4-.8l.9-1.2v-2.5c0-.627.07-1.232.21-1.92.097-.509.207-.954.327-1.342A4.002 4.002 0 0 1 7.896 2z" />
     </svg>
-    <!-- Unread badge -->
     <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
   </button>
 
   <div class="notifications-dropdown" *ngIf="showDropdown">
-    <!-- Unread messages -->
     <div *ngFor="let msg of unreads" class="notification-item" (click)="userClicked(msg.SenderId)">
       <img [src]="msg.ProfilePicture" alt="avatar" class="avatar" />
       <div class="message-info">
@@ -20,7 +17,6 @@
       </div>
     </div>
 
-    <!-- Pending friend requests -->
     <div *ngFor="let req of pendingRequests" class="notification-item">
       <img [src]="req.SenderPicture || '/assets/svg/user-avatar-placeholder.svg'" alt="avatar" class="avatar" />
       <div class="message-info">
@@ -33,14 +29,8 @@
       </div>
     </div>
 
-    <!-- Empty state -->
     <div *ngIf="unreads.length === 0 && pendingRequests.length === 0" class="empty-msg">
       No notifications
     </div>
   </div>
-
-
-
-
-
 </div>

@@ -58,6 +58,12 @@
   white-space: nowrap;
 }
 
+.top-socialbar {
+  display: flex;
+  align-items: start;
+  gap: 9rem;
+}
+
 .linebreak-horizontal-child {
   width: 100%;
   height: 0.063rem;
@@ -122,6 +128,8 @@
   border-radius: 50%;
 }
 
+/* Notifikaatiot */
+
 .friends-container,
 .chatroom-items {
   overflow-y: auto;
@@ -176,7 +184,7 @@
 
 .friends-container::-webkit-scrollbar-thumb,
 .chatroom-items::-webkit-scrollbar-thumb {
-  background: #2b2b2b;
+  background: var(--color-background);
   border-radius: 3px;
 }
 

@@ -61,11 +61,10 @@
 /* Kortti */
 app-dashboard-card {
   width: 100%;
-  height: 280px;
-  width: 200px;
-  border-radius: 4px;
+  height: 100%;
+  border-radius: 14px;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
 }
 
@@ -74,26 +73,6 @@ app-dashboard-card img {
   height: 100%;
   object-fit: cover;
   display: block;
-}
-
-.notification-bell {
-  position: relative;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-}
-
-.notification-bell svg {
-  width: 28px;
-  height: 28px;
-  color: #007bff; /* Blue bell */
-}
-
-.notification-bell.unread svg {
-  color: red; /* Red if there are unread messages */
 }
 
 .badge {
