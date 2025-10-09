@@ -1,22 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
-import { User, UserFilters } from '../../core/interfaces/user.model'; // add if you have a model
+import { User, UserFilters } from '../../core/interfaces/user.model';
 import { PlayerCardComponent } from './player-card/player-card.component';
-import { SocialBarComponent } from '../social-bar/social-bar.component';
 import { PlayerFiltersComponent } from './player-filters/player-filters.component';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-find-players',
-  standalone: true, // only if you want to use imports array
-  imports: [
-    CommonModule,
-    PlayerCardComponent,
-    SocialBarComponent,
-    PlayerFiltersComponent,
-  ],
+  standalone: true,
+  imports: [CommonModule, PlayerCardComponent, PlayerFiltersComponent],
   templateUrl: './find-players.component.html',
   styleUrls: ['./find-players.component.css'],
 })

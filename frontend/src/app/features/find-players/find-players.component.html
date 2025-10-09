@@ -1,22 +1,12 @@
-<div class="layout">
+<div class="main-content">
 
-  <div class="mid-container">
-
-    <!-- Pelaajien filtteröintipalkki -->
-    <div class="filter-component">
-      <app-player-filters (filtersChanged)="onFiltersChanged($event)"></app-player-filters>
-    </div>
-
-    <!-- Container, joka sisältää pelaajat -->
-    <div class="users-container">
-      <app-player-card *ngFor="let user of filteredUsers.length ? filteredUsers : users"
-        [user]="user"></app-player-card>
-
-    </div>
+  <!-- Filtterikomponentti -->
+  <div class="filter-component">
+    <app-player-filters (filtersChanged)="onFiltersChanged($event)"></app-player-filters>
   </div>
 
-  <!-- Leijuva social-floatin palkki -->
-  <div class="social-floating">
-    <app-social-bar></app-social-bar>
+  <!-- Pelaajalista -->
+  <div class="users-container">
+    <app-player-card *ngFor="let user of filteredUsers.length ? filteredUsers : users" [user]="user"></app-player-card>
   </div>
 </div>
