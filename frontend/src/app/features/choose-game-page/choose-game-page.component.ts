@@ -4,23 +4,17 @@ import { CommonModule } from '@angular/common';
 import { Game } from '../../core/interfaces/game.model'; // add if you have a model
 import { GameCardComponent } from './game-card/game-card.component';
 import { GameFiltersComponent } from './game-filters/game-filters.component';
-import { SocialBarComponent } from '../social-bar/social-bar.component';
 
 @Component({
   selector: 'app-choose-game-page',
-  imports: [
-    CommonModule,
-    GameCardComponent,
-    GameFiltersComponent,
-    SocialBarComponent,
-  ],
+  imports: [CommonModule, GameCardComponent, GameFiltersComponent],
   templateUrl: './choose-game-page.component.html',
   styleUrl: './choose-game-page.component.css',
 })
 export class ChooseGamePageComponent implements OnInit {
   games: Game[] = [];
   filteredGames: Game[] = [];
-  descending = true; // default sort order
+  descending = true;
 
   // For search input from child component
   searchText: string = '';
@@ -62,7 +56,6 @@ export class ChooseGamePageComponent implements OnInit {
     this.applyFiltersAndSort();
   }
 
-  //applies both the filters and sorts
   //applies both the filters and sorts
   applyFiltersAndSort() {
     // Filter first

@@ -6,26 +6,22 @@
   </header>
 
 
-  <app-notifications></app-notifications>
-
 
   <!-- Favorite Games -->
   <section class="favorite-games">
     <div class="section-title">Favorite games</div>
-    <div class="game-row-container">
-      <div class="game-row">
-        <app-dashboard-card *ngFor="let game of filteredGames" [game]="game"></app-dashboard-card>
-      </div>
+    <div class="games-grid">
+      <app-dashboard-card *ngFor="let game of filteredGames" [game]="game">
+      </app-dashboard-card>
     </div>
   </section>
 
   <!-- Popular Games -->
   <section class="popular-games">
     <div class="section-title">Popular games</div>
-    <div class="game-row-container">
-      <div class="game-row">
-        <app-dashboard-card *ngFor="let game of sortedGames" [game]="game"></app-dashboard-card>
-      </div>
+    <div class="games-grid">
+      <app-dashboard-card *ngFor="let game of sortedGames" [game]="game">
+      </app-dashboard-card>
     </div>
   </section>
 </div>
