@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
 import { Game } from '../../../../core/interfaces/game.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-card',
@@ -10,4 +11,10 @@ import { Game } from '../../../../core/interfaces/game.model';
 })
 export class DashboardCardComponent {
   @Input() game: any;
+  constructor(private router: Router) {}
+  selectGame(game: any) {
+    this.router.navigate(['dashboard/find-players'], {
+      queryParams: { game: game.PK.replace('GAME#', '') },
+    });
+  }
 }

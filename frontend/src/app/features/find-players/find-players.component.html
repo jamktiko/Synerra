@@ -1,12 +1,16 @@
 <div class="main-content">
 
-  <!-- Filtterikomponentti -->
-  <div class="filter-component">
-    <app-player-filters (filtersChanged)="onFiltersChanged($event)"></app-player-filters>
-  </div>
+  <div class="mid-container">
 
-  <!-- Pelaajalista -->
-  <div class="users-container">
-    <app-player-card *ngFor="let user of filteredUsers.length ? filteredUsers : users" [user]="user"></app-player-card>
+    <!-- Pelaajien filtteröintipalkki -->
+    <div class="filter-component">
+      <app-player-filters (filtersChanged)="onFiltersChanged($event)"
+        [preSelectedGame]="preSelectedGame"></app-player-filters>
+    </div>
+
+    <!-- Pelaajalista -->
+    <div class="users-container">
+      <app-player-card *ngFor="let user of filteredUsers.length ? filteredUsers : users"
+        [user]="user"></app-player-card>
+    </div>
   </div>
-</div>

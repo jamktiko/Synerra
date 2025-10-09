@@ -3,7 +3,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../shared/components/button/button.component';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup-page',
@@ -14,9 +14,9 @@ import { RouterLink } from '@angular/router';
 export class SignupPageComponent {
   emailInput: string = '';
   passwordInput: string = '';
-  confirmPasswordInput: string = ''; //Tämän lisäsin //
+  confirmPasswordInput: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   signup() {
     if (this.passwordInput !== this.confirmPasswordInput) {
@@ -29,11 +29,33 @@ export class SignupPageComponent {
       email: this.emailInput,
       password: this.passwordInput,
     };
-    this.passwordInput = '';
+
     this.authService.signup(credentials).subscribe({
       next: (res) => {
-        this.emailInput = '';
         console.log('Signup success:', res);
+        this.login(); // login automatically after signup
+        this.passwordInput = '';
+        this.emailInput = '';
+        this.router.navigate(['/profile-creation']);
+      },
+    });
+  }
+
+  login() {
+    const credentials = {
+      email: this.emailInput,
+      password: this.passwordInput,
+    };
+
+    this.passwordInput = '';
+
+    this.authService.login(credentials).subscribe({
+      next: (res) => {
+        console.log('Login success:', res);
+        this.emailInput = '';
+      },
+      error: (err) => {
+        console.error('Login failed:', err);
       },
     });
   }

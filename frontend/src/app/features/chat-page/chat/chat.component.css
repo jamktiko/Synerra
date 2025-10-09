@@ -59,19 +59,19 @@
   flex: 1;
   overflow-y: auto;
   margin: 1rem 0;
-  padding-right: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  /* remove justify-content */
 }
 
 .chats {
-  flex: 1;
   padding-right: 1rem;
   padding-left: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  flex: none;
+  margin-bottom: 1%;
 }
 
 .sentMessage,
@@ -80,22 +80,26 @@
   padding: 0.5rem 0.75rem;
   font-size: 0.95rem;
   line-height: 1.4;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap; /* keep line breaks but wrap long words */
 }
 
-/* Your messages (right side) */
 .sentMessage {
   background: rgba(58, 58, 58, 0.5);
   align-self: flex-end;
   border-radius: 8px 8px 0px 8px;
 }
 
-/* Other user's messages (left side) */
 .receivedMessage {
   background: rgba(58, 58, 58, 0.5);
-  align-self: flex-start; /* LEFT */
+  align-self: flex-start;
   border-radius: 8px 8px 8px 0px;
-  border: 2px solid var(--color-primary);
+}
+
+.sentMessageWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
 }
 
 .receivedMessageWrapper {
@@ -138,4 +142,18 @@
   background: var(--color-primary);
   color: var(--color-text-default);
   cursor: pointer;
+}
+
+.sentTimestamp {
+  font-size: 0.75rem; /* smaller text */
+  color: #aaa; /* light gray */
+  margin-top: 0.25rem; /* small spacing below bubble */
+  text-align: right; /* align to right for sent, optional */
+}
+
+.receivedTimestamp {
+  font-size: 0.75rem; /* smaller text */
+  color: #aaa; /* light gray */
+  margin-top: 0.25rem; /* small spacing below bubble */
+  text-align: left; /* align to right for sent, optional */
 }

@@ -42,13 +42,6 @@
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-
-  scrollbar-color: var(--color-background) var(--color-background);
-  scrollbar-width: thin;
-}
-
-.gameCards:hover {
-  scrollbar-color: var(--color-text-dark) var(--color-background);
 }
 
 .card {
@@ -86,52 +79,27 @@
   text-align: center;
   padding: 1rem 0 1rem 0;
 }
-@media (max-width: 991px) {
-  .modal-frame {
-    gap: 0;
+
+@media (max-width: 682px) {
+  h2 {
+    font-size: 17px;
+  }
+  .modal-body {
     padding: 0;
-  }
-
-  .progress {
-    display: none;
-  }
-  .hint {
-    scale: 0.7;
-  }
-
-  .modal-header {
-    text-align: center;
-  }
-
-  .modal-body,
-  .modal-footer {
-    scale: 0.9;
-  }
-
-  .text-h1 {
-    scale: 0.8;
   }
 }
 
-@media (max-width: 522px) {
-  .hint {
-    padding: 0;
+@media (max-width: 592px) {
+  h1 {
+    font-size: 35px;
   }
+  .text-sm {
+    font-size: 14px;
+  }
+}
 
-  .progress {
-    display: none;
-  }
-
-  .modal-footer {
-    width: 20rem;
-    padding: 0;
-  }
-  .modal-header {
-    text-align: center;
-    padding: 0;
-  }
-
-  .text-h1 {
-    scale: 0.5;
-  }
+.card.selected {
+  border: 3px solid var(--color-primary); /* blue border for selected games */
+  transform: scale(1.05); /* optional: slightly enlarge selected cards */
+  transition: transform 0.2s ease;
 }

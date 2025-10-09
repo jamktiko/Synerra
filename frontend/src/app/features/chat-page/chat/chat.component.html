@@ -3,26 +3,34 @@
     <img class="avatarframe-icon" src="assets/svg/Acount.svg" alt="avatar" />
     <div class="headerframe">
       <div class="chatheading">Chat</div>
+
     </div>
     <div class="headerButton">
       <button [routerLink]="['/dashboard/social']"><img src="/assets/svg/Cross.svg" alt="" /></button>
     </div>
   </div>
 
-  <div class="chat-log">
+  <div class="chat-log" #chatLog>
     <!-- Loops the messages gotten from the chatService -->
     <div *ngFor="let msg of messages$ | async" class="chats">
-      <div *ngIf="msg.senderId === loggedInUser.UserId" class="sentMessage">
-        <p>{{loggedInUser.Username}}</p>
-        <p>{{msg.message}}</p>
+      <div *ngIf="msg.SenderId === loggedInUser?.UserId" class="sentMessageWrapper">
+        <div class="sentMessage">
+          <p>{{msg.Content}}</p>
+        </div>
+        <p class="sentTimestamp">{{ msg.Timestamp | date:'d.MM.yyyy, HH.mm' }}</p>
       </div>
-      <div *ngIf="msg.senderId !== loggedInUser.UserId" class=" receivedMessageWrapper">
-        <img src="assets/svg/Acount.svg" alt="avatar" class="messageAvatar" />
-        <div class="receivedMessage">
-          <p>{{msg.senderUsername}}</p>
-          <p>{{msg.message}}</p>
+
+      <div *ngIf="msg.SenderId !== loggedInUser?.UserId" class="receivedMessageWrapper">
+        <img src="{{msg.ProfilePicture || 'assets/svg/Acount.svg'}}" alt="avatar" class="messageAvatar" />
+        <div>
+          <div class="receivedMessage">
+            <p>{{msg.SenderUsername}}</p>
+            <p>{{msg.Content}}</p>
+          </div>
+          <p class="receivedTimestamp">{{ msg.Timestamp | date:'dd/MM/yyyy, HH:mm' }}</p>
         </div>
       </div>
+
 
     </div>
   </div>
@@ -32,6 +40,7 @@
     <button (click)="sendMessage(messageText)">
       <img src="assets/svg/Send.svg" alt="">
     </button>
+
 
   </div>
 </div>

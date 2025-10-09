@@ -1,7 +1,9 @@
 <div class="modal-frame">
   <!--Progressbar-->
   <div class="progress">
-    <div class="done"><img src="assets/svg/Acount.svg" alt="step1" /></div>
+    <div class="done">
+      <img src="assets/svg/Acount.svg" alt="step1" />
+    </div>
     <div class="nextStep">></div>
     <div class="step">
       <img src="assets/svg/Birthday.svg" alt="step2" />
@@ -20,11 +22,7 @@
   <!--Body-->
   <div class="modal-body">
     <h2 class="text-sm-bold">Choose your username</h2>
-    <input
-      [(ngModel)]="profile.username"
-      placeholder="Username"
-      class="form-control"
-    />
+    <input type="text" [(ngModel)]="username" class="form-control" placeholder="Username" />
   </div>
 
   <!--The Hint-->
@@ -35,12 +33,7 @@
   <div class="modal-footer">
     <!--<button class="btn btn-primary" (click)="next()">Next</button>-->
     <app-button label="Back" icon="ArrowKey/LeftArrow"></app-button>
-    <app-button
-      label="Next"
-      variant="highlight"
-      iconPosition="right"
-      icon="ArrowKey/RightArrow"
-      (click)="next()"
-    ></app-button>
+    <app-button label="Next" variant="highlight" iconPosition="right" icon="ArrowKey/RightArrow"
+      (click)="next()"></app-button>
   </div>
 </div>

@@ -6,7 +6,7 @@ module.exports.handler = async (event) => {
   console.log('GetMessages triggered');
 
   // Extract roomId from query parameters
-  const roomId = event.queryStringParameters?.roomId;
+  const roomId = event.pathParameters?.roomId;
   if (!roomId) {
     console.warn('Missing roomId');
     return { statusCode: 400, body: JSON.stringify('Missing roomId') };
@@ -26,7 +26,7 @@ module.exports.handler = async (event) => {
     };
 
     const data = await doccli.send(new QueryCommand(queryParams));
-
+    //11
     console.log(`Found ${data.Items.length} messages`);
     return {
       statusCode: 200,

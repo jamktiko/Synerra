@@ -7,8 +7,8 @@
   display: flex;
   align-items: center; /* pystysuunta */
   justify-content: center; /* vaakasuunta */
-  border: 1px solid transparent;
   border-radius: 8px;
+  border: 1px solid transparent;
   background:
     /* sisäpinta */ linear-gradient(var(--color-background))
       padding-box,
@@ -16,7 +16,6 @@
 
   padding: 0 100px;
   gap: 20px;
-  opacity: 100%;
   flex-direction: column;
 }
 
@@ -32,11 +31,12 @@ input {
   color: var(--color-text-default);
   outline: none;
 
-  /* border */
   background:
     /* sisäpinta */ linear-gradient(var(--color-background))
       padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
+
+  transition: background 0.4s ease, transform 0.2s ease;
 }
 
 input::placeholder {
@@ -100,5 +100,12 @@ input:focus {
 @media (max-height: 551.33px) {
   .main-frame {
     scale: 0.9;
+  }
+}
+
+/*Mobiili*/
+@media (max-width: 430px) {
+  .main-frame {
+    scale: 0.88;
   }
 }

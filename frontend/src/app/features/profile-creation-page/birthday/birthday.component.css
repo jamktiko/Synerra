@@ -1,7 +1,6 @@
 .modal-frame {
   color: var(--color-text-default);
-
-  height: 40rem;
+  height: 39rem;
   overflow: hidden;
   display: flex;
   align-items: center; /* pystysuunta */
@@ -48,20 +47,6 @@
 .hint {
   color: var(--color-text-dark);
   padding-top: 2rem;
-}
-
-.done {
-  color: var(--color-primary);
-  background-color: var(--color-primary);
-  padding: 3px;
-  border-radius: 50%;
-}
-
-.step {
-  color: var(--color-primary);
-  border: 1px solid var(--color-text-dark);
-  padding: 3px;
-  border-radius: 50%;
 }
 
 .nextStep {
@@ -267,7 +252,7 @@
 
 @media (max-width: 991px) {
   .progress {
-    display: none;
+    scale: 0.9;
   }
 }
 
@@ -275,6 +260,9 @@
   .modal-body,
   .modal-footer {
     width: 20rem;
+  }
+  .progress {
+    display: none;
   }
   .text-h1 {
     scale: 0.8;

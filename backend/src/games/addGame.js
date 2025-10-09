@@ -113,6 +113,7 @@ module.exports.handler = async (event) => {
       SK: 'DETAILS', // Sort key
       GSI4PK: 'GAME', // for GamesIndex
       Name: name, // Name of the game
+      Name_lower: name.toLowerCase(), // Lowercase name for searching
       Genre: genre, // Genre of the Game
       Img_url: img_url, // Url of the img
       Img_name: img_name, // for the img fetch from API

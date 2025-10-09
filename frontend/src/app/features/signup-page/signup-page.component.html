@@ -8,61 +8,29 @@
       <div>
         <h2 class="text-sm">Email</h2>
       </div>
-      <input
-        type="email"
-        [(ngModel)]="emailInput"
-        name="email"
-        placeholder="example@email.com"
-        class="text-xs"
-      />
+      <input type="email" [(ngModel)]="emailInput" name="email" placeholder="example@email.com" class="text-xs" />
 
       <div class="inputHeadings">
         <h2 class="text-sm">Password</h2>
       </div>
-      <input
-        type="password"
-        [(ngModel)]="passwordInput"
-        name="password"
-        placeholder="**********"
-        class="text-xs"
-      />
+      <input type="password" [(ngModel)]="passwordInput" name="password" placeholder="**********" class="text-xs" />
 
       <div class="inputHeadings">
         <h2 class="text-sm">Confirm password</h2>
       </div>
       <!--Tästä en tiiä toimiiko, täytyykö jotain muuttaa type / ngModelia?-->
-      <input
-        type="password"
-        [(ngModel)]="confirmPasswordInput"
-        name="confirmPassword"
-        placeholder="**********"
-        class="text-xs"
-      />
-      <h2
-        class="text-xs error-text"
-        *ngIf="confirmPasswordInput && passwordInput !== confirmPasswordInput"
-      >
+      <input type="password" [(ngModel)]="confirmPasswordInput" name="confirmPassword" placeholder="**********"
+        class="text-xs" />
+      <h2 class="text-xs error-text" *ngIf="confirmPasswordInput && passwordInput !== confirmPasswordInput">
         Passwords do not match
       </h2>
+
+      <div class="buttonFrame">
+        <app-button label="Back" variant="default" size="medium" [routerLink]="'/login'"></app-button>
+        <app-button label="Create account" variant="highlight" type="submit" size="medium"></app-button>
+      </div>
     </form>
   </div>
 
-  <div class="buttonFrame">
-    <app-button
-      label="Back"
-      variant="default"
-      size="medium"
-      [routerLink]="'/login'"
-    ></app-button>
-    <app-button
-      label="Create account"
-      variant="highlight"
-      type="submit"
-      size="medium"
-    ></app-button>
 
-    <!--Alkuperäinen nappi alla!
-    <button type="submit">Signup</button>
-    -->
-  </div>
 </div>

@@ -2,6 +2,7 @@ import {
   Component,
   EventEmitter,
   HostListener,
+  Input,
   OnInit,
   Output,
 } from '@angular/core';
@@ -32,23 +33,38 @@ export class PlayerFiltersComponent implements OnInit {
 
   searchControl = new FormControl('');
   openDropdown: DropdownKey | null = null;
-  // LISÄTTY: Muuttuja valitun statuksen tekstille
+  // Muuttuja valitun statuksen tekstille
   selectedStatusLabel: string = 'Any status';
 
   availableLanguages = [
     { value: 'en', label: 'English' },
-    { value: 'fi', label: 'Finnish' },
+    { value: 'es', label: 'Spanish' },
+    { value: 'fr', label: 'French' },
+    { value: 'de', label: 'German' },
+    { value: 'zh', label: 'Chinese' },
+    { value: 'hi', label: 'Hindi' },
+    { value: 'ar', label: 'Arabic' },
+    { value: 'pt', label: 'Portuguese' },
     { value: 'ru', label: 'Russian' },
+    { value: 'ja', label: 'Japanese' },
+    { value: 'fi', label: 'Finnish' },
     { value: 'sv', label: 'Swedish' },
   ].sort((a, b) => a.label.localeCompare(b.label));
 
   @Output() filtersChanged = new EventEmitter<typeof this.filters>();
-
+  @Input() preSelectedGame: string | null = null;
   constructor(private gameService: GameService) {}
 
   ngOnInit(): void {
     this.loadGames();
-
+    if (this.preSelectedGame) {
+      //  Push the pre-selected game into the filters.games array if not already present
+      console.log('PRESELECTED:', this.preSelectedGame);
+      if (!this.filters.games) this.filters.games = [];
+      if (!this.filters.games.includes(this.preSelectedGame)) {
+        this.filters.games.push(this.preSelectedGame);
+      }
+    }
     this.searchControl.valueChanges
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((username) => {

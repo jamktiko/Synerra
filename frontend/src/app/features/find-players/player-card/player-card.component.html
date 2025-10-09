@@ -15,7 +15,7 @@
       <div class="divider"></div>
       <p class="languages" *ngIf="user.Languages">{{ user.Languages }}</p>
       <div class="card-actions">
-        <button class="btn btn-primary" (click)="onInvite()">
+        <button class="btn btn-primary" (click)="SendMsg(user.UserId)">
           <img src="/assets/svg/Messages/NoMessage.svg" alt="" class="btn-icon" />
           <span>Send Message</span>
         </button>

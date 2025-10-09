@@ -1,32 +1,77 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../shared/components/button/button.component';
-import { RouterLink } from '@angular/router';
-
+import { Router } from '@angular/router';
+import { UserService } from '../../core/services/user.service';
+import { OnInit } from '@angular/core';
+import { User } from '../../core/interfaces/user.model';
+import { UserStore } from '../../core/stores/user.store';
+import { NgZone } from '@angular/core';
 @Component({
+  standalone: true,
   selector: 'app-email-login-page',
-  imports: [CommonModule, FormsModule, ButtonComponent, RouterLink],
+  imports: [CommonModule, FormsModule, ButtonComponent],
   templateUrl: './email-login-page.component.html',
   styleUrl: './email-login-page.component.css',
 })
-export class EmailLoginPageComponent {
+export class EmailLoginPageComponent implements OnInit {
   emailInput: string = '';
   passwordInput: string = '';
+  me: any = {};
+  user: User | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private userService: UserService,
+    private userStore: UserStore
+  ) {
+    effect(() => {
+      const user = this.userStore.user();
+      if (user) {
+        this.user = user;
+      }
+    });
+  }
 
+  ngOnInit(): void {}
   login() {
     const credentials = {
       email: this.emailInput,
       password: this.passwordInput,
     };
+
     this.passwordInput = '';
+
     this.authService.login(credentials).subscribe({
       next: (res) => {
-        this.emailInput = '';
         console.log('Login success:', res);
+        this.emailInput = '';
+
+        // Fetch the user after successful login
+        this.userService.getMe().subscribe({
+          next: (user) => {
+            this.userStore.setUser(user);
+            this.user = user;
+            console.log('Loaded user:', user);
+
+            // Navigate based on updated user
+            if (user.Username) {
+              this.router.navigate(['/dashboard']);
+            } else {
+              this.router.navigate(['/profile-creation']);
+            }
+          },
+          error: (err) => {
+            console.error('Error loading user after login:', err);
+            this.router.navigate(['/profile-creation']);
+          },
+        });
+      },
+      error: (err) => {
+        console.error('Login error:', err);
       },
     });
   }

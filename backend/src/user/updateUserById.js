@@ -11,7 +11,7 @@ module.exports.handler = async (event) => {
     console.log('Full event:', JSON.stringify(event, null, 2));
     console.log('Auth claims:', event.requestContext?.authorizer);
 
-    const userId = verifyUser(event);
+    const userId = event.requestContext?.authorizer?.jwt?.claims?.sub;
 
     //eventin body
     const body = JSON.parse(event.body);
@@ -22,6 +22,7 @@ module.exports.handler = async (event) => {
       'bio',
       'languages',
       'games',
+      'birthday',
     ];
 
     //variables for ddb update
