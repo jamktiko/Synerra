@@ -15,11 +15,6 @@
   transition: grid-template-columns 0.3s ease;
 }
 
-/* Collapsed-tila NAVBARILLE */
-.layout.collapsed {
-  grid-template-columns: auto 1fr 5%;
-}
-
 /* Kiinteä taustakuva koko näkymälle */
 .layout::before {
   content: "";
