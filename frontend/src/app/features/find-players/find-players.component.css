@@ -67,3 +67,9 @@
 .filter-component {
   z-index: 10000000;
 }
+/* Mahdollisesti tarvittava myös muilla sivuilla, mahdollinen siirto siis yleiseen css tiedostoon */
+@media (max-width: 768px) {
+  .users-container {
+    padding-bottom: 90px;
+  }
+}

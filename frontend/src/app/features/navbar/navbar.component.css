@@ -459,6 +459,10 @@
   box-shadow: none;
 }
 
+.mobile-nav {
+  display: none;
+}
+
 /* Media queryt */
 @media (max-width: 37.5rem) {
   /* <600px */
@@ -468,4 +472,84 @@
 }
 @media (min-width: 64rem) {
   /* >1024px */
+}
+
+@media (max-width: 768px) {
+  /* Piilota desktop-osat, näytä mobiiliversio */
+  .navigation .top-section,
+  .navigation .nav-links,
+  .navigation .bottom-section,
+  .navigation .divider {
+    display: none;
+  }
+  .navigation {
+    position: static;
+    height: auto;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  .navigation .mobile-nav {
+    display: block;
+    width: 100vw;
+    aspect-ratio: 7 / 1; /* Jotta tuo navbarin napit eivät olisi niin kaukana toisistaan. */
+    min-height: 90px;
+    position: fixed;
+    bottom: 0;
+    background: var(--color-background);
+    box-shadow: 0px -2px 12.7px 4px rgba(0, 0, 0, 0.25);
+    border-top: 1px solid #8e8e8e;
+    padding: 3px 0;
+    z-index: 1000;
+  }
+
+  .navigation .mobile-nav .nav-content {
+    display: flex;
+    height: 100%;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 0px 0px 0px;
+  }
+
+  .navigation .mobile-nav .nav-icon {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-style: solid;
+    border-width: 0px 1px 0px 1px;
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .navigation .mobile-nav .nav-icon img {
+    height: 85%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    padding: 4px;
+    opacity: 0.8;
+  }
+
+  .navigation .mobile-nav .nav-icon.active {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 5%,
+      #13131370 90%,
+      #ce3815 100%
+    );
+    border-style: solid;
+    border-width: 0px 2px 0px 2px;
+    border-color: rgba(0, 0, 0, 0.2);
+    /*animation: gradientFade 2s forwards;*/ /* en tiedä toimiiko nämä koska tietokone hidas niin olen poistanut animaatiot */
+  }
+
+  /* @keyframes gradientFade {
+    0% {
+      background: linear-gradient(180deg, #f2690d00 70%, #f2690d00 100%);
+    }
+    100% {
+      background: linear-gradient(180deg, #f2690d00 70%, #ce3815 100%);
+    }
+  }*/
 }

@@ -69,6 +69,16 @@
       <span>{{ logout.label }}</span>
     </a>
   </div>
+  <!-- Mobile bottom navbar -->
+  <div class="mobile-nav">
+    <div class="nav-content">
+      <a *ngFor="let item of navItemsMobile" class="nav-icon" [routerLink]="item.route" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <img [src]="'assets/svg/' + item.icon" alt="{{ item.label }} icon" />
+      </a>
+    </div>
+  </div>
+
 </nav>
 
 
