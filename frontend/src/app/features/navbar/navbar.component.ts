@@ -30,8 +30,6 @@ export class NavbarComponent implements OnInit {
 
   @Output() collapsedChange = new EventEmitter<boolean>();
 
-  @Output() collapsedChange = new EventEmitter<boolean>();
-
   user: User | null = null;
 
   navItems: NavItem[] = [
