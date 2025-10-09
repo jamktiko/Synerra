@@ -31,10 +31,25 @@
 }
 @media (max-width: 768px) {
   .layout {
-    grid-template-columns: 1fr; /* poistaa tilan joka oli varattu navigaatiolle työpöytä resoluutiolla */
+    grid-template-columns: 1fr; /* layout ottaa kaiken käytettävän tilan */
   }
 
   .main {
     grid-column: 1;
+  }
+  .navbar {
+    /* tämä on patentti jolla sain sellaisen tyhjän palkin piiloon rikkomatta mobile navigaatiota*/
+    /* Tuotanto 2 alussa voisin korjata tämän kokonaan ja tehdä täysin erillisen navigaation mobiilille t: Aleksi :-) */
+    position: static;
+    width: 100vw;
+    height: 0px;
+    padding: 0px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .navbar .nav-links {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
   }
 }
