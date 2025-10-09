@@ -7,12 +7,10 @@
   display: flex;
   align-items: center; /* pystysuunta */
   justify-content: center; /* vaakasuunta */
-  border: 1px solid transparent;
   border-radius: 8px;
-  background:
-    /* sisäpinta */ linear-gradient(var(--color-background))
-      padding-box,
-    /* varsinainen reuna*/ var(--color-gray-v1) border-box;
+  background: var(--color-gray);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
+  border: 1px solid rgba(58, 58, 58, 1);
   gap: 35px;
   flex-direction: column;
 }
@@ -42,7 +40,7 @@
 .progress {
   justify-content: center;
   gap: 5px;
-  background-color: var(--color-background);
+  background-color: var(--color-gray);
   height: fit-content;
 }
 

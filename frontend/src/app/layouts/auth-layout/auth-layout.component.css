@@ -14,6 +14,7 @@
 .layout {
   position: relative;
   background-image: url("/assets/images/SynerraBackground.webp");
+  filter: brightness(0.9);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -26,6 +27,7 @@
   /* GPU-kiihdytys ja kevyempi renderöinti */
   transform: translateZ(0);
   backface-visibility: hidden;
+  z-index: 10000;
 }
 
 .layout > .auth-card,
