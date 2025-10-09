@@ -13,7 +13,7 @@ export class AuthGuard implements CanActivate {
     private authStore: AuthStore,
   ) {}
 
-  // This function keeps track on wether the user is logged in or not.
+  // This function keeps track on whether the user is logged in or not.
   canActivate(): boolean {
     // Gets the login status boolean from AuthStore
     const loggedIn = this.authStore.isLoggedIn();

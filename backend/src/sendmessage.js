@@ -18,25 +18,24 @@ module.exports.handler = async (event) => {
   const userId = event.requestContext.authorizer?.sub;
 
   //extract message payload from client request body
-  let { senderId, roomId, message, timestamp, senderUsername, profilePicture } =
+  let { SenderId, RoomId, Content, Timestamp, SenderUsername, ProfilePicture } =
     JSON.parse(event.body).data;
-
   // find roomId for this connection first
 
+  // Get the correct room with connectionid
   try {
-    //paremeters for the scan
-    const scanParams = {
-      //get the correct table with environmental variables
+    const queryParams = {
       TableName: process.env.CONNECTION_DB_TABLE,
-      ProjectionExpression: 'roomId, connectionId', //fetch needed attributes
-      FilterExpression: 'connectionId = :cid', // find matching connectionId
+      IndexName: 'ConnectionIdIndex',
+      KeyConditionExpression: 'connectionId = :cid',
       ExpressionAttributeValues: { ':cid': connectionId },
+      ProjectionExpression: 'roomId, connectionId',
     };
 
-    const data = await doccli.send(new ScanCommand(scanParams));
+    const data = await doccli.send(new QueryCommand(queryParams));
 
     if (data.Items && data.Items.length > 0) {
-      roomId = data.Items[0].roomId; //extract roomid if found
+      RoomId = data.Items[0].roomId;
     } else {
       console.warn('No matching room found for connectionId');
       return { statusCode: 404, body: JSON.stringify('Room not found') };
@@ -51,41 +50,41 @@ module.exports.handler = async (event) => {
       new PutCommand({
         TableName: process.env.MAIN_TABLE, // main application table from environmental variables
         Item: {
-          PK: `room#${roomId}`, // room#<roomId>
-          SK: `message#${timestamp}`, // message#<timestamp>
+          PK: `room#${RoomId}`, // room#<roomId>
+          SK: `message#${Timestamp}`, // message#<timestamp>
           ConnectionId: connectionId,
-          SenderId: senderId, // used for MessagesBySender GSI
-          Content: message,
-          Timestamp: timestamp, // used for MessagesBySender GSI
-          RoomId: roomId, // optional can help with other queries
-          SenderUsername: senderUsername,
-          ProfilePicture: profilePicture,
+          SenderId, // used for MessagesBySender GSI
+          Content,
+          Timestamp, // used for MessagesBySender GSI
+          RoomId, // optional can help with other queries
+          SenderUsername,
+          ProfilePicture,
         },
       })
     );
-    console.log('Message saved to DynamoDB:', message);
+    console.log('Message saved to DynamoDB:', Content);
   } catch (err) {
     console.error('Error saving message to DynamoDB:', err);
   }
-  // 🔹 NEW ----------------------
-  // 3. Create unread markers for offline recipients
-  // ----------------------
+
+  //  Create unread markers for offline recipients
   let allParticipants = [];
   let membershipData;
+  console.log('Querying RoomMembersIndex for RoomId:', RoomId);
   try {
     console.log('Fetching membershipdata');
-    // Fetch all members of the room
+    // Fetching all members of the room
     membershipData = await doccli.send(
       new QueryCommand({
         TableName: process.env.MAIN_TABLE,
         IndexName: 'RoomMembersIndex',
         KeyConditionExpression: 'RoomId = :rid',
-        ExpressionAttributeValues: { ':rid': roomId },
+        ExpressionAttributeValues: { ':rid': RoomId },
         ProjectionExpression: 'UserId',
       })
     );
     allParticipants = membershipData.Items.map((i) => i.UserId).filter(
-      (uid) => uid !== senderId // exclude sender
+      (uid) => uid !== SenderId // exclude sender
     );
     console.log('All participants', allParticipants);
 
@@ -96,16 +95,16 @@ module.exports.handler = async (event) => {
             TableName: process.env.MAIN_TABLE,
             Item: {
               PK: `USER#${uid}`, // partition key for user
-              SK: `UNREAD#${timestamp}`, // sort key for unread message
-              MessageId: timestamp,
-              RoomId: roomId,
-              SenderId: senderId,
-              SenderUsername: senderUsername,
-              Content: message,
-              ProfilePicture: profilePicture,
-              GSI1PK: `USER#${uid}`, // 🔹 key for UnreadMessagesIndex
-              GSI1SK: `UNREAD#${timestamp}`, // 🔹 key for UnreadMessagesIndex
-              Timestamp: timestamp,
+              SK: `UNREAD#${Timestamp}`, // sort key for unread message
+              MessageId: Timestamp,
+              RoomId,
+              SenderId,
+              SenderUsername,
+              Content,
+              ProfilePicture,
+              GSI1PK: `USER#${uid}`, //key for UnreadMessagesIndex
+              GSI1SK: `UNREAD#${Timestamp}`, // key for UnreadMessagesIndex
+              Timestamp,
             },
           })
         )
@@ -114,6 +113,7 @@ module.exports.handler = async (event) => {
   } catch (err) {
     console.error('Error creating unread markers:', err);
   }
+
   // Setup API Gateway management client
   const domain = event.requestContext.domainName; // domain of websocket api
   const stage = event.requestContext.stage; // deployment stage
@@ -127,7 +127,7 @@ module.exports.handler = async (event) => {
       TableName: process.env.CONNECTION_DB_TABLE,
       ProjectionExpression: 'roomId, connectionId',
       KeyConditionExpression: 'roomId = :rid', //Query by roomID
-      ExpressionAttributeValues: { ':rid': roomId },
+      ExpressionAttributeValues: { ':rid': RoomId },
     };
     const data = await doccli.send(new QueryCommand(queryParams));
     connections = data.Items; //all connections in chat room
@@ -136,21 +136,21 @@ module.exports.handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify('Internal server error') };
   }
 
-  // Broadcast message to all connections
+  console.log('connections, ', connections);
   try {
     await Promise.all(
       connections.map(async ({ connectionId }) => {
         try {
-          //send message to each connection via websocket
+          //sends message to each connection via websocket
           await agmac.send(
             new PostToConnectionCommand({
               ConnectionId: connectionId,
               Data: JSON.stringify({
-                senderId,
-                message,
-                timestamp,
-                senderUsername,
-                profilePicture,
+                SenderId,
+                Content,
+                Timestamp,
+                SenderUsername,
+                ProfilePicture,
               }),
             })
           );
@@ -161,7 +161,7 @@ module.exports.handler = async (event) => {
             await doccli.send(
               new DeleteCommand({
                 TableName: process.env.CONNECTION_DB_TABLE,
-                Key: { roomId, connectionId },
+                Key: { RoomId, connectionId },
               })
             );
           } else {

@@ -25,44 +25,62 @@ export class NotificationsComponent implements OnInit {
 
   // on init load the unread messages and pending friend requests
   ngOnInit(): void {
-    this.loadUnreads();
-    this.loadPendingRequests();
-  }
+    // Initial load
+    this.friendService.getPendingRequests().subscribe();
 
-  // loads the unread messages
-  loadUnreads() {
-    this.userService.getUnreadMessages().subscribe({
-      next: (res) => {
-        this.unreads = res;
-        console.log('Unread messages:', res);
-      },
-      error: (err) => {
-        console.error('Failed to load unread messages', err);
-      },
+    // Reactive updates
+    this.friendService.pendingRequests$.subscribe((requests) => {
+      this.pendingRequests = requests;
+      console.log('REQUESTIT', this.pendingRequests);
+    });
+
+    // Reactive unreads from userService
+    this.userService.getUnreadMessages().subscribe();
+    this.userService.unreads$.subscribe((res) => {
+      this.unreads = res;
+      this.unreads = res.filter((msg) => msg.Relation !== 'FRIEND_REQUEST');
+      console.log('UNREADIT', this.unreads, res);
     });
   }
 
-  // loads pending friend requests
-  loadPendingRequests() {
-    this.friendService.getPendingRequests().subscribe({
-      next: (res) => {
-        this.pendingRequests = res.pendingRequests;
-        console.log('Pending friend requests:', res);
-      },
-      error: (err) => {
-        console.error('Failed to load pending requests', err);
-      },
-    });
-  }
+  // VANHA FUNKTIO
+  // loadUnreads() {
+  //   this.userService.getUnreadMessages().subscribe({
+  //     next: (res) => {
+  //       this.unreads = res;
+  //       console.log('Unread messages:', res);
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to load unread messages', err);
+  //     },
+  //   });
+  // }
+
+  // VANHA FUNKTIO
+  // loadPendingRequests() {
+  //   this.friendService.getPendingRequests().subscribe({
+  //     next: (res) => {
+  //       this.pendingRequests = res.pendingRequests;
+  //       console.log('Pending friend requests:', this.pendingRequests);
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to load pending requests', err);
+  //     },
+  //   });
+  // }
 
   // method to accept a friend request
   acceptRequest(targetUserId: string) {
+    const request = this.pendingRequests.find(
+      (req) => req.PK === `USER#${targetUserId}`
+    );
+    const username = request?.SenderUsername || 'User';
     this.friendService.acceptFriendRequest(targetUserId).subscribe({
       next: () => {
         this.pendingRequests = this.pendingRequests.filter(
           (req) => req.PK !== `USER#${targetUserId}`
         );
-        alert(`Friend request accepted}`);
+        alert(`Friend request from ${username} accepted`);
       },
       error: (err) => console.error('Failed to accept request', err),
     });
@@ -70,11 +88,16 @@ export class NotificationsComponent implements OnInit {
 
   // method to decline a friend request
   declineRequest(targetUserId: string) {
+    const request = this.pendingRequests.find(
+      (req) => req.PK === `USER#${targetUserId}`
+    );
+    const username = request?.SenderUsername || 'User';
     this.friendService.declineFriendRequest(targetUserId).subscribe({
       next: () => {
         this.pendingRequests = this.pendingRequests.filter(
           (req) => req.PK !== `USER#${targetUserId}`
         );
+        alert(`Friend request from ${username} declined`);
       },
       error: (err) => console.error('Failed to decline request', err),
     });

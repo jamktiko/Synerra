@@ -18,10 +18,10 @@
     </div>
 
     <button type="button" class="user-profile" (click)="onUserClick()" aria-label="User menu">
-      <img class="avatar" [src]="'assets/' + user.avatar" alt="User avatar" />
+      <img class="avatar" [src]="user?.ProfilePicture" alt="User avatar" />
       <div class="user-info">
-        <span class="user-name">{{ user.name }}</span>
-        <span class="user-email">{{ user.email }}</span>
+        <span class="user-name">{{ user?.Username }}</span>
+        <span class="user-email">{{ user?.Email }}</span>
       </div>
     </button>
   </div>

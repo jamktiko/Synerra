@@ -6,7 +6,7 @@ module.exports.handler = async (event) => {
   console.log('GetMessages triggered');
 
   // Extract roomId from query parameters
-  const roomId = event.queryStringParameters?.roomId;
+  const roomId = event.pathParameters?.roomId;
   if (!roomId) {
     console.warn('Missing roomId');
     return { statusCode: 400, body: JSON.stringify('Missing roomId') };

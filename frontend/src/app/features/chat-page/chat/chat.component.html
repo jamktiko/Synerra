@@ -10,19 +10,27 @@
     </div>
   </div>
 
-  <div class="chat-log">
+  <div class="chat-log" #chatLog>
     <!-- Loops the messages gotten from the chatService -->
     <div *ngFor="let msg of messages$ | async" class="chats">
-      <div *ngIf="msg.senderId === loggedInUser?.UserId" class="sentMessage">
-        <p>{{msg.message}}</p>
+      <div *ngIf="msg.SenderId === loggedInUser?.UserId" class="sentMessageWrapper">
+        <div class="sentMessage">
+          <p>{{msg.Content}}</p>
+        </div>
+        <p class="sentTimestamp">{{ msg.Timestamp | date:'d.MM.yyyy, HH.mm' }}</p>
       </div>
-      <div *ngIf="msg.senderId !== loggedInUser?.UserId" class=" receivedMessageWrapper">
-        <img src="{{msg.profilePicture || 'assets/svg/Acount.svg'}}" alt="avatar" class="messageAvatar" />
-        <div class="receivedMessage">
-          <p>{{msg.senderUsername}}</p>
-          <p>{{msg.message}}</p>
+
+      <div *ngIf="msg.SenderId !== loggedInUser?.UserId" class="receivedMessageWrapper">
+        <img src="{{msg.ProfilePicture || 'assets/svg/Acount.svg'}}" alt="avatar" class="messageAvatar" />
+        <div>
+          <div class="receivedMessage">
+            <p>{{msg.SenderUsername}}</p>
+            <p>{{msg.Content}}</p>
+          </div>
+          <p class="receivedTimestamp">{{ msg.Timestamp | date:'dd/MM/yyyy, HH:mm' }}</p>
         </div>
       </div>
+
 
     </div>
   </div>

@@ -160,14 +160,8 @@
   }
 }
 
-@media (max-height: 551.33px) {
+@media (max-height: 675px) {
   .container-opaque {
-    scale: 0.9;
-  }
-}
-
-@media (max-height: 551.33px), (max-width: 991px) {
-  .container-opaque {
-    scale: 0.82;
+    scale: 0.83;
   }
 }

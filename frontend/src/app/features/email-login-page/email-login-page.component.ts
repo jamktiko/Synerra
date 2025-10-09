@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { OnInit } from '@angular/core';
 import { User } from '../../core/interfaces/user.model';
-
+import { UserStore } from '../../core/stores/user.store';
+import { NgZone } from '@angular/core';
 @Component({
   standalone: true,
   selector: 'app-email-login-page',
@@ -19,24 +20,23 @@ export class EmailLoginPageComponent implements OnInit {
   emailInput: string = '';
   passwordInput: string = '';
   me: any = {};
+  user: User | null = null;
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private userService: UserService
-  ) {}
-
-  ngOnInit(): void {
-    this.userService.getMe().subscribe({
-      next: (res) => {
-        this.me = res;
-        console.log('me:', res);
-      },
-      error: (err) => {
-        console.error('Failed to load games', err);
-      },
+    private userService: UserService,
+    private userStore: UserStore
+  ) {
+    effect(() => {
+      const user = this.userStore.user();
+      if (user) {
+        this.user = user;
+      }
     });
   }
+
+  ngOnInit(): void {}
   login() {
     const credentials = {
       email: this.emailInput,
@@ -50,26 +50,28 @@ export class EmailLoginPageComponent implements OnInit {
         console.log('Login success:', res);
         this.emailInput = '';
 
-        // After login, fetch user profile to see if username exists
+        // Fetch the user after successful login
         this.userService.getMe().subscribe({
           next: (user) => {
-            this.me = user;
-            if (user?.Username) {
-              // User already has a username -> go to dashboard
+            this.userStore.setUser(user);
+            this.user = user;
+            console.log('Loaded user:', user);
+
+            // Navigate based on updated user
+            if (user.Username) {
               this.router.navigate(['/dashboard']);
             } else {
-              // No username yet -> go to profile creation
               this.router.navigate(['/profile-creation']);
             }
           },
           error: (err) => {
-            console.error('Error fetching user after login:', err);
+            console.error('Error loading user after login:', err);
             this.router.navigate(['/profile-creation']);
           },
         });
       },
       error: (err) => {
-        console.error('Login failed:', err);
+        console.error('Login error:', err);
       },
     });
   }

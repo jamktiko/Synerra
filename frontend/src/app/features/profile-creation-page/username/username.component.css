@@ -1,7 +1,8 @@
 .modal-frame {
   color: var(--color-text-default);
   padding: 4rem;
-  height: 40rem;
+  height: 39rem;
+  max-width: 100%;
   overflow: hidden;
   display: flex;
   align-items: center; /* pystysuunta */
@@ -45,20 +46,6 @@
   height: fit-content;
 }
 
-.done {
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
-  padding: 3px;
-  border-radius: 50%;
-}
-
-.step {
-  color: var(--color-primary);
-  border: 1px solid var(--color-text-dark);
-  padding: 3px;
-  border-radius: 50%;
-}
-
 .nextStep {
   color: var(--color-primary);
   font-size: 30px;
@@ -93,26 +80,35 @@
 
   transform: scale(1.01);
 }
-
-@media (max-width: 991px) {
+@media (max-width: 583px) {
   .progress {
     display: none;
   }
-  .modal-body,
-  .modal-footer {
-    width: 25rem;
+  h1 {
+    font-size: 40px;
+  }
+  .text-sm {
+    font-size: 18px;
+  }
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }
 
-@media (max-width: 460px) {
-  .progress {
-    display: none;
+@media (max-width: 555px) {
+  h1 {
+    font-size: 33px;
   }
   .modal-body,
   .modal-footer {
     width: 20rem;
   }
-  .text-h1 {
-    scale: 0.8;
+  .text-sm {
+    font-size: 14px;
+  }
+  .text-sm-bold {
+    font-size: 18px;
   }
 }

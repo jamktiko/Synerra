@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, effect, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
@@ -8,6 +8,8 @@ import { OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../../core/services/user.service';
 import { forkJoin } from 'rxjs';
+import { UserStore } from '../../../core/stores/user.store';
+import { User } from '../../../core/interfaces/user.model';
 
 @Component({
   selector: 'app-games',
@@ -22,13 +24,22 @@ export class GamesComponent implements OnInit {
   userId: string = '';
   updatedData: any = {};
   me: any = {};
-
+  user: any = {};
   @Input() profile: any; // this contains profile data from previous modals
   constructor(
     private modalRef: NgbActiveModal,
     private gameService: GameService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private userStore: UserStore
+  ) {
+    // Sets up a reactive watcher that updates user
+    effect(() => {
+      const user = this.userStore.user();
+      if (user) {
+        this.user = user;
+      }
+    });
+  }
 
   // Loads the games to the modal on init
   ngOnInit() {
@@ -37,45 +48,49 @@ export class GamesComponent implements OnInit {
   }
   finish() {
     // First, get the current user
-    this.userService.getMe().subscribe({
-      next: (res) => {
-        this.me = res;
-        console.log('me:', this.me);
 
-        const updatedData = {
-          username: this.profile.Username,
-          languages: this.profile.Languages,
-          birthday: this.profile.Birthday,
-        };
+    const updatedData = {
+      username: this.profile.Username,
+      languages: this.profile.Languages,
+      birthday: this.profile.Birthday,
+    };
 
-        // Update username, languages, birthday
-        this.userService.updateUser(this.me.UserId, updatedData).subscribe({
-          next: (res) => console.log('User updated:', res),
-          error: (err) => console.error('Failed to update user:', err),
-        });
-
-        // For each selected game, call the Lambda
-        const requests = this.selectedGames.map((game) => {
-          const gameId = game.PK.split('#')[1];
-          return this.gameService.addGame(gameId, game.Name!);
-        });
-
-        // Execute all requests in parallel
-        forkJoin(requests).subscribe({
-          next: (results) => {
-            console.log('All games updated:', results);
-            // Close modal after success
-            this.modalRef.close(this.profile);
-          },
-          error: (err) => {
-            console.error('Failed to update some games:', err);
-          },
-        });
-      },
-      error: (err) => console.error('Failed to load user info', err),
+    if (!this.user) {
+      console.error('User not found in store');
+      return;
+    }
+    // Update username, languages, birthday
+    this.userService.updateUser(this.user.UserId, updatedData).subscribe({
+      next: (res) => console.log('User updated:', res),
+      error: (err) => console.error('Failed to update user:', err),
     });
-    this.modalRef.close();
+
+    // For each selected game, call the Lambda
+    const requests = this.selectedGames.map((game) => {
+      const gameId = game.PK.split('#')[1];
+      return this.gameService.addGame(gameId, game.Name!);
+    });
+
+    // Execute all requests in parallel
+    forkJoin(requests).subscribe({
+      next: (results) => {
+        console.log('All games updated:', results);
+        // Close modal after success
+        this.userService.getMe().subscribe({
+          next: (res) => {
+            this.userStore.setUser(res); // update the current user info to the user-store
+            console.log('USER: ', res);
+          },
+          error: (err) => console.error('Error loading users', err),
+        });
+        this.modalRef.close(this.profile);
+      },
+      error: (err) => {
+        console.error('Failed to update some games:', err);
+      },
+    });
   }
+
   back() {
     this.modalRef.dismiss('back');
   }
@@ -90,18 +105,6 @@ export class GamesComponent implements OnInit {
           .filter((game) => Number(game.Popularity) >= 1) // exclude unpopular games
           .sort((a, b) => Number(b.Popularity) - Number(a.Popularity));
         console.log(this.sortedGames);
-      },
-      error: (err) => {
-        console.error('Failed to load games', err);
-      },
-    });
-  }
-  // Info of the user who is currently logged in
-  loadMe() {
-    this.userService.getMe().subscribe({
-      next: (res) => {
-        this.me = res;
-        console.log('me:', res);
       },
       error: (err) => {
         console.error('Failed to load games', err);

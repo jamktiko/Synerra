@@ -5,17 +5,21 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environment';
 import { AuthStore } from '../stores/auth.store';
+import { UserStore } from '../stores/user.store';
+import { User } from '../interfaces/user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = environment.AWS_USER_URL;
+  user: User | null = null;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private authStore: AuthStore,
+    private userStore: UserStore
   ) {}
 
   signup(credentials: { email: string; password: string }): Observable<any> {
@@ -24,17 +28,18 @@ export class AuthService {
       .pipe(
         tap((res) => {
           console.log(res);
-        }),
+        })
       );
   }
 
   login(credentials: { email: string; password: string }): Observable<any> {
     return this.http
-      .post<{ token: string }>(`${this.apiUrl}/login`, credentials)
+      .post<{ token: string; user: User }>(`${this.apiUrl}/login`, credentials)
       .pipe(
         tap((res) => {
           this.authStore.setToken(res.token);
-        }),
+          this.userStore.setUser(res.user);
+        })
       );
   }
 

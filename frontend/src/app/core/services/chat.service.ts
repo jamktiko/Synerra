@@ -1,11 +1,13 @@
 // This file handles the whole frontend chat logic
 
-import { Injectable } from '@angular/core';
+import { Injectable, effect } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../../environment';
 import { AuthStore } from '../stores/auth.store';
+import { UserStore } from '../stores/user.store';
 import { BehaviorSubject } from 'rxjs';
 import { ChatMessage } from '../interfaces/chatMessage';
+import { User } from '../interfaces/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
@@ -13,18 +15,24 @@ export class ChatService {
   private token: string | null = null;
   private uri: string = '';
   private currentRoomId: string | null = null;
+  private loggedInUser: User | null = null;
 
   // Sets up a Behavioral Subject for frontend to keep track of the current chat logs
-  private logMessagesSubject = new BehaviorSubject<ChatMessage[]>([]);
+  public logMessagesSubject = new BehaviorSubject<ChatMessage[]>([]);
   // Observable for the chat logs, so components can see the chat logs reactively. $-sign is commonly used for telling that a variable is an observable.
   logMessages$ = this.logMessagesSubject.asObservable();
 
   constructor(
     private authStore: AuthStore,
+    private userStore: UserStore,
     private router: Router,
   ) {
     this.token = this.authStore.getToken();
     this.uri = `${environment.WSS_URL}?Auth=${this.token}`; // AWS wss url
+
+    effect(() => {
+      this.loggedInUser = this.userStore.user();
+    });
   }
 
   // This starts the whole websocket process
@@ -46,10 +54,11 @@ export class ChatService {
         this.logMessagesSubject.next([]);
         // Sends a message
         this.addLog({
-          senderId: 'system',
-          senderUsername: 'system',
-          message: 'Connected to server',
-          profilePicture: 'assets/svg/Acount.svg',
+          SenderId: 'system',
+          SenderUsername: 'system',
+          Content: 'Connected to server',
+          ProfilePicture: 'assets/svg/Acount.svg',
+          Timestamp: Date.now(),
         });
 
         // Tells the server to create/enter a room with either targetUserIds or chatRoomId, depending on how the startChat() was called.
@@ -73,15 +82,17 @@ export class ChatService {
 
       // Activates when the websocket server sends a message
       this.ws.onmessage = (e) => {
+        console.log('JOS TÄÄ NÄKYY NII HERRANJUMALA');
         console.log('Message: ', e);
+
         try {
           // Parses the message to usable form
           const msg = JSON.parse(e.data);
-          this.currentRoomId = msg.roomId;
+          this.currentRoomId = msg.RoomId;
           // The backend sends 2 kind of messages. The first type is sent when the user joins a new room.
           // The second type is sent when the user sends a message inside of a room.
           // If the e.data has senderId and message on it, it means that the received action is a message being sent.
-          if (msg.senderId && msg.message) {
+          if (msg.SenderId && msg.Content) {
             // Uses addLog to show the received message in the frontend
             this.addLog(msg);
             // If the e.data has roomId on it, it means that the received action is about joining a new room.
@@ -100,44 +111,63 @@ export class ChatService {
       // Sends a message to the user when the websocket connection is cut.
       this.ws.onclose = () =>
         this.addLog({
-          senderId: 'system',
-          senderUsername: 'system',
-          message: 'Connection closed',
-          profilePicture: 'assets/svg/Acount.svg',
+          SenderId: 'system',
+          SenderUsername: 'system',
+          Content: 'Connection closed',
+          ProfilePicture: 'assets/svg/Acount.svg',
+          Timestamp: Date.now(),
         });
     });
   }
 
   // Sends a message to the websocket server
   sendMessage(
-    msg: string,
+    content: string,
     userId: string,
     userName: string,
     profilePicture: string,
     roomId: string,
   ) {
     // If no websocket connection or message, it breaks.
-    if (!this.ws || !msg) {
-      console.log('returning ', this.ws, msg);
+    if (!this.ws || !content) {
+      console.log('returning ', this.ws, content);
       return;
+    }
+
+    if (!this.loggedInUser) {
+      console.log('Not logged in');
     }
 
     // Gathering all the data that is being sent to the server
     const payload = {
       action: 'sendmessage',
       data: {
-        senderId: userId,
-        senderUsername: userName,
-        profilePicture: profilePicture,
-        roomId,
-        message: msg,
-        timestamp: Date.now(),
+        SenderId: userId,
+        SenderUsername: userName,
+        ProfilePicture: profilePicture,
+        RoomId: roomId,
+        Content: content,
+        Timestamp: Date.now(),
       },
+    };
+
+    // Own object for the message that shows for the frontend user immediately
+    const message = {
+      SenderId: userId,
+      SenderUsername: userName,
+      Content: content,
+      ProfilePicture: profilePicture,
+      Timestamp: Date.now(),
     };
 
     console.log('Sending structured message:', payload);
     // sends the data to the websocket server
     this.ws.send(JSON.stringify(payload));
+
+    // Gets the current websocket chatlog and adds the new message there
+    // (immediately after sending the message to the server, not waiting for the addLog to catch it for more responsive user experience)
+    const current = this.logMessagesSubject.getValue();
+    this.logMessagesSubject.next([...current, message]);
   }
 
   // Closes the whole websocket connection
@@ -163,12 +193,21 @@ export class ChatService {
 
   // Adds a received message to the behavioral subject for showing it for the user in frontend.
   addLog(msg: {
-    senderId: string;
-    senderUsername: string;
-    message: string;
-    profilePicture: string;
+    SenderId: string;
+    SenderUsername: string;
+    Content: string;
+    ProfilePicture: string;
+    Timestamp: number;
   }) {
-    const current = this.logMessagesSubject.getValue();
-    this.logMessagesSubject.next([...current, msg]);
+    // If the message was sent by the loggedInUser,
+    // it will not be added to the showing chatlog as the message was already added there by sendMessage().
+    if (msg.SenderId !== this.loggedInUser?.UserId) {
+      console.log('ei oo sama');
+      console.log(msg.SenderId, this.loggedInUser?.UserId);
+      const current = this.logMessagesSubject.getValue();
+      this.logMessagesSubject.next([...current, msg]);
+    } else {
+      console.log('ON SAMA LÄJHETTÖAA');
+    }
   }
 }
