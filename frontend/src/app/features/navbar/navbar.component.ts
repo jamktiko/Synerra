@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { User } from '../../core/interfaces/user.model';
 import { UserStore } from '../../core/stores/user.store';
+import { Router } from '@angular/router';
 
 interface NavItem {
   label: string;
@@ -41,7 +42,7 @@ export class NavbarComponent implements OnInit {
 
   logout = { label: 'Logout', icon: 'Logout.svg', route: '/login' };
 
-  constructor(private userStore: UserStore) {
+  constructor(private userStore: UserStore, private router: Router) {
     // Sets up a reactive watcher that updates user
     effect(() => {
       const user = this.userStore.user();
@@ -50,9 +51,7 @@ export class NavbarComponent implements OnInit {
       }
     });
   }
-  // get user(): User | null {
-  //   return this.userStore.user();
-  // }
+
   ngOnInit(): void {
     const saved = localStorage.getItem('navbarCollapsed');
     if (saved !== null) {
@@ -86,5 +85,6 @@ export class NavbarComponent implements OnInit {
 
   onUserClick(): void {
     console.log('User button clicked');
+    this.router.navigate(['/dashboard/profile']);
   }
 }

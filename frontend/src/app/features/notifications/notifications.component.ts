@@ -48,6 +48,7 @@ export class NotificationsComponent implements OnInit {
     // Pyydetään aluksi palvelimelta tiedot
     this.userService.getUnreadMessages().subscribe();
     this.friendService.getPendingRequests().subscribe();
+    this.userService.fetchUnreadMessages();
   }
 
   // hyväksy friend request

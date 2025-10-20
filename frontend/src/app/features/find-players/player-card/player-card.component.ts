@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { User } from '../../../core/interfaces/user.model';
 import { FriendService } from '../../../core/services/friend.service';
 import { ChatService } from '../../../core/services/chat.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-player-card',
@@ -16,10 +17,12 @@ export class PlayerCardComponent {
 
   constructor(
     private friendService: FriendService,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private router: Router
   ) {}
   onProfile(): void {
     console.log(`Opening profile of ${this.user.Username}`);
+    this.router.navigate(['/dashboard/profile']);
   }
 
   SendMsg(userId: any) {
