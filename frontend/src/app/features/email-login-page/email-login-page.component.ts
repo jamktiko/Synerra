@@ -26,7 +26,7 @@ export class EmailLoginPageComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private userService: UserService,
-    private userStore: UserStore
+    private userStore: UserStore,
   ) {
     effect(() => {
       const user = this.userStore.user();
@@ -36,8 +36,18 @@ export class EmailLoginPageComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
-  login() {
+  ngOnInit(): void {
+    this.userService.getMe().subscribe({
+      next: (res) => {
+        this.me = res;
+        console.log('me:', res);
+      },
+      error: (err) => {
+        console.error('Failed to load games', err);
+      },
+    });
+  }
+  async login() {
     const credentials = {
       email: this.emailInput,
       password: this.passwordInput,
