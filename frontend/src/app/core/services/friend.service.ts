@@ -17,7 +17,10 @@ export class FriendService {
   private friendsSubject = new BehaviorSubject<User[]>([]);
   friends$ = this.friendsSubject.asObservable();
 
-  constructor(private http: HttpClient, private authStore: AuthStore) {}
+  constructor(
+    private http: HttpClient,
+    private authStore: AuthStore,
+  ) {}
 
   sendFriendRequest(targetUserId: string): Observable<any> {
     const jwt = this.authStore.getToken();
@@ -31,13 +34,13 @@ export class FriendService {
         },
         {
           headers: { Authorization: `${jwt}` },
-        }
+        },
       )
       .pipe(
         tap(() => {
           //  Refresh pending requests after sending a new one
           this.refreshPendingRequests();
-        })
+        }),
       );
   }
 
@@ -48,19 +51,19 @@ export class FriendService {
       .post(
         `${this.baseUrl}/friendrequest`,
         { targetUserId, action: 'ACCEPT' },
-        { headers: { Authorization: `${jwt}` } }
+        { headers: { Authorization: `${jwt}` } },
       )
       .pipe(
         tap(() => {
           // Remove from pending requests reactively
           const current = this.pendingRequestsSubject.value.filter(
-            (r) => r.PK !== `USER#${targetUserId}`
+            (r) => r.PK !== `USER#${targetUserId}`,
           );
           this.pendingRequestsSubject.next(current);
 
           // Refresh friends list reactively
           this.getFriends().subscribe();
-        })
+        }),
       );
   }
 
@@ -76,16 +79,16 @@ export class FriendService {
         },
         {
           headers: { Authorization: `${jwt}` },
-        }
+        },
       )
       .pipe(
         tap(() => {
           //  Remove from pending requests reactively
           const current = this.pendingRequestsSubject.value.filter(
-            (r: any) => r.PK !== `USER#${targetUserId}`
+            (r: any) => r.PK !== `USER#${targetUserId}`,
           );
           this.pendingRequestsSubject.next(current);
-        })
+        }),
       );
   }
 
@@ -100,7 +103,7 @@ export class FriendService {
         tap(() => {
           //  Refresh friends list reactively
           this.getFriends().subscribe();
-        })
+        }),
       );
   }
 
@@ -115,7 +118,7 @@ export class FriendService {
           // Only push the users array into the BehaviorSubject
           this.friendsSubject.next(res.users || []);
         }),
-        map((res) => res.users || [])
+        map((res) => res.users || []),
       );
   }
 
@@ -129,7 +132,7 @@ export class FriendService {
       .pipe(
         tap((res: any) => {
           this.pendingRequestsSubject.next(res.pendingRequests || []);
-        })
+        }),
       );
   }
 

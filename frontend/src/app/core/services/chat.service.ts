@@ -8,6 +8,7 @@ import { UserStore } from '../stores/user.store';
 import { BehaviorSubject } from 'rxjs';
 import { ChatMessage } from '../interfaces/chatMessage';
 import { User } from '../interfaces/user.model';
+import { MessageService } from './message.service';
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
@@ -26,9 +27,10 @@ export class ChatService {
     private authStore: AuthStore,
     private userStore: UserStore,
     private router: Router,
+    private messageService: MessageService,
   ) {
     this.token = this.authStore.getToken();
-    this.uri = `${environment.WSS_URL}?Auth=${this.token}`; // AWS wss url
+    this.uri = `${environment.WSS_URL}?Auth=${this.token}`;
 
     effect(() => {
       this.loggedInUser = this.userStore.user();
@@ -51,15 +53,14 @@ export class ChatService {
 
       // Activates when a successful connection between server and client has been made
       this.ws.onopen = () => {
-        this.logMessagesSubject.next([]);
         // Sends a message
-        this.addLog({
-          SenderId: 'system',
-          SenderUsername: 'system',
-          Content: 'Connected to server',
-          ProfilePicture: 'assets/svg/Acount.svg',
-          Timestamp: Date.now(),
-        });
+        // this.addLog({
+        //   SenderId: 'system',
+        //   SenderUsername: 'system',
+        //   Content: 'Connected to server',
+        //   ProfilePicture: 'assets/svg/Acount.svg',
+        //   Timestamp: Date.now(),
+        // });
 
         // Tells the server to create/enter a room with either targetUserIds or chatRoomId, depending on how the startChat() was called.
         if (targetUserId && !targetRoomId) {
@@ -98,6 +99,20 @@ export class ChatService {
           } else if (msg.roomId) {
             // Routes the user to the new room in frontend
             this.router.navigate(['/dashboard/social', msg.roomId]);
+
+            this.logMessagesSubject.next([]);
+
+            // Gets the chat history of a room and adds it to the chat messages$, that holds the chatlogs
+            this.messageService.getMessages(msg.roomId).subscribe({
+              next: (messages) => {
+                console.log('yhistääÄÄÄä', messages);
+                const current = this.logMessagesSubject.getValue();
+                this.logMessagesSubject.next([...messages, ...current]);
+              },
+              error: (err) => {
+                console.error('Failed to fetch messages:', err);
+              },
+            });
           }
         } catch (err) {
           console.error('Failed to parse message', e.data);
@@ -159,14 +174,26 @@ export class ChatService {
       Timestamp: Date.now(),
     };
 
-    console.log('Sending structured message:', payload);
-    // sends the data to the websocket server
-    this.ws.send(JSON.stringify(payload));
+    try {
+      console.log('Sending message to WS:', payload);
+      // sends the data to the websocket server
+      this.ws.send(JSON.stringify(payload));
 
-    // Gets the current websocket chatlog and adds the new message there
-    // (immediately after sending the message to the server, not waiting for the addLog to catch it for more responsive user experience)
-    const current = this.logMessagesSubject.getValue();
-    this.logMessagesSubject.next([...current, message]);
+      // Gets the current websocket chatlog and adds the new message there
+      // (immediately after sending the message to the server, not waiting for the addLog to catch it for more responsive user experience)
+      const current = this.logMessagesSubject.getValue();
+      this.logMessagesSubject.next([...current, message]);
+    } catch (error) {
+      console.log('WS send failed', error);
+
+      this.addLog({
+        SenderId: 'system',
+        SenderUsername: 'system',
+        Content: 'Sending message failed',
+        ProfilePicture: 'assets/svg/Acount.svg',
+        Timestamp: Date.now(),
+      });
+    }
   }
 
   // Closes the whole websocket connection
@@ -201,12 +228,9 @@ export class ChatService {
     // If the message was sent by the loggedInUser,
     // it will not be added to the showing chatlog as the message was already added there by sendMessage().
     if (msg.SenderId !== this.loggedInUser?.UserId) {
-      console.log('ei oo sama');
       console.log(msg.SenderId, this.loggedInUser?.UserId);
       const current = this.logMessagesSubject.getValue();
       this.logMessagesSubject.next([...current, msg]);
-    } else {
-      console.log('ON SAMA LÄJHETTÖAA');
     }
   }
 }
