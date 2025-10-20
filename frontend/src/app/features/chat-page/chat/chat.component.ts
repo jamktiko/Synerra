@@ -30,6 +30,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   loggedInUser: any;
   // Sets an observable for the showing chat messages
   messages$: Observable<ChatMessage[]>;
+  messageHistory: [] = [];
 
   messageText: string = '';
 
@@ -67,18 +68,6 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    // Gets the chat history of a room and adds it to the chat messages$, that holds the chatlogs
-    this.messageService.getMessages(this.roomId).subscribe({
-      next: (messages) => {
-        console.log('yhistääÄÄÄä', messages);
-        const current = this.chatService.logMessagesSubject.getValue();
-        this.chatService.logMessagesSubject.next([...messages, ...current]);
-      },
-      error: (err) => {
-        console.error('Failed to fetch messages:', err);
-      },
-    });
-
     this.userService.markRoomMessagesAsRead(this.roomId).subscribe({
       next: (res) => {
         console.log(`Messages in room ${this.roomId} marked as read`, res);
