@@ -1,4 +1,11 @@
-import { Component, HostListener, OnInit, effect } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  Output,
+  EventEmitter,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { User } from '../../core/interfaces/user.model';
@@ -20,6 +27,8 @@ interface NavItem {
 export class NavbarComponent implements OnInit {
   isCollapsed = false;
   private hasUserPreference = false;
+
+  @Output() collapsedChange = new EventEmitter<boolean>();
 
   user: User | null = null;
 
@@ -57,39 +66,33 @@ export class NavbarComponent implements OnInit {
     if (saved !== null) {
       this.isCollapsed = saved === 'true';
       this.hasUserPreference = true;
-    } else if (typeof window !== 'undefined' && window.innerWidth < 600) {
-      // Ensikäynnillä pienillä näytöillä voit halutessasi aloittaa collapsedina
+    } else if (typeof window !== 'undefined' && window.innerWidth < 900) {
       this.isCollapsed = true;
     }
+    this.checkAutoCollapse();
+    this.collapsedChange.emit(this.isCollapsed);
   }
 
   toggleCollapse(): void {
     this.isCollapsed = !this.isCollapsed;
     this.hasUserPreference = true;
     localStorage.setItem('navbarCollapsed', String(this.isCollapsed));
+    this.collapsedChange.emit(this.isCollapsed);
   }
 
-  // Pikanäppäin: Ctrl/Cmd + B togglaa navin
-  @HostListener('window:keydown', ['$event'])
-  onKeydown(e: KeyboardEvent) {
-    if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
-      e.preventDefault();
-      this.toggleCollapse();
-    }
-  }
+  @HostListener('window:resize', [])
+  checkAutoCollapse() {
+    if (this.hasUserPreference) return;
 
-  // Responsiivisuus: kun käyttäjällä ei ole omaa preferenssiä, voidaan pienen näytön tulla collapsed-tilaan
-  @HostListener('window:resize')
-  onResize() {
-    if (!this.hasUserPreference) {
-      if (window.innerWidth < 600) this.isCollapsed = true;
-      // ei pakoteta takaisin expanded-tilaan, jos käyttäjä on tottunut collapsediin
-    }
+    const layout = document.querySelector('.layout') as HTMLElement;
+    if (!layout) return;
+
+    const layoutRect = layout.getBoundingClientRect();
+    this.isCollapsed = layoutRect.top < 0;
+    this.collapsedChange.emit(this.isCollapsed);
   }
 
   onUserClick(): void {
-    // TODO: lisää reitti tai avaa käyttäjävalikko
-    // Esim: this.router.navigate(['/dashboard/account']);
     console.log('User button clicked');
   }
 }

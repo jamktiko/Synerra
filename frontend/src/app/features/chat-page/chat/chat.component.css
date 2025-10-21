@@ -5,59 +5,28 @@
   background: var(--color-background);
   border-radius: 8px;
   padding: 1rem;
-  color: #fff;
+  color: var(--color-text-default);
   font-family: Inter, sans-serif;
   width: 100vh;
   max-width: 100vh;
-  position: relative;
-  z-index: 0;
-}
-
-.chatElement::before {
-  content: "";
-  position: absolute;
-  inset: 0; /* cover full element */
-  border-radius: 8px;
-  padding: 1px; /* thickness of gradient border */
-  background: linear-gradient(
-    180deg,
-    #8e8e8e,
-    #5d5c5c 25%,
-    #515050 50%,
-    #5d5c5c 75%,
-    #8e8e8e
-  );
-  z-index: -1;
-
-  /* Mask to create gradient outline only */
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-
-  pointer-events: none; /* don’t block clicks */
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .headframe {
   display: grid;
-  grid-template-columns: 10% 75% 15%; /* left | center | right */
+  grid-template-columns: 10% 75% 15%;
   align-items: center;
   padding: 0.5rem 1rem;
   background: var(--color-background);
   border-radius: 8px;
   gap: 1rem;
   text-align: center;
-
-  /* Background image */
-  background-image: url("/assets/images/chatHeadFrame.png");
+  background: linear-gradient(135deg, #1f1f1f, #2c2c2c);
   background-size: 100%;
   background-position: center;
   background-repeat: no-repeat;
-  color: #fff; /* text color on top of image */
+  color: var(--color-text-default);
 }
 
 .avatarframe-icon {
@@ -68,11 +37,11 @@
 .chatheading {
   font-size: 1.25rem;
   font-weight: bold;
-  color: #fff;
+  color: var(--color-text-default);
 }
 
 .headerButton button {
-  all: unset; /* remove default button styles */
+  all: unset;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -85,7 +54,7 @@
 }
 
 .headerButton button:active {
-  transform: scale(0.85); /* shrink to 85% on press */
+  transform: scale(0.85);
 }
 
 .chat-log {
@@ -95,7 +64,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  /* remove justify-content */
+  overflow-x: hidden;
 }
 
 .chats {
@@ -105,11 +74,13 @@
   flex-direction: column;
   flex: none;
   margin-bottom: 1%;
+  box-sizing: border-box;
 }
 
 .sentMessage,
 .receivedMessage {
-  max-width: 100%;
+  max-width: 90%;
+  box-sizing: border-box;
   padding: 0.5rem 0.75rem;
   font-size: 0.95rem;
   line-height: 1.4;
@@ -160,12 +131,12 @@
   border-radius: 8px;
   border: 1px solid #8e8e8e;
   background: #1e1e1e;
-  color: #fff;
+  color: var(--color-text-default);
 }
 
 .chat-input input:focus {
-  border-color: var(--color-primary); /* or any color you want */
-  outline: none; /* remove default blue outline */
+  border-color: var(--color-primary);
+  outline: none;
 }
 
 .chat-input button {
@@ -173,7 +144,7 @@
   border-radius: 8px;
   border: none;
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-text-default);
   cursor: pointer;
 }
 

@@ -4,10 +4,11 @@ import { FriendService } from '../../core/services/friend.service';
 import { User } from '../../core/interfaces/user.model';
 import { ChatService } from '../../core/services/chat.service';
 import { Observable } from 'rxjs';
+import { NotificationsComponent } from '../notifications/notifications.component';
 
 @Component({
   selector: 'app-social-bar',
-  imports: [CommonModule],
+  imports: [CommonModule, NotificationsComponent],
   templateUrl: './social-bar.component.html',
   styleUrls: ['./social-bar.component.css', '../../../styles.css'],
 })

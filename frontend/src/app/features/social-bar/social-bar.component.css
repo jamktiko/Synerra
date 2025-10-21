@@ -1,72 +1,95 @@
 .social-floating {
-  position: absolute;
-  top: 5%;
-  right: 2%;
-  width: 16rem;
-  height: 90vh;
-  border-radius: 8px;
-  background-color: var(--color-background);
-  padding: 1rem 1.875rem 0 1rem;
+  position: fixed;
+  top: 57px;
+  right: 20px;
+  width: 320px;
+  max-width: 18rem;
+  height: calc(100vh - 120px);
+  max-height: calc(100vh - 120px);
   display: flex;
+  align-self: flex-start;
   flex-direction: column;
-  gap: 0.437rem;
-  overflow-x: hidden;
-  z-index: 1000;
+  gap: 1.25rem;
+  padding: 1.5rem 1.25rem;
+  border-radius: 12px;
+  background: var(--color-dark-gradient);
   box-sizing: border-box;
+  border: 1px solid rgba(58, 58, 58, 1);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  z-index: 2;
 }
 
-/* Gradient outline */
+.social-floating a {
+  color: var(--color-text-default);
+  font-size: 1.4rem;
+  transition: all 0.25s ease;
+  opacity: 0.85;
+}
+
 .social-floating::before {
   content: "";
   position: absolute;
-  inset: 0; /* covers entire element */
-  border-radius: 8px;
-  padding: 1px; /* thickness of gradient border */
-  background: var(--color-gray-v2);
-
-  /* Mask for gradient border */
+  inset: 0;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #8e8e8e, #4b4b4b);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
-
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-
-  pointer-events: none; /* don’t block clicks */
+  pointer-events: none;
 }
 
 .header {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 1.875rem 1.25rem 0 0;
-  gap: 1.5rem;
+  padding-right: 0.5rem;
+  gap: 0.75rem;
 }
 
 .social-text {
-  height: 0.938rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.top-socialbar {
+  display: flex;
+  align-items: start;
+  gap: 9rem;
 }
 
 .linebreak-horizontal-child {
-  width: 100%;
-  height: 0.063rem;
+  display: block;
+  width: calc(100% - 1rem);
+  height: 1px;
   background: linear-gradient(
-    180deg,
-    #8e8e8e,
-    #5d5c5c 25%,
-    #515050 50%,
-    #5d5c5c 75%,
-    #8e8e8e
+    90deg,
+    transparent 0%,
+    rgba(88, 88, 88, 0.3) 10%,
+    rgba(88, 88, 88, 0.6) 25%,
+    rgba(88, 88, 88, 0.8) 50%,
+    rgba(88, 88, 88, 0.6) 75%,
+    rgba(88, 88, 88, 0.3) 90%,
+    transparent 100%
   );
-  border-radius: 1px;
+  margin: 0.5rem;
+  position: relative;
+  transition: width 300ms ease;
+  overflow: hidden;
 }
 
-/* Players online scrollable */
 .friends-container {
   max-height: 80%;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: 1rem;
 }
 
 .player-card {
@@ -74,11 +97,14 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.812rem;
-  height: 3rem;
-  width: 100%;
+  padding: 0.4rem 0.5rem;
   border-radius: 8px;
-  padding: 0.25rem 0.312rem;
-  box-sizing: border-box;
+  transition: background 0.2s ease;
+}
+
+.player-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
 }
 
 .player-name {
@@ -86,12 +112,14 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  color: var(--color-text-default);
 }
 
 .acount-icon {
   width: 2.5rem;
-  height: 100%;
+  height: 2.5rem;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .status {
@@ -101,21 +129,28 @@
 }
 
 .online-icon {
-  width: 100%;
-  height: 100%;
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
+  border-radius: 50%;
 }
 
-/* Chatrooms scrollable */
+/* Notifikaatiot */
+
+.friends-container,
 .chatroom-items {
-  max-height: 40vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.312rem;
+  gap: 0.625rem;
+  scrollbar-width: thin;
+  scrollbar-color: #2b2b2b #1a1a1a;
+}
+
+/* Chatroomit */
+.chatroom-items {
+  max-height: 40vh;
   padding: 0.5rem 0;
+  gap: 0.5rem;
 }
 
 .chatroom-card {
@@ -124,15 +159,27 @@
   gap: 1rem;
   height: 3.625rem;
   width: 100%;
-  padding: 0.25rem 0.312rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  transition: background 0.2s ease;
+}
+
+.chatroom-card:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .chatroom-card-child {
   width: 3.125rem;
   height: 3.125rem;
   border-radius: 20px;
-  background-color: #1b1b1b;
-  border: 1px solid #8e8e8e;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-text-dark);
+}
+
+.sum {
+  color: var(--color-primary);
+  font-weight: 600;
 }
 
 /* Scrollbar styling */
@@ -143,18 +190,25 @@
 
 .friends-container::-webkit-scrollbar-thumb,
 .chatroom-items::-webkit-scrollbar-thumb {
-  background: #333;
+  background: var(--color-background);
   border-radius: 3px;
 }
 
 .friends-container,
 .chatroom-items {
   scrollbar-width: thin;
-  scrollbar-color: #1b1b1b var(--color-background);
+  scrollbar-color: var(--color-background);
 }
+/* Mobiili */
+@media (max-width: 900px) {
+  .social-floating {
+    display: none;
+  }
 
-.sum {
-  color: var(--color-primary);
+  .friends-container,
+  .chatroom-items {
+    display: none;
+  }
 }
 @media (max-width: 768px) {
   .social-floating {
