@@ -120,3 +120,8 @@ app-dashboard-card {
   font-size: 12px;
   font-weight: bold;
 }
+@media (max-width: 768px) {
+  .dashboard {
+    width: auto;
+  }
+}

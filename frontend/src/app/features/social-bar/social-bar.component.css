@@ -156,3 +156,8 @@
 .sum {
   color: var(--color-primary);
 }
+@media (max-width: 768px) {
+  .social-floating {
+    display: none;
+  }
+}

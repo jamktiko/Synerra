@@ -72,4 +72,7 @@
   .users-container {
     padding-bottom: 90px;
   }
+  .mid-container {
+    width: 100%;
+  }
 }

@@ -32,6 +32,7 @@
 @media (max-width: 768px) {
   .layout {
     grid-template-columns: 1fr; /* layout ottaa kaiken käytettävän tilan */
+    width: 100%;
   }
 
   .main {
@@ -41,7 +42,7 @@
     /* tämä on patentti jolla sain sellaisen tyhjän palkin piiloon rikkomatta mobile navigaatiota*/
     /* Tuotanto 2 alussa voisin korjata tämän kokonaan ja tehdä täysin erillisen navigaation mobiilille t: Aleksi :-) */
     position: static;
-    width: 100vw;
+    width: 100%;
     height: 0px;
     padding: 0px;
     flex-direction: column;
