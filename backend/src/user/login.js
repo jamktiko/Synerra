@@ -39,6 +39,14 @@ module.exports.handler = async (event) => {
       accessToken: response.AuthenticationResult.AccessToken,
     });
   } catch (error) {
+    if (error.name === 'UserNotFoundException') {
+      return sendResponse(400, { message: 'User does not exist' });
+    }
+
+    if (error.name === 'NotAuthorizedException') {
+      return sendResponse(400, { message: 'Wrong email or password' });
+    }
+
     const message = error.message ? error.message : 'Internal server error';
     return sendResponse(500, { message });
   }

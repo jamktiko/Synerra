@@ -53,15 +53,6 @@ export class ChatService {
 
       // Activates when a successful connection between server and client has been made
       this.ws.onopen = () => {
-        // Sends a message
-        // this.addLog({
-        //   SenderId: 'system',
-        //   SenderUsername: 'system',
-        //   Content: 'Connected to server',
-        //   ProfilePicture: 'assets/svg/Acount.svg',
-        //   Timestamp: Date.now(),
-        // });
-
         // Tells the server to create/enter a room with either targetUserIds or chatRoomId, depending on how the startChat() was called.
         if (targetUserId && !targetRoomId) {
           this.ws!.send(
