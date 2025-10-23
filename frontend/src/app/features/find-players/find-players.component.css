@@ -2,7 +2,6 @@
 .users-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 40px;
   column-gap: 40px;
   row-gap: 50px;
   padding: 35px;
@@ -94,14 +93,5 @@
       width: 100%;
       margin: 0 0 20px;
     }
-  }
-}
-/* Mahdollisesti tarvittava myös muilla sivuilla, mahdollinen siirto siis yleiseen css tiedostoon */
-@media (max-width: 768px) {
-  .users-container {
-    padding-bottom: 90px;
-  }
-  .mid-container {
-    width: 100%;
   }
 }

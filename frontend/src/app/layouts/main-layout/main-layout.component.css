@@ -80,25 +80,48 @@
     display: none;
   }
 }
+/*
+===============================================
+Mobiili näkymään flexbox, ja järjestys muutettu
+[main]
+[navigation]
+===============================================
+*/
 @media (max-width: 768px) {
   .layout {
-    grid-template-columns: 1fr; /* layout ottaa kaiken käytettävän tilan */
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    min-height: 100vh;
   }
 
   .main {
-    grid-column: 1;
+    order: 1;
+    flex: 1 1 auto;
+    width: 100%;
+    overflow-y: auto;
+    padding: 0;
   }
   .navbar {
-    /* tämä on patentti jolla sain sellaisen tyhjän palkin piiloon rikkomatta mobile navigaatiota*/
-    /* Tuotanto 2 alussa voisin korjata tämän kokonaan ja tehdä täysin erillisen navigaation mobiilille t: Aleksi :-) */
-    position: static;
+    order: 2;
     width: 100%;
-    height: 0px;
-    padding: 0px;
-    flex-direction: column;
-    align-items: stretch;
+    flex-shrink: 0;
+    position: relative;
   }
+
+  .navbar app-navbar .mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10000;
+  }
+
+  body,
+  .main {
+    padding-bottom: 92px; /*80px + 12px*/
+  }
+
   .navbar .nav-links {
     flex-direction: row;
     width: 100%;

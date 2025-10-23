@@ -5,18 +5,20 @@ h1 {
 
 .layout {
   display: flex;
-  height: 100vh;
+  height: 100%;
 }
 
+html,
 body {
   height: 100%;
-  overflow: hidden;
 }
 
 .social-menu {
   margin-left: 1.5%;
   margin-right: 1.5%;
   margin-top: 3.6%;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .social-floating {
@@ -24,4 +26,12 @@ body {
 }
 app-dashboard {
   flex: 1;
+}
+@media (max-width: 768px) {
+  .layout {
+    justify-content: center;
+  }
+  .social-menu {
+    width: 100%;
+  }
 }
