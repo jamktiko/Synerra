@@ -43,9 +43,15 @@
           class="avatar" />
         <div class="message-info">
           <div class="content">{{ notification.message }}</div>
-          <div class="friend-actions">
-            <button class="btn btn-success btn-sm" (click)="acceptRequest(notification.fromUserId)">Accept</button>
-            <button class="btn btn-danger btn-sm" (click)="declineRequest(notification.fromUserId)">Decline</button>
+          <div *ngIf="notification.type === 'friend_request'" class="friend-actions">
+            <button class="btn btn-success btn-sm" (click)="acceptRequest(notification.fromUserId)"
+              (click)="clearRequest(notification.fromUserId)">Accept</button>
+            <button class="btn btn-danger btn-sm" (click)="declineRequest(notification.fromUserId)"
+              (click)="clearRequest(notification.fromUserId)">Decline</button>
+          </div>
+          <div *ngIf=" notification.type==='friend_request_accepted' ||
+              notification.type==='friend_request_declined'" class=" friend-actions">
+            <button class="btn btn-success btn-sm" (click)="clearRequest(notification.fromUserId)">Clear</button>
           </div>
         </div>
       </div>
@@ -55,12 +61,26 @@
     <!-- NON-REACTIVE FRIEND REQUEST NOTIFICATIONS -->
     <div *ngFor="let req of pendingRequests" class="notification-item">
       <img [src]="req.SenderPicture || '/assets/svg/user-avatar-placeholder.svg'" alt="avatar" class="avatar" />
-      <div class="message-info">
+      <div *ngIf="req.Status === 'PENDING'" class="message-info">
         <div class="sender">{{ req.SenderUsername }}</div>
         <div class="content">sent you a friend request</div>
         <div class="friend-actions">
           <button class="btn btn-success btn-sm" (click)="acceptRequest(req.SenderId)">Accept</button>
           <button class="btn btn-danger btn-sm" (click)="declineRequest(req.SenderId)">Decline</button>
+        </div>
+      </div>
+      <div *ngIf="req.Status === 'ACCEPTED'" class="message-info">
+        <div class="sender">{{ req.SenderUsername }}</div>
+        <div class="content">accepted your friend request</div>
+        <div class="friend-actions">
+          <button class="btn btn-success btn-sm" (click)="clearRequest(req.SenderId)">Clear</button>
+        </div>
+      </div>
+      <div *ngIf="req.Status === 'DECLINED'" class="message-info">
+        <div class="sender">{{ req.SenderUsername }}</div>
+        <div class="content">declined your friend request</div>
+        <div class="friend-actions">
+          <button class="btn btn-success btn-sm" (click)="clearRequest(req.SenderId)">Clear</button>
         </div>
       </div>
     </div>

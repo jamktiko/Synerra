@@ -15,19 +15,15 @@ module.exports.handler = async (event) => {
         IndexName: 'OnlineStatusIndex', // replace with your actual GSI for friend requests
         KeyConditionExpression:
           'GSI1PK = :userId AND begins_with(GSI1SK, :prefix)',
-        FilterExpression: '#status = :pending',
-        ExpressionAttributeNames: {
-          '#status': 'Status', // alias to avoid reserved word
-        },
         ExpressionAttributeValues: {
           ':userId': `USER#${authUserId}`,
           ':prefix': 'FRIEND_REQUEST#',
-          ':pending': 'PENDING',
         },
       })
     );
 
     const pendingRequests = result.Items || [];
+    console.log(pendingRequests);
 
     return sendResponse(200, {
       message: 'Pending friend requests retrieved successfully',

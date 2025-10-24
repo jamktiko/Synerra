@@ -123,4 +123,30 @@ export class NotificationsComponent implements OnInit {
     });
     this.chatService.startChat([userId]);
   }
+  clearRequest(userId: string) {
+    // clears the declined or accepted request from database
+    this.friendService.clearAcceptedDeclinedRequests(userId).subscribe({
+      next: (res) => {
+        console.log(
+          `Cleared ${res.deletedCount} accepted/declined requests from this user.`
+        );
+      },
+      error: (err) => {
+        console.error('Failed to clear requests', err);
+        alert('Failed to clear requests. Check console for details.');
+      },
+    });
+
+    //remove notifications of requests from certain sender
+    this.notifications = this.notifications.filter((n) => {
+      const senderId = n.senderId || n.senderID || n.fromUserId || n.SenderId;
+      return senderId !== userId;
+    });
+    // Remove from pending friend requests
+    this.pendingRequests = this.pendingRequests.filter(
+      (req) => req.SenderId !== userId && req.PK !== `USER#${userId}`
+    );
+
+    console.log(`Cleared requests from user ${userId}`);
+  }
 }

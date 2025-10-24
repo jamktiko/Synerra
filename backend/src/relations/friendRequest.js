@@ -157,6 +157,27 @@ module.exports.handler = async (event) => {
           },
         })
       );
+
+      // Create new database item for accepted request
+      const acceptedItem = {
+        PK: `USER#${authUserId}`,
+        SK: `FRIEND_REQUEST#${targetUserId}`,
+        GSI1PK: `USER#${targetUserId}`,
+        GSI1SK: `FRIEND_REQUEST#${authUserId}`,
+        Relation: 'FRIEND_REQUEST',
+        Status: 'ACCEPTED',
+        CreatedAt: timestamp,
+        SenderUsername: senderUsername,
+        SenderPicture: senderPfp,
+        SenderId: authUserId,
+      };
+
+      await doccli.send(
+        new PutCommand({
+          TableName: MAIN_TABLE,
+          Item: acceptedItem,
+        })
+      );
       // call the notification handler to send notifications of the friend-request
       try {
         await notificationLambda.handler({
@@ -164,6 +185,7 @@ module.exports.handler = async (event) => {
           payload: {
             type: 'friend_request_accepted',
             fromUserId: authUserId,
+            fromPicture: senderPfp,
             message: `${senderUsername} accepted your friend request`,
             timestamp,
           },
@@ -192,6 +214,27 @@ module.exports.handler = async (event) => {
           },
         })
       );
+
+      // Create new database item for declined request
+      const declinedItem = {
+        PK: `USER#${authUserId}`,
+        SK: `FRIEND_REQUEST#${targetUserId}`,
+        GSI1PK: `USER#${targetUserId}`,
+        GSI1SK: `FRIEND_REQUEST#${authUserId}`,
+        Relation: 'FRIEND_REQUEST',
+        Status: 'DECLINED',
+        CreatedAt: timestamp,
+        SenderUsername: senderUsername,
+        SenderPicture: senderPfp,
+        SenderId: authUserId,
+      };
+
+      await doccli.send(
+        new PutCommand({
+          TableName: MAIN_TABLE,
+          Item: declinedItem,
+        })
+      );
       // call the notification handler to send notifications of the friend-request
       try {
         await notificationLambda.handler({
@@ -199,6 +242,7 @@ module.exports.handler = async (event) => {
           payload: {
             type: 'friend_request_declined',
             fromUserId: authUserId,
+            fromPicture: senderPfp,
             message: `${senderUsername} declined your friend request`,
             timestamp,
           },
