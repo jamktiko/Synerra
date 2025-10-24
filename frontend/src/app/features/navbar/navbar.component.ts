@@ -36,6 +36,7 @@ export class NavbarComponent implements OnInit {
   navItems: NavItem[] = [
     { label: 'Home', icon: 'Home.svg', route: '/dashboard' },
     { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/choose-game' },
+    { label: 'Users', icon: 'Acount.svg', route: '/dashboard/find-players' },
     { label: 'Social', icon: 'NoMessage.svg', route: '/dashboard/social' },
     { label: 'Settings', icon: 'Settings.svg', route: '/dashboard/settings' },
   ];

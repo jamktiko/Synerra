@@ -9,6 +9,7 @@ import { OnInit } from '@angular/core';
 import { User } from '../../core/interfaces/user.model';
 import { UserStore } from '../../core/stores/user.store';
 import { NgZone } from '@angular/core';
+import { NotificationService } from '../../core/services/notification.service';
 @Component({
   standalone: true,
   selector: 'app-email-login-page',
@@ -27,6 +28,7 @@ export class EmailLoginPageComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private userStore: UserStore,
+    private notificationService: NotificationService
   ) {
     effect(() => {
       const user = this.userStore.user();
@@ -58,6 +60,7 @@ export class EmailLoginPageComponent implements OnInit {
     this.authService.login(credentials).subscribe({
       next: (res) => {
         console.log('Login success:', res);
+
         this.emailInput = '';
 
         // Fetch the user after successful login
@@ -66,6 +69,7 @@ export class EmailLoginPageComponent implements OnInit {
             this.userStore.setUser(user);
             this.user = user;
             console.log('Loaded user:', user);
+            this.notificationService.initConnection();
 
             // Navigate based on updated user
             if (user.Username) {

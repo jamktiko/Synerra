@@ -10,6 +10,10 @@ const {
   PostToConnectionCommand,
 } = require('@aws-sdk/client-apigatewaymanagementapi');
 
+const { SNSClient, PublishCommand } = require('@aws-sdk/client-sns');
+const snsClient = new SNSClient({});
+const sendNotification = require('./notifications/notifSend');
+
 //handler for sendmessage-route
 module.exports.handler = async (event) => {
   console.log('SendMessage triggered');
@@ -114,12 +118,31 @@ module.exports.handler = async (event) => {
     console.error('Error creating unread markers:', err);
   }
 
+  for (const uid of allParticipants) {
+    // calls sendnotification handler, which sends notifications to users
+    await sendNotification.handler({
+      userId: uid,
+      payload: {
+        type: 'newMessage',
+        roomId: RoomId,
+        senderId: SenderId,
+        content: Content,
+        timestamp: Timestamp,
+        senderUsername: SenderUsername,
+        profilePicture: ProfilePicture,
+      },
+      domainName: event.requestContext.domainName,
+      stage: event.requestContext.stage,
+    });
+  }
+
   // Setup API Gateway management client
   const domain = event.requestContext.domainName; // domain of websocket api
   const stage = event.requestContext.stage; // deployment stage
   const endpoint = `https://${domain}/${stage}`;
   const agmac = new ApiGatewayManagementApi({ apiVersion: 'latest', endpoint });
 
+  console.log('DOMAINI JA STAGE: ', domain, stage);
   // Get all connections in the room
   let connections;
   try {
@@ -131,6 +154,7 @@ module.exports.handler = async (event) => {
     };
     const data = await doccli.send(new QueryCommand(queryParams));
     connections = data.Items; //all connections in chat room
+    console.log('YHTEYDEET', connections);
   } catch (err) {
     console.error('Error fetching connections in room:', err);
     return { statusCode: 500, body: JSON.stringify('Internal server error') };
@@ -139,7 +163,7 @@ module.exports.handler = async (event) => {
   console.log('connections, ', connections);
   try {
     await Promise.all(
-      connections.map(async ({ connectionId }) => {
+      connections.map(async ({ connectionId, roomId }) => {
         try {
           //sends message to each connection via websocket
           await agmac.send(
@@ -156,12 +180,13 @@ module.exports.handler = async (event) => {
           );
         } catch (err) {
           //if disconnected remove from table
-          if (err.statusCode === 410) {
+          console.log('ERORRIIII', err);
+          if (err.statusCode === 410 || err.name === 'GoneException') {
             console.log(`Stale connection, deleting ${connectionId}`);
             await doccli.send(
               new DeleteCommand({
                 TableName: process.env.CONNECTION_DB_TABLE,
-                Key: { RoomId, connectionId },
+                Key: { roomId, connectionId },
               })
             );
           } else {
