@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { Output, EventEmitter } from '@angular/core';
 import { User } from '../../../core/interfaces/user.model';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-username',
@@ -16,14 +17,27 @@ export class UsernameComponent {
   username: string = '';
   // Output for the profileUpdate so that it can be used in the next modal too
   @Output() profileUpdate = new EventEmitter<Partial<User>>();
-  constructor(private modalRef: NgbActiveModal) {}
+  constructor(
+    private modalRef: NgbActiveModal,
+    private userService: UserService,
+  ) {}
   next() {
-    this.saveUsername();
-    // Save username into profile object
-    this.profile.Username = this.username;
+    this.userService.getUserByUsername(this.username).subscribe({
+      next: (res) => {
+        if (res.users && res.users.length > 0) {
+          console.log('nimi on otettu');
+          return;
+        }
 
-    // Close modal and pass full profile to parent
-    this.modalRef.close(this.profile);
+        this.saveUsername();
+
+        // Save username into profile object
+        this.profile.Username = this.username;
+
+        // Close modal and pass full profile to parent
+        this.modalRef.close(this.profile);
+      },
+    });
   }
   saveUsername() {
     // Emit only the username field
