@@ -40,7 +40,7 @@
   <!-- Alaosa -->
   <div class="bottom-section">
     <div class="divider"></div>
-    <a class="nav-btn logout-btn" [routerLink]="logout.route">
+    <a class="nav-btn logout-btn" (click)="logOut()">
       <img [src]="'assets/svg/' + logout.icon" alt="{{ logout.label }} icon" />
       <span>{{ logout.label }}</span>
     </a>
