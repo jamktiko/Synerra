@@ -31,6 +31,7 @@ module.exports.handler = async (event) => {
     };
     // do the authentication in cognito and get response
     const response = await cognito.adminInitiateAuth(params);
+    console.log('RESPONSEE:', response);
     // if it succeeds the token is sent
     return sendResponse(200, {
       message: 'Success',
