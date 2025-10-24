@@ -6,15 +6,15 @@
   overflow: hidden;
   display: flex;
   align-items: center; /* pystysuunta */
-  justify-content: center; /* vaakasuunta */
+  justify-content: start; /* vaakasuunta */
   border: 1px solid transparent;
   background:
     /* sisäpinta */ linear-gradient(var(--color-background))
       padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
   border-radius: 8px;
-  padding: 0 100px;
-  gap: 30px;
+  padding: 50px 100px;
+  gap: 32px;
 
   flex-direction: column;
 
@@ -56,6 +56,12 @@ input:focus {
   transform: scale(1.01);
 }
 
+/* Täytyy lisätä tämä globaliin, ja tutkia enemmän! Inputin menevät valkoiseksi jos auto fillaa historiasta esim. sähköpostin!
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-background) inset !important;
+}
+  */
+
 .headFrame {
   width: 100%;
   display: flex;
@@ -64,11 +70,26 @@ input:focus {
 }
 
 .buttonFrame {
-  padding: 2rem 0 0 0;
+  padding: 1.5rem 0 0 0;
   width: 100%;
   display: flex;
   justify-content: center;
   gap: 2rem;
+}
+
+.errorText {
+  display: flex;
+  align-items: center;
+  color: var(--color-primary);
+  text-align: center;
+  gap: 0.4rem;
+}
+.errorText h2 {
+  margin: 0;
+}
+
+.stateImage {
+  width: 18px;
 }
 
 /*Breakpointit*/

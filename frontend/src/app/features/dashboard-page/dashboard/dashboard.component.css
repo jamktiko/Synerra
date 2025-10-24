@@ -87,6 +87,13 @@
 app-dashboard-card {
   flex: 0 0 auto; /* do not grow or shrink, keep natural width */
   width: 180px; /* or whatever fixed width you want for the card */
+  filter: brightness(0.82);
+}
+
+app-dashboard-card:hover {
+  scale: 1.01;
+  filter: brightness(1.15);
+  transition: 0.2s ease-in-out;
 }
 
 .notification-bell {

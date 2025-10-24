@@ -237,7 +237,7 @@ h2,
   margin: auto; /*Keskitys*/
 }
 
-@media (max-height: 675px) {
+@media (max-height: 600px) {
   .modal-dialog {
     scale: 0.825;
   }

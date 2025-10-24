@@ -154,3 +154,10 @@
     gap: 12px;
   }
 }
+
+/* Kutistus pienelle näytölle -JH*/
+@media (max-height: 675px) {
+  .container-opaque {
+    scale: 0.85;
+  }
+}
