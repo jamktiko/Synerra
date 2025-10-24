@@ -1,5 +1,6 @@
 <div class="main-frame">
   <!--Tässä sisältö-->
+
   <div class="headFrame">
     <h2 class="text-xl-light">Login with email</h2>
   </div>
@@ -10,18 +11,44 @@
         <h2 class="text-sm">Email</h2>
       </div>
 
-      <input type="email" [(ngModel)]="emailInput" name="email" placeholder="example@email.com" class="text-xs" />
+      <input
+        type="email"
+        [(ngModel)]="emailInput"
+        name="email"
+        placeholder="example@email.com"
+        class="text-xs"
+        (focus)="errorVisible = false"
+      />
 
       <div class="inputHeadings">
         <h2 class="text-sm">Password</h2>
       </div>
 
-      <input type="password" [(ngModel)]="passwordInput" name="password" placeholder="**********" class="text-xs" />
+      <input
+        type="password"
+        [(ngModel)]="passwordInput"
+        name="password"
+        placeholder="**********"
+        class="text-xs"
+        (focus)="errorVisible = false"
+      />
 
       <div class="buttonFrame">
-        <app-button label="Back" variant="default" [routerLink]="'/login/'"></app-button>
-        <app-button label="Login" variant="highlight" type="submit"></app-button>
+        <app-button
+          label="Back"
+          variant="default"
+          [routerLink]="'/login/'"
+        ></app-button>
+        <app-button
+          label="Login"
+          variant="highlight"
+          type="submit"
+        ></app-button>
       </div>
     </form>
+  </div>
+  <div class="errorText" *ngIf="errorVisible">
+    <img src="assets/svg/StateKey/NotAllowed.svg" class="stateImage" />
+    <h2 class="text-xs">Wrong password or email</h2>
   </div>
 </div>

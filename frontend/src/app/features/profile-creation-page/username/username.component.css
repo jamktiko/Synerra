@@ -37,6 +37,24 @@
   color: var(--color-text-dark);
 }
 
+.warning-container {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0;
+}
+.warning-container h2 {
+  margin: 0;
+}
+
+.error-text {
+  color: var(--color-primary);
+}
+
+.valid-text {
+  color: var(--color-success);
+}
+
 .progress {
   justify-content: center;
   gap: 5px;
