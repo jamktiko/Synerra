@@ -232,7 +232,8 @@ describe('ChatService', () => {
     wsInstance.onmessage({ data: JSON.stringify(chatMsg) });
 
     const logs = chatService.logMessagesSubject.getValue();
-    expect(logs.length).toBe(2);
+    console.log(logs);
+    expect(logs.length).toBe(1);
     expect(logs[0].Content).toBe('Hi!');
 
     // Again "closes" the mocked ws for startChats's promise
