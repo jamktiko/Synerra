@@ -6,9 +6,11 @@ const MAIN_TABLE = process.env.MAIN_TABLE;
 
 module.exports.handler = async (event) => {
   try {
+    //chech that the user is authorized and get the jwt token
     const authUserId = event.requestContext?.authorizer?.jwt?.claims?.sub;
     if (!authUserId) return sendResponse(401, { message: 'Unauthorized' });
 
+    //get the event body
     const body = JSON.parse(event.body || '{}');
     const { targetUserId } = body;
 
@@ -20,7 +22,7 @@ module.exports.handler = async (event) => {
     const queryResult = await doccli.send(
       new QueryCommand({
         TableName: MAIN_TABLE,
-        IndexName: 'OnlineStatusIndex',
+        IndexName: 'OnlineStatusIndex', // search with onlineStatusIndex
         KeyConditionExpression:
           'GSI1PK = :userId AND begins_with(GSI1SK, :prefix)',
         FilterExpression: '#status = :accepted OR #status = :declined',

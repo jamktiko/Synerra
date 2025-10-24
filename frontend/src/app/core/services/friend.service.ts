@@ -138,6 +138,7 @@ export class FriendService {
     this.getPendingRequests().subscribe();
   }
 
+  // delete the accepted/declined request when the user clears it from notifications
   clearAcceptedDeclinedRequests(targetUserId: string): Observable<any> {
     const jwt = this.authStore.getToken();
 

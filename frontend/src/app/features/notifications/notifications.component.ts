@@ -124,6 +124,7 @@ export class NotificationsComponent implements OnInit {
     this.chatService.startChat([userId]);
   }
   clearRequest(userId: string) {
+    // clears the declined or accepted request from database
     this.friendService.clearAcceptedDeclinedRequests(userId).subscribe({
       next: (res) => {
         console.log(
