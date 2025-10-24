@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { GameService } from '../../../core/services/game.service';
 import { Game } from '../../../core/interfaces/game.model';
 import { OnInit } from '@angular/core';
@@ -6,17 +6,13 @@ import { DashboardCardComponent } from './dashboard-card/dashboard-card.componen
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../../core/interfaces/user.model';
+import { UserStore } from '../../../core/stores/user.store';
+import { ChatService } from '../../../core/services/chat.service';
 import { UserService } from '../../../core/services/user.service';
-import { NotificationsComponent } from '../../notifications/notifications.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [
-    DashboardCardComponent,
-    CommonModule,
-    FormsModule,
-    NotificationsComponent,
-  ],
+  imports: [DashboardCardComponent, CommonModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -25,16 +21,28 @@ export class DashboardComponent implements OnInit {
   sortedGames: Game[] = [];
   filteredGames: Game[] = [];
   userGames: any[] = [];
-  me: User[] = [];
+  me: User | null = null;
+
   constructor(
     private gameService: GameService,
-    private userService: UserService
-  ) {}
+    private userStore: UserStore,
+    private userService: UserService,
+  ) {
+    // Sets up a reactive watcher that updates user
+    effect(() => {
+      const user = this.userStore.user();
+      if (user) {
+        this.me = user;
+        this.userGames = this.me.PlayedGames || [];
+        console.log('Usergames:', this.userGames);
+        this.filterUserGames();
+      }
+    });
+  }
 
   //calls functions on init
   ngOnInit() {
     this.loadgames();
-    this.loadMe();
   }
 
   //gets games to the dashboard from endpoint
@@ -57,23 +65,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  //gets info of the user that is currently logged in
-  loadMe() {
-    this.userService.getMe().subscribe({
-      next: (res) => {
-        this.me = res;
-        console.log('me:', res);
-        this.userGames = res.PlayedGames;
-        console.log('Usergames:', this.userGames);
-
-        this.filterUserGames();
-      },
-      error: (err) => {
-        console.error('Failed to load games', err);
-      },
-    });
-  }
-
   // Searches the games that the current user has added as favourites
   filterUserGames() {
     const userGameIds = new Set(this.userGames.map((g) => g.gameId));
@@ -85,22 +76,5 @@ export class DashboardComponent implements OnInit {
     console.log('Filtered games', this.filteredGames);
     // Optional: sort by popularity
     this.filteredGames.sort((a, b) => b.Popularity - a.Popularity);
-  }
-
-  showNotifications = false;
-  unreadCount = 0;
-
-  toggleNotifications() {
-    this.showNotifications = !this.showNotifications;
-
-    // Optionally, load unread count when opening
-    if (this.showNotifications) {
-      this.userService.getUnreadMessages().subscribe({
-        next: (messages) => {
-          this.unreadCount = messages.length;
-        },
-        error: (err) => console.error(err),
-      });
-    }
   }
 }

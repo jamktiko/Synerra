@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 // Define a filter object type
 export interface GameFilters {
@@ -25,10 +26,14 @@ export class GameFiltersComponent {
   @Output() filterChanged = new EventEmitter<GameFilters>();
 
   constructor() {
-    // Whenever the search box changes, emit updated filters
-    this.searchControl.valueChanges.subscribe(() => {
-      this.emitFilters();
-    });
+    this.searchControl.valueChanges
+      .pipe(
+        debounceTime(500), // wait 500ms after user stops typing
+        distinctUntilChanged() // only emit if value actually changed
+      )
+      .subscribe(() => {
+        this.emitFilters();
+      });
   }
 
   // When the genre is changed emit the event

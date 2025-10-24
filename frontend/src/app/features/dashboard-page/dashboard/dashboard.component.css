@@ -1,26 +1,33 @@
 .dashboard {
   margin-top: 0.78%;
-  width: 70%;
-  max-width: 100vw;
-  min-height: 100vh;
-  padding: 2rem;
+  width: 100%;
+  max-width: 100%;
+  padding: 3rem;
   box-sizing: border-box;
   font-family: Inter, sans-serif;
-  color: #fff;
+  color: var(--color-text-default);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  overflow-x: hidden;
+}
+
+.dashboard-inner {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-/* Top navigation */
+/* Top navigation, Welcome message */
 .top-navigation-bar {
   display: flex;
   align-items: center;
   gap: 1rem;
   font-size: 1.5rem;
-  color: #a9a9a9;
-  background-color: var(--color-background);
+  color: var(--color-text-default);
+  background: var(--color-dark-gradient);
   padding: 0.5rem 1rem;
+  border: 1px solid rgba(58, 58, 58, 1);
   border-radius: 8px;
   width: 100%;
 }
@@ -29,91 +36,43 @@
   color: var(--color-primary);
 }
 
-/* Section titles */
 .section-title {
   font-weight: 500;
-  font-size: 1.25rem;
-  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
 }
 
-/* Game grids */
+/* Korttien container */
 .games-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  padding: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  background: var(--color-dark-gradient);
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 1px solid rgba(58, 58, 58, 1);
+  border-radius: 8px;
+  box-sizing: border-box;
 }
 
-/* Individual game card */
-.game-card {
-  flex: 1 1 calc(25% - 1rem); /* 4 cards per row with gap */
-  min-width: 10rem;
-  max-width: 12rem;
-  height: 6rem;
-}
-
-.game-card-inner {
+/* Kortti */
+app-dashboard-card {
   width: 100%;
   height: 100%;
-  border-radius: 8px;
-  background-color: var(--color-background);
-  border: 1px solid #8e8e8e;
-}
-
-.game-row-container {
-  overflow-x: auto; /* enable horizontal scroll */
-  overflow-y: hidden; /* hide vertical scroll */
-  padding: 10px 0;
-  white-space: nowrap; /* prevent wrapping */
-}
-
-.game-row {
+  border-radius: 14px;
   display: flex;
-  flex-direction: row;
-  gap: 16px;
-
-  /* Key fixes for Netflix-style horizontal scroll */
-  flex-wrap: nowrap; /* prevent wrapping */
-  align-items: flex-start; /* align cards to top */
-}
-.game-row::-webkit-scrollbar {
-  height: 8px;
+  align-items: stretch;
+  justify-content: center;
 }
 
-.game-row::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
-}
-
-app-dashboard-card {
-  flex: 0 0 auto; /* do not grow or shrink, keep natural width */
-  width: 180px; /* or whatever fixed width you want for the card */
-  filter: brightness(0.82);
-}
-
-app-dashboard-card:hover {
-  scale: 1.01;
-  filter: brightness(1.15);
-  transition: 0.2s ease-in-out;
-}
-
-.notification-bell {
-  position: relative;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-}
-
-.notification-bell svg {
-  width: 28px;
-  height: 28px;
-  color: #007bff; /* Blue bell */
-}
-
-.notification-bell.unread svg {
-  color: red; /* Red if there are unread messages */
+app-dashboard-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .badge {

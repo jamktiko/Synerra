@@ -13,8 +13,11 @@ import { EmailLoginPageComponent } from './features/email-login-page/email-login
 import { SocialPageComponent } from './features/social-page/social-page.component';
 import { ChatPageComponent } from './features/chat-page/chat-page.component';
 import { ProfilePageComponent } from './features/profile-page/profile-page.component';
+import { SettingsPageComponent } from './features/settings-page/settings-page.component';
 
 export const routes: Routes = [
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+
   {
     path: '',
     component: MainLayoutComponent,
@@ -49,6 +52,11 @@ export const routes: Routes = [
         path: 'dashboard/profile',
         canActivate: [AuthGuard],
         component: ProfilePageComponent,
+      },
+      {
+        path: 'dashboard/settings',
+        canActivate: [AuthGuard],
+        component: SettingsPageComponent,
       },
     ],
   },

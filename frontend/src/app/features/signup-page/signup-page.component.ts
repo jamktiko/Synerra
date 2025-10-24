@@ -99,14 +99,24 @@ export class SignupPageComponent {
     this.authService.signup(credentials).subscribe({
       next: (res) => {
         console.log('Signup success:', res);
-        this.login(); // login automatically after signup
-        this.passwordInput = '';
-        this.emailInput = '';
-        this.router.navigate(['/profile-creation']);
+
+        this.authService.login(credentials).subscribe({
+          next: (loginRes) => {
+            console.log('Auto-login success:', loginRes);
+            this.passwordInput = '';
+            this.emailInput = '';
+            this.router.navigate(['/profile-creation']);
+          },
+          error: (err) => {
+            console.error('Auto-login failed:', err);
+          },
+        });
+      },
+      error: (err) => {
+        console.error('Signup failed:', err);
       },
     });
   }
-
   login() {
     const credentials = {
       email: this.emailInput,

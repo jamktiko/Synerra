@@ -37,7 +37,7 @@
   --fs-xs: 0.875rem; /* 14px  | Inter Small (Regular/Bold) */
   --fs-2xs: 0.75rem; /* 12px  | Inter Extra Small (Regular) */
 
-  /* Colors  */
+  /* Colors and gradients  */
   --color-primary: #e8341d;
   --color-highlight: #ffb31c;
   --color-success: #14ae5c;
@@ -46,8 +46,11 @@
   --color-background: #141414;
 
   --color-orange-gradient: linear-gradient(to bottom, #f2680d 0%, #ce3815 100%);
-  --color-gray: linear-gradient(to bottom, #262626, #363636);
+
+  --color-gray: linear-gradient(to bottom, #262626, #252525);
+
   --color-gray-v1: linear-gradient(to bottom, #404040, #999999);
+
   --color-gray-v2: linear-gradient(
     to bottom,
     #8e8e8e 0%,
@@ -56,6 +59,8 @@
     #5d5c5c 75%,
     #8e8e8e 100%
   );
+
+  --color-dark-gradient: linear-gradient(145deg, #161719, #34353f, #0d0e11);
 
   /* Shadows (elevation) */
   --shadow-0: none;
@@ -76,6 +81,7 @@
   --border-width-1: 1px;
   --border-width-2: 2px;
   --border-color: #3a3a3a;
+  --color-border-glow: linear-gradient(180deg, #4f6aff, #2b2b2b);
   --focus-ring: 0 0 0 2px rgba(255, 255, 255, 0.14), 0 0 0 4px #ff6a2b;
 
   /* Z-index scale */
@@ -108,32 +114,6 @@ body {
   margin: 0;
   padding: 0;
   height: 100vh;
-}
-
-h1,
-.text-h1 {
-  font-family: var(--font-title);
-  font-size: var(--fs-h1);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-tight);
-  letter-spacing: var(--tracking-tight);
-  margin: 0 0 0.5em;
-}
-
-h2,
-.text-h2-regular {
-  font-family: var(--font-title);
-  font-size: var(--fs-h2);
-  font-weight: var(--font-weight-regular);
-  line-height: var(--line-tight);
-  letter-spacing: var(--tracking-tight);
-  margin: 0 0 0.5em;
-}
-.text-h2-medium {
-  font-weight: var(--font-weight-medium);
-}
-.text-h2-light {
-  font-weight: var(--font-weight-light);
 }
 
 /* Kappaletyylit */

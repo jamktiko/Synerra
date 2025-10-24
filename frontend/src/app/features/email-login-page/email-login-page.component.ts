@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,7 +7,9 @@ import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { OnInit } from '@angular/core';
 import { User } from '../../core/interfaces/user.model';
-
+import { UserStore } from '../../core/stores/user.store';
+import { NgZone } from '@angular/core';
+import { NotificationService } from '../../core/services/notification.service';
 @Component({
   standalone: true,
   selector: 'app-email-login-page',
@@ -20,12 +22,21 @@ export class EmailLoginPageComponent implements OnInit {
   passwordInput: string = '';
   me: any = {};
   errorVisible: boolean = false;
-
+  user: User | null = null;
   constructor(
     private authService: AuthService,
     private router: Router,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private userStore: UserStore,
+    private notificationService: NotificationService
+  ) {
+    effect(() => {
+      const user = this.userStore.user();
+      if (user) {
+        this.user = user;
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.userService.getMe().subscribe({
@@ -38,7 +49,7 @@ export class EmailLoginPageComponent implements OnInit {
       },
     });
   }
-  login() {
+  async login() {
     const credentials = {
       email: this.emailInput,
       password: this.passwordInput,
@@ -49,22 +60,26 @@ export class EmailLoginPageComponent implements OnInit {
     this.authService.login(credentials).subscribe({
       next: (res) => {
         console.log('Login success:', res);
+
         this.emailInput = '';
 
-        // After login, fetch user profile to see if username exists
+        // Fetch the user after successful login
         this.userService.getMe().subscribe({
           next: (user) => {
-            this.me = user;
-            if (user?.Username) {
-              // User already has a username -> go to dashboard
+            this.userStore.setUser(user);
+            this.user = user;
+            console.log('Loaded user:', user);
+            this.notificationService.initConnection();
+
+            // Navigate based on updated user
+            if (user.Username) {
               this.router.navigate(['/dashboard']);
             } else {
-              // No username yet -> go to profile creation
               this.router.navigate(['/profile-creation']);
             }
           },
           error: (err) => {
-            console.error('Error fetching user after login:', err);
+            console.error('Error loading user after login:', err);
             this.router.navigate(['/profile-creation']);
           },
         });

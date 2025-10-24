@@ -1,14 +1,17 @@
+/* Pelaajalista */
 .users-container {
-  position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 15px;
-  padding: 30px;
-  background: var(--color-background);
-  border-radius: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 40px;
+  column-gap: 40px;
+  row-gap: 50px;
+  padding: 35px;
+  background: var(--color-dark-gradient);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   box-sizing: border-box;
-  z-index: 100;
-  border: 1px solid rgba(58, 58, 58, 0.8);
+  position: relative;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.9);
 }
 
 .users-container::before {
@@ -16,54 +19,80 @@
   position: absolute;
   inset: 0;
   border-radius: 16px;
-  padding: 1px;
-  background: linear-gradient(
-    180deg,
-    rgba(58, 58, 58, 0) 0%,
-    rgba(58, 58, 58, 0.8) 15%,
-    rgba(58, 58, 58, 1) 30%,
-    rgba(58, 58, 58, 1) 70%,
-    rgba(58, 58, 58, 0.8) 85%,
-    rgba(58, 58, 58, 0) 100%
-  );
-
+  background: var(--color-gray);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-
   pointer-events: none;
 }
 
+/* Layout */
 .layout {
   display: flex;
-  height: 100vh;
-  justify-content: center;
-  position: relative;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: flex-start;
+  gap: 40px;
+  min-height: 100vh;
+  margin: 0 auto;
 }
 
-.mid-container {
-  margin-left: 1.5%;
-  margin-right: 1.5%;
-  margin-top: 3.6%;
-  position: relative;
+/* Keskikontti */
+.main-content {
+  flex: 1;
   display: flex;
-  justify-content: flex-start;
   flex-direction: column;
-  align-items: stretch;
-  height: 100vh;
-  width: 75%;
-  z-index: 100;
 }
 
-.social-floating {
-  z-index: 10001;
-  margin-left: 100px;
+/* Dropdownien sivuttaisrullauksen esto */
+.checkbox-list {
+  overflow-x: hidden;
 }
 
-.filter-component {
-  z-index: 10000000;
+@media (max-width: 700px) {
+  .search-wrapper {
+    max-width: 90%;
+  }
+  .search-input {
+    font-size: 0.9rem;
+  }
+  .search-input::placeholder {
+    content: "search";
+  }
+}
+
+/* Responsiivisuus hieman isommille  näytöille */
+@media (max-width: 1200px) {
+  .layout {
+    flex-direction: column;
+    max-width: 100%;
+  }
+
+  .main-content {
+    max-width: 100%; /* keskikontti venyy */
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .users-container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .main {
+    padding-left: 10px;
+  }
+
+  @media (max-width: 900px) {
+    .layout {
+      flex-direction: column;
+    }
+
+    .filters-container {
+      max-width: 100% !important;
+      width: 100%;
+      margin: 0 0 20px;
+    }
+  }
 }

@@ -1,16 +1,21 @@
 <div class="social-floating">
+
   <!-- Header -->
   <div class="header">
-    <div class="social-text">Social</div>
+    <div class="top-socialbar">
+      <div class="social-text">Social</div>
+      <app-notifications></app-notifications>
+    </div>
     <div class="linebreak-horizontal-child"></div>
+
   </div>
 
-  <!-- Players online -->
+  <!-- Online players summary -->
   <div class="chatrooms-sum-wrapper">
     <div class="chatrooms-sum">
       <b class="my-chatrooms-container">
         <span>PLAYERS ONLINE - </span>
-        <span class="sum">{{ users.length }}</span>
+        <span class="sum">{{ (users$ | async)?.length }}</span>
       </b>
     </div>
   </div>
@@ -18,12 +23,14 @@
   <!-- Player list -->
   <div class="friends-container">
     <div class="players">
-      <div class="player-card" *ngFor="let user of users" (click)="userClicked(user.UserId)">
+      <div class="player-card" *ngFor="let user of users$ | async" (click)="userClicked(user.UserId)">
         <img class="acount-icon" [src]="user.ProfilePicture" alt="Player Avatar" />
         <div class="player-name">{{ user.Username }}</div>
         <div class="status">
-          <!-- <img class="online-icon" [src]="user.statusIcon" alt="Online Status" /> -->
+          <!-- statuksen kuva, jos halutaan -->
         </div>
       </div>
     </div>
   </div>
+
+</div>

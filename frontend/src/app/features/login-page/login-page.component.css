@@ -4,15 +4,11 @@
   grid-template-columns: 1fr auto 1fr;
   gap: 32px;
   padding: 5rem;
+  border: 1px solid rgba(58, 58, 58, 1);
   border-radius: 8px;
   box-shadow: var(--shadow-2);
   box-sizing: border-box;
-
-  /* Gradienttireuna */
-  background: linear-gradient(var(--color-background), var(--color-background))
-      padding-box,
-    linear-gradient(180deg, #404040 0%, #6b6b6b 100%) border-box;
-  border: 1px solid transparent;
+  background: var(--color-gray);
   max-width: 1000px;
 }
 

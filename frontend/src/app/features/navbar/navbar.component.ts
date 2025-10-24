@@ -1,6 +1,17 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  Output,
+  EventEmitter,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { User } from '../../core/interfaces/user.model';
+import { UserStore } from '../../core/stores/user.store';
+import { Router } from '@angular/router';
+import { AuthStore } from '../../core/stores/auth.store';
 
 interface NavItem {
   label: string;
@@ -19,59 +30,73 @@ export class NavbarComponent implements OnInit {
   isCollapsed = false;
   private hasUserPreference = false;
 
-  user = {
-    name: 'User',
-    email: 'Email address',
-    avatar: 'svg/Acount.svg',
-  };
+  @Output() collapsedChange = new EventEmitter<boolean>();
+
+  user: User | null = null;
 
   navItems: NavItem[] = [
     { label: 'Home', icon: 'Home.svg', route: '/dashboard' },
-    { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/find-players' },
+    { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/choose-game' },
+    { label: 'Users', icon: 'Acount.svg', route: '/dashboard/find-players' },
     { label: 'Social', icon: 'NoMessage.svg', route: '/dashboard/social' },
     { label: 'Settings', icon: 'Settings.svg', route: '/dashboard/settings' },
   ];
 
   logout = { label: 'Logout', icon: 'Logout.svg', route: '/login' };
 
+  constructor(
+    private userStore: UserStore,
+    private router: Router,
+    private authStore: AuthStore
+  ) {
+    // Sets up a reactive watcher that updates user
+    effect(() => {
+      const user = this.userStore.user();
+      if (user) {
+        this.user = user;
+      }
+    });
+  }
+
   ngOnInit(): void {
     const saved = localStorage.getItem('navbarCollapsed');
     if (saved !== null) {
       this.isCollapsed = saved === 'true';
       this.hasUserPreference = true;
-    } else if (typeof window !== 'undefined' && window.innerWidth < 600) {
-      // Ensikäynnillä pienillä näytöillä voit halutessasi aloittaa collapsedina
+    } else if (typeof window !== 'undefined' && window.innerWidth < 900) {
       this.isCollapsed = true;
     }
+    this.checkAutoCollapse();
+    this.collapsedChange.emit(this.isCollapsed);
   }
 
   toggleCollapse(): void {
     this.isCollapsed = !this.isCollapsed;
     this.hasUserPreference = true;
     localStorage.setItem('navbarCollapsed', String(this.isCollapsed));
+    this.collapsedChange.emit(this.isCollapsed);
   }
 
-  // Pikanäppäin: Ctrl/Cmd + B togglaa navin
-  @HostListener('window:keydown', ['$event'])
-  onKeydown(e: KeyboardEvent) {
-    if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
-      e.preventDefault();
-      this.toggleCollapse();
-    }
-  }
+  @HostListener('window:resize', [])
+  checkAutoCollapse() {
+    if (this.hasUserPreference) return;
 
-  // Responsiivisuus: kun käyttäjällä ei ole omaa preferenssiä, voidaan pienen näytön tulla collapsed-tilaan
-  @HostListener('window:resize')
-  onResize() {
-    if (!this.hasUserPreference) {
-      if (window.innerWidth < 600) this.isCollapsed = true;
-      // ei pakoteta takaisin expanded-tilaan, jos käyttäjä on tottunut collapsediin
-    }
+    const layout = document.querySelector('.layout') as HTMLElement;
+    if (!layout) return;
+
+    const layoutRect = layout.getBoundingClientRect();
+    this.isCollapsed = layoutRect.top < 0;
+    this.collapsedChange.emit(this.isCollapsed);
   }
 
   onUserClick(): void {
-    // TODO: lisää reitti tai avaa käyttäjävalikko
-    // Esim: this.router.navigate(['/dashboard/account']);
     console.log('User button clicked');
+    this.router.navigate(['/dashboard/profile']);
+  }
+
+  // Clearing authToken and rerouting to the login-page when logging off
+  logOut() {
+    this.authStore.clearToken();
+    this.router.navigate(['/login']);
   }
 }

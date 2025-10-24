@@ -5,19 +5,16 @@
   height: 32rem;
   overflow: hidden;
   display: flex;
-  align-items: center; /* pystysuunta */
-  justify-content: start; /* vaakasuunta */
-  border: 1px solid transparent;
-  background:
-    /* sisäpinta */ linear-gradient(var(--color-background))
-      padding-box,
-    /* varsinainen reuna*/ var(--color-gray-v1) border-box;
-  border-radius: 8px;
-  padding: 50px 100px;
-  gap: 32px;
-
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+  background: var(--color-gray);
+  border-radius: 18px;
+  padding: 0 100px;
+  gap: 30px;
+  border: 1px solid rgba(58, 58, 58, 1);
   flex-direction: column;
-
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
   min-height: 22rem;
 }
 

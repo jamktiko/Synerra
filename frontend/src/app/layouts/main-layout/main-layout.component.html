@@ -1,8 +1,13 @@
-<div class="layout">
+<div class="layout" [class.collapsed]="isNavbarCollapsed">
   <div class="navbar">
     <app-navbar></app-navbar>
   </div>
+
   <div class="main">
     <router-outlet></router-outlet>
+  </div>
+
+  <div class="social-floating">
+    <app-social-bar></app-social-bar>
   </div>
 </div>

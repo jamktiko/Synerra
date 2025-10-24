@@ -5,10 +5,36 @@ const {
   DeleteCommand,
   GetCommand,
 } = require('@aws-sdk/lib-dynamodb');
+const {
+  ApiGatewayManagementApi,
+} = require('@aws-sdk/client-apigatewaymanagementapi');
 
+const {
+  ApiGatewayV2Client,
+  GetApisCommand,
+} = require('@aws-sdk/client-apigatewayv2');
+
+const notificationLambda = require('../notifications/notifSend');
 const MAIN_TABLE = process.env.MAIN_TABLE;
+const AWS_REGION = process.env.AWS_REGION;
+const WS_API_NAME = 'dev-synerra-backend-websockets'; // WebSocket API name
+const STAGE = 'dev';
+
+// Since this is an HTTP-api lambda we need to get the Websocket endpoint manually with this function
+async function getWebSocketEndpoint() {
+  const agApiClient = new ApiGatewayV2Client({ region: AWS_REGION });
+  const apis = await agApiClient.send(new GetApisCommand({}));
+  const wsApi = apis.Items.find((api) => api.Name === WS_API_NAME);
+  if (!wsApi) throw new Error(`WebSocket API "${WS_API_NAME}" not found`);
+  const fullUrl = wsApi.ApiEndpoint;
+  const urlWithoutProtocol = fullUrl.startsWith('wss://') // remove extra parts of the url
+    ? fullUrl.slice(6)
+    : fullUrl;
+  return urlWithoutProtocol;
+}
 
 module.exports.handler = async (event) => {
+  const wsEndpoint = await getWebSocketEndpoint();
   try {
     console.log('Full event:', JSON.stringify(event, null, 2));
 
@@ -69,6 +95,28 @@ module.exports.handler = async (event) => {
         })
       );
 
+      // call the notification handler to send notifications of the friend-request
+      try {
+        await notificationLambda.handler({
+          userId: targetUserId, // receiver
+          payload: {
+            type: 'friend_request',
+            fromUserId: authUserId,
+            fromUsername: senderUsername,
+            fromPicture: senderPfp,
+            message: `${senderUsername} sent you a friend request`,
+            timestamp,
+          },
+          domainName: wsEndpoint, // pass domainName to notification handler
+          stage: STAGE, // pass the stage also
+        });
+        console.log(
+          `WebSocket friend request notification sent to ${targetUserId}`
+        );
+      } catch (notifyErr) {
+        console.error('Error sending WebSocket notification:', notifyErr);
+      }
+
       return sendResponse(201, {
         message: 'Friend request sent',
         relation: item,
@@ -109,7 +157,23 @@ module.exports.handler = async (event) => {
           },
         })
       );
-
+      // call the notification handler to send notifications of the friend-request
+      try {
+        await notificationLambda.handler({
+          userId: targetUserId,
+          payload: {
+            type: 'friend_request_accepted',
+            fromUserId: authUserId,
+            message: `${senderUsername} accepted your friend request`,
+            timestamp,
+          },
+          domainName: wsEndpoint, // pass domain name
+          stage: STAGE, //pass the stage
+        });
+        console.log(`Acceptance notification sent to ${targetUserId}`);
+      } catch (notifyErr) {
+        console.error('Error sending acceptance notification:', notifyErr);
+      }
       return sendResponse(200, {
         message: 'Friend request accepted',
         friends: [friend1, friend2],
@@ -128,7 +192,23 @@ module.exports.handler = async (event) => {
           },
         })
       );
-
+      // call the notification handler to send notifications of the friend-request
+      try {
+        await notificationLambda.handler({
+          userId: targetUserId,
+          payload: {
+            type: 'friend_request_declined',
+            fromUserId: authUserId,
+            message: `${senderUsername} declined your friend request`,
+            timestamp,
+          },
+          domainName: wsEndpoint, //pass the domainName
+          stage: STAGE, // pass the stage
+        });
+        console.log(`Decline notification sent to ${targetUserId}`);
+      } catch (notifyErr) {
+        console.error('Error sending decline notification:', notifyErr);
+      }
       return sendResponse(200, { message: 'Friend request declined' });
     }
 

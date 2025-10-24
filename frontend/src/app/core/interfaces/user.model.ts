@@ -1,7 +1,7 @@
 // Interface and example data:
 export interface User {
-  PK: string; // "USER#b0ac990c-a021-7002-788b-4d5c2f912fa9"
-  SK: string; // "PROFILE"
+  PK?: string; // "USER#b0ac990c-a021-7002-788b-4d5c2f912fa9"
+  SK?: string; // "PROFILE"
   AverageReputation?: number; //60
   CreatedAt?: number; // optional timestamp
   Email?: string; // test@test.fi
