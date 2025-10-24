@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
 
 interface User {
   name: string;
@@ -9,7 +10,7 @@ interface User {
 
 @Component({
   selector: 'app-social-menu',
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './social-menu.component.html',
   styleUrl: './social-menu.component.css',
 })
@@ -19,7 +20,7 @@ export class SocialMenuComponent {
     {
       name: 'Alice',
       avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'Hello there',
+      lastMessage: 'Well Alice, it seems we both have autism.',
     },
     {
       name: 'Bob',
