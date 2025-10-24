@@ -1,5 +1,11 @@
 const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
+const { doccli } = require('./ddbconn');
+const {
+  PutCommand,
+  DeleteCommand,
+  QueryCommand,
+} = require('@aws-sdk/lib-dynamodb');
 
 //jwksClient for getting public keys from Cognito for identification
 const client = jwksClient({
@@ -52,6 +58,58 @@ module.exports.connectHandler = async (event) => {
 
   console.log('User connected:', user.email);
 
+  const userId = user.sub; //get the userID
+  const connectionId = event.requestContext.connectionId; // get the connectionId from event
+  const type = event.queryStringParameters?.type; // connectionType from endpoint url
+  console.log('INFO:', userId, connectionId, type);
+
+  //checks the connection type if its notifications
+  if (type === 'notifications') {
+    try {
+      //Queryes existing connections and checks to find the correct connection by userIdIndex
+      const existingConnections = await doccli.send(
+        new QueryCommand({
+          TableName: process.env.CONNECTION_DB_TABLE,
+          IndexName: 'UserIdIndex',
+          KeyConditionExpression: 'userId = :uid',
+          FilterExpression: '#t = :typeVal',
+          ExpressionAttributeNames: { '#t': 'type' },
+          ExpressionAttributeValues: { ':uid': userId, ':typeVal': type },
+        })
+      );
+
+      // if it finds old stale connections delete them
+      if (existingConnections.Items?.length) {
+        for (const item of existingConnections.Items) {
+          console.log(
+            `Deleting old connection ${item.connectionId} for user ${userId}`
+          );
+          await doccli.send(
+            new DeleteCommand({
+              TableName: process.env.CONNECTION_DB_TABLE,
+              Key: { roomId: item.roomId, connectionId: item.connectionId },
+            })
+          );
+        }
+      }
+      // saves the new connection to connection-table
+      await doccli.send(
+        new PutCommand({
+          TableName: process.env.CONNECTION_DB_TABLE,
+          Item: {
+            roomId: `user#${userId}`,
+            connectionId,
+            userId,
+            type: 'notifications',
+          },
+        })
+      );
+      console.log(`Notification connection saved for user ${userId}`);
+    } catch (err) {
+      console.error('Error saving notification connection:', err);
+      return { statusCode: 500, body: 'Internal server error' };
+    }
+  }
   return {}; // Success, allow websocket connection
 };
 

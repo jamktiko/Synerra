@@ -10,17 +10,14 @@ import { User } from '../interfaces/user.model';
 })
 export class FriendService {
   private baseUrl = environment.AWS_FRIENDS_URL;
-
+  private mostBasicUrl = environment.AWS_BASE_URL;
   private pendingRequestsSubject = new BehaviorSubject<any[]>([]);
   pendingRequests$ = this.pendingRequestsSubject.asObservable();
 
   private friendsSubject = new BehaviorSubject<User[]>([]);
   friends$ = this.friendsSubject.asObservable();
 
-  constructor(
-    private http: HttpClient,
-    private authStore: AuthStore,
-  ) {}
+  constructor(private http: HttpClient, private authStore: AuthStore) {}
 
   sendFriendRequest(targetUserId: string): Observable<any> {
     const jwt = this.authStore.getToken();
@@ -34,13 +31,13 @@ export class FriendService {
         },
         {
           headers: { Authorization: `${jwt}` },
-        },
+        }
       )
       .pipe(
         tap(() => {
           //  Refresh pending requests after sending a new one
           this.refreshPendingRequests();
-        }),
+        })
       );
   }
 
@@ -51,19 +48,19 @@ export class FriendService {
       .post(
         `${this.baseUrl}/friendrequest`,
         { targetUserId, action: 'ACCEPT' },
-        { headers: { Authorization: `${jwt}` } },
+        { headers: { Authorization: `${jwt}` } }
       )
       .pipe(
         tap(() => {
           // Remove from pending requests reactively
           const current = this.pendingRequestsSubject.value.filter(
-            (r) => r.PK !== `USER#${targetUserId}`,
+            (r) => r.PK !== `USER#${targetUserId}`
           );
           this.pendingRequestsSubject.next(current);
 
           // Refresh friends list reactively
           this.getFriends().subscribe();
-        }),
+        })
       );
   }
 
@@ -79,16 +76,16 @@ export class FriendService {
         },
         {
           headers: { Authorization: `${jwt}` },
-        },
+        }
       )
       .pipe(
         tap(() => {
           //  Remove from pending requests reactively
           const current = this.pendingRequestsSubject.value.filter(
-            (r: any) => r.PK !== `USER#${targetUserId}`,
+            (r: any) => r.PK !== `USER#${targetUserId}`
           );
           this.pendingRequestsSubject.next(current);
-        }),
+        })
       );
   }
 
@@ -103,7 +100,7 @@ export class FriendService {
         tap(() => {
           //  Refresh friends list reactively
           this.getFriends().subscribe();
-        }),
+        })
       );
   }
 
@@ -118,7 +115,7 @@ export class FriendService {
           // Only push the users array into the BehaviorSubject
           this.friendsSubject.next(res.users || []);
         }),
-        map((res) => res.users || []),
+        map((res) => res.users || [])
       );
   }
 
@@ -132,12 +129,38 @@ export class FriendService {
       .pipe(
         tap((res: any) => {
           this.pendingRequestsSubject.next(res.pendingRequests || []);
-        }),
+        })
       );
   }
 
   // refresh method (can be called anywhere)
   refreshPendingRequests(): void {
     this.getPendingRequests().subscribe();
+  }
+
+  // delete the accepted/declined request when the user clears it from notifications
+  clearAcceptedDeclinedRequests(targetUserId: string): Observable<any> {
+    const jwt = this.authStore.getToken();
+
+    return this.http
+      .delete(`${this.mostBasicUrl}/friendRequests/delete`, {
+        headers: { Authorization: `${jwt}` },
+        body: { targetUserId }, // DELETE with a body
+      })
+      .pipe(
+        tap((res: any) => {
+          // Remove cleared requests from pendingRequestsSubject
+          const updated = this.pendingRequestsSubject.value.filter(
+            (r: any) => r.PK !== `USER#${targetUserId}`
+          );
+          this.pendingRequestsSubject.next(updated);
+
+          console.log(
+            `Cleared ${
+              res.deletedCount || 0
+            } accepted/declined requests from ${targetUserId}`
+          );
+        })
+      );
   }
 }

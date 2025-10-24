@@ -2,7 +2,7 @@
   color: var(--color-text-default);
   width: 100%;
   max-width: 60rem;
-  height: 32rem;
+  height: 35rem;
   overflow: hidden;
   display: flex;
   align-items: center; /* pystysuunta */
@@ -12,7 +12,7 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
   border: 1px solid rgba(58, 58, 58, 1);
   padding: 0 100px;
-  gap: 20px;
+  gap: 15px;
   flex-direction: column;
 }
 
@@ -51,7 +51,7 @@ input:focus {
 }
 
 .inputHeadings {
-  padding: 1rem 0 0 0;
+  padding: 0.5rem 0 0 0;
 }
 
 .headFrame {
@@ -61,12 +61,51 @@ input:focus {
   align-items: center;
 }
 
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.eyeImage {
+  position: absolute;
+  right: 0.75rem;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.eyeImage:hover {
+  opacity: 1;
+}
+
+.req-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.4rem;
+}
+
+.stateImage {
+  width: 16px;
+}
+
+.req-item h2 {
+  margin: 0;
+  line-height: 1;
+}
+
 .error-text {
   color: var(--color-primary);
 }
 
+.valid-text {
+  color: var(--color-success);
+}
+
 .buttonFrame {
-  padding: 1rem 0 0 0;
+  padding: 1.4rem 0 0 0;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -105,4 +144,96 @@ input:focus {
   .main-frame {
     scale: 0.88;
   }
+}
+
+/*Checkbox kokeilu*/
+
+.ios-checkbox {
+  --checkbox-size: 20px;
+  --checkbox-color: #3b82f6;
+  --checkbox-bg: #dbeafe;
+  --checkbox-border: #93c5fd;
+
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ios-checkbox input {
+  display: none;
+}
+
+.checkbox-wrapper {
+  position: relative;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  border-radius: 4px;
+  transition: transform 0.2s ease;
+}
+
+.checkbox-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  border: 2px solid var(--color-text-dark);
+  background: var(--color-background);
+  transition: all 0.2s ease;
+}
+
+.checkbox-text {
+  padding: 0 0rem 0.2rem 0.5rem;
+}
+
+.checkbox-icon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 80%;
+  height: 80%;
+  color: white;
+  transform: scale(0);
+  transition: all 0.2s ease;
+}
+
+.check-path {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  transition: stroke-dashoffset 0.3s ease 0.1s;
+}
+
+/* Checked State */
+.ios-checkbox input:checked + .checkbox-wrapper .checkbox-bg {
+  background: var(--checkbox-color);
+  border-color: var(--checkbox-color);
+}
+
+.ios-checkbox input:checked + .checkbox-wrapper .checkbox-icon {
+  transform: scale(1);
+}
+
+.ios-checkbox input:checked + .checkbox-wrapper .check-path {
+  stroke-dashoffset: 0;
+}
+
+/* Hover Effects */
+.ios-checkbox:hover .checkbox-wrapper {
+  transform: scale(1.05);
+}
+
+/* Active Animation */
+.ios-checkbox:active .checkbox-wrapper {
+  transform: scale(0.95);
+}
+
+/* Focus Styles */
+.ios-checkbox input:focus + .checkbox-wrapper .checkbox-bg {
+  box-shadow: 0 0 0 4px var(--checkbox-bg);
+}
+
+.ios-checkbox.red {
+  --checkbox-color: var(--color-primary);
+  --checkbox-bg: #fee2e2;
+  --checkbox-border: #fca5a5;
 }

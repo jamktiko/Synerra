@@ -15,6 +15,10 @@ provider:
     USER_CLIENT_ID: { Ref: UserClient } # cogniton client id
     PFP_BUCKET: synerra-pfp
     SECRET_NAME: arn:aws:secretsmanager:eu-north-1:810251959934:secret:GameApiSecrets-lyqEj3
+    OFFLINE_MESSAGE_TOPIC:
+      Fn::GetAtt:
+        - OfflineMessageTopic
+        - TopicArn
 
   iamRoleStatements:
     - Effect: 'Allow'
@@ -33,7 +37,9 @@ provider:
         - 'cognito-idp:AdminDeleteUser'
         - s3:PutObject
         - s3:GetObject
+        - 'sns:Publish'
       Resource:
+        - Fn::GetAtt: [OfflineMessageTopic, TopicArn]
         - Fn::GetAtt: [ConnectionTable, Arn]
         - Fn::GetAtt: [MainTable, Arn]
         - Fn::Join:
@@ -80,6 +86,10 @@ provider:
             - ''
             - - Fn::GetAtt: [ConnectionTable, Arn]
               - '/index/ConnectionIdIndex'
+        - Fn::Join:
+            - ''
+            - - Fn::GetAtt: [ConnectionTable, Arn]
+              - '/index/UserIdIndex'
         - !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}
         - arn:aws:s3:::synerra-pfp/profile-pictures/*
     - Effect: 'Allow'
@@ -92,6 +102,11 @@ provider:
         - 'secretsmanager:GetSecretValue'
       Resource:
         - 'arn:aws:secretsmanager:eu-north-1:810251959934:secret:GameApiSecrets-*'
+    - Effect: 'Allow'
+      Action:
+        - 'apigateway:GET'
+        - 'apigateway:GET/*'
+      Resource: '*'
   httpApi:
     cors:
       allowedOrigins:
@@ -279,6 +294,13 @@ functions:
           path: /rooms/{roomId}/unreads
           method: delete
           authorizer: PrivateAuthorizer
+  deleteRequests:
+    handler: src/relations/deleteRequests.handler
+    events:
+      - httpApi:
+          path: /friendRequests/delete
+          method: delete
+          authorizer: PrivateAuthorizer
   uploadProfilePicture:
     handler: src/profile-picture/upload.handler
     events:
@@ -344,8 +366,18 @@ functions:
   authHandler:
     handler: src/handlers.auth
 
+  sendNotification:
+    handler: src/notifications/notifSend.handler
+    events:
+      - websocket:
+          route: sendnotification
+
 resources:
   Resources:
+    OfflineMessageTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: offline-message-topic
     UserPool: # cognito userpool
       Type: AWS::Cognito::UserPool
       Properties:
@@ -378,6 +410,8 @@ resources:
             AttributeType: S
           - AttributeName: connectionId
             AttributeType: S
+          - AttributeName: userId
+            AttributeType: S
         KeySchema:
           - AttributeName: roomId
             KeyType: HASH
@@ -388,6 +422,14 @@ resources:
             KeySchema:
               - AttributeName: connectionId
                 KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+          - IndexName: UserIdIndex
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+              - AttributeName: connectionId
+                KeyType: RANGE
             Projection:
               ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
@@ -516,6 +558,13 @@ resources:
             Projection:
               ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
+  Outputs:
+    OfflineMessageTopicArn:
+      Description: 'ARN of the OfflineMessageTopic'
+      Value:
+        Ref: OfflineMessageTopic
+      Export:
+        Name: OfflineMessageTopicArn
 plugins:
   - serverless-prune-plugin
 

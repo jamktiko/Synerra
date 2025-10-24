@@ -49,6 +49,16 @@ export class BirthdayComponent {
     }
   }
 
+  get hasDate(): boolean {
+    // true when date has been selected in the date input
+    return !!this.profile.Birthday; // converts the value: boolean
+  }
+
+  get canProceed(): boolean {
+    // True ONLY if date is selected & at least one language is selected
+    return this.hasDate && this.selectedLanguages.length > 0;
+  }
+
   next() {
     // Add birthday and languages to profile
     // Convert string to Date if necessary
