@@ -31,6 +31,7 @@ module.exports.handler = async (event) => {
     };
     // do the authentication in cognito and get response
     const response = await cognito.adminInitiateAuth(params);
+    console.log('RESPONSEE:', response);
     // if it succeeds the token is sent
     return sendResponse(200, {
       message: 'Success',
@@ -39,6 +40,7 @@ module.exports.handler = async (event) => {
       accessToken: response.AuthenticationResult.AccessToken,
     });
   } catch (error) {
+    console.log('ERRORIIIIIII:', error);
     const message = error.message ? error.message : 'Internal server error';
     return sendResponse(500, { message });
   }

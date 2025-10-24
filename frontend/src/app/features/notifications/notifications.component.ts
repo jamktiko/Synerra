@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { ChatService } from '../../core/services/chat.service';
 import { FriendService } from '../../core/services/friend.service';
 import { FriendRequest } from '../../core/interfaces/friendrequest.model';
+import { NotificationService } from '../../core/services/notification.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-notifications',
@@ -16,15 +18,18 @@ export class NotificationsComponent implements OnInit {
   unreads: UnreadMessage[] = [];
   pendingRequests: FriendRequest[] = [];
   showDropdown = false;
+  private sub: Subscription | null = null;
+  notifications: any[] = [];
 
   constructor(
     private userService: UserService,
     private chatService: ChatService,
-    private friendService: FriendService
+    private friendService: FriendService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
-    // Kuuntele friend requests
+    // Listens to friend requests
     this.friendService.pendingRequests$.subscribe({
       next: (requests) => {
         this.pendingRequests = requests;
@@ -33,10 +38,10 @@ export class NotificationsComponent implements OnInit {
       error: (err) => console.error('Failed to load pending requests', err),
     });
 
-    // Kuuntele unread messages
+    // Listens to unread messages
     this.userService.unreads$.subscribe({
       next: (messages) => {
-        // suodatetaan FRIEND_REQUESTit pois
+        // filter out friend requests
         this.unreads = messages.filter(
           (msg) => msg.Relation !== 'FRIEND_REQUEST'
         );
@@ -45,12 +50,20 @@ export class NotificationsComponent implements OnInit {
       error: (err) => console.error('Failed to load unread messages', err),
     });
 
-    // Pyydetään aluksi palvelimelta tiedot
+    // Ask for initial information
     this.userService.getUnreadMessages().subscribe();
     this.friendService.getPendingRequests().subscribe();
+    this.userService.fetchUnreadMessages();
+
+    // Subscribe to incoming notifications
+    this.sub = this.notificationService.notifications$.subscribe((data) => {
+      console.log('Received notification in component:', data);
+      this.notifications.push(data);
+      console.log(this.notifications);
+    });
   }
 
-  // hyväksy friend request
+  // accept friend request
   acceptRequest(targetUserId: string) {
     const request = this.pendingRequests.find(
       (req) => req.PK === `USER#${targetUserId}`
@@ -68,7 +81,7 @@ export class NotificationsComponent implements OnInit {
     });
   }
 
-  // hylkää friend request
+  //decline friend request
   declineRequest(targetUserId: string) {
     const request = this.pendingRequests.find(
       (req) => req.PK === `USER#${targetUserId}`
@@ -91,13 +104,23 @@ export class NotificationsComponent implements OnInit {
     this.showDropdown = !this.showDropdown;
   }
 
-  // badge-lukumäärä
+  // badge-count
   get unreadCount(): number {
-    return (this.unreads?.length || 0) + (this.pendingRequests?.length || 0);
+    return (
+      (this.unreads?.length || 0) +
+      (this.pendingRequests?.length || 0) +
+      (this.notifications?.length || 0)
+    );
   }
 
-  // aloittaa chatin kun klikkaa notifikaatiota
+  // Starts chat when clicking notification
   userClicked(userId: string) {
+    //Remove notifications from certain sender when clicked
+    this.notifications = this.notifications.filter((n) => {
+      const senderId = n.senderId || n.senderID || n.fromUserId || n.SenderId; //sometimes payload differs so check many options
+
+      return senderId !== userId;
+    });
     this.chatService.startChat([userId]);
   }
 }

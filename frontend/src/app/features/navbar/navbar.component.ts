@@ -37,6 +37,7 @@ export class NavbarComponent implements OnInit {
   navItems: NavItem[] = [
     { label: 'Home', icon: 'Home.svg', route: '/dashboard' },
     { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/choose-game' },
+    { label: 'Users', icon: 'Acount.svg', route: '/dashboard/find-players' },
     { label: 'Social', icon: 'NoMessage.svg', route: '/dashboard/social' },
     { label: 'Settings', icon: 'Settings.svg', route: '/dashboard/settings' },
   ];
@@ -46,7 +47,7 @@ export class NavbarComponent implements OnInit {
   constructor(
     private userStore: UserStore,
     private router: Router,
-    private authStore: AuthStore,
+    private authStore: AuthStore
   ) {
     // Sets up a reactive watcher that updates user
     effect(() => {
@@ -56,9 +57,7 @@ export class NavbarComponent implements OnInit {
       }
     });
   }
-  // get user(): User | null {
-  //   return this.userStore.user();
-  // }
+
   ngOnInit(): void {
     const saved = localStorage.getItem('navbarCollapsed');
     if (saved !== null) {
@@ -92,6 +91,7 @@ export class NavbarComponent implements OnInit {
 
   onUserClick(): void {
     console.log('User button clicked');
+    this.router.navigate(['/dashboard/profile']);
   }
 
   // Clearing authToken and rerouting to the login-page when logging off
