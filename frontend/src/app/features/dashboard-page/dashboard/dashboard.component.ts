@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private gameService: GameService,
     private userStore: UserStore,
-    private userService: UserService
+    private userService: UserService,
   ) {
     // Sets up a reactive watcher that updates user
     effect(() => {
