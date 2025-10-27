@@ -7,14 +7,12 @@
 
 .layout {
   display: grid;
-  grid-template-columns: 20% 1fr 300px; /* navbar | main | social bar */
+  grid-template-columns: 14rem 1fr; /* navbar | main */
   width: 100%;
   column-gap: 0.25rem;
   min-height: 100vh;
   position: relative;
-  transition: grid-template-columns 0.3s ease;
 }
-
 /* Kiinteä taustakuva koko näkymälle */
 .layout::before {
   content: "";
@@ -47,6 +45,7 @@
   padding-right: 2rem;
   padding-left: 0;
   margin-left: 0;
+  margin-right: clamp(12rem, 20vw, 18rem);
   overflow: visible;
   height: 100vh;
 }
@@ -56,7 +55,6 @@
   grid-column: 3;
   align-self: start;
   justify-self: start;
-
   max-width: 18rem;
   width: 100%;
   height: fit-content;
@@ -67,17 +65,9 @@
 /* MEDIA QUERYT */
 
 @media (max-width: 900px) {
-  .layout {
-    grid-template-columns: 20% 1fr; /* vain navbar + main */
-  }
-
   .main {
     grid-column: 2;
-    padding-right: 0;
-  }
-
-  .social-floating {
-    display: none;
+    padding-right: 2rem;
   }
 }
 /*
@@ -126,5 +116,16 @@ Mobiili näkymään flexbox, ja järjestys muutettu
     flex-direction: row;
     width: 100%;
     justify-content: space-around;
+  }
+}
+@media (max-width: 1024px) {
+  .social-floating {
+    display: none;
+  }
+  .layout {
+    grid-template-columns: 5rem 1fr; /* Increases size of main content by removing social floating space */
+  }
+  .main {
+    margin-right: 0;
   }
 }

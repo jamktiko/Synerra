@@ -27,7 +27,12 @@ export class SocialMenuComponent {
       avatar: 'assets/svg/Acount.svg',
       lastMessage: 'Last message',
     },
-    { name: 'Charlie', avatar: 'assets/svg/Acount.svg', lastMessage: 'Yo!' },
+    {
+      name: 'Charlie',
+      avatar: 'assets/svg/Acount.svg',
+      lastMessage:
+        'Yo! Long message to test stuffLong message to test stuffLong message to test stuffLong message to test stuffLong message to test stuffLong message to test stuffLong message to test stuffLong message to test stuffLong message to test stuffLong message to test stuff',
+    },
     {
       name: 'David',
       avatar: 'assets/svg/Acount.svg',

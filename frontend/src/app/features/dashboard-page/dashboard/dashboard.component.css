@@ -89,5 +89,7 @@ app-dashboard-card img {
 @media (max-width: 768px) {
   .dashboard {
     width: auto;
+    padding: 1rem;
+    margin-top: 1.5%;
   }
 }

@@ -1,7 +1,7 @@
 <div class="users-list">
   <h2>Chats</h2>
   <div class="header">
-    <input type="text" placeholder="Search..." />
+    <input class="searchUsers" type="text" placeholder="Search..." />
     <app-button label="Online" variant="default" size="small" [fullWidth]="true"></app-button>
     <app-button label="All" variant="default" size="small" [fullWidth]="true"></app-button>
     <app-button label="Add" variant="default" button-align="center" size="small" [fullWidth]="true"
@@ -34,7 +34,7 @@
           <div *ngFor="let user of users" class="card mb-2 p-2 text-white">
             <div class="d-flex align-items-center">
               <img [src]="user.avatar" class="rounded-circle me-2" width="50" />
-              <div>
+              <div class="userTextBar">
                 <strong>{{ user.name }}</strong><br />
                 <small class="lMessage">{{ user.lastMessage }}</small>
               </div>

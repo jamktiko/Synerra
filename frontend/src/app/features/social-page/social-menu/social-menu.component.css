@@ -93,6 +93,18 @@
 /* Last message styling on user tab */
 .lMessage {
   color: var(--color-text-dark);
+  display: block;
+  width: 100%;
+  white-space: nowrap; /* prevent line breaks */
+  overflow: hidden; /* hide overflowing text */
+  text-overflow: ellipsis; /* add "..." at the end */
+}
+
+.userTextBar {
+  flex: 1;
+  min-width: 0;
+  max-width: 30em; /* prevents lMessage from being way too long. */
+  width: 100%;
 }
 
 /* Groups & Users tab cards */
@@ -239,7 +251,9 @@
   min-height: 0;
   overflow-y: auto;
 }
-
+.users-list {
+  width: auto;
+}
 @media (max-width: 768px) {
   .users-list {
     width: auto;
