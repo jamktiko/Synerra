@@ -46,7 +46,7 @@ export class NavbarComponent implements OnInit {
   constructor(
     private userStore: UserStore,
     private router: Router,
-    private authStore: AuthStore,
+    private authStore: AuthStore
   ) {
     // Sets up a reactive watcher that updates user
     effect(() => {
@@ -92,6 +92,7 @@ export class NavbarComponent implements OnInit {
 
   onUserClick(): void {
     console.log('User button clicked');
+    this.router.navigate(['/dashboard/profile']);
   }
 
   // Clearing authToken and rerouting to the login-page when logging off

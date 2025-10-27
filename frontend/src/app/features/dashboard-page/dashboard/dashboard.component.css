@@ -1,8 +1,9 @@
 .dashboard {
+  --page-horizontal-gap: clamp(1.5rem, 4vw, 3rem);
   margin-top: 0.78%;
   width: 100%;
-  max-width: 100%;
-  padding: 3rem;
+  max-width: 1100px;
+  padding: 3rem 2.5rem;
   box-sizing: border-box;
   font-family: Inter, sans-serif;
   color: var(--color-text-default);
@@ -10,6 +11,8 @@
   flex-direction: column;
   gap: 2rem;
   overflow-x: hidden;
+  margin-left: calc(var(--page-horizontal-gap) + 2rem);
+  margin-right: var(--page-horizontal-gap);
 }
 
 .dashboard-inner {
@@ -47,7 +50,7 @@
   display: grid;
   padding: 1.5rem;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  gap: 2rem;
   width: 100%;
   max-width: 100%;
   background: var(--color-dark-gradient);
@@ -85,4 +88,33 @@ app-dashboard-card img {
   padding: 2px 6px;
   font-size: 12px;
   font-weight: bold;
+}
+
+@media (max-width: 900px) {
+  .dashboard {
+    margin-left: var(--page-horizontal-gap);
+    padding: 2.5rem 2rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .games-grid {
+    max-height: none;
+    overflow-y: visible;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard {
+    --page-horizontal-gap: clamp(1rem, 6vw, 2rem);
+    margin-left: var(--page-horizontal-gap);
+    margin-right: var(--page-horizontal-gap);
+    padding: 2rem 1.25rem;
+    gap: 1.75rem;
+  }
+
+  .games-grid {
+    padding: 1rem;
+    gap: 1.25rem;
+  }
 }

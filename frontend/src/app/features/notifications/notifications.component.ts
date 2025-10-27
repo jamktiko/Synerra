@@ -1,26 +1,63 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  TemplateRef,
+  EmbeddedViewRef,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { UnreadMessage } from '../../core/interfaces/chatMessage';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { ChatService } from '../../core/services/chat.service';
 import { FriendService } from '../../core/services/friend.service';
 import { FriendRequest } from '../../core/interfaces/friendrequest.model';
-
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
   imports: [CommonModule],
 })
-export class NotificationsComponent implements OnInit {
+export class NotificationsComponent implements OnInit, OnDestroy {
   unreads: UnreadMessage[] = [];
   pendingRequests: FriendRequest[] = [];
   showDropdown = false;
+  readonly dropdownContext = { inline: false };
+
+  @ViewChild('panelTemplate') panelTemplate!: TemplateRef<{ inline: boolean }>;
+
+  private inlineView?: EmbeddedViewRef<{ inline: boolean }>;
+  private _inlineHost?: ViewContainerRef;
+
+  @Input()
+  set inlineHost(host: ViewContainerRef | undefined) {
+    if (this._inlineHost === host) return;
+    if (this.inlineView) {
+      this.inlineView.destroy();
+      this.inlineView = undefined;
+    }
+    this._inlineHost = host;
+    this.syncInlineView();
+  }
+  get inlineHost(): ViewContainerRef | undefined {
+    return this._inlineHost;
+  }
+
+  @Input() inlineHostElement?: HTMLElement;
+
+  @Output() dropdownChanged = new EventEmitter<boolean>();
 
   constructor(
     private userService: UserService,
     private chatService: ChatService,
-    private friendService: FriendService
+    private friendService: FriendService,
+    private host: ElementRef
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +85,13 @@ export class NotificationsComponent implements OnInit {
     // Pyydetään aluksi palvelimelta tiedot
     this.userService.getUnreadMessages().subscribe();
     this.friendService.getPendingRequests().subscribe();
+  }
+
+  ngOnDestroy(): void {
+    if (this.inlineView) {
+      this.inlineView.destroy();
+      this.inlineView = undefined;
+    }
   }
 
   // hyväksy friend request
@@ -88,7 +132,7 @@ export class NotificationsComponent implements OnInit {
 
   // toggle dropdown
   toggleDropdown() {
-    this.showDropdown = !this.showDropdown;
+    this.setDropdownState(!this.showDropdown);
   }
 
   // badge-lukumäärä
@@ -99,5 +143,68 @@ export class NotificationsComponent implements OnInit {
   // aloittaa chatin kun klikkaa notifikaatiota
   userClicked(userId: string) {
     this.chatService.startChat([userId]);
+  }
+
+  // merkitse kaikki viestit luetuiksi
+  markAllAsRead() {
+    if (!this.unreads?.length) return;
+    const roomIds = Array.from(new Set(this.unreads.map((m) => m.RoomId)));
+    // Best-effort: fire requests and refresh; ignore individual failures here
+    roomIds.forEach((roomId) => {
+      this.userService.markRoomMessagesAsRead(roomId).subscribe({
+        error: (err) => console.error('Failed to mark room read', roomId, err),
+      });
+    });
+    this.setDropdownState(false);
+  }
+
+  // close when clicking outside of the component
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this.showDropdown) return;
+    const target = event.target as Node;
+    const clickedInsideComponent = this.host.nativeElement.contains(target);
+    const clickedInsideInlineHost =
+      this.inlineHostElement?.contains(target as Node) ?? false;
+    if (!clickedInsideComponent && !clickedInsideInlineHost) {
+      this.setDropdownState(false);
+    }
+  }
+
+  private setDropdownState(state: boolean) {
+    if (this.showDropdown === state) {
+      this.dropdownChanged.emit(this.showDropdown);
+      return;
+    }
+    this.showDropdown = state;
+    this.syncInlineView();
+    this.dropdownChanged.emit(this.showDropdown);
+  }
+
+  private syncInlineView() {
+    if (!this.inlineHost) {
+      if (this.inlineView) {
+        this.inlineView.destroy();
+        this.inlineView = undefined;
+      }
+      return;
+    }
+
+    if (!this.panelTemplate) {
+      return;
+    }
+
+    if (this.showDropdown) {
+      if (!this.inlineView) {
+        this.inlineView = this.inlineHost.createEmbeddedView(
+          this.panelTemplate,
+          { inline: true }
+        );
+      }
+      this.inlineView.detectChanges();
+    } else if (this.inlineView) {
+      this.inlineView.destroy();
+      this.inlineView = undefined;
+    }
   }
 }
