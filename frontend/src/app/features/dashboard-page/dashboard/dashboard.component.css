@@ -3,7 +3,7 @@
   margin-top: 0.78%;
   width: 100%;
   max-width: 1100px;
-  padding: 3rem 2.5rem;
+  padding: 3rem calc(2rem + var(--page-horizontal-gap));
   box-sizing: border-box;
   font-family: Inter, sans-serif;
   color: var(--color-text-default);
@@ -11,8 +11,7 @@
   flex-direction: column;
   gap: 2rem;
   overflow-x: hidden;
-  margin-left: calc(var(--page-horizontal-gap) + 2rem);
-  margin-right: var(--page-horizontal-gap);
+  margin: 0 auto;
 }
 
 .dashboard-inner {
@@ -92,8 +91,7 @@ app-dashboard-card img {
 
 @media (max-width: 900px) {
   .dashboard {
-    margin-left: var(--page-horizontal-gap);
-    padding: 2.5rem 2rem;
+    padding: 2.5rem calc(1.75rem + var(--page-horizontal-gap));
   }
 }
 
@@ -107,9 +105,8 @@ app-dashboard-card img {
 @media (max-width: 600px) {
   .dashboard {
     --page-horizontal-gap: clamp(1rem, 6vw, 2rem);
-    margin-left: var(--page-horizontal-gap);
-    margin-right: var(--page-horizontal-gap);
-    padding: 2rem 1.25rem;
+    padding: 2rem calc(1.25rem + var(--page-horizontal-gap));
+    margin: 0 auto;
     gap: 1.75rem;
   }
 
