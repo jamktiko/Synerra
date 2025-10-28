@@ -6,10 +6,11 @@
 
 :root {
   /* Font families */
-  --font-main: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial,
+  --font-main:
+    "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --font-title:
+    "Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Arial,
     sans-serif;
-  --font-title: "Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto,
-    Arial, sans-serif;
 
   /* Font weights */
   --font-weight-light: 300;
@@ -42,6 +43,7 @@
   --color-highlight: #ffb31c;
   --color-success: #14ae5c;
   --color-text-default: #f2f2f2;
+  --color-text-grey: #bfbfbf;
   --color-text-dark: #7f7f7f;
   --color-background: #141414;
 

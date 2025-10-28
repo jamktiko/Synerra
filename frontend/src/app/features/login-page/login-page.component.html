@@ -21,7 +21,7 @@
         align="left"></app-button>
 
       <app-button label="Login with Email" icon="Mail" variant="default" size="large" [fullWidth]="true" align="left"
-        [routerLink]="'/login/email'"></app-button>
+        (click)="emailLogin()"></app-button>
 
       <div class="linebreak">
         <div class="linebreak-child"></div>

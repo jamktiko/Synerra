@@ -19,7 +19,7 @@ export class AuthService {
     private http: HttpClient,
     private router: Router,
     private authStore: AuthStore,
-    private userStore: UserStore
+    private userStore: UserStore,
   ) {}
 
   signup(credentials: { email: string; password: string }): Observable<any> {
@@ -28,7 +28,7 @@ export class AuthService {
       .pipe(
         tap((res) => {
           console.log(res);
-        })
+        }),
       );
   }
 
@@ -39,12 +39,13 @@ export class AuthService {
         tap((res) => {
           this.authStore.setToken(res.token);
           this.userStore.setUser(res.user);
-        })
+        }),
       );
   }
 
+  // This logs the user out from the whole app
   logout(): void {
     this.authStore.clearToken();
-    this.router.navigate(['/login']);
+    this.userStore.clearUser();
   }
 }
