@@ -101,18 +101,6 @@
   word-break: break-word;
 }
 
-.languages {
-  font-size: var(--fs-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-default);
-  letter-spacing: 0.3px;
-  min-height: 20px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding: 0 0.5rem;
-}
-
 .languages:empty {
   display: none;
   margin: 0;
@@ -433,4 +421,44 @@
 .card-img-top {
   position: relative;
   z-index: 1;
+}
+
+.languages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  justify-content: center;
+  margin-bottom: 20px;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+.languages::-webkit-scrollbar {
+  height: 6px;
+  display: none;
+}
+
+.languages::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+
+.languages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.flag-img {
+  width: 40px;
+  height: auto;
+  border-radius: 3px;
+  object-fit: cover;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+.flag-img:hover {
+  transform: scale(1.15);
+  cursor: pointer;
 }
