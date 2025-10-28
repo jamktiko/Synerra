@@ -1,17 +1,20 @@
-<div class="social-floating">
+<div class="social-floating" [class.notifications-open]="notificationsOpen">
 
   <!-- Header -->
   <div class="header">
     <div class="top-socialbar">
       <div class="social-text">Social</div>
-      <app-notifications></app-notifications>
+      <app-notifications [inlineHost]="inlineHost" [inlineHostElement]="inlineHostElement"
+        (dropdownChanged)="onNotificationsToggle($event)"></app-notifications>
     </div>
-    <div class="linebreak-horizontal-child"></div>
+    <div class="linebreak-horizontal-child" *ngIf="!notificationsOpen"></div>
 
   </div>
 
+  <div class="notifications-inline-host" #notificationsHost></div>
+
   <!-- Online players summary -->
-  <div class="chatrooms-sum-wrapper">
+  <div class="chatrooms-sum-wrapper" *ngIf="!notificationsOpen">
     <div class="chatrooms-sum">
       <b class="my-chatrooms-container">
         <span>FRIENDS ONLINE - </span>
@@ -21,7 +24,7 @@
   </div>
 
   <!-- Player list -->
-  <div class="friends-container">
+  <div class="friends-container" *ngIf="!notificationsOpen">
     <div class="players">
       <div *ngFor="let user of users$ | async" (click)="userClicked(user.UserId)">
         <div class="player-card">

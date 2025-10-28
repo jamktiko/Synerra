@@ -3,29 +3,37 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1rem;
-  background: var(--color-background);
+  padding: 1rem 0 1rem 1rem;
+  background: var(--color-dark-gradient);
   border-radius: 8px;
   color: #fff;
   font-family: Inter, sans-serif;
-
-  width: 160%; /* 40% wider */
+  height: 100%;
+  width: auto;
   max-height: 94vh; /* lock height to viewport */
-  overflow-y: hidden; /* scroll if overflowing */
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.layout {
+  height: 100%;
+  padding-bottom: 3px;
 }
 
 /* Container must hide overflow */
 .conts {
-  overflow: hidden;
-  overflow-y: auto;
   position: relative;
+  flex: 1 1 auto; /* vie jäljellä olevan tilan */
+  min-height: 0; /* TÄRKEÄ: mahdollistaa overflow-y:auto toiminnan */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
-
 /* Make tab-content behave like a slider */
 .tab-content {
   display: flex;
   transition: transform 0.3s ease-in-out;
   width: 200%; /* 2 tabs side by side */
+  min-height: 0;
 }
 
 /* Each tab-pane should take half */
@@ -35,6 +43,7 @@
   opacity: 1 !important; /* disable bootstrap fade effect */
   display: block !important; /* always keep them in DOM */
   overflow-y: auto;
+  min-height: 0;
 }
 
 /* Default: show first tab (users) */
@@ -59,7 +68,7 @@
 .nav-tabs .nav-link.active {
   background: var(--color-primary);
   color: var(--color-text-default);
-  border-radius: 8px 8px 0 0;
+  border-radius: 8px 8px 0 8px;
 }
 
 /* Gradient outline */
@@ -72,39 +81,38 @@
   background: var(--color-gray-v2);
 
   /* Mask for gradient border */
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
 
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
 
   pointer-events: none; /* don’t block clicks */
 }
 
-/* Users tab cards */
-#users .card {
-  background: var(--color-background);
-  border: none;
-  border-radius: 8px;
-  color: #fff;
+/* Last message styling on user tab */
+.lMessage {
+  color: var(--color-text-dark);
 }
 
-/* Groups tab cards */
-#groups .card {
-  background: var(--color-background);
-  border: none;
+/* Groups & Users tab cards */
+#groups .card,
+#users .card {
+  background: var(--color-transparent-gradient);
+  border-bottom: 0;
+  border-right: 0;
+  border-width: 2px;
   border-radius: 8px;
   color: #fff;
+  margin-right: 1rem;
 }
 
 .header {
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  height: 2.5rem;
+  padding-right: 1rem;
 }
 
 .header input {
@@ -114,15 +122,24 @@
   border: 1px solid #8e8e8e;
   background: #262626;
   color: #fff;
+  height: 100%;
+  min-width: 100px;
 }
 
 .header button {
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  border: none;
   cursor: pointer;
-  background: var(--color-primary);
+  background: var(--color-transparent-gradient);
   color: #fff;
+  height: 100%;
+
+  border-right: none;
+  border-bottom: none;
+}
+
+.buttonImage {
+  height: 100%;
 }
 
 .users,
@@ -195,35 +212,36 @@
   color: #e8341d;
   border: none;
 }
-/* Remove the default tab underline */
-.nav-tabs {
-  border-bottom: none !important;
+
+/* wrapper that contains tabs (new/changed) */
+.tabsConts {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* täyttää users-listin korkeus */
+  min-height: 0; /* TÄRKEÄ: sallii lapsen kutistua ja scrollin toimia */
+  gap: 0.5rem;
+  box-sizing: border-box;
 }
 
-/* Remove the active tab underline */
-.nav-tabs .nav-link {
-  border: none !important;
+/* tab content row must also be able to shrink */
+.tab-content {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+  width: 200%; /* 2 tabs side by side */
+  min-height: 0;
 }
 
-/* Optional: set your own active tab highlight */
-.nav-tabs .nav-link.active {
-  background: var(--color-background);
-  color: #e8341d;
-  border: none;
-}
-/* Remove the default tab underline */
-.nav-tabs {
-  border-bottom: none !important;
+/* each pane scrolls internally */
+.tab-pane {
+  flex: 0 0 50%;
+  max-width: 50%;
+  display: block !important;
+  min-height: 0;
+  overflow-y: auto;
 }
 
-/* Remove the active tab underline */
-.nav-tabs .nav-link {
-  border: none !important;
-}
-
-/* Optional: set your own active tab highlight */
-.nav-tabs .nav-link.active {
-  background: var(--color-background);
-  color: #e8341d;
-  border: none;
+@media (max-width: 768px) {
+  .users-list {
+    width: auto;
+  }
 }

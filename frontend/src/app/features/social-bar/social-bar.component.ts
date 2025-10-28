@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { FriendService } from '../../core/services/friend.service';
 import { User } from '../../core/interfaces/user.model';
 import { ChatService } from '../../core/services/chat.service';
@@ -12,13 +19,22 @@ import { NotificationsComponent } from '../notifications/notifications.component
   templateUrl: './social-bar.component.html',
   styleUrls: ['./social-bar.component.css', '../../../styles.css'],
 })
-export class SocialBarComponent {
+export class SocialBarComponent implements AfterViewInit {
   users$: Observable<User[]>;
+  notificationsOpen = false;
+  inlineHost?: ViewContainerRef;
+  inlineHostElement?: HTMLElement;
+
+  @ViewChild('notificationsHost', { read: ViewContainerRef })
+  private notificationsHostRef?: ViewContainerRef;
+  @ViewChild('notificationsHost', { read: ElementRef })
+  private notificationsHostElementRef?: ElementRef<HTMLElement>;
   onlineUsers$: Observable<User[]>;
 
   constructor(
     private friendService: FriendService,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private cdr: ChangeDetectorRef
   ) {
     this.users$ = this.friendService.friends$.pipe(
       map((friends) =>
@@ -47,6 +63,19 @@ export class SocialBarComponent {
       error: (err) => console.error(err),
     });
     console.log(this.users$);
+  }
+
+  ngAfterViewInit(): void {
+    this.inlineHost = this.notificationsHostRef;
+    this.inlineHostElement = this.notificationsHostElementRef?.nativeElement;
+    this.cdr.detectChanges();
+  }
+
+  onNotificationsToggle(open: boolean) {
+    this.notificationsOpen = open;
+    if (!open) {
+      this.inlineHost?.clear();
+    }
   }
 
   userClicked(userId: any) {

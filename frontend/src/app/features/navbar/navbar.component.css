@@ -450,6 +450,10 @@
   box-shadow: none;
 }
 
+.mobile-nav {
+  display: none;
+}
+
 /* Automaattinen pienentäminen pienemmillä näytöillä */
 @media (max-width: 64rem) {
   .navigation {
@@ -518,4 +522,88 @@
   .logout-btn {
     margin-left: 0em;
   }
+}
+
+@media (max-width: 768px) {
+  /* Piilota desktop-osat, näytä mobiiliversio */
+  .navigation .top-section,
+  .navigation .nav-links,
+  .navigation .bottom-section,
+  .navigation .divider {
+    display: none;
+  }
+  .nav-btn {
+    width: auto;
+    max-width: 100%;
+  }
+  .navigation.collapsed {
+    all: unset;
+  }
+  .navigation {
+    all: unset;
+    position: static;
+    height: auto;
+    display: block;
+    width: 100%;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+  .navigation .mobile-nav {
+    display: block;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    background: var(--color-background);
+    box-shadow: 0px -2px 12.7px 4px rgba(0, 0, 0, 0.25);
+    border-top: 1px solid #8e8e8e;
+    padding: 3px 0;
+    z-index: 10000;
+  }
+
+  .navigation .mobile-nav .nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    padding-top: 8px;
+  }
+
+  .navigation .mobile-nav .nav-icon {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-style: solid;
+    border-width: 0 1px;
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .navigation .mobile-nav .nav-icon img {
+    width: 60%;
+    min-width: 50px;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+    padding: 4px;
+    opacity: 0.8;
+  }
+
+  .navigation .mobile-nav .nav-icon.active {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 5%,
+      #13131370 90%,
+      #ce3815 100%
+    );
+    border-style: solid;
+    border-width: 0 1px;
+    border-color: rgba(0, 0, 0, 0.2);
+  } /*
+  .navigation .mobile-nav .nav-icon.active img {
+    background: radial-gradient(#e15c23 0%, #00000000 70%);
+  }*/
 }
