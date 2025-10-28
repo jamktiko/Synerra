@@ -203,7 +203,7 @@
 }
 
 .btn-icon-right {
-  flex-direction: row-reverse;
+  flex-direction: row;
 }
 
 .btn-icon-right .btn-icon {
