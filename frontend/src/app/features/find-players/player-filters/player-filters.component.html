@@ -19,19 +19,19 @@
 
       <div *ngIf="openDropdown === 'status'" class="checkbox-list animate-fade" role="menu">
         <label class="checkbox-item" (click)="$event.stopPropagation()">
-          <input type="radio" name="status" (change)="onStatusChange('')" [checked]="!filters.onlineStatus" />
+          <input type="radio" name="status" (change)="onStatusChange('')" [checked]="!filters.Status" />
           <span class="item-text">Any status</span>
         </label>
 
         <label class="checkbox-item" (click)="$event.stopPropagation()">
           <input type="radio" name="status" (change)="onStatusChange('online')"
-            [checked]="filters.onlineStatus === 'online'" />
+            [checked]="filters.Status === 'online'" />
           <span class="item-text">Online</span>
         </label>
 
         <label class="checkbox-item" (click)="$event.stopPropagation()">
           <input type="radio" name="status" (change)="onStatusChange('offline')"
-            [checked]="filters.onlineStatus === 'offline'" />
+            [checked]="filters.Status === 'offline'" />
           <span class="item-text">Offline</span>
         </label>
       </div>

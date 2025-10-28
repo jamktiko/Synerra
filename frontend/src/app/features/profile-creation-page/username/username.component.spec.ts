@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { UsernameComponent } from './username.component';
 
@@ -9,6 +12,13 @@ describe('UsernameComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [UsernameComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        // NgbActiveModal is needed because this component is used in a modal dialog
+        // Bootstrap modals require this service to control modal lifecycle (open/close/dismiss)
+        NgbActiveModal,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UsernameComponent);
@@ -16,6 +26,8 @@ describe('UsernameComponent', () => {
     fixture.detectChanges();
   });
 
+  // Basic smoke test for modal component
+  // Verifies component can be created with NgbActiveModal dependency
   it('should create', () => {
     expect(component).toBeTruthy();
   });

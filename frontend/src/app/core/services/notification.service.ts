@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { filter, Subject, Subscription } from 'rxjs';
 import { environment } from '../../../environment';
 import { AuthStore } from '../stores/auth.store';
 import { UserStore } from '../stores/user.store';
@@ -11,7 +11,6 @@ export class NotificationService implements OnDestroy {
   private socket: WebSocket | null = null;
   private token: string | null = null;
   private notificationsSubject = new Subject<any>();
-  public notifications$ = this.notificationsSubject.asObservable();
   private reconnectInterval = 3000;
   private hasSentType = false;
   private reconnecting = false;
@@ -22,6 +21,13 @@ export class NotificationService implements OnDestroy {
     this.token = this.authStore.getToken(); //get the users jwt token
   }
 
+  public notifications$ = this.notificationsSubject.asObservable().pipe(
+    filter((msg) => msg.type !== 'USER_STATUS') // ignore online_status messages
+  );
+
+  public userStatus$ = this.notificationsSubject
+    .asObservable()
+    .pipe(filter((msg) => msg.type === 'USER_STATUS'));
   //Initialize the connection
   public initConnection() {
     const tryConnect = () => {
@@ -80,6 +86,7 @@ export class NotificationService implements OnDestroy {
       try {
         const data = JSON.parse(event.data);
         console.log('Notification received:', data);
+
         this.notificationsSubject.next(data);
       } catch (err) {
         console.error('Error parsing notification message', err);

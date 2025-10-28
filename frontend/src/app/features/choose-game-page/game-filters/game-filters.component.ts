@@ -3,6 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
 
 // Define a filter object type
 export interface GameFilters {
@@ -13,7 +14,7 @@ export interface GameFilters {
 
 @Component({
   selector: 'app-game-filters',
-  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule, ButtonComponent],
   templateUrl: './game-filters.component.html',
   styleUrl: './game-filters.component.css',
 })

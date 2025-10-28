@@ -1,11 +1,16 @@
 const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 const { doccli } = require('./ddbconn');
+const AWS = require('aws-sdk');
 const {
   PutCommand,
   DeleteCommand,
   QueryCommand,
 } = require('@aws-sdk/lib-dynamodb');
+const {
+  ApiGatewayManagementApi,
+  PostToConnectionCommand,
+} = require('@aws-sdk/client-apigatewaymanagementapi');
 
 //jwksClient for getting public keys from Cognito for identification
 const client = jwksClient({
@@ -110,15 +115,62 @@ module.exports.connectHandler = async (event) => {
       return { statusCode: 500, body: 'Internal server error' };
     }
   }
+  await broadcastUserStatus(
+    userId,
+    'online',
+    event.requestContext.domainName,
+    event.requestContext.stage,
+    connectionId
+  );
   return {}; // Success, allow websocket connection
 };
 
 //handler for $disconnect-route
 module.exports.disconnectHandler = async (event) => {
   console.log('OnDisconnect');
-  console.log('Received event:', JSON.stringify(event, null, 2));
+  const connectionId = event.requestContext.connectionId;
+  if (!connectionId) {
+    console.log('ConnectionId not found!');
+  }
+  try {
+    // Find connectionId and remove it from the table
+    const result = await doccli.send(
+      new QueryCommand({
+        TableName: process.env.CONNECTION_DB_TABLE,
+        IndexName: 'ConnectionIdIndex',
+        KeyConditionExpression: 'connectionId = :cid',
+        ExpressionAttributeValues: { ':cid': connectionId },
+      })
+    );
 
-  return {};
+    console.log(result.Items);
+    // if items are found
+    if (result.Items?.length) {
+      const item = result.Items[0];
+      await doccli.send(
+        //delete the items
+        new DeleteCommand({
+          TableName: process.env.CONNECTION_DB_TABLE,
+          Key: { roomId: item.roomId, connectionId: item.connectionId },
+        })
+      );
+      console.log(`Connection ${connectionId} removed for user ${item.userId}`);
+
+      if (item.type === 'notifications') {
+        await broadcastUserStatus(
+          item.userId,
+          'offline',
+          event.requestContext.domainName,
+          event.requestContext.stage
+        );
+      }
+    }
+  } catch (err) {
+    console.error('Error during disconnect:', err);
+    return { statusCode: 500, body: 'Error during disconnect' };
+  }
+
+  return { statusCode: 200, body: 'Disconnected' };
 };
 
 // default handler for unknown WebSocket messages
@@ -175,6 +227,60 @@ module.exports.auth = async (event) => {
     },
   };
 };
+
+async function broadcastUserStatus(
+  userId,
+  status,
+  domainName,
+  stage,
+  newConnectionId
+) {
+  const endpoint = `https://${domainName}/${stage}`;
+  const apigw = new ApiGatewayManagementApi({ apiVersion: 'latest', endpoint });
+
+  const connections = await doccli.send(
+    new QueryCommand({
+      TableName: process.env.CONNECTION_DB_TABLE,
+      IndexName: 'TypeIndex',
+      KeyConditionExpression: '#t = :type',
+      ExpressionAttributeNames: { '#t': 'type' },
+      ExpressionAttributeValues: { ':type': 'notifications' },
+    })
+  );
+
+  if (!connections.Items?.length) return;
+
+  const payload = JSON.stringify({ type: 'USER_STATUS', userId, status });
+  console.log('Broadcast payload:', payload, newConnectionId); // <-- log payload
+
+  for (const item of connections.Items) {
+    console.log('begin loop...');
+    console.log(item);
+    if (item.connectionId === newConnectionId) continue;
+
+    try {
+      console.log(`Sending message to connection: ${item.connectionId}`);
+      await apigw.send(
+        new PostToConnectionCommand({
+          ConnectionId: item.connectionId,
+          Data: payload,
+        })
+      );
+      console.log(`Message sent to ${item.connectionId}`);
+    } catch (err) {
+      console.error('Error broadcasting to connection', item.connectionId, err);
+      if (err.statusCode === 410 || err.name === 'GoneException') {
+        console.log(`Deleting stale connection ${item.connectionId}`);
+        await doccli.send(
+          new DeleteCommand({
+            TableName: process.env.CONNECTION_DB_TABLE,
+            Key: { roomId: item.roomId, connectionId: item.connectionId },
+          })
+        );
+      }
+    }
+  }
+}
 
 // Export responses in case other modules need them
 module.exports.successfulResponse = successfulResponse;
