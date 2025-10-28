@@ -4,11 +4,11 @@ import { CommonModule } from '@angular/common';
 import { User, UserFilters } from '../../core/interfaces/user.model';
 import { PlayerCardComponent } from './player-card/player-card.component';
 import { PlayerFiltersComponent } from './player-filters/player-filters.component';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { UserStore } from '../../core/stores/user.store';
-
+import { BehaviorSubject, combineLatest } from 'rxjs';
 @Component({
   selector: 'app-find-players',
   standalone: true,
@@ -22,6 +22,9 @@ export class FindPlayersComponent implements OnInit {
   initialGameFilter: any;
   preSelectedGame: string | null = null;
   user: User | null = null;
+  users$: Observable<User[]>;
+  onlineUsers$: Observable<User[]>;
+  filteredUsers$ = new BehaviorSubject<User[]>([]);
 
   constructor(
     private userService: UserService,
@@ -35,9 +38,24 @@ export class FindPlayersComponent implements OnInit {
         this.user = user;
       }
     });
+
+    // base users stream
+    this.users$ = this.userService.users$;
+    this.onlineUsers$ = this.users$.pipe(
+      map((users) => users.filter((user) => user.Status === 'online'))
+    );
+    this.users$.subscribe((users) => {
+      this.filteredUsers$.next(users);
+    });
   }
 
   ngOnInit() {
+    this.userService.refreshUsers();
+
+    this.users$.subscribe((users) => {
+      console.log('Reactive users:', users);
+    });
+
     // pass the selected game to make the checkbox selected
     this.route.queryParams.subscribe((params) => {
       const game = params['game'];
@@ -52,7 +70,7 @@ export class FindPlayersComponent implements OnInit {
 
       const initialGameFilter: UserFilters = {
         username: '',
-        onlineStatus: '',
+        Status: '',
         languages: [],
         games: [],
       };
@@ -67,69 +85,53 @@ export class FindPlayersComponent implements OnInit {
     });
   }
 
-  // loads user from endpoint
-  loadUsers(p0?: any[]) {
-    this.userService.getUsers().subscribe({
-      next: (res) => {
-        this.users = res.users;
-        console.log('Users:', res.users);
-      },
-      error: (err) => {
-        console.error('Failed to load users', err);
-      },
-    });
-  }
-
   // called when the filters are changed, does the actual filtering
   onFiltersChanged(filters: UserFilters) {
-    const { username, onlineStatus, languages, games } = filters;
-    console.log(filters);
-    // Request username search + filter endpoint as before
-    let usernameRequest$ = username
-      ? this.userService
-          .getUserByUsername(username)
-          .pipe(catchError(() => of({ users: [] })))
-      : of({ users: null });
+    const { username, Status, languages, games } = filters;
 
-    let filterRequest$ = this.userService
-      .filterUsers({ onlineStatus, languages })
-      .pipe(catchError(() => of({ users: [] })));
-
-    forkJoin([usernameRequest$, filterRequest$])
+    // Take latest users from users$ and filter
+    this.users$
       .pipe(
-        map(([usernameRes, filterRes]) => {
-          let candidates = filterRes.users;
+        map((users) => {
+          let candidates = [...users];
 
-          // If username was provided, intersect with that result
-          if (usernameRes.users !== null) {
-            const usernameIds = new Set(
-              usernameRes.users.map((u: User) => u.PK)
+          // username filter
+          if (username) {
+            candidates = candidates.filter((u) =>
+              u.Username_Lower?.includes(username.toLowerCase())
             );
-            candidates = candidates.filter((u: User) => usernameIds.has(u.PK));
           }
 
-          // Filter by PlayedGames locally (frontend only)
+          //language filter
+          if (languages && languages.length > 0) {
+            candidates = candidates.filter((u) =>
+              u.Languages?.some((lang) => languages.includes(lang))
+            );
+          }
+
+          //game filter
           if (games && games.length > 0) {
-            candidates = candidates.filter((u: User) =>
+            candidates = candidates.filter((u) =>
               u.PlayedGames?.some((pg) => games.includes(pg.gameId))
             );
+          }
+
+          //online status filter
+          if (Status) {
+            candidates = candidates.filter((u) => u.Status === Status);
+          }
+
+          // Exclude current user
+          if (this.user) {
+            candidates = candidates.filter((u) => u.PK !== this.user?.PK);
           }
 
           return candidates;
         })
       )
-      .subscribe({
-        next: (combinedUsers) => {
-          // Remove the logged-in user
-          if (this.user) {
-            combinedUsers = combinedUsers.filter(
-              (u: User) => u.PK !== this.user?.PK
-            );
-          }
-
-          this.users = combinedUsers;
-        },
-        error: (err) => console.error('Error fetching users', err),
+      .subscribe((filtered) => {
+        // Emit filtered users to the BehaviorSubject
+        this.filteredUsers$.next(filtered);
       });
   }
 }

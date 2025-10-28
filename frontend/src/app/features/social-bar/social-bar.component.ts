@@ -10,7 +10,7 @@ import {
 import { FriendService } from '../../core/services/friend.service';
 import { User } from '../../core/interfaces/user.model';
 import { ChatService } from '../../core/services/chat.service';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { NotificationsComponent } from '../notifications/notifications.component';
 
 @Component({
@@ -29,13 +29,26 @@ export class SocialBarComponent implements AfterViewInit {
   private notificationsHostRef?: ViewContainerRef;
   @ViewChild('notificationsHost', { read: ElementRef })
   private notificationsHostElementRef?: ElementRef<HTMLElement>;
+  onlineUsers$: Observable<User[]>;
 
   constructor(
     private friendService: FriendService,
     private chatService: ChatService,
     private cdr: ChangeDetectorRef
   ) {
-    this.users$ = this.friendService.friends$;
+    this.users$ = this.friendService.friends$.pipe(
+      map((friends) =>
+        [...friends].sort((a, b) => {
+          // Online users first
+          if (a.Status === 'online' && b.Status !== 'online') return -1;
+          if (a.Status !== 'online' && b.Status === 'online') return 1;
+          return 0; // keep the original order if both same
+        })
+      )
+    );
+    this.onlineUsers$ = this.users$.pipe(
+      map((friends) => friends.filter((f) => f.Status === 'online'))
+    );
   }
 
   ngOnInit() {
@@ -57,19 +70,6 @@ export class SocialBarComponent implements AfterViewInit {
     this.inlineHostElement = this.notificationsHostElementRef?.nativeElement;
     this.cdr.detectChanges();
   }
-
-  //VANHA LOAD USERS
-  // loadUsers() {
-  //   this.friendService.getFriends().subscribe({
-  //     next: (res) => {
-  //       this.users = res.users;
-  //       console.log('Users:', res.users);
-  //     },
-  //     error: (err) => {
-  //       console.error('Failed to load users', err);
-  //     },
-  //   });
-  // }
 
   onNotificationsToggle(open: boolean) {
     this.notificationsOpen = open;

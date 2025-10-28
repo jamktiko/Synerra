@@ -402,3 +402,35 @@
     transform: translateX(-50%) translateY(0);
   }
 }
+
+/* /*
+
+/* Status ring hugging the profile picture exactly */
+.status-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  z-index: 0; /* behind the image */
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+/* Online: green glow tightly around avatar */
+.status-ring.online {
+  box-shadow: 0 0 20px 5px rgba(0, 255, 0, 0.6);
+}
+
+/* Offline: subtle gray glow tightly around avatar */
+.status-ring.offline {
+  box-shadow: 0 0 8px 7px rgba(128, 128, 128, 0.4);
+  opacity: 0.6;
+}
+
+/* Keep profile image above the ring */
+.card-img-top {
+  position: relative;
+  z-index: 1;
+}

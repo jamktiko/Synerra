@@ -17,8 +17,8 @@
   <div class="chatrooms-sum-wrapper" *ngIf="!notificationsOpen">
     <div class="chatrooms-sum">
       <b class="my-chatrooms-container">
-        <span>PLAYERS ONLINE - </span>
-        <span class="sum">{{ (users$ | async)?.length }}</span>
+        <span>FRIENDS ONLINE - </span>
+        <span class="sum">{{ (onlineUsers$ | async)?.length }}</span>
       </b>
     </div>
   </div>
@@ -26,11 +26,14 @@
   <!-- Player list -->
   <div class="friends-container" *ngIf="!notificationsOpen">
     <div class="players">
-      <div class="player-card" *ngFor="let user of users$ | async" (click)="userClicked(user.UserId)">
-        <img class="acount-icon" [src]="user.ProfilePicture" alt="Player Avatar" />
-        <div class="player-name">{{ user.Username }}</div>
-        <div class="status">
-          <!-- statuksen kuva, jos halutaan -->
+      <div *ngFor="let user of users$ | async" (click)="userClicked(user.UserId)">
+        <div class="player-card">
+          <img class="acount-icon" [src]="user.ProfilePicture" alt="Player Avatar" />
+          <div class="player-name">{{ user.Username }}</div>
+          <div class="status">
+            <img src="/assets/svg/Status/Online.svg" *ngIf="user.Status==='online'" alt="Online">
+            <img src="/assets/svg/Status/Offline.svg" *ngIf="user.Status==='offline'" alt="Offline">
+          </div>
         </div>
       </div>
     </div>

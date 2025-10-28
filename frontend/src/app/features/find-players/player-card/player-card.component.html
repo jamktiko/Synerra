@@ -2,15 +2,27 @@
   <div class="card-body">
     <!-- Vasen sarake -->
     <div class="card-left">
-      <div class="card-img-wrapper" (click)="onProfile()" role="button" tabindex="0" (keydown.enter)="onProfile()"
+      <div class="card-img-wrapper" (click)="onProfile()" role="button" tabindex="0"
         [attr.aria-label]="'Open profile of ' + user.Username" data-tooltip="View player profile">
+
+        <!-- Status ring -->
+        <span class="status-ring"
+          [ngClass]="{'online': user.Status==='online', 'offline': user.Status!=='online'}"></span>
+
+        <!-- Profile picture -->
         <img [src]="user.ProfilePicture" class="card-img-top" alt="Profile picture" />
       </div>
+
       <p class="user-name">{{ user.Username }}</p>
+
+
+
+
     </div>
 
     <!-- Oikea sarake -->
     <div class="card-right">
+
       <p class="bio-text">{{ user.Bio }}</p>
       <div class="divider"></div>
       <p class="languages" *ngIf="user.Languages">{{ user.Languages }}</p>
