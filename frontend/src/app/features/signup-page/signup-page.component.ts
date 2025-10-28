@@ -22,13 +22,18 @@ export class SignupPageComponent {
   showPassword = false; //the eye svg on input
   passwordsMatch = false;
   correctEmail = false;
+  passwordBlur = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   checkPasswordReq() {
     const password = this.passwordInput;
     this.hasCapital = /[A-Z]/.test(password); // checks, is there CAPITAL
     this.hasNumber = /\d/.test(password); // checks, is the number
+    this.checkPasswordsMatch(); // re-check if passwords match automatically
   }
 
   checkPasswordsMatch() {
@@ -82,7 +87,9 @@ export class SignupPageComponent {
     this.showPassword = !this.showPassword;
   }
 
-  signup() {
+  async signup() {
+    await this.authService.logout();
+    console.log('signed out');
     this.submitted = true;
 
     // if (this.passwordInput !== this.confirmPasswordInput) --- Tämä siis se vanha

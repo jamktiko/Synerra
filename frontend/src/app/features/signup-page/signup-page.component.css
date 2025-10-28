@@ -85,6 +85,13 @@ input:focus {
   align-items: center;
   gap: 0.4rem;
   padding: 0.2rem 0.4rem;
+  padding: 0.5rem 0.5rem;
+}
+
+.requiredContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
 }
 
 .stateImage {
@@ -94,6 +101,10 @@ input:focus {
 .req-item h2 {
   margin: 0;
   line-height: 1;
+}
+
+.default-text {
+  color: var(--color-text-dark);
 }
 
 .error-text {

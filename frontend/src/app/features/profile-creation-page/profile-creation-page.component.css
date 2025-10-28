@@ -119,6 +119,27 @@
   display: none;
 }
 
+.footerButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.login-link {
+  color: var(--color-text-dark);
+  cursor: pointer;
+  margin: 0;
+  padding-top: 1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  transition: color 0.2s ease;
+}
+
+.login-link:hover {
+  color: var(--color-text-grey);
+}
+
 @media (max-width: 991px) {
   .container-opaque {
     grid-template-columns: 1fr;

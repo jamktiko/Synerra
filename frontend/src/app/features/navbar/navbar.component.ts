@@ -11,8 +11,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { User } from '../../core/interfaces/user.model';
 import { UserStore } from '../../core/stores/user.store';
 import { Router } from '@angular/router';
-import { AuthStore } from '../../core/stores/auth.store';
-
+import { AuthService } from '../../core/services/auth.service';
 interface NavItem {
   label: string;
   icon: string;
@@ -55,7 +54,7 @@ export class NavbarComponent implements OnInit {
   constructor(
     private userStore: UserStore,
     private router: Router,
-    private authStore: AuthStore
+    private authService: AuthService,
   ) {
     // Sets up a reactive watcher that updates user
     effect(() => {
@@ -104,7 +103,7 @@ export class NavbarComponent implements OnInit {
 
   // Clearing authToken and rerouting to the login-page when logging off
   logOut() {
-    this.authStore.clearToken();
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }
