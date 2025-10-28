@@ -27,7 +27,7 @@ export class PlayerFiltersComponent implements OnInit {
   filters = {
     username: '',
     languages: [] as string[],
-    onlineStatus: '',
+    Status: '',
     games: [] as string[],
   };
 
@@ -97,7 +97,7 @@ export class PlayerFiltersComponent implements OnInit {
 
   // PÄIVITETTY: Asettaa myös label-tekstin
   onStatusChange(value: string): void {
-    this.filters.onlineStatus = value;
+    this.filters.Status = value;
     if (value === 'online') {
       this.selectedStatusLabel = 'Online';
     } else if (value === 'offline') {
