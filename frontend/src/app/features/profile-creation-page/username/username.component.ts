@@ -5,22 +5,55 @@ import { ButtonComponent } from '../../../shared/components/button/button.compon
 import { Output, EventEmitter } from '@angular/core';
 import { User } from '../../../core/interfaces/user.model';
 import { UserService } from '../../../core/services/user.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-username',
-  imports: [FormsModule, ButtonComponent],
+  imports: [FormsModule, ButtonComponent, CommonModule],
   templateUrl: './username.component.html',
   styleUrl: './username.component.css',
 })
 export class UsernameComponent {
   profile: any = {};
   username: string = '';
+  errorText = false; // The error text
+  validUsername = false;
+
   // Output for the profileUpdate so that it can be used in the next modal too
   @Output() profileUpdate = new EventEmitter<Partial<User>>();
   constructor(
     private modalRef: NgbActiveModal,
     private userService: UserService,
   ) {}
+  constructor(private modalRef: NgbActiveModal) {}
+
+  onUsernameInput() {
+    const valid = /^[A-Za-z0-9_]{3,20}$/; //checks chars + numbers -> button disabled
+    this.validUsername = valid.test(this.username);
+
+    this.errorText = false;
+  }
+
+  usernameTaken() {
+    // fake data, saa siis poistaa tän :D
+    const takenUsernames = [
+      'admin',
+      'test',
+      'user',
+      'karhukoira',
+      'mayrakoira',
+    ];
+
+    // is the username available
+    if (takenUsernames.includes(this.username)) {
+      this.errorText = true; // error visible
+      this.validUsername = false; // cant proceed to birthday
+      console.log('username is taken');
+    } else {
+      this.errorText = false;
+    }
+  }
+
   next() {
     this.userService.getUserByUsername(this.username).subscribe({
       next: (res) => {
@@ -31,6 +64,16 @@ export class UsernameComponent {
 
         this.saveUsername();
 
+        // Save username into profile object
+        this.profile.Username = this.username;
+        this.usernameTaken(); // checks is the username available
+
+        // blocks progress
+        if (!this.validUsername || this.errorText) {
+          return;
+        }
+
+        this.saveUsername();
         // Save username into profile object
         this.profile.Username = this.username;
 

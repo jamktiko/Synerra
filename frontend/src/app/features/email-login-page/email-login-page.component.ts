@@ -21,8 +21,8 @@ export class EmailLoginPageComponent implements OnInit {
   emailInput: string = '';
   passwordInput: string = '';
   me: any = {};
+  errorVisible: boolean = false;
   user: User | null = null;
-
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -85,7 +85,8 @@ export class EmailLoginPageComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.error('Login error:', err);
+        console.error('Login failed:', err);
+        this.errorVisible = true; //näyttää virheen
       },
     });
   }

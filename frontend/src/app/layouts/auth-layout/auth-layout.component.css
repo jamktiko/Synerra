@@ -43,7 +43,7 @@
     0.5
   ); /* tummennus, säädä arvoa tarpeen mukaan */
   pointer-events: none; /* ei estä interaktiota lapsissa */
-  z-index: 0;
+  z-index: -1;
 }
 
 .layout > .auth-card,

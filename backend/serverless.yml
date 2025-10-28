@@ -294,6 +294,13 @@ functions:
           path: /rooms/{roomId}/unreads
           method: delete
           authorizer: PrivateAuthorizer
+  deleteRequests:
+    handler: src/relations/deleteRequests.handler
+    events:
+      - httpApi:
+          path: /friendRequests/delete
+          method: delete
+          authorizer: PrivateAuthorizer
   uploadProfilePicture:
     handler: src/profile-picture/upload.handler
     events:
