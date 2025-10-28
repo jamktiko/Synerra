@@ -8,29 +8,136 @@
       <div>
         <h2 class="text-sm">Email</h2>
       </div>
-      <input type="email" [(ngModel)]="emailInput" name="email" placeholder="example@email.com" class="text-xs" />
+
+      <input
+        type="email"
+        [(ngModel)]="emailInput"
+        name="email"
+        placeholder="example@email.com"
+        class="text-xs"
+        (blur)="validEmail()"
+        (input)="onEmailInput()"
+      />
+
+      <div
+        class="req-item"
+        [style.visibility]="emailError ? 'visible' : 'hidden'"
+      >
+        <img src="assets/svg/StateKey/NotAllowed.svg" class="stateImage" />
+        <h2 class="text-2xs error-text">Must be an actual email</h2>
+      </div>
 
       <div class="inputHeadings">
         <h2 class="text-sm">Password</h2>
       </div>
-      <input type="password" [(ngModel)]="passwordInput" name="password" placeholder="**********" class="text-xs" />
+
+      <!--Salasana container, silmällä-->
+      <div class="password-container">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          [(ngModel)]="passwordInput"
+          name="password"
+          placeholder="**********"
+          class="text-xs"
+          (input)="checkPasswordReq()"
+        />
+        <img
+          class="eyeImage"
+          [src]="
+            showPassword
+              ? 'assets/svg/Eye_closed.svg'
+              : 'assets/svg/Eye_open.svg'
+          "
+          (click)="togglePasswordVisibility()"
+          alt="Show/Hide password"
+        />
+      </div>
+
+      <!--Mitä "salasanan" pitäisi sisältää-->
+      <div class="requiredContainer">
+        <div class="req-item">
+          <img
+            [src]="
+              hasCapital
+                ? 'assets/svg/StateKey/Success.svg'
+                : 'assets/svg/StateKey/NotAllowed.svg'
+            "
+            class="stateImage"
+          />
+          <h2
+            class="text-2xs"
+            [ngClass]="{ 'valid-text': hasCapital, 'error-text': !hasCapital }"
+          >
+            Capital letter
+          </h2>
+        </div>
+        <div class="req-item">
+          <img
+            [src]="
+              hasNumber
+                ? 'assets/svg/StateKey/Success.svg'
+                : 'assets/svg/StateKey/NotAllowed.svg'
+            "
+            class="stateImage"
+          />
+          <h2
+            class="text-2xs"
+            [ngClass]="{ 'valid-text': hasNumber, 'error-text': !hasNumber }"
+          >
+            Number
+          </h2>
+        </div>
+      </div>
 
       <div class="inputHeadings">
         <h2 class="text-sm">Confirm password</h2>
       </div>
-      <!--Tästä en tiiä toimiiko, täytyykö jotain muuttaa type / ngModelia?-->
-      <input type="password" [(ngModel)]="confirmPasswordInput" name="confirmPassword" placeholder="**********"
-        class="text-xs" />
-      <h2 class="text-xs error-text" *ngIf="confirmPasswordInput && passwordInput !== confirmPasswordInput">
-        Passwords do not match
-      </h2>
+
+      <input
+        type="password"
+        [(ngModel)]="confirmPasswordInput"
+        name="confirmPassword"
+        placeholder="**********"
+        class="text-xs"
+        (input)="checkPasswordsMatch()"
+        (focus)="submitted = false"
+      />
+
+      <div class="req-item">
+        <img
+          [src]="
+            passwordsMatch
+              ? 'assets/svg/StateKey/Success.svg'
+              : 'assets/svg/StateKey/NotAllowed.svg'
+          "
+          class="stateImage"
+        />
+        <h2
+          class="text-2xs"
+          [ngClass]="{
+            'valid-text': passwordsMatch,
+            'error-text': !passwordsMatch
+          }"
+        >
+          {{ passwordsMatch ? "Passwords match" : "Passwords do not match" }}
+        </h2>
+      </div>
 
       <div class="buttonFrame">
-        <app-button label="Back" variant="default" size="medium" [routerLink]="'/login'"></app-button>
-        <app-button label="Create account" variant="highlight" type="submit" size="medium"></app-button>
+        <app-button
+          label="Back"
+          variant="default"
+          size="medium"
+          [routerLink]="'/login'"
+        ></app-button>
+        <app-button
+          label="Create account"
+          variant="highlight"
+          [state]="isFormValid ? 'active' : 'disabled'"
+          type="submit"
+          size="medium"
+        ></app-button>
       </div>
     </form>
   </div>
-
-
 </div>

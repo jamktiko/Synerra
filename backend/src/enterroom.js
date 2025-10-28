@@ -81,7 +81,7 @@ module.exports.handler = async (event) => {
       // Step 3: Map connection to the room
       const connectionParams = {
         TableName: process.env.CONNECTION_DB_TABLE,
-        Item: { roomId: targetRoomId, connectionId },
+        Item: { roomId: targetRoomId, connectionId, userId, type: 'chatroom' },
       };
       await doccli.send(new PutCommand(connectionParams));
       console.log('Mapped connection to room:', targetRoomId);
@@ -216,7 +216,7 @@ module.exports.handler = async (event) => {
       // Step 5: Map WebSocket connection
       const connectionParams = {
         TableName: process.env.CONNECTION_DB_TABLE,
-        Item: { roomId, connectionId },
+        Item: { roomId, connectionId, userId, type: 'chatroom' },
       };
       await doccli.send(new PutCommand(connectionParams));
       console.log('Tiedot connection tableen...');

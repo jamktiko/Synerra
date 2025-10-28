@@ -5,6 +5,7 @@ import { environment } from '../../../environment';
 import { User } from '../interfaces/user.model';
 import { AuthStore } from '../stores/auth.store';
 import { forkJoin, map } from 'rxjs';
+import { UnreadMessage } from '../interfaces/chatMessage';
 
 @Injectable({
   providedIn: 'root',
@@ -123,12 +124,22 @@ export class UserService {
       })
       .pipe(
         tap((res: any) => {
-          this.unreadsSubject.next(res); // 🟢 Push to stream
+          this.unreadsSubject.next(res); //Push to stream
+          console.log('STREAMI', this.unreadsSubject);
         })
       );
   }
 
-  // 🟢 Added: Manual refresh method (can be called by polling or WebSocket)
+  fetchUnreadMessages(): Observable<UnreadMessage[]> {
+    const token = this.authStore.getToken();
+    return this.http
+      .get<UnreadMessage[]>(`${this.baseUrl}/messages/unread`, {
+        headers: { Authorization: `${token}` },
+      })
+      .pipe(tap((res) => this.unreadsSubject.next([...res])));
+  }
+
+  //  Manual refresh method (can be called by polling or WebSocket)
   refreshUnreads() {
     this.getUnreadMessages().subscribe();
   }
@@ -141,7 +152,6 @@ export class UserService {
       })
       .pipe(
         tap(() => {
-          // 🟢 Re-fetch unreads after marking read
           this.refreshUnreads();
         })
       );

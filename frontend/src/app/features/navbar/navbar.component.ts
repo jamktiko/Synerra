@@ -37,8 +37,17 @@ export class NavbarComponent implements OnInit {
   navItems: NavItem[] = [
     { label: 'Home', icon: 'Home.svg', route: '/dashboard' },
     { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/choose-game' },
+    { label: 'Users', icon: 'Acount.svg', route: '/dashboard/find-players' },
     { label: 'Social', icon: 'NoMessage.svg', route: '/dashboard/social' },
     { label: 'Settings', icon: 'Settings.svg', route: '/dashboard/settings' },
+  ];
+
+  navItemsMobile: NavItem[] = [
+    { label: 'Settings', icon: 'Settings.svg', route: '/dashboard/settings' },
+    { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/find-players' },
+    { label: 'Home', icon: 'logo_small.svg', route: '/dashboard' },
+    { label: 'Social', icon: 'NoMessage.svg', route: '/dashboard/social' },
+    { label: 'Profile', icon: 'Acount.svg', route: '/dashboard/profile-page' },
   ];
 
   logout = { label: 'Logout', icon: 'Logout.svg', route: '/login' };
@@ -56,9 +65,7 @@ export class NavbarComponent implements OnInit {
       }
     });
   }
-  // get user(): User | null {
-  //   return this.userStore.user();
-  // }
+
   ngOnInit(): void {
     const saved = localStorage.getItem('navbarCollapsed');
     if (saved !== null) {

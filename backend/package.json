@@ -13,6 +13,7 @@
     "@aws-sdk/client-dynamodb": "^3.788.0",
     "@aws-sdk/client-s3": "^3.400.0",
     "@aws-sdk/client-secrets-manager": "^3.882.0",
+    "@aws-sdk/client-sns": "^3.913.0",
     "@aws-sdk/lib-dynamodb": "^3.789.0",
     "@aws-sdk/s3-request-presigner": "^3.400.0",
     "aws-sdk": "^2.1692.0",
