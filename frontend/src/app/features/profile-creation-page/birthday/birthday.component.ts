@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './birthday.component.html',
   styleUrl: './birthday.component.css',
 })
-export class BirthdayComponent {
+export class BirthdayComponent implements OnInit {
   //Input so that it gets the profile data from the previous modal
   @Input() profile: Partial<User> = {};
   // Output for the profileUpdate so that it can be used in the next modal too
@@ -32,6 +32,12 @@ export class BirthdayComponent {
     { code: 'sv', name: 'Swedish' },
   ];
   selectedLanguages: string[] = [];
+
+  ngOnInit(): void {
+    if (this.profile?.Languages?.length) {
+      this.selectedLanguages = [...this.profile.Languages];
+    }
+  }
 
   constructor(private modalRef: NgbActiveModal) {}
 

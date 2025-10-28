@@ -24,7 +24,10 @@ export class SignupPageComponent {
   correctEmail = false;
   passwordBlur = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   checkPasswordReq() {
     const password = this.passwordInput;
@@ -84,7 +87,9 @@ export class SignupPageComponent {
     this.showPassword = !this.showPassword;
   }
 
-  signup() {
+  async signup() {
+    await this.authService.logout();
+    console.log('signed out');
     this.submitted = true;
 
     // if (this.passwordInput !== this.confirmPasswordInput) --- Tämä siis se vanha
