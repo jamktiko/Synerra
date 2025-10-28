@@ -21,6 +21,10 @@
   z-index: 2;
 }
 
+.social-floating.notifications-open {
+  gap: 1rem;
+}
+
 .social-floating a {
   color: var(--color-text-default);
   font-size: 1.4rem;
@@ -60,8 +64,10 @@
 
 .top-socialbar {
   display: flex;
-  align-items: start;
-  gap: 9rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
 }
 
 .linebreak-horizontal-child {
@@ -82,6 +88,17 @@
   position: relative;
   transition: width 300ms ease;
   overflow: hidden;
+}
+
+.notifications-inline-host {
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.notifications-inline-host:empty {
+  display: none;
 }
 
 .friends-container {

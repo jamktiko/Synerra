@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { ProfileComponent } from './profile/profile.component';
-import { SocialBarComponent } from '../social-bar/social-bar.component';
+import { ProfileHeaderComponent } from './profile-header/profile-header.component';
+import { ProfileContentComponent } from './profile-content/profile-content.component';
 
 @Component({
   selector: 'app-profile-page',
-  imports: [SocialBarComponent, ProfileComponent],
+  imports: [ProfileHeaderComponent, ProfileContentComponent],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.css',
 })
