@@ -28,8 +28,10 @@
 
       <div class="divider"></div>
       <div>
-        <div class="languages" *ngIf="user.Languages?.length">
-          <img *ngFor="let langCode of user.Languages" [src]="getFlag(langCode)" alt="" class="flag-img me-1" />
+        <div class="languages" *ngIf="getCommonLanguages(user.Languages).length > 0">
+          <ng-container *ngFor="let langCode of getCommonLanguages(user.Languages)">
+            <img [src]="getFlag(langCode)" alt="" class="flag-img" />
+          </ng-container>
         </div>
         <div class="card-actions">
           <button class="btn btn-primary" (click)="SendMsg(user.UserId)">

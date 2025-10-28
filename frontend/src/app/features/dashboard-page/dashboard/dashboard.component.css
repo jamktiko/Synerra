@@ -31,7 +31,7 @@
   padding: 0.5rem 1rem;
   border: 1px solid rgba(58, 58, 58, 1);
   border-radius: 8px;
-  width: 100%;
+  max-width: 85%;
 }
 
 .user-name {
@@ -114,4 +114,20 @@ app-dashboard-card img {
     padding: 1rem;
     gap: 1.25rem;
   }
+}
+
+.games-row {
+  display: flex;
+  gap: 0.8rem; /* space between cards */
+  overflow-x: auto; /* horizontal scroll */
+  max-width: 85%;
+  padding: 0 1rem;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+  background-color: rgba(255, 255, 255, 0.05); /* very subtle white overlay */
+  border-radius: 12px; /* rounded edges for style */
+}
+
+.games-row {
+  -ms-overflow-style: none; /* IE/Edge */
 }

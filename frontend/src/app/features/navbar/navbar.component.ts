@@ -43,10 +43,10 @@ export class NavbarComponent implements OnInit {
 
   navItemsMobile: NavItem[] = [
     { label: 'Settings', icon: 'Settings.svg', route: '/dashboard/settings' },
-    { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/find-players' },
+    { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/choose-game' },
     { label: 'Home', icon: 'logo_small.svg', route: '/dashboard' },
     { label: 'Social', icon: 'NoMessage.svg', route: '/dashboard/social' },
-    { label: 'Profile', icon: 'Acount.svg', route: '/dashboard/profile-page' },
+    { label: 'Profile', icon: 'Acount.svg', route: '/dashboard/profile' },
   ];
 
   logout = { label: 'Logout', icon: 'Logout.svg', route: '/login' };
@@ -54,7 +54,7 @@ export class NavbarComponent implements OnInit {
   constructor(
     private userStore: UserStore,
     private router: Router,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
     // Sets up a reactive watcher that updates user
     effect(() => {
