@@ -47,7 +47,10 @@
       </div>
     </form>
   </div>
-  <div class="errorText" *ngIf="errorVisible">
+  <div
+    class="errorText"
+    [style.visibility]="errorVisible ? 'visible' : 'hidden'"
+  >
     <img src="assets/svg/StateKey/NotAllowed.svg" class="stateImage" />
     <h2 class="text-xs">Wrong password or email</h2>
   </div>
