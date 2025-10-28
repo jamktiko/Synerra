@@ -126,6 +126,12 @@
   border-color: rgba(255, 122, 62, 0.4);
 }
 
+.btn-highlight.btn-active {
+  background: linear-gradient(180deg, #c24d00 0%, #8f3a00 100%);
+  box-shadow: 0 0 18px rgba(242, 104, 13, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
 /* Side Navigation bar variant */
 .btn-sidebar {
   background: transparent;
@@ -203,7 +209,7 @@
 }
 
 .btn-icon-right {
-  flex-direction: row-reverse;
+  flex-direction: row;
 }
 
 .btn-icon-right .btn-icon {

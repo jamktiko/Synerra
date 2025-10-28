@@ -12,9 +12,16 @@
       <option value="br">Battle Royale</option>
       <option value="other">Other</option>
     </select>
-    <button (click)="onToggleSort()">
-      Sort by Popularity
-    </button>
+    <app-button
+      class="sort-button"
+      variant="highlight"
+      size="medium"
+      [label]="sortByPopularity ? 'Sorted by Popularity' : 'Sort by Popularity'"
+      (click)="onToggleSort()"
+      [state]="sortByPopularity ? 'active' : undefined"
+      [attr.aria-pressed]="sortByPopularity"
+      aria-label="Toggle sort by popularity">
+    </app-button>
 
   </div>
 </div>

@@ -12,16 +12,18 @@ export interface User {
   Reputations?: Record<string, any>; // Map of reputation data
   UserId?: string; // b0ac990c-a021-7002-788b-4d5c2f912fa9"
   Username?: string; // TestMan
+  Username_Lower?: string;
   Languages?: string[]; // [ru, fi]
   PlayedGames?: { gameId: string; gameName: string }[]; // [{gameName:'Valorant',gameId:'asfiphqwiphgiåqhå'}]
   Birthday?: Date;
+  Status?: string;
 }
 
 export interface UserFilters {
   username?: string | null;
-  onlineStatus?: string;
   languages?: string[];
   games?: string[];
+  Status?: string;
 }
 
 export interface Country {

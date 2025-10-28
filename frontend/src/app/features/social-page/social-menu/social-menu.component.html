@@ -2,51 +2,54 @@
   <h2>Chats</h2>
   <div class="header">
     <input type="text" placeholder="Search..." />
-    <button>Online</button>
-    <button>All</button>
-    <button>Add Friend</button>
+    <app-button label="Online" variant="default" size="small" [fullWidth]="true"></app-button>
+    <app-button label="All" variant="default" size="small" [fullWidth]="true"></app-button>
+    <app-button label="Add" variant="default" button-align="center" size="small" [fullWidth]="true"
+      icon="Add user"></app-button>
   </div>
 
 
   <!-- Tabs -->
-  <ul class="nav nav-tabs" id="chatTabs" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'" type="button">
-        Users
-      </button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" [class.active]="activeTab === 'groups'" (click)="activeTab = 'groups'" type="button">
-        Groups
-      </button>
-    </li>
-  </ul>
+  <div class="tabsConts">
+    <ul class="nav nav-tabs" id="chatTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'" type="button">
+          Users
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" [class.active]="activeTab === 'groups'" (click)="activeTab = 'groups'" type="button">
+          Groups
+        </button>
+      </li>
+    </ul>
 
 
-  <div class="conts">
-    <div class="tab-content mt-3" id="chatTabsContent" [ngClass]="{
+    <div class="conts">
+      <div class="tab-content" id="chatTabsContent" [ngClass]="{
       'show-users': activeTab === 'users',
       'show-groups': activeTab === 'groups'
     }">
-      <div class="tab-pane" id="users">
-        <div *ngFor="let user of users" class="card mb-2 p-2 text-white">
-          <div class="d-flex align-items-center">
-            <img [src]="user.avatar" class="rounded-circle me-2" width="50" />
-            <div>
-              <strong>{{ user.name }}</strong><br />
-              <small class="text-muted">{{ user.lastMessage }}</small>
+        <div class="tab-pane" id="users">
+          <div *ngFor="let user of users" class="card mb-2 p-2 text-white">
+            <div class="d-flex align-items-center">
+              <img [src]="user.avatar" class="rounded-circle me-2" width="50" />
+              <div>
+                <strong>{{ user.name }}</strong><br />
+                <small class="lMessage">{{ user.lastMessage }}</small>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="tab-pane" id="groups">
-        <div *ngFor="let room of rooms" class="card mb-2 p-2 text-white">
-          <div class="d-flex align-items-center">
-            <img [src]="room.avatar" class="rounded-circle me-2" width="50" />
-            <div>
-              <strong>{{ room.name }}</strong><br />
-              <small class="text-muted">{{ room.lastMessage }}</small>
+        <div class="tab-pane" id="groups">
+          <div *ngFor="let room of rooms" class="card mb-2 p-2 text-white">
+            <div class="d-flex align-items-center">
+              <img [src]="room.avatar" class="rounded-circle me-2" width="50" />
+              <div>
+                <strong>{{ room.name }}</strong><br />
+                <small class="lMessage">{{ room.lastMessage }}</small>
+              </div>
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ const { QueryCommand, BatchGetCommand } = require('@aws-sdk/lib-dynamodb');
 const { sendResponse } = require('../helpers');
 
 const MAIN_TABLE = process.env.MAIN_TABLE;
+const CONNECTION_TABLE = process.env.CONNECTION_DB_TABLE;
 
 module.exports.handler = async (event) => {
   try {
@@ -46,10 +47,35 @@ module.exports.handler = async (event) => {
         },
       })
     );
+    const users = batch.Responses[MAIN_TABLE] || [];
+    // Check online status for each friend using notifications connection
+    const usersWithStatus = await Promise.all(
+      users.map(async (user) => {
+        const userId = user.PK.replace('USER#', '');
+        const connectionResult = await doccli.send(
+          new QueryCommand({
+            TableName: CONNECTION_TABLE,
+            IndexName: 'UserIdIndex', // Query by UserIdIndex
+            KeyConditionExpression: 'userId = :uid',
+            FilterExpression: '#t = :typeVal',
+            ExpressionAttributeNames: { '#t': 'type' },
+            ExpressionAttributeValues: {
+              ':uid': userId,
+              ':typeVal': 'notifications',
+            },
+          })
+        );
 
+        //returns the online status for each user
+        return {
+          ...user,
+          Status: connectionResult.Items?.length ? 'online' : 'offline',
+        };
+      })
+    );
     return sendResponse(200, {
       message: 'Friends data retrieved',
-      users: batch.Responses[MAIN_TABLE] || [],
+      users: usersWithStatus,
     });
   } catch (err) {
     console.error('Get friends data error:', err);

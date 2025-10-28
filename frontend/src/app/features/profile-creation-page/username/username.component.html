@@ -37,7 +37,7 @@
   <!--Footer-->
   <div class="modal-footer">
     <!--<button class="btn btn-primary" (click)="next()">Next</button>-->
-    <app-button label="Back" icon="ArrowKey/LeftArrow" (click)="closeModal()"></app-button>
+    <app-button label="Back" icon="ArrowKey/LeftArrow" (click)="closeModal()" iconPosition="left"></app-button>
 
     <app-button label="Next" variant="highlight" iconPosition="right" icon="ArrowKey/RightArrow" (click)="next()"
       [state]="validUsername && !errorText ? 'active' : 'disabled'"></app-button>

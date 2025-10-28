@@ -22,6 +22,7 @@ export class SignupPageComponent {
   showPassword = false; //the eye svg on input
   passwordsMatch = false;
   correctEmail = false;
+  passwordBlur = false;
 
   constructor(
     private authService: AuthService,
@@ -32,6 +33,7 @@ export class SignupPageComponent {
     const password = this.passwordInput;
     this.hasCapital = /[A-Z]/.test(password); // checks, is there CAPITAL
     this.hasNumber = /\d/.test(password); // checks, is the number
+    this.checkPasswordsMatch(); // re-check if passwords match automatically
   }
 
   checkPasswordsMatch() {
