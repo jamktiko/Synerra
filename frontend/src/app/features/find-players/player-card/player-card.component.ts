@@ -63,7 +63,7 @@ export class PlayerCardComponent implements OnInit {
   }
   onProfile(): void {
     console.log(`Opening profile of ${this.user.Username}`);
-    this.router.navigate(['/dashboard/profile']);
+    this.router.navigate([`dashboard/profile/${this.user.UserId}`]);
   }
 
   SendMsg(userId: any) {

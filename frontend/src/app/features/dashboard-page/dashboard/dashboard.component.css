@@ -114,6 +114,12 @@ app-dashboard-card img {
     padding: 1rem;
     gap: 1.25rem;
   }
+
+  .top-navigation-bar {
+    flex-direction: column; /* Stack items vertically */
+    text-align: center;
+    gap: 4px;
+  }
 }
 
 .games-row {

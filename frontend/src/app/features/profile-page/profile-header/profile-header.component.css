@@ -181,6 +181,32 @@
   color: var(--color-text-default);
   box-shadow: 0 0 12px rgba(242, 104, 13, 0.3);
   align-self: flex-start;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.social-badge:hover {
+  transform: scale(1.1);
+}
+
+.profilesvg {
+  width: 35px; /* fixed size for consistency */
+  height: 35px;
+  fill: currentColor; /* inherits button text color */
+  flex-shrink: 0; /* prevent svg from shrinking */
+  transition: transform 0.2s ease;
+}
+
+.profilesvg:hover {
+  transform: scale(1.1);
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* Responsive */

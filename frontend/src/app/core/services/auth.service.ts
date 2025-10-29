@@ -41,7 +41,6 @@ export class AuthService {
         tap((res) => {
           this.authStore.setToken(res.token);
           this.userStore.setUser(res.user);
-          this.notificationService.initConnection();
         })
       );
   }

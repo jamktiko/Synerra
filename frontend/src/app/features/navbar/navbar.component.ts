@@ -41,13 +41,7 @@ export class NavbarComponent implements OnInit {
     { label: 'Settings', icon: 'Settings.svg', route: '/dashboard/settings' },
   ];
 
-  navItemsMobile: NavItem[] = [
-    { label: 'Settings', icon: 'Settings.svg', route: '/dashboard/settings' },
-    { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/choose-game' },
-    { label: 'Home', icon: 'logo_small.svg', route: '/dashboard' },
-    { label: 'Social', icon: 'NoMessage.svg', route: '/dashboard/social' },
-    { label: 'Profile', icon: 'Acount.svg', route: '/dashboard/profile' },
-  ];
+  navItemsMobile: NavItem[] = [];
 
   logout = { label: 'Logout', icon: 'Logout.svg', route: '/login' };
 
@@ -56,11 +50,12 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private authService: AuthService
   ) {
-    // Sets up a reactive watcher that updates user
+    // Watch for user changes reactively
     effect(() => {
       const user = this.userStore.user();
-      if (user) {
+      if (user && user.UserId) {
         this.user = user;
+        this.buildNavItemsMobile(user.UserId);
       }
     });
   }
@@ -77,6 +72,19 @@ export class NavbarComponent implements OnInit {
     this.collapsedChange.emit(this.isCollapsed);
   }
 
+  private buildNavItemsMobile(userId: string): void {
+    this.navItemsMobile = [
+      { label: 'Settings', icon: 'Settings.svg', route: '/dashboard/settings' },
+      { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/choose-game' },
+      { label: 'Home', icon: 'logo_small.svg', route: '/dashboard' },
+      { label: 'Social', icon: 'NoMessage.svg', route: '/dashboard/social' },
+      {
+        label: 'Profile',
+        icon: 'Acount.svg',
+        route: `/dashboard/profile/${userId}`,
+      },
+    ];
+  }
   toggleCollapse(): void {
     this.isCollapsed = !this.isCollapsed;
     this.hasUserPreference = true;
@@ -98,7 +106,7 @@ export class NavbarComponent implements OnInit {
 
   onUserClick(): void {
     console.log('User button clicked');
-    this.router.navigate(['/dashboard/profile']);
+    this.router.navigate([`/dashboard/profile/${this.user?.UserId}`]);
   }
 
   // Clearing authToken and rerouting to the login-page when logging off

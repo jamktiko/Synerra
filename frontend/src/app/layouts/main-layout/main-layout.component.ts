@@ -21,7 +21,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
   constructor(
     private notificationService: NotificationService,
     private userStore: UserStore,
-    private router: Router,
+    private router: Router
   ) {
     // Checks for every possible login and load case where the user might be at the dashboard. To access the dashboard,
     // user must have authToken that is given when logging in with email. (this is being checked with authStore in app.routes)

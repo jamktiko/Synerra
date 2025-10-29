@@ -47,7 +47,8 @@ export class GameService {
     });
   }
 
-  getUserByUsername(gameName: string): Observable<any> {
+  getGamesByName(gameName: string): Observable<any> {
+    console.log('GET GAMES BY NAME CALLED');
     const token = this.authStore.getToken();
     const normalizedGameName = gameName.toLowerCase();
     console.log(normalizedGameName);

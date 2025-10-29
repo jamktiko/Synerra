@@ -11,9 +11,10 @@
     <div class="user-info-section">
       <div class="user-main-info">
         <h1 class="username">{{ user.Username }}</h1>
+        <span *ngIf="isFriend">Friend</span>
         <div class="joined-date">
           <span>Joined:</span>
-          <span class="date">mm.yyyy</span>
+          <span class="date">{{ ((user.CreatedAt ?? 0) * 1000) | date:'dd/MM/yyyy' }}</span>
         </div>
       </div>
 
@@ -30,17 +31,27 @@
 
     <!-- Action Buttons Section -->
     <div class="actions-section">
-      <button class="btn-icon btn-edit" (click)="onEditProfile()" aria-label="Edit profile">
-        <img src="assets/svg/edit-icon.svg" alt="Edit" />
-      </button>
-      <button class="btn-icon btn-upload" (click)="onUploadPhoto()" aria-label="Upload photo">
-        <img src="assets/svg/upload-icon.svg" alt="Upload" />
-      </button>
+      <div *ngIf="isOwnProfile" class="action-buttons">
+        <button class="social-badge" (click)="onEditProfile()" aria-label="Edit profile">
+          <img src="assets/svg/edit-icon.svg" alt="Edit" class="profilesvg" />
+        </button>
+        <button class="social-badge" (click)="onUploadPhoto()" aria-label="Upload photo">
+          <img src="assets/svg/upload-icon.svg" alt="Upload" class="profilesvg" />
+        </button>
+      </div>
+      <div *ngIf="!isOwnProfile" class="action-buttons">
+        <button class="social-badge" *ngIf="!isFriend" (click)="addFriend(user)" aria-label="Add friend">
+          <img src="/assets/svg/Add user.svg" alt="addfriend" class="profilesvg">
+        </button>
+        <button class="social-badge" (click)="userClicked(user.UserId)" aria-label="Start chat">
+          Chat
+        </button>
+      </div>
     </div>
 
     <!-- Right Section: Social Badge -->
-    <div class="social-badge">
-      Social
-    </div>
+
+
+
   </div>
 </div>

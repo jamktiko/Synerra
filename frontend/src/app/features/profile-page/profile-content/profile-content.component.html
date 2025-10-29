@@ -6,7 +6,9 @@
       <div class="attribute-card">
         <h3 class="attribute-title">Languages</h3>
         <div class="attribute-value">
-          <span *ngIf="stats.languages.length > 0">{{ stats.languages.join(', ') }}</span>
+          <span *ngIf="user?.Languages?.length">
+            {{ getLanguageNames(user?.Languages) }}
+          </span>
           <span *ngIf="stats.languages.length === 0" class="empty">---</span>
         </div>
       </div>
@@ -115,20 +117,20 @@
 
   <!-- My Games Section -->
   <section class="games-section card-surface">
-    <h2 class="section-title">My games</h2>
+    <h2 class="section-title" *ngIf="isOwnProfile">My games</h2>
+    <h2 class="section-title" *ngIf="!isOwnProfile">{{user?.Username}}'s games</h2>
     <div class="games-grid">
-      <!-- Placeholder game cards -->
-      <div class="game-card" *ngFor="let game of [1,2,3,4,5,6]">
+      <!-- game cards -->
+      <div class="game-card" *ngFor="let game of completeGames">
         <div class="game-image-container">
-          <div class="game-image">
-            <!-- Placeholder image -->
-          </div>
-
-          <div class="game-info-overlay">
-            <div class="game-title">Counter-Strike 2</div>
-            <div class="game-genre">Genre: Shooter</div>
-          </div>
+          <img class="game-image" [src]="game.Img_url" [alt]="game.Name" />
         </div>
+
+        <div class="game-info-overlay">
+          <div class="game-title">{{game.Name | uppercase}}</div>
+          <div class="game-genre">GENRE: {{game.Genre | uppercase}}</div>
+        </div>
+
       </div>
     </div>
   </section>

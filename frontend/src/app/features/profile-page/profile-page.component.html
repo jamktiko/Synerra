@@ -1,6 +1,6 @@
 <div class="layout">
   <div class="mid-container">
-    <app-profile-header />
-    <app-profile-content />
+    <app-profile-header [user]="user" [isOwnProfile]="isOwnProfile" [isFriend]="isFriend"></app-profile-header>
+    <app-profile-content [user]="user" [isOwnProfile]="isOwnProfile" [isFriend]="isFriend"></app-profile-content>
   </div>
 </div>
