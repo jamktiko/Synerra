@@ -97,7 +97,7 @@ button {
   color: var(--color-text-default);
   background: var(--color-background);
   border-radius: 8px;
-  border: 1px solid rgba(58, 58, 58, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.65);
 }
 
 select {
@@ -117,18 +117,86 @@ select {
 .checkbox-collapsible > button {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   min-width: 180px;
-  padding: 10px 14px;
-  background: rgba(35, 35, 35, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 18px;
   border-radius: 12px;
   cursor: pointer;
-  font-size: 0.92rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+  color: var(--color-text-default);
+  text-align: center;
+  background: var(--color-gray);
+  border: 1px solid rgba(0, 0, 0, 0.65);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 200ms ease, background 200ms ease, border-color 200ms ease;
 }
 
+.checkbox-collapsible > button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05),
+    transparent 40%
+  );
+  mix-blend-mode: soft-light;
+}
+
+.checkbox-collapsible > button::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(
+    70deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.16) 50%,
+    transparent 100%
+  );
+  transform: translateX(-120%);
+  opacity: 0;
+  transition: transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 400ms ease;
+}
+
+.checkbox-collapsible > button:hover {
+  transform: translateY(-1px) scale(1.01);
+  background: linear-gradient(180deg, #323232 0%, #222 100%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.checkbox-collapsible > button:hover::after {
+  opacity: 0.75;
+  transform: translateX(280%);
+}
+
+.checkbox-collapsible > button:active {
+  transform: translateY(1px) scale(0.995);
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+  border-color: transparent;
+}
+
+.checkbox-collapsible > button:focus-visible {
+  outline: 3px solid var(--accent-color, var(--color-highlight));
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.checkbox-collapsible > button[aria-expanded="true"] {
+  border-color: rgba(242, 104, 13, 0.7);
+  box-shadow: 0 0 18px rgba(242, 104, 13, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
 /* Dropdown listat */
 .checkbox-list {
   position: absolute;
