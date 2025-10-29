@@ -88,47 +88,210 @@ input[type="text"]::placeholder {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
+  gap: 22px;
   margin-top: 20px;
 }
 
 /* Dropdown */
-select {
-  width: 220px; /* tee leveämpi, jotta nuoli mahtuu */
-  padding: 8px 36px 8px 12px;
-  font-size: 0.95rem;
-  color: var(--color-text-default);
-  background: var(--color-background);
-  border-radius: 8px;
-  border: 1px solid rgba(58, 58, 58, 0.8);
-  height: 42px;
-  min-width: 220px; /* leveämpi dropdown */
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 10px center; /* siirrä nuoli hieman vasemmalle */
-  background-size: 16px;
-  transition: background-color 0.3s, border-color 0.3s;
+.category-dropdown {
+  position: relative;
+  min-width: 220px;
+  width: 240px;
 }
 
-select:hover {
-  background-color: #3a3a3a;
-  border-color: #888;
+.category-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 10px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+  color: var(--color-text-default);
+  background: var(--color-gray);
+  border: 1px solid rgba(0, 0, 0, 0.65);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 200ms ease, background 200ms ease, border-color 200ms ease;
+  min-height: 44px;
+}
+
+.category-trigger::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05),
+    transparent 40%
+  );
+  mix-blend-mode: soft-light;
+}
+
+.category-trigger::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(
+    70deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.16) 50%,
+    transparent 100%
+  );
+  transform: translateX(-120%);
+  opacity: 0;
+  transition: transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 400ms ease;
+  pointer-events: none;
+}
+
+.category-trigger:hover {
+  transform: translateY(-1px) scale(1.01);
+  background: linear-gradient(180deg, #323232 0%, #222 100%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.category-trigger:hover::after {
+  opacity: 0.75;
+  transform: translateX(280%);
+}
+
+.category-trigger:active {
+  transform: translateY(1px) scale(0.995);
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+  border-color: transparent;
+}
+
+.category-trigger:focus-visible {
+  outline: 3px solid var(--accent-color, var(--color-highlight));
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.category-dropdown.open .category-trigger {
+  border-color: rgba(242, 104, 13, 0.7);
+  box-shadow: 0 0 18px rgba(242, 104, 13, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.category-trigger__arrow {
+  display: inline-block;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.75);
+  transition: transform 200ms ease, color 200ms ease;
+}
+
+.category-dropdown .category-trigger__arrow {
+  transform: rotate(0deg);
+}
+
+.category-dropdown.open .category-trigger__arrow {
+  transform: rotate(180deg);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.category-dropdown__list {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  max-height: 320px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--color-background);
+  border: 1px solid rgba(58, 58, 58, 0.9);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  gap: 6px;
+  z-index: 1200;
+  display: grid;
+  grid-auto-rows: minmax(36px, auto);
+}
+
+.category-option {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: var(--color-text-default);
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.category-option:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.category-option.is-active {
+  color: var(--color-primary);
+}
+
+.category-option:focus-visible {
+  outline: 2px solid var(--color-highlight);
+  outline-offset: 2px;
+}
+
+.category-native {
+  position: absolute;
+  inset: auto;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
 }
 
 .sort-button {
-  width: 240px;
+  width: 280px;
   min-width: 240px;
+  max-width: 280px;
   display: flex;
   justify-content: center;
 }
 
+/* Slightly reduced vertical size for the sort button */
 app-button.sort-button ::ng-deep .btn {
   min-height: 44px;
-  padding: 0.65rem 1.5rem;
+  padding: 0.65rem 1.35rem;
+}
+
+/* Ensure default variant shows dark background when used in this component */
+app-button.sort-button ::ng-deep .btn-default {
+  background: var(--color-orange-gradient);
+  border-color: rgba(206, 56, 21, 0.5);
+  color: var(--color-text-default);
+}
+
+app-button.sort-button ::ng-deep .btn-highlight {
+  background: var(--color-orange-gradient);
+  border-color: rgba(206, 56, 21, 0.65);
+  color: var(--color-text-default);
+}
+
+app-button.sort-button ::ng-deep .btn-highlight.btn-active {
+  box-shadow: 0 12px 24px rgba(194, 46, 7, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 /* Responsiivisuus */
@@ -136,7 +299,7 @@ app-button.sort-button ::ng-deep .btn {
   .filters {
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 18px;
   }
 
   .input-container {
@@ -147,13 +310,9 @@ app-button.sort-button ::ng-deep .btn {
     width: 100%;
   }
 
-  select {
-    width: 80%;
-    min-width: 0;
-  }
-
+  .category-dropdown,
   .sort-button {
-    width: 80%;
+    width: 90%;
     min-width: 0;
   }
 }

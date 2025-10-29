@@ -7,22 +7,38 @@ import {
   effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  NavigationEnd,
+  Params,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 import { User } from '../../core/interfaces/user.model';
 import { UserStore } from '../../core/stores/user.store';
-import { Router } from '@angular/router';
 import { AuthStore } from '../../core/stores/auth.store';
+import { ButtonComponent } from '../../shared/components/button/button.component';
+import { filter } from 'rxjs/operators';
 
 interface NavItem {
   label: string;
   icon: string;
+  route?: string;
+  children?: NavChild[];
+}
+
+interface NavChild {
+  label: string;
+  icon?: string;
   route: string;
+  queryParams?: Params;
+  exact?: boolean;
 }
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, ButtonComponent],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
@@ -33,24 +49,44 @@ export class NavbarComponent implements OnInit {
   @Output() collapsedChange = new EventEmitter<boolean>();
 
   user: User | null = null;
+  currentUrl = '';
+  expandedGroups = new Set<string>();
 
   navItems: NavItem[] = [
-    { label: 'Home', icon: 'Home.svg', route: '/dashboard' },
-    { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/choose-game' },
-    { label: 'Users', icon: 'Acount.svg', route: '/dashboard/find-players' },
-    { label: 'Social', icon: 'NoMessage.svg', route: '/dashboard/social' },
-    { label: 'Settings', icon: 'Settings.svg', route: '/dashboard/settings' },
+    { label: 'Home', icon: 'Home', route: '/dashboard' },
+    { label: 'Games', icon: 'Gamepad', route: '/dashboard/choose-game' },
+    { label: 'Users', icon: 'Acount', route: '/dashboard/find-players' },
+    { label: 'Social', icon: 'NoMessage', route: '/dashboard/social' },
+    {
+      label: 'Settings',
+      icon: 'Settings',
+      children: [
+        { label: 'Profile', icon: 'Acount', route: '/dashboard/profile' },
+        {
+          label: 'Account',
+          icon: 'Settings',
+          route: '/dashboard/settings',
+          queryParams: { section: 'account' },
+        },
+        {
+          label: 'Notifications',
+          icon: 'NoMessage',
+          route: '/dashboard/settings',
+          queryParams: { section: 'notifications' },
+        },
+      ],
+    },
   ];
 
   navItemsMobile: NavItem[] = [
-    { label: 'Settings', icon: 'Settings.svg', route: '/dashboard/settings' },
-    { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/find-players' },
-    { label: 'Home', icon: 'logo_small.svg', route: '/dashboard' },
-    { label: 'Social', icon: 'NoMessage.svg', route: '/dashboard/social' },
-    { label: 'Profile', icon: 'Acount.svg', route: '/dashboard/profile-page' },
+    { label: 'Settings', icon: 'Settings', route: '/dashboard/settings' },
+    { label: 'Games', icon: 'Gamepad', route: '/dashboard/choose-game' },
+    { label: 'Home', icon: 'logo_small', route: '/dashboard' },
+    { label: 'Social', icon: 'NoMessage', route: '/dashboard/social' },
+    { label: 'Profile', icon: 'Acount', route: '/dashboard/profile' },
   ];
 
-  logout = { label: 'Logout', icon: 'Logout.svg', route: '/login' };
+  logout = { label: 'Logout', icon: 'Logout', route: '/login' };
 
   constructor(
     private userStore: UserStore,
@@ -64,6 +100,16 @@ export class NavbarComponent implements OnInit {
         this.user = user;
       }
     });
+
+    this.currentUrl = this.router.url;
+    this.syncExpandedState(this.currentUrl);
+
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event) => {
+        this.currentUrl = event.urlAfterRedirects;
+        this.syncExpandedState(this.currentUrl);
+      });
   }
 
   ngOnInit(): void {
@@ -76,6 +122,7 @@ export class NavbarComponent implements OnInit {
     }
     this.checkAutoCollapse();
     this.collapsedChange.emit(this.isCollapsed);
+    this.syncExpandedState(this.currentUrl);
   }
 
   toggleCollapse(): void {
@@ -106,5 +153,77 @@ export class NavbarComponent implements OnInit {
   logOut() {
     this.authStore.clearToken();
     this.router.navigate(['/login']);
+  }
+
+  toggleGroup(item: NavItem): void {
+    if (!item.children || !item.children.length) {
+      if (item.route) {
+        this.router.navigate([item.route]);
+      }
+      return;
+    }
+    const key = item.label;
+    if (this.expandedGroups.has(key)) {
+      this.expandedGroups.delete(key);
+    } else {
+      this.expandedGroups.clear();
+      this.expandedGroups.add(key);
+    }
+  }
+
+  isGroupExpanded(item: NavItem): boolean {
+    return item.children ? this.expandedGroups.has(item.label) : false;
+  }
+
+  isGroupActive(item: NavItem): boolean {
+    if (!item.children) {
+      return false;
+    }
+    return item.children.some((child) => this.matchesChildRoute(child, this.currentUrl));
+  }
+
+  getSubmenuHeight(item: NavItem): string {
+    if (!item.children || !this.isGroupExpanded(item) || this.isCollapsed) {
+      return '0px';
+    }
+    const rowHeight = 48;
+    return `${item.children.length * rowHeight}px`;
+  }
+
+  getIconPath(icon: string): string {
+    return `assets/svg/${icon}.svg`;
+  }
+
+  trackByLabel(_: number, item: NavItem): string {
+    return item.label;
+  }
+
+  private syncExpandedState(url: string): void {
+    this.navItems.forEach((item) => {
+      if (!item.children || !item.children.length) {
+        return;
+      }
+      const hasMatch = item.children.some((child) => this.matchesChildRoute(child, url));
+      if (hasMatch) {
+        this.expandedGroups.add(item.label);
+      }
+    });
+  }
+
+  private matchesChildRoute(child: NavChild, url: string): boolean {
+    const [path, search = ''] = url.split('?');
+    if (child.exact === false) {
+      return path.startsWith(child.route);
+    }
+    if (path !== child.route) {
+      return false;
+    }
+    if (!child.queryParams) {
+      return true;
+    }
+    const params = new URLSearchParams(search);
+    return Object.entries(child.queryParams).every(
+      ([key, value]) => params.get(key) === String(value)
+    );
   }
 }
