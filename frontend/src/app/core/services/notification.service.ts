@@ -30,6 +30,7 @@ export class NotificationService implements OnDestroy {
     .pipe(filter((msg) => msg.type === 'USER_STATUS'));
   //Initialize the connection
   public initConnection() {
+    console.log('INIT CONNECTION CALLED');
     const tryConnect = () => {
       const user = this.userStore.user(); // get the logged in user
       if (!user || !this.token) {
@@ -94,6 +95,15 @@ export class NotificationService implements OnDestroy {
     };
   }
 
+  close() {
+    if (this.socket) {
+      console.log('CLOSING WEBSOCKET CONNECTION');
+      this.socket.close(); // properly closes the connection
+      this.socket = null;
+      clearInterval(this.pingInterval); // stop pinging
+      this.reconnecting = false;
+    }
+  }
   //Send method used for the pinging so the connection stays open when AFK
   public send(payload: any) {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {

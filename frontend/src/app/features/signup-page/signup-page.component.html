@@ -40,6 +40,8 @@
           placeholder="**********"
           class="text-xs"
           (input)="checkPasswordReq()"
+          (blur)="passwordBlur = true"
+          (focus)="passwordBlur = false"
         />
         <img
           class="eyeImage"
@@ -58,15 +60,23 @@
         <div class="req-item">
           <img
             [src]="
-              hasCapital
+              !passwordInput
+                ? 'assets/svg/StateKey/Default.svg'
+                : hasCapital
                 ? 'assets/svg/StateKey/Success.svg'
-                : 'assets/svg/StateKey/NotAllowed.svg'
+                : passwordBlur
+                ? 'assets/svg/StateKey/NotAllowed.svg'
+                : 'assets/svg/StateKey/Default.svg'
             "
             class="stateImage"
           />
           <h2
             class="text-2xs"
-            [ngClass]="{ 'valid-text': hasCapital, 'error-text': !hasCapital }"
+            [ngClass]="{
+              'default-text': !passwordInput || (!hasCapital && !passwordBlur),
+              'valid-text': passwordInput && hasCapital,
+              'error-text': passwordInput && !hasCapital && passwordBlur
+            }"
           >
             Capital letter
           </h2>
@@ -74,15 +84,23 @@
         <div class="req-item">
           <img
             [src]="
-              hasNumber
+              !passwordInput
+                ? 'assets/svg/StateKey/Default.svg'
+                : hasNumber
                 ? 'assets/svg/StateKey/Success.svg'
-                : 'assets/svg/StateKey/NotAllowed.svg'
+                : passwordBlur
+                ? 'assets/svg/StateKey/NotAllowed.svg'
+                : 'assets/svg/StateKey/Default.svg'
             "
             class="stateImage"
           />
           <h2
             class="text-2xs"
-            [ngClass]="{ 'valid-text': hasNumber, 'error-text': !hasNumber }"
+            [ngClass]="{
+              'default-text': !passwordInput || (!hasCapital && !passwordBlur),
+              'valid-text': passwordInput && hasNumber,
+              'error-text': passwordInput && !hasNumber && passwordBlur
+            }"
           >
             Number
           </h2>
@@ -106,7 +124,9 @@
       <div class="req-item">
         <img
           [src]="
-            passwordsMatch
+            !confirmPasswordInput
+              ? 'assets/svg/StateKey/Default.svg'
+              : passwordsMatch
               ? 'assets/svg/StateKey/Success.svg'
               : 'assets/svg/StateKey/NotAllowed.svg'
           "
@@ -115,8 +135,9 @@
         <h2
           class="text-2xs"
           [ngClass]="{
-            'valid-text': passwordsMatch,
-            'error-text': !passwordsMatch
+            'default-text': !confirmPasswordInput,
+            'valid-text': confirmPasswordInput && passwordsMatch,
+            'error-text': confirmPasswordInput && !passwordsMatch
           }"
         >
           {{ passwordsMatch ? "Passwords match" : "Passwords do not match" }}

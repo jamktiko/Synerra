@@ -158,6 +158,7 @@ functions:
       - httpApi:
           path: /user
           method: get
+          authorizer: PrivateAuthorizer
 
   getMe:
     handler: src/user/me.handler

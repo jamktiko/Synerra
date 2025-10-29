@@ -7,6 +7,7 @@ import { environment } from '../../../environment';
 import { AuthStore } from '../stores/auth.store';
 import { UserStore } from '../stores/user.store';
 import { User } from '../interfaces/user.model';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,8 @@ export class AuthService {
     private http: HttpClient,
     private router: Router,
     private authStore: AuthStore,
-    private userStore: UserStore
+    private userStore: UserStore,
+    private notificationService: NotificationService
   ) {}
 
   signup(credentials: { email: string; password: string }): Observable<any> {
@@ -39,12 +41,15 @@ export class AuthService {
         tap((res) => {
           this.authStore.setToken(res.token);
           this.userStore.setUser(res.user);
+          this.notificationService.initConnection();
         })
       );
   }
 
+  // This logs the user out from the whole app
   logout(): void {
+    this.notificationService.close();
     this.authStore.clearToken();
-    this.router.navigate(['/login']);
+    this.userStore.clearUser();
   }
 }
