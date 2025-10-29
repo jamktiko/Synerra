@@ -36,11 +36,15 @@
   margin: 0 auto;
 }
 
+.filter-component {
+  width: 100%; /* Allows as much space as possible for child element (filters-container) */
+}
+
 /* Keskikontti */
 .main-content {
-  flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 32px;
 }
 
 /* Dropdownien sivuttaisrullauksen esto */

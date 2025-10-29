@@ -5,21 +5,24 @@
   gap: 1rem;
   padding: 1rem 0 1rem 1rem;
   background: var(--color-dark-gradient);
-  border-radius: 8px;
+  border-radius: 20px;
   color: #fff;
   font-family: Inter, sans-serif;
   height: 100%;
   width: auto;
-  max-height: 94vh; /* lock height to viewport */
+  border: 1px solid rgba(255, 255, 255, 0.12);
   box-sizing: border-box;
   overflow: visible;
 }
-
-.layout {
-  height: 100%;
-  padding-bottom: 3px;
+.title {
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--color-text-default);
+  margin-top: 16px;
 }
-
 /* Container must hide overflow */
 .conts {
   position: relative;
@@ -72,23 +75,24 @@
 }
 
 /* Gradient outline */
+/* Removed so all elements are the same across all pages */
+/*
 .users-list::before {
   content: "";
   position: absolute;
-  inset: 0; /* covers entire element */
-  border-radius: 8px;
-  padding: 1px; /* thickness of gradient border */
+  inset: 0; 
+  border-radius: 20px;
+  padding: 1px; 
   background: var(--color-gray-v2);
 
-  /* Mask for gradient border */
+ 
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
 
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
 
-  pointer-events: none; /* don’t block clicks */
-}
+  pointer-events: none;
+}*/
 
 /* Last message styling on user tab */
 .lMessage {
@@ -251,9 +255,7 @@
   min-height: 0;
   overflow-y: auto;
 }
-.users-list {
-  width: auto;
-}
+
 @media (max-width: 768px) {
   .users-list {
     width: auto;

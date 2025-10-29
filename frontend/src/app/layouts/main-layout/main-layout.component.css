@@ -13,6 +13,7 @@
   min-height: 100vh;
   position: relative;
 }
+
 /* Kiinteä taustakuva koko näkymälle */
 .layout::before {
   content: "";
@@ -41,13 +42,15 @@
 }
 
 .main {
+  height: 100%;
   grid-column: 2;
-  padding-right: 2rem;
-  padding-left: 0;
-  margin-left: 0;
-  margin-right: clamp(12rem, 20vw, 18rem);
+  padding: 57px 2rem 63px 3rem;
+  margin-right: clamp(
+    14rem,
+    20vw,
+    20rem
+  ); /* Allows navbar space to shrink a between 17, and 20rem */
   overflow: visible;
-  height: 100vh;
 }
 
 /* Social bar asetukset */
@@ -92,6 +95,7 @@ Mobiili näkymään flexbox, ja järjestys muutettu
     overflow-y: auto;
     padding: 0;
   }
+
   .navbar {
     order: 2;
     width: 100%;
@@ -123,7 +127,7 @@ Mobiili näkymään flexbox, ja järjestys muutettu
     display: none;
   }
   .layout {
-    grid-template-columns: 5rem 1fr; /* Increases size of main content by removing social floating space */
+    grid-template-columns: 5rem 1fr; /* Removes social floating space and shrinks nav space */
   }
   .main {
     margin-right: 0;
