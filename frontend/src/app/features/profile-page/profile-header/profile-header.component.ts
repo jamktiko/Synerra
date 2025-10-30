@@ -6,11 +6,13 @@ import { UserService } from '../../../core/services/user.service';
 import { ChatService } from '../../../core/services/chat.service';
 import { FriendService } from '../../../core/services/friend.service';
 import { Friend } from '../../../core/interfaces/friend.model';
+import { Game } from '../../../core/interfaces/game.model';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-profile-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './profile-header.component.html',
   styleUrl: './profile-header.component.css',
 })
@@ -19,6 +21,8 @@ export class ProfileHeaderComponent implements OnInit {
   @Input() user!: User | null; // input from mother component
   @Input() isOwnProfile: boolean = false; //isOwnProfile check from mothercomponent
   @Input() isFriend: boolean = false; //isFriend check from mothercomponent
+  @Input() completeGames: Game[] = [];
+  @Input() genrePopularity: any[] = [];
 
   constructor(
     private userStore: UserStore,

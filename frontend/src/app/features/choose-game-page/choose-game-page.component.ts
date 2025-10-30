@@ -29,6 +29,10 @@ export class ChooseGamePageComponent implements OnInit {
     this.loadgames();
   }
 
+  ngOnDestroy() {
+    this.games = [];
+  }
+
   // gets games from endpoint
   loadgames() {
     this.gameService.listGames().subscribe({

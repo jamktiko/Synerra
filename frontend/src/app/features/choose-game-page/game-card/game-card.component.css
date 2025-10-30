@@ -179,3 +179,61 @@
     font-size: 0.7rem;
   }
 }
+
+.card-img-wrapper {
+  position: relative;
+}
+
+.fav-button {
+  background: rgba(10, 10, 10, 0.6);
+  border: none;
+  color: var(--color-primary); /* bright primary color */
+  font-size: 2.5rem; /* slightly bigger */
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(232, 52, 29, 0.7); /* soft red glow */
+  text-shadow: 0 0 10px rgba(232, 52, 29, 0.8); /* make it glow */
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease,
+    color 0.2s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Show button on card hover (desktop) */
+@media (hover: hover) {
+  .card:hover .fav-button {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* Always show button on mobile */
+@media (hover: none), (max-width: 768px) {
+  .fav-button {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+}
+/* Hover effect: bounce + glow */
+.fav-button:hover {
+  transform: scale(1.25) rotate(-10deg); /* noticeable bounce + tilt */
+  background: rgba(var(--color-background-rgb, 20, 20, 20), 0.6);
+  box-shadow: 0 0 20px rgba(232, 52, 29, 0.9);
+  text-shadow: 0 0 15px rgba(232, 52, 29, 1);
+}
+
+/* Filled star styling */
+.fav-button.filled {
+  color: var(--color-primary);
+  background: rgba(var(--color-background-rgb, 20, 20, 20), 0.6);
+  box-shadow: 0 0 20px rgba(232, 52, 29, 0.9);
+  text-shadow: 0 0 15px rgba(232, 52, 29, 1);
+}

@@ -7,7 +7,7 @@ import { AuthStore } from '../stores/auth.store';
 @Injectable({ providedIn: 'root' })
 export class GameService {
   private baseUrl = environment.AWS_GAMES_URL;
-  private addUrl = environment.AWS_BASE_URL;
+  private basicUrl = environment.AWS_BASE_URL;
 
   constructor(private http: HttpClient, private authStore: AuthStore) {}
 
@@ -15,7 +15,7 @@ export class GameService {
   addGame(gameId: string, gameName: string): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.post(
-      `${this.addUrl}/relations/usergame`,
+      `${this.basicUrl}/relations/usergame`,
       { gameId, gameName },
       {
         headers: {
@@ -56,6 +56,13 @@ export class GameService {
       headers: {
         Authorization: `${token}`,
       },
+    });
+  }
+
+  removeGame(gameId: string): Observable<any> {
+    const jwt = this.authStore.getToken();
+    return this.http.delete(`${this.basicUrl}/relations/deletegame/${gameId}`, {
+      headers: { Authorization: `${jwt}` },
     });
   }
 }

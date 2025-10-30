@@ -246,6 +246,31 @@
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
+.delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.delete-btn:hover {
+  background: rgba(255, 0, 0, 0.8);
+  transform: scale(1.1);
+}
+
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 1400px) {
   .games-grid {
@@ -338,4 +363,12 @@
   .game-info-overlay {
     padding: 32px 12px 10px 12px;
   }
+}
+
+.empty-games {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
 }

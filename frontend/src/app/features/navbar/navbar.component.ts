@@ -131,13 +131,13 @@ export class NavbarComponent implements OnInit {
 
   private buildNavItemsMobile(userId: string): void {
     this.navItemsMobile = [
-      { label: 'Settings', icon: 'Settings.svg', route: '/dashboard/settings' },
-      { label: 'Games', icon: 'Gamepad.svg', route: '/dashboard/choose-game' },
-      { label: 'Home', icon: 'logo_small.svg', route: '/dashboard' },
-      { label: 'Social', icon: 'NoMessage.svg', route: '/dashboard/social' },
+      { label: 'Settings', icon: 'Settings', route: '/dashboard/settings' },
+      { label: 'Games', icon: 'Gamepad', route: '/dashboard/choose-game' },
+      { label: 'Home', icon: 'logo_small', route: '/dashboard' },
+      { label: 'Social', icon: 'NoMessage', route: '/dashboard/social' },
       {
         label: 'Profile',
-        icon: 'Acount.svg',
+        icon: 'Acount',
         route: `/dashboard/profile/${userId}`,
       },
     ];

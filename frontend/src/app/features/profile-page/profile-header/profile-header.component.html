@@ -32,19 +32,20 @@
     <!-- Action Buttons Section -->
     <div class="actions-section">
       <div *ngIf="isOwnProfile" class="action-buttons">
-        <button class="social-badge" (click)="onEditProfile()" aria-label="Edit profile">
+        <button class="social-badge" (click)="onEditProfile()" aria-label="Edit profile" title="Edit profile">
           <img src="assets/svg/edit-icon.svg" alt="Edit" class="profilesvg" />
         </button>
-        <button class="social-badge" (click)="onUploadPhoto()" aria-label="Upload photo">
+        <button class="social-badge" (click)="onUploadPhoto()" aria-label="Upload photo" title="Upload profile picture">
           <img src="assets/svg/upload-icon.svg" alt="Upload" class="profilesvg" />
         </button>
       </div>
       <div *ngIf="!isOwnProfile" class="action-buttons">
-        <button class="social-badge" *ngIf="!isFriend" (click)="addFriend(user)" aria-label="Add friend">
+        <button class="social-badge" *ngIf="!isFriend" (click)="addFriend(user)" aria-label="Add friend"
+          title="Add as friend">
           <img src="/assets/svg/Add user.svg" alt="addfriend" class="profilesvg">
         </button>
-        <button class="social-badge" (click)="userClicked(user.UserId)" aria-label="Start chat">
-          Chat
+        <button class="social-badge" (click)="userClicked(user.UserId)" aria-label="Start chat" title="Start chat">
+          <img src="/assets/svg/NoMessage.svg" alt="addfriend" class="profilesvg">
         </button>
       </div>
     </div>

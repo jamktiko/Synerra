@@ -42,7 +42,7 @@ export class UserService {
   }
 
   // adds online status to user-subject
-  private initUsersOnlineStatus() {
+  public initUsersOnlineStatus() {
     console.log('INITING USERS ONLINE STATUUS');
 
     this.getUsers().subscribe({

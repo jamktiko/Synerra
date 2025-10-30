@@ -1,15 +1,24 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserStore } from '../../../core/stores/user.store';
 import { User } from '../../../core/interfaces/user.model';
 import { Game } from '../../../core/interfaces/game.model';
 import { GameService } from '../../../core/services/game.service';
 import { forkJoin, Subscription } from 'rxjs';
+import { RouterModule } from '@angular/router';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-profile-content',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule, ButtonComponent],
   templateUrl: './profile-content.component.html',
   styleUrl: './profile-content.component.css',
 })
@@ -17,10 +26,12 @@ export class ProfileContentComponent implements OnInit {
   @Input() user!: User | null; // user from mother component
   @Input() isOwnProfile: boolean = false; //isOwnProfile check from mothercomponent
   @Input() isFriend: boolean = false; //isFriend check from mothercomponent
+  @Output() gamesLoaded = new EventEmitter<Game[]>();
   // Placeholder data - will be replaced with real data from services
   userGames: Game[] = [];
   chatrooms: any[] = [];
   completeGames: Game[] = [];
+  genrePopularity: any[] = [];
   private sub!: Subscription;
 
   // Reputation/stats data
@@ -53,8 +64,14 @@ export class ProfileContentComponent implements OnInit {
   constructor(private userStore: UserStore, private gameService: GameService) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['user'] && this.user?.PlayedGames?.length) {
-      this.loadGames();
+    if (changes['user']) {
+      if (this.sub) this.sub.unsubscribe(); // cancel previous fetch
+
+      this.completeGames = [];
+
+      if (this.user?.PlayedGames?.length) {
+        this.loadGames();
+      }
     }
   }
   ngOnInit(): void {}
@@ -85,16 +102,61 @@ export class ProfileContentComponent implements OnInit {
           ...this.user!.PlayedGames![index],
           ...(Array.isArray(res) ? res[0] : res), // unwrap if array
         }));
+        const genrePopularityMap: Record<string, number> = {};
+
+        this.completeGames.forEach((game) => {
+          const genre = game.Genre?.toLowerCase() || 'unknown';
+          const popularity = game.Popularity || 0;
+          genrePopularityMap[genre] =
+            (genrePopularityMap[genre] || 0) + popularity;
+        });
+        // Call genre frequency calculation
+        const genreStats = this.mapGenresByCount();
+        this.gamesLoaded.emit(this.completeGames);
         console.log('Complete games after fetch:', this.completeGames);
       },
       error: (err) => console.error('Failed to fetch game info:', err),
     });
   }
-  onRemoveGame(gameId: string): void {
-    console.log('Remove game:', gameId);
-    // TODO: Implement game removal
+
+  // get genres from games and map them to array by popularity
+  private mapGenresByCount() {
+    if (!this.completeGames.length) return;
+
+    const genreCountMap: Record<string, number> = {};
+
+    // Count how many times each genre appears
+    this.completeGames.forEach((game) => {
+      const genre = game.Genre?.toLowerCase() || 'unknown';
+      genreCountMap[genre] = (genreCountMap[genre] || 0) + 1;
+    });
+
+    // Convert the object into a sorted array (most played genres first)
+    const sortedGenres = Object.entries(genreCountMap)
+      .map(([genre, count]) => ({ genre, count }))
+      .sort((a, b) => b.count - a.count);
+
+    this.genrePopularity = sortedGenres.map(
+      (g) => g.genre.charAt(0).toUpperCase() + g.genre.slice(1)
+    );
+
+    console.log('Genre frequency map:', sortedGenres);
+  }
+  onRemoveGame(pk: string): void {
+    const gameId = pk.replace('GAME#', '');
+    console.log('DELETING GAME: ', gameId);
+    this.gameService.removeGame(gameId).subscribe({
+      next: (res) => {
+        console.log('Game removed successfully:', res);
+        this.completeGames = this.completeGames.filter((g) => g.PK !== pk);
+      },
+      error: (err) => {
+        console.error('Failed to remove game:', err);
+      },
+    });
   }
   ngOnDestroy() {
     this.user = null;
+    this.completeGames = [];
   }
 }

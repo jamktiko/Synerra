@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { UserStore } from '../../core/stores/user.store';
 import { FriendService } from '../../core/services/friend.service';
+import { Game } from '../../core/interfaces/game.model';
 
 @Component({
   selector: 'app-profile-page',
@@ -24,6 +25,8 @@ export class ProfilePageComponent implements OnInit {
   isFriend: boolean = false;
   private sub!: Subscription;
   private routeSub!: Subscription;
+  completeGames: Game[] = [];
+  genrePopularity: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -41,6 +44,11 @@ export class ProfilePageComponent implements OnInit {
     });
 
     console.log(this.userId);
+  }
+
+  onGamesLoaded(games: Game[]): void {
+    this.completeGames = games;
+    console.log('Received games from child:', games);
   }
 
   private loadUser() {
