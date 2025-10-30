@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
@@ -74,5 +74,26 @@ export class UsernameComponent implements OnInit {
   }
   closeModal() {
     this.modalRef.dismiss();
+  }
+
+  // Binds this viewer to the next-button
+  @ViewChild('nextBtn', { read: ElementRef }) nextBtn!: ElementRef;
+
+  // Activates when enter is being pressed whilist inside of the input slot
+  handleEnter(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    if (
+      // Input validation and key check
+      keyboardEvent.key === 'Enter' &&
+      this.validUsername &&
+      !this.errorText
+    ) {
+      // Without preventDefault, because of the bootstrap modal used here, the modal would shut down without the preventDefault()
+      keyboardEvent.preventDefault();
+      // Presses the next-button that then activates the next() -function
+      this.nextBtn.nativeElement.click();
+    }
+    // No matter what happens in the function, the modal will not shut down on enter-key press
+    keyboardEvent.preventDefault();
   }
 }

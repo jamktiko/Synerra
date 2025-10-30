@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
+import { UserStore } from '../../core/stores/user.store';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { RouterLink, Router } from '@angular/router';
+import { AuthStore } from '../../core/stores/auth.store';
 
 @Component({
   selector: 'app-signup-page',
@@ -26,6 +28,8 @@ export class SignupPageComponent {
 
   constructor(
     private authService: AuthService,
+    private userStore: UserStore,
+    private authStore: AuthStore,
     private router: Router,
   ) {}
 
@@ -88,8 +92,14 @@ export class SignupPageComponent {
   }
 
   async signup() {
-    await this.authService.logout();
-    console.log('signed out');
+    const user = this.userStore.getUser();
+    const loggedIn = this.authStore.isLoggedIn();
+
+    if (user || loggedIn) {
+      await this.authService.logout();
+      console.log('signed out');
+    }
+
     this.submitted = true;
 
     // if (this.passwordInput !== this.confirmPasswordInput) --- Tämä siis se vanha

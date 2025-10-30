@@ -10,7 +10,7 @@
     </div>
     <div class="nextStep">></div>
     <div class="step">
-      <img src="assets/svg/Thumb.svg" alt="step2" />
+      <img src="assets/svg/Thumb.svg" alt="step3" />
     </div>
   </div>
 
@@ -25,91 +25,58 @@
       birthday is only used to verify your age and will not be shared.
     </h2>
   </div>
-  <div class="modal-body">
-    <div class="hint">
-      <h2 class="text-sm-18">Enter your date of birth</h2>
-    </div>
-    <div class="bDay-container">
-      <input
-        type="date"
-        [(ngModel)]="profile.Birthday"
-        class="form-control text-sm-18"
-        placeholder="DD.MM.YYYY"
-        (click)="dateInput.showPicker()"
-        #dateInput
-      />
+  <form (ngSubmit)="next()">
+    <div class="modal-body">
+      <div class="hint">
+        <h2 class="text-sm-18">Enter your date of birth</h2>
+      </div>
+      <div class="bDay-container">
+        <input type="date" name="birthday" (keydown.enter)="handleEnter($event)" [(ngModel)]="selectedBirthday"
+          class="form-control text-sm-18" placeholder="DD.MM.YYYY" #dateInput />
 
-      <!-- calendar svg, ei ehkä tarpeellinen -->
-      <!-- <img
-        src="assets/svg/Calendar.svg"
-        alt="Open calendar"
-        class="calendar-icon"
-        (click)="dateInput.showPicker()"
-      /> -->
-    </div>
+        <!-- calendar svg, ei ehkä tarpeellinen -->
+        <img src="assets/svg/Calendar.svg" alt="Open calendar" class="calendar-icon" (click)="dateInput.showPicker()" />
+      </div>
 
-    <div class="hint">
-      <h2 class="text-sm-18">Choose your language</h2>
-    </div>
+      <div class="hint">
+        <h2 class="text-sm-18">Choose your language</h2>
+      </div>
 
-    <!--Dropdown-->
-    <div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
-      <button
-        type="button"
-        class="btn btn-outline-primary me-2"
-        id="dropdownManual"
-        ngbDropdownAnchor
-        (focus)="myDrop.open()"
-      >
-        Select language
-      </button>
-      <div ngbDropdownMenu aria-labelledby="dropdownManual" class="dropBox">
-        <li class="checkboxWithTextFrame" *ngFor="let lang of languages">
-          <label class="ios-checkbox red">
-            <input
-              type="checkbox"
-              (change)="toggleLanguage($event, lang.code)"
-              [checked]="selectedLanguages.includes(lang.code)"
-            />
-            <div class="checkbox-wrapper">
-              <div class="checkbox-bg"></div>
-              <svg class="checkbox-icon" viewBox="0 0 24 24" fill="none">
-                <path
-                  class="check-path"
-                  d="M4 12L10 18L20 6"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+      <!--Dropdown-->
+      <div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
+        <button type="button" class="btn btn-outline-primary me-2" id="dropdownManual" ngbDropdownAnchor
+          (focus)="myDrop.open()">
+          Select languages
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownManual" class="dropBox">
+          <li class="checkboxWithTextFrame" *ngFor="let lang of languages">
+            <label class="ios-checkbox red">
+              <input type="checkbox" (change)="toggleLanguage($event, lang.code)"
+                [checked]="selectedLanguages.includes(lang.code)" />
+              <div class="checkbox-wrapper">
+                <div class="checkbox-bg"></div>
+                <svg class="checkbox-icon" viewBox="0 0 24 24" fill="none">
+                  <path class="check-path" d="M4 12L10 18L20 6" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </label>
+            <div class="checkbox-text">
+              <h2 class="text-xs">{{ lang.name }}</h2>
             </div>
-          </label>
-          <div class="checkbox-text">
-            <h2 class="text-xs">{{ lang.name }}</h2>
-          </div>
-        </li>
+          </li>
+        </div>
+      </div>
+      <!--Dropdown ends-->
+
+      <!--Footer-->
+      <div class="modal-footer">
+        <!-- <button class="btn btn-secondary" (click)="back()">Back</button>
+      <button class="btn btn-primary" (click)="next()">Next</button> -->
+        <app-button label="Back" icon="ArrowKey/LeftArrow" (click)="back()"></app-button>
+        <app-button #nextBtn label="Next" variant="highlight" iconPosition="right" icon="ArrowKey/RightArrow"
+          [state]="canProceed ? 'active' : 'disabled'" (click)="canProceed && next()"></app-button>
       </div>
     </div>
-    <!--Dropdown ends-->
-
-    <!--Footer-->
-    <div class="modal-footer">
-      <!-- <button class="btn btn-secondary" (click)="back()">Back</button>
-      <button class="btn btn-primary" (click)="next()">Next</button> -->
-      <app-button
-        label="Back"
-        icon="ArrowKey/LeftArrow"
-        (click)="back()"
-      ></app-button>
-      <app-button
-        label="Next"
-        variant="highlight"
-        iconPosition="right"
-        icon="ArrowKey/RightArrow"
-        [state]="canProceed ? 'active' : 'disabled'"
-        (click)="canProceed && next()"
-      ></app-button>
-    </div>
-  </div>
+  </form>
 </div>

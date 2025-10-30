@@ -1,5 +1,5 @@
 // Bootstrap modal
-import { Component, effect } from '@angular/core';
+import { Component, effect, ViewChild, ElementRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BirthdayComponent } from './birthday/birthday.component';
 import { UsernameComponent } from './username/username.component';
@@ -10,6 +10,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { UserStore } from '../../core/stores/user.store';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-profile-creation-page',
@@ -53,6 +54,7 @@ export class ProfileCreationPageComponent implements OnInit {
         });
         usernameModalRef.componentInstance.profile = this.profile; // In case of going back to this modal, sending the current username
         await usernameModalRef.result;
+        console.log(usernameModalRef.result);
         step++;
       }
 
@@ -88,5 +90,17 @@ export class ProfileCreationPageComponent implements OnInit {
         console.log('Modal process closed');
       }
     }
+  }
+
+  // Binds this viewer to the next-button
+  @ViewChild('nextBtn', { read: ElementRef }) nextBtn!: ElementRef;
+
+  // Activates when enter is being pressed whilist inside of the input slot
+  handleEnter(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    // Without preventDefault, because of the bootstrap modal used here, the modal would shut down without the preventDefault()
+    keyboardEvent.preventDefault();
+    // Presses the next-button that then activates the next() -function
+    this.nextBtn.nativeElement.click();
   }
 }
