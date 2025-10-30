@@ -76,6 +76,10 @@ export class SignupPageComponent {
     this.correctEmail = isValid;
   }
 
+  get minLength(): boolean {
+    return this.passwordInput.length >= 6;
+  }
+
   get isFormValid(): boolean {
     return (
       !this.emailError &&
@@ -83,7 +87,7 @@ export class SignupPageComponent {
       this.hasCapital && // has a capital
       this.hasNumber && // has a number
       this.passwordInput === this.confirmPasswordInput && // is the input + confirm right
-      this.passwordInput.length > 0 // checks, if the input is empty
+      this.minLength
     );
   }
 

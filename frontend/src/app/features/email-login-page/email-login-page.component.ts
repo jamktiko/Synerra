@@ -48,6 +48,12 @@ export class EmailLoginPageComponent implements OnInit {
       },
     });
   }
+
+  // Check the inputs => the login button is active
+  get canLogin(): boolean {
+    return !!this.emailInput && !!this.passwordInput;
+  }
+
   async login() {
     const credentials = {
       email: this.emailInput,

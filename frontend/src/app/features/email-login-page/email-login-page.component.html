@@ -24,7 +24,8 @@
 
       <div class="buttonFrame">
         <app-button label="Back" variant="default" [routerLink]="'/login/'"></app-button>
-        <app-button #nextBtn label="Login" variant="highlight" type="submit"></app-button>
+        <app-button #nextBtn label="Login" variant="highlight" type="submit"
+          [state]="canLogin ? 'active' : 'disabled'"></app-button>
       </div>
     </form>
   </div>
