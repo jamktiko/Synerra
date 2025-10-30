@@ -152,4 +152,21 @@ export class SignupPageComponent {
       },
     });
   }
+
+  handleEnter(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter') {
+      keyboardEvent.preventDefault();
+    }
+    keyboardEvent.preventDefault();
+  }
+
+  handleEnterOnPassword2(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter') {
+      keyboardEvent.preventDefault();
+      this.signup();
+    }
+    keyboardEvent.preventDefault();
+  }
 }

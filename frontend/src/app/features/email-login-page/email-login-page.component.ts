@@ -1,4 +1,4 @@
-import { Component, effect } from '@angular/core';
+import { Component, effect, ViewChild, ElementRef } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +8,6 @@ import { UserService } from '../../core/services/user.service';
 import { OnInit } from '@angular/core';
 import { User } from '../../core/interfaces/user.model';
 import { UserStore } from '../../core/stores/user.store';
-import { NgZone } from '@angular/core';
 import { NotificationService } from '../../core/services/notification.service';
 @Component({
   standalone: true,
@@ -28,7 +27,7 @@ export class EmailLoginPageComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private userStore: UserStore,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
   ) {
     effect(() => {
       const user = this.userStore.user();
@@ -89,5 +88,24 @@ export class EmailLoginPageComponent implements OnInit {
         this.errorVisible = true; //näyttää virheen
       },
     });
+  }
+
+  // @ViewChild('nextBtn', { read: ElementRef }) nextBtn!: ElementRef;
+
+  handleEnterOnEmail(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter') {
+      keyboardEvent.preventDefault();
+    }
+    keyboardEvent.preventDefault();
+  }
+
+  handleEnterOnPassword(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter') {
+      keyboardEvent.preventDefault();
+      this.login();
+    }
+    keyboardEvent.preventDefault();
   }
 }
