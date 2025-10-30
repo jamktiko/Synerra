@@ -18,23 +18,31 @@
 
 
 
+
+
     </div>
 
     <!-- Oikea sarake -->
     <div class="card-right">
 
-      <p class="bio-text">{{ user.Bio }}</p>
+
       <div class="divider"></div>
-      <p class="languages" *ngIf="user.Languages">{{ user.Languages }}</p>
-      <div class="card-actions">
-        <button class="btn btn-primary" (click)="SendMsg(user.UserId)">
-          <img src="/assets/svg/Messages/NoMessage.svg" alt="" class="btn-icon" />
-          <span>Send Message</span>
-        </button>
-        <button class="btn btn-success" (click)="onAddFriend()">
-          <img src="/assets/svg/Plus_icon.svg" alt="" class="btn-icon" />
-          <span>Add Friend</span>
-        </button>
+      <div>
+        <div class="languages" *ngIf="getCommonLanguages(user.Languages).length > 0">
+          <ng-container *ngFor="let langCode of getCommonLanguages(user.Languages)">
+            <img [src]="getFlag(langCode)" alt="" class="flag-img" />
+          </ng-container>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-primary" (click)="SendMsg(user.UserId)">
+            <img src="/assets/svg/Messages/NoMessage.svg" alt="" class="btn-icon" />
+            <span>Send Message</span>
+          </button>
+          <button class="btn btn-success" (click)="onAddFriend()">
+            <img src="/assets/svg/Plus_icon.svg" alt="" class="btn-icon" />
+            <span>Add Friend</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

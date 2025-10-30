@@ -7,14 +7,14 @@
       <app-notifications [inlineHost]="inlineHost" [inlineHostElement]="inlineHostElement"
         (dropdownChanged)="onNotificationsToggle($event)"></app-notifications>
     </div>
-    <div class="linebreak-horizontal-child" *ngIf="!notificationsOpen"></div>
+    <div class="linebreak-horizontal-child" [class.linebreak-hidden]="notificationsOpen"></div>
 
   </div>
 
-  <div class="notifications-inline-host" #notificationsHost></div>
+  <div class="notifications-inline-host" #notificationsHost [class.is-active]="notificationsOpen"></div>
 
   <!-- Online players summary -->
-  <div class="chatrooms-sum-wrapper" *ngIf="!notificationsOpen">
+  <div class="chatrooms-sum-wrapper">
     <div class="chatrooms-sum">
       <b class="my-chatrooms-container">
         <span>FRIENDS ONLINE - </span>
@@ -24,15 +24,15 @@
   </div>
 
   <!-- Player list -->
-  <div class="friends-container" *ngIf="!notificationsOpen">
+  <div class="friends-container" [class.shifted]="notificationsOpen">
     <div class="players">
       <div *ngFor="let user of users$ | async" (click)="userClicked(user.UserId)">
         <div class="player-card">
           <img class="acount-icon" [src]="user.ProfilePicture" alt="Player Avatar" />
           <div class="player-name">{{ user.Username }}</div>
-          <div class="status">
-            <img src="/assets/svg/Status/Online.svg" *ngIf="user.Status==='online'" alt="Online">
-            <img src="/assets/svg/Status/Offline.svg" *ngIf="user.Status==='offline'" alt="Offline">
+          <div class="status" [class.online]="user.Status==='online'" [class.offline]="user.Status!=='online'">
+            <span class="status-pulse"></span>
+            <span class="status-dot"></span>
           </div>
         </div>
       </div>
