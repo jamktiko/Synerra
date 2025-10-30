@@ -13,6 +13,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ButtonComponent } from '../../shared/components/button/button.component';
 import { Subscription } from 'rxjs';
 
 import { UnreadMessage } from '../../core/interfaces/chatMessage';
@@ -27,7 +28,7 @@ import { NotificationService } from '../../core/services/notification.service';
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonComponent],
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
   unreads: UnreadMessage[] = [];
@@ -35,6 +36,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   notifications: any[] = [];
 
   showDropdown = false;
+  activeTab: 'messages' | 'requests' = 'messages';
   readonly dropdownContext = { inline: false };
 
   private inlineView?: EmbeddedViewRef<{ inline: boolean }>;
@@ -196,6 +198,29 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     );
   }
 
+  get messageNotifications() {
+    return this.notifications.filter((n) => n.type === 'newMessage');
+  }
+
+  get friendRequestNotifications() {
+    return this.notifications.filter(
+      (n) =>
+        n.type === 'friend_request' ||
+        n.type === 'friend_request_accepted' ||
+        n.type === 'friend_request_declined'
+    );
+  }
+
+  get messageTabCount(): number {
+    return (this.unreads?.length || 0) + this.messageNotifications.length;
+  }
+
+  get requestTabCount(): number {
+    return (
+      (this.pendingRequests?.length || 0) + this.friendRequestNotifications.length
+    );
+  }
+
   // Starts chat when clicking notification and removes notifications from that sender
   userClicked(userId: string) {
     this.notifications = this.notifications.filter((n) => {
@@ -203,6 +228,13 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       return senderId !== userId;
     });
     this.chatService.startChat([userId]);
+  }
+
+  setActiveTab(tab: 'messages' | 'requests', event?: MouseEvent) {
+    event?.preventDefault();
+    event?.stopPropagation();
+    if (this.activeTab === tab) return;
+    this.activeTab = tab;
   }
 
   // Mark all messages as read

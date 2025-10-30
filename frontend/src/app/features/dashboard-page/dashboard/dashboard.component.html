@@ -1,8 +1,8 @@
 <div class="dashboard">
   <!-- Top Navigation -->
   <header class="top-navigation-bar">
-    <b class="welcome-text">Good evening, </b>
-    <b class="user-name">{{me?.Username }}</b>
+    <b class="welcome-text">{{ greeting }}, </b>
+    <b class="user-name">{{ me?.Username }}</b>
   </header>
 
 
@@ -10,7 +10,7 @@
   <!-- Favorite Games -->
   <section class="favorite-games">
     <div class="section-title">Favorite games</div>
-    <div class="games-grid">
+    <div class="games-row">
       <app-dashboard-card *ngFor="let game of filteredGames" [game]="game">
       </app-dashboard-card>
     </div>
@@ -19,7 +19,7 @@
   <!-- Popular Games -->
   <section class="popular-games">
     <div class="section-title">Popular games</div>
-    <div class="games-grid">
+    <div class="games-row">
       <app-dashboard-card *ngFor="let game of sortedGames" [game]="game">
       </app-dashboard-card>
     </div>

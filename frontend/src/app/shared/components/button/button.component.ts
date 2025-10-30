@@ -4,7 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 
 type ButtonVariant = 'default' | 'highlight' | 'sidebar';
 type ButtonState = 'active' | 'disabled';
-type ButtonSize = 'small' | 'medium' | 'large';
+type ButtonSize = 'xsmall' | 'small' | 'medium' | 'large';
 type ButtonAlign = 'left' | 'center';
 type IconPosition = 'left' | 'right';
 
@@ -18,7 +18,6 @@ export class ButtonComponent {
   @Input() label: string = '';
   @Input() icon?: string;
   @Input() variant: ButtonVariant = 'default';
-  @Input() state?: ButtonState;
   @Input() size: ButtonSize = 'medium';
   @Input() iconPosition: IconPosition = 'left';
   @Input() routerLink?: string;
@@ -39,6 +38,21 @@ export class ButtonComponent {
   }
 
   @Input() align: ButtonAlign = 'center';
+
+  private _state?: ButtonState;
+
+  @Input()
+  set state(value: ButtonState | undefined) {
+    this._state = value;
+  }
+  get state(): ButtonState | undefined {
+    return this._state;
+  }
+
+  @Input('buttonState')
+  set buttonState(value: ButtonState | undefined) {
+    this._state = value;
+  }
 
   constructor(private router: Router) {}
 
