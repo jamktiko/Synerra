@@ -174,13 +174,42 @@
 /* Social Badge */
 .social-badge {
   padding: 12px 24px;
-  background: linear-gradient(180deg, #f2680d 0%, #c24d00 100%);
+
   border-radius: 10px;
   font-weight: 600;
   font-size: 1rem;
   color: var(--color-text-default);
   box-shadow: 0 0 12px rgba(242, 104, 13, 0.3);
   align-self: flex-start;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-text-default);
+  background: linear-gradient(180deg, #ff7a3e 0%, #e34b0e 100%);
+  border-color: rgba(255, 122, 62, 0.4);
+}
+
+.social-badge:hover {
+  transform: scale(1.1);
+}
+
+.profilesvg {
+  width: 35px; /* fixed size for consistency */
+  height: 35px;
+  fill: currentColor; /* inherits button text color */
+  flex-shrink: 0; /* prevent svg from shrinking */
+  transition: transform 0.2s ease;
+}
+
+.profilesvg:hover {
+  transform: scale(1.1);
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* Responsive */
@@ -210,4 +239,22 @@
   .joined-date {
     justify-content: center;
   }
+}
+
+.icon-centered .btn {
+  justify-content: center; /* center content */
+  align-items: center; /* vertical centering */
+  padding: 0.5rem; /* adjust for bigger icon */
+  min-width: 48px; /* optional, square button */
+  min-height: 48px;
+}
+
+.icon-centered .btn-icon {
+  width: 32px; /* bigger SVG */
+  height: 32px;
+  margin: 0; /* remove extra spacing */
+}
+
+.icon-centered .btn-label {
+  display: none; /* hide text if any */
 }

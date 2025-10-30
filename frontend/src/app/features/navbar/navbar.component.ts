@@ -92,11 +92,12 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private authService: AuthService
   ) {
-    // Sets up a reactive watcher that updates user
+    // Watch for user changes reactively
     effect(() => {
       const user = this.userStore.user();
-      if (user) {
+      if (user && user.UserId) {
         this.user = user;
+        this.buildNavItemsMobile(user.UserId);
       }
     });
 
@@ -128,6 +129,19 @@ export class NavbarComponent implements OnInit {
     this.syncExpandedState(this.currentUrl);
   }
 
+  private buildNavItemsMobile(userId: string): void {
+    this.navItemsMobile = [
+      { label: 'Settings', icon: 'Settings', route: '/dashboard/settings' },
+      { label: 'Games', icon: 'Gamepad', route: '/dashboard/choose-game' },
+      { label: 'Home', icon: 'logo_small', route: '/dashboard' },
+      { label: 'Social', icon: 'NoMessage', route: '/dashboard/social' },
+      {
+        label: 'Profile',
+        icon: 'Acount',
+        route: `/dashboard/profile/${userId}`,
+      },
+    ];
+  }
   toggleCollapse(): void {
     this.isCollapsed = !this.isCollapsed;
     this.hasUserPreference = true;
@@ -149,7 +163,7 @@ export class NavbarComponent implements OnInit {
 
   onUserClick(): void {
     console.log('User button clicked');
-    this.router.navigate(['/dashboard/profile']);
+    this.router.navigate([`/dashboard/profile/${this.user?.UserId}`]);
   }
 
   // Clearing authToken and rerouting to the login-page when logging off

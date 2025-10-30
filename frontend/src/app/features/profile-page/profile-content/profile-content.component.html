@@ -6,7 +6,9 @@
       <div class="attribute-card">
         <h3 class="attribute-title">Languages</h3>
         <div class="attribute-value">
-          <span *ngIf="stats.languages.length > 0">{{ stats.languages.join(', ') }}</span>
+          <span *ngIf="user?.Languages?.length">
+            {{ getLanguageNames(user?.Languages) }}
+          </span>
           <span *ngIf="stats.languages.length === 0" class="empty">---</span>
         </div>
       </div>
@@ -24,8 +26,8 @@
       <div class="attribute-card">
         <h3 class="attribute-title">Genres</h3>
         <div class="attribute-value">
-          <span *ngIf="stats.genres.length > 0">{{ stats.genres.join(', ') }}</span>
-          <span *ngIf="stats.genres.length === 0" class="empty">---</span>
+          <span *ngIf="genrePopularity.length > 0">{{ genrePopularity.join(', ') }}</span>
+          <span *ngIf="genrePopularity.length === 0" class="empty">---</span>
         </div>
       </div>
 
@@ -115,20 +117,33 @@
 
   <!-- My Games Section -->
   <section class="games-section card-surface">
-    <h2 class="section-title">My games</h2>
-    <div class="games-grid">
-      <!-- Placeholder game cards -->
-      <div class="game-card" *ngFor="let game of [1,2,3,4,5,6]">
-        <div class="game-image-container">
-          <div class="game-image">
-            <!-- Placeholder image -->
-          </div>
+    <h2 class="section-title" *ngIf="isOwnProfile">My games</h2>
+    <h2 class="section-title" *ngIf="!isOwnProfile">{{user?.Username}}'s games</h2>
+    <div *ngIf="completeGames.length<1" class="empty-games">
+      <p>{{user?.Username}} has no favorite games!</p>
 
-          <div class="game-info-overlay">
-            <div class="game-title">Counter-Strike 2</div>
-            <div class="game-genre">Genre: Shooter</div>
-          </div>
+      <app-button *ngIf="completeGames.length<1 && isOwnProfile" label="Add games" variant="highlight" size="xsmall"
+        [fullWidth]="false" align="center" [routerLink]="'/dashboard/choose-game'"></app-button>
+    </div>
+    <div *ngIf="completeGames.length>0" class="games-grid">
+      <!-- game cards -->
+
+      <div class="game-card" *ngFor="let game of completeGames" [attr.aria-label]="game.Name" [attr.title]="game.Name">
+        <div class="game-image-container">
+          <img class="game-image" [src]="game.Img_url" [alt]="game.Name" />
+          <button *ngIf="isOwnProfile" class="delete-btn" (click)="onRemoveGame(game.PK)"
+            [attr.aria-label]="'Remove '+game.Name+ ' from favourites'"
+            [attr.title]="'Remove '+game.Name+ ' from favourites'">
+            ✕
+          </button>
         </div>
+
+        <div class="game-info-overlay">
+
+          <div class="game-title">{{game.Name | uppercase}}</div>
+          <div class="game-genre">GENRE: {{game.Genre | uppercase}}</div>
+        </div>
+
       </div>
     </div>
   </section>

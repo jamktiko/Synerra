@@ -6,6 +6,8 @@ import { NotificationService } from '../../core/services/notification.service';
 import { OnInit } from '@angular/core';
 import { UserStore } from '../../core/stores/user.store';
 import { Router } from '@angular/router';
+import { UserService } from '../../core/services/user.service';
+import { User } from '../../core/interfaces/user.model';
 
 @Component({
   selector: 'app-main-layout',
@@ -22,6 +24,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
     private notificationService: NotificationService,
     private userStore: UserStore,
     private router: Router,
+    private userService: UserService
   ) {
     // Checks for every possible login and load case where the user might be at the dashboard. To access the dashboard,
     // user must have authToken that is given when logging in with email. (this is being checked with authStore in app.routes)
@@ -44,6 +47,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.notificationService.initConnection();
+    this.userService.initUsersOnlineStatus();
     console.log('WebSocket Reconnect in progress...');
   }
   ngAfterViewInit(): void {
