@@ -62,8 +62,8 @@
 
   /* border */
   background:
-    /* sisäpinta */ linear-gradient(var(--color-background))
-      padding-box,
+    /* sisäpinta */
+    linear-gradient(var(--color-background)) padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 }
 
@@ -72,8 +72,8 @@
   box-shadow: none;
   color: var(--color-text-default);
   background:
-    /* sisäpinta */ linear-gradient(var(--color-background))
-      padding-box,
+    /* sisäpinta */
+    linear-gradient(var(--color-background)) padding-box,
     /* varsinainen reuna*/ var(--color-orange-gradient) border-box;
 }
 .form-control::placeholder {
@@ -126,29 +126,29 @@
   color: var(--color-text-dark);
   border: 1px solid transparent;
   background:
-    /* sisäpinta */ linear-gradient(var(--color-background))
-      padding-box,
+    /* sisäpinta */
+    linear-gradient(var(--color-background)) padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 }
 .btn-outline-primary:active {
   border: 1px solid transparent;
   transition: all 0.2s ease;
   background:
-    /* sisäpinta */ linear-gradient(var(--color-background))
-      padding-box,
+    /* sisäpinta */
+    linear-gradient(var(--color-background)) padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 }
 .btn-outline-primary:focus {
   color: var(--color-text-default);
   border: 1px solid transparent;
   background:
-    /* sisäpinta */ linear-gradient(var(--color-background))
-      padding-box,
+    /* sisäpinta */
+    linear-gradient(var(--color-background)) padding-box,
     /* varsinainen reuna*/ var(--color-orange-gradient) border-box;
 }
 
 .dropBox {
-  max-height: 6.2rem;
+  max-height: 15rem;
   overflow-y: auto;
   width: 20rem;
   color: var(--color-text-default);
@@ -156,8 +156,8 @@
   column-gap: 2rem;
 
   background:
-    /* sisäpinta */ linear-gradient(var(--color-background))
-      padding-box,
+    /* sisäpinta */
+    linear-gradient(var(--color-background)) padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 }
 

@@ -20,6 +20,7 @@ import { HostListener } from '@angular/core';
 })
 export class ProfileCreationPageComponent implements OnInit {
   profile: Partial<User> = {};
+  currentStep: number = 0;
 
   constructor(
     private modalService: NgbModal,
@@ -48,6 +49,9 @@ export class ProfileCreationPageComponent implements OnInit {
     try {
       // Step 1: Username
       if (step === 1) {
+        // The enter listener must immediately know that a modal is open (to prevent multiple simultanious modal renders)
+        this.currentStep++;
+
         const usernameModalRef = this.modalService.open(UsernameComponent, {
           centered: true,
           size: 'lg',
@@ -60,6 +64,7 @@ export class ProfileCreationPageComponent implements OnInit {
 
       // Step 2: Birthday
       if (step === 2) {
+        this.currentStep++;
         const birthdayModalRef = this.modalService.open(BirthdayComponent, {
           centered: true,
           size: 'lg',
@@ -71,6 +76,7 @@ export class ProfileCreationPageComponent implements OnInit {
 
       // Step 3: Games
       if (step === 3) {
+        this.currentStep++;
         const gamesModalRef = this.modalService.open(GamesComponent, {
           centered: true,
           size: 'lg',
@@ -88,19 +94,19 @@ export class ProfileCreationPageComponent implements OnInit {
         console.log('Modal closed/cancelled');
       } else {
         console.log('Modal process closed');
+        step = 0;
+        this.currentStep = 0;
       }
     }
   }
 
-  // Binds this viewer to the next-button
   @ViewChild('nextBtn', { read: ElementRef }) nextBtn!: ElementRef;
 
-  // Activates when enter is being pressed whilist inside of the input slot
-  handleEnter(event: Event) {
-    const keyboardEvent = event as KeyboardEvent;
-    // Without preventDefault, because of the bootstrap modal used here, the modal would shut down without the preventDefault()
-    keyboardEvent.preventDefault();
-    // Presses the next-button that then activates the next() -function
-    this.nextBtn.nativeElement.click();
+  @HostListener('document:keydown.enter', ['$event'])
+  onEnter(event: KeyboardEvent) {
+    event.preventDefault();
+    if (this.nextBtn?.nativeElement && this.currentStep < 1) {
+      this.nextBtn.nativeElement.querySelector('app-button')?.click();
+    }
   }
 }

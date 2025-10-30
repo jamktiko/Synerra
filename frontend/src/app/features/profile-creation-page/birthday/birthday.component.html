@@ -46,7 +46,7 @@
       <div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
         <button type="button" class="btn btn-outline-primary me-2" id="dropdownManual" ngbDropdownAnchor
           (focus)="myDrop.open()">
-          Select languages
+          {{ selectedLanguages.length > 0 ? selectedLanguages.join(', ') : 'Select languages' }}
         </button>
         <div ngbDropdownMenu aria-labelledby="dropdownManual" class="dropBox">
           <li class="checkboxWithTextFrame" *ngFor="let lang of languages">
