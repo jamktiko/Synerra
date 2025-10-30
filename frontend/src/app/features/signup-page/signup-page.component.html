@@ -9,20 +9,10 @@
         <h2 class="text-sm">Email</h2>
       </div>
 
-      <input
-        type="email"
-        [(ngModel)]="emailInput"
-        name="email"
-        placeholder="example@email.com"
-        class="text-xs"
-        (blur)="validEmail()"
-        (input)="onEmailInput()"
-      />
+      <input type="email" [(ngModel)]="emailInput" name="email" placeholder="example@email.com" class="text-xs"
+        (blur)="validEmail()" (input)="onEmailInput()" (keydown.enter)="handleEnter($event); inputPassword1.focus()" />
 
-      <div
-        class="req-item"
-        [style.visibility]="emailError ? 'visible' : 'hidden'"
-      >
+      <div class="req-item" [style.visibility]="emailError ? 'visible' : 'hidden'">
         <img src="assets/svg/StateKey/NotAllowed.svg" class="stateImage" />
         <h2 class="text-2xs error-text">Must be an actual email</h2>
       </div>
@@ -33,33 +23,20 @@
 
       <!--Salasana container, silmällä-->
       <div class="password-container">
-        <input
-          [type]="showPassword ? 'text' : 'password'"
-          [(ngModel)]="passwordInput"
-          name="password"
-          placeholder="**********"
-          class="text-xs"
-          (input)="checkPasswordReq()"
-          (blur)="passwordBlur = true"
-          (focus)="passwordBlur = false"
-        />
-        <img
-          class="eyeImage"
-          [src]="
+        <input #inputPassword1 [type]="showPassword ? 'text' : 'password'" [(ngModel)]="passwordInput" name="password"
+          placeholder="**********" class="text-xs" (input)="checkPasswordReq()" (blur)="passwordBlur = true"
+          (focus)="passwordBlur = false" (keydown.enter)="handleEnter($event); inputPassword2.focus()" />
+        <img class="eyeImage" [src]="
             showPassword
               ? 'assets/svg/Eye_closed.svg'
               : 'assets/svg/Eye_open.svg'
-          "
-          (click)="togglePasswordVisibility()"
-          alt="Show/Hide password"
-        />
+          " (click)="togglePasswordVisibility()" alt="Show/Hide password" />
       </div>
 
       <!--Mitä "salasanan" pitäisi sisältää-->
       <div class="requiredContainer">
         <div class="req-item">
-          <img
-            [src]="
+          <img [src]="
               !passwordInput
                 ? 'assets/svg/StateKey/Default.svg'
                 : hasCapital
@@ -67,23 +44,17 @@
                 : passwordBlur
                 ? 'assets/svg/StateKey/NotAllowed.svg'
                 : 'assets/svg/StateKey/Default.svg'
-            "
-            class="stateImage"
-          />
-          <h2
-            class="text-2xs"
-            [ngClass]="{
+            " class="stateImage" />
+          <h2 class="text-2xs" [ngClass]="{
               'default-text': !passwordInput || (!hasCapital && !passwordBlur),
               'valid-text': passwordInput && hasCapital,
               'error-text': passwordInput && !hasCapital && passwordBlur
-            }"
-          >
+            }">
             Capital letter
           </h2>
         </div>
         <div class="req-item">
-          <img
-            [src]="
+          <img [src]="
               !passwordInput
                 ? 'assets/svg/StateKey/Default.svg'
                 : hasNumber
@@ -91,18 +62,31 @@
                 : passwordBlur
                 ? 'assets/svg/StateKey/NotAllowed.svg'
                 : 'assets/svg/StateKey/Default.svg'
-            "
-            class="stateImage"
-          />
-          <h2
-            class="text-2xs"
-            [ngClass]="{
+            " class="stateImage" />
+          <h2 class="text-2xs" [ngClass]="{
               'default-text': !passwordInput || (!hasCapital && !passwordBlur),
               'valid-text': passwordInput && hasNumber,
               'error-text': passwordInput && !hasNumber && passwordBlur
-            }"
-          >
+            }">
             Number
+          </h2>
+        </div>
+        <div class="req-item">
+          <img [src]="
+              !passwordInput
+                ? 'assets/svg/StateKey/Default.svg'
+                : minLength
+                ? 'assets/svg/StateKey/Success.svg'
+                : passwordBlur
+                ? 'assets/svg/StateKey/NotAllowed.svg'
+                : 'assets/svg/StateKey/Default.svg'
+            " class="stateImage" />
+          <h2 class="text-2xs" [ngClass]="{
+              'default-text': !passwordInput || (!minLength && !passwordBlur),
+              'valid-text': passwordInput && minLength,
+              'error-text': passwordInput && !minLength && passwordBlur
+            }">
+            Min 6 characters
           </h2>
         </div>
       </div>
@@ -111,53 +95,31 @@
         <h2 class="text-sm">Confirm password</h2>
       </div>
 
-      <input
-        type="password"
-        [(ngModel)]="confirmPasswordInput"
-        name="confirmPassword"
-        placeholder="**********"
-        class="text-xs"
-        (input)="checkPasswordsMatch()"
-        (focus)="submitted = false"
-      />
+      <input #inputPassword2 type="password" [(ngModel)]="confirmPasswordInput" name="confirmPassword"
+        placeholder="**********" class="text-xs" (input)="checkPasswordsMatch()" (focus)="submitted = false"
+        (keydown.enter)="handleEnterOnPassword2($event);" />
 
       <div class="req-item">
-        <img
-          [src]="
+        <img [src]="
             !confirmPasswordInput
               ? 'assets/svg/StateKey/Default.svg'
               : passwordsMatch
               ? 'assets/svg/StateKey/Success.svg'
               : 'assets/svg/StateKey/NotAllowed.svg'
-          "
-          class="stateImage"
-        />
-        <h2
-          class="text-2xs"
-          [ngClass]="{
+          " class="stateImage" />
+        <h2 class="text-2xs" [ngClass]="{
             'default-text': !confirmPasswordInput,
             'valid-text': confirmPasswordInput && passwordsMatch,
             'error-text': confirmPasswordInput && !passwordsMatch
-          }"
-        >
+          }">
           {{ passwordsMatch ? "Passwords match" : "Passwords do not match" }}
         </h2>
       </div>
 
       <div class="buttonFrame">
-        <app-button
-          label="Back"
-          variant="default"
-          size="medium"
-          [routerLink]="'/login'"
-        ></app-button>
-        <app-button
-          label="Create account"
-          variant="highlight"
-          [state]="isFormValid ? 'active' : 'disabled'"
-          type="submit"
-          size="medium"
-        ></app-button>
+        <app-button label="Back" variant="default" size="medium" [routerLink]="'/login'"></app-button>
+        <app-button label="Create account" variant="highlight" [state]="isFormValid ? 'active' : 'disabled'"
+          type="submit" size="medium"></app-button>
       </div>
     </form>
   </div>
