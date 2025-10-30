@@ -105,6 +105,30 @@
             Number
           </h2>
         </div>
+        <div class="req-item">
+          <img
+            [src]="
+              !passwordInput
+                ? 'assets/svg/StateKey/Default.svg'
+                : minLength
+                ? 'assets/svg/StateKey/Success.svg'
+                : passwordBlur
+                ? 'assets/svg/StateKey/NotAllowed.svg'
+                : 'assets/svg/StateKey/Default.svg'
+            "
+            class="stateImage"
+          />
+          <h2
+            class="text-2xs"
+            [ngClass]="{
+              'default-text': !passwordInput || (!minLength && !passwordBlur),
+              'valid-text': passwordInput && minLength,
+              'error-text': passwordInput && !minLength && passwordBlur
+            }"
+          >
+            Min 6 characters
+          </h2>
+        </div>
       </div>
 
       <div class="inputHeadings">

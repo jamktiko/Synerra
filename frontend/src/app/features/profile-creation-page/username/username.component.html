@@ -22,7 +22,13 @@
   <!--Body-->
   <div class="modal-body">
     <h2 class="text-sm-bold">Choose your username</h2>
-    <input type="text" [(ngModel)]="username" class="form-control" placeholder="Username" (input)="onUsernameInput()" />
+    <input
+      type="text"
+      [(ngModel)]="username"
+      class="form-control"
+      placeholder="Username"
+      (input)="onUsernameInput()"
+    />
     <!-- Tämä siis tulee näkyviin, jos käyttäjätunnus on varattu -->
     <div class="warning-container" *ngIf="errorText">
       <img src="assets/svg/StateKey/NotAllowed.svg" class="stateImage" />
@@ -37,9 +43,20 @@
   <!--Footer-->
   <div class="modal-footer">
     <!--<button class="btn btn-primary" (click)="next()">Next</button>-->
-    <app-button label="Back" icon="ArrowKey/LeftArrow" (click)="closeModal()" iconPosition="left"></app-button>
+    <app-button
+      label="Back"
+      icon="ArrowKey/LeftArrow"
+      (click)="closeModal()"
+      iconPosition="left"
+    ></app-button>
 
-    <app-button label="Next" variant="highlight" iconPosition="right" icon="ArrowKey/RightArrow" (click)="next()"
-      [state]="validUsername && !errorText ? 'active' : 'disabled'"></app-button>
+    <app-button
+      label="Next"
+      variant="highlight"
+      iconPosition="right"
+      icon="ArrowKey/RightArrow"
+      (click)="next()"
+      [state]="validUsername && !errorText ? 'active' : 'disabled'"
+    ></app-button>
   </div>
 </div>
