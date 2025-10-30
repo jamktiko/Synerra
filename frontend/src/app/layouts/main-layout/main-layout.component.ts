@@ -1,5 +1,6 @@
 import { Component, ViewChild, AfterViewInit, effect } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { LoadingPageComponent } from '../../features/loading-page/loading-page.component';
 import { NavbarComponent } from '../../features/navbar/navbar.component';
 import { SocialBarComponent } from '../../features/social-bar/social-bar.component';
 import { NotificationService } from '../../core/services/notification.service';
@@ -8,11 +9,18 @@ import { UserStore } from '../../core/stores/user.store';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/interfaces/user.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, SocialBarComponent],
+  imports: [
+    RouterOutlet,
+    NavbarComponent,
+    SocialBarComponent,
+    LoadingPageComponent,
+    CommonModule,
+  ],
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.css'],
 })
