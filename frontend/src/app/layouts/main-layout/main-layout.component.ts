@@ -32,7 +32,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
     private notificationService: NotificationService,
     private userStore: UserStore,
     private router: Router,
-    private userService: UserService,
+    private userService: UserService
   ) {
     // Checks for every possible login and load case where the user might be at the dashboard. To access the dashboard,
     // user must have authToken that is given when logging in with email. (this is being checked with authStore in app.routes)
@@ -48,6 +48,9 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
         this.router.navigate(['/profile-creation']);
       } else {
         console.log('profile loaded succesfully!');
+        console.log('WebSocket connect in progress...');
+        this.notificationService.initConnection(); // opens notification connection
+        this.userService.initUsersOnlineStatus(); // initializes users online status through websocket-connection
         this.showLoadingPage = false;
       }
     });
@@ -56,9 +59,6 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.loadLoggedInUserData();
-    this.notificationService.initConnection();
-    this.userService.initUsersOnlineStatus();
-    console.log('WebSocket Reconnect in progress...');
   }
   ngAfterViewInit(): void {
     this.navbar.collapsedChange.subscribe((collapsed: boolean) => {
