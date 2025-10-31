@@ -89,7 +89,6 @@ export class UserService {
 
   getMe(): Observable<any> {
     const token = this.authStore.getToken();
-    console.log('TOKENUIUUU', token);
     return this.http.get(`${this.baseUrl}/me`, {
       headers: {
         Authorization: `${token}`,
