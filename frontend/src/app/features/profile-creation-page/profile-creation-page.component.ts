@@ -106,7 +106,7 @@ export class ProfileCreationPageComponent implements OnInit {
   onEnter(event: KeyboardEvent) {
     event.preventDefault();
     if (this.nextBtn?.nativeElement && this.currentStep < 1) {
-      this.nextBtn.nativeElement.querySelector('app-button')?.click();
+      this.nextBtn.nativeElement.click();
     }
   }
 }

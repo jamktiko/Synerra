@@ -30,7 +30,7 @@
       <!--<button class="btn btn-secondary" (click)="back()">Back</button>
     <button class="btn btn-success" (click)="finish()">Finish</button> -->
       <app-button label="Back" icon="ArrowKey/LeftArrow" (click)="back()"></app-button>
-      <app-button label="Next" variant="highlight" iconPosition="right" icon="ArrowKey/RightArrow"
-        [routerLink]="'/dashboard'" (click)="finish()"></app-button>
+      <app-button #nextBtn label="Next" variant="highlight" iconPosition="right" icon="ArrowKey/RightArrow"
+        (click)="finish()"></app-button>
     </div>
   </div>

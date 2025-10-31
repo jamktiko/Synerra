@@ -138,6 +138,7 @@ export class SignupPageComponent {
       },
     });
   }
+
   login() {
     const credentials = {
       email: this.emailInput,
