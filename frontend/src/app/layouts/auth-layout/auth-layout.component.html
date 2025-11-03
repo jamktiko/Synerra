@@ -1,3 +1,7 @@
-<div class="layout">
+<div *ngIf="showLoadingPage" class="loadingPage">
+  <app-loading-page />
+</div>
+
+<div *ngIf="!showLoadingPage" class="layout">
   <router-outlet />
 </div>

@@ -6,6 +6,7 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { ProfileCreationPageComponent } from './features/profile-creation-page/profile-creation-page.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { ProfileGuard } from './core/guards/profile.guard';
 import { SocialBarComponent } from './features/social-bar/social-bar.component';
 import { FindPlayersComponent } from './features/find-players/find-players.component';
 import { ChooseGamePageComponent } from './features/choose-game-page/choose-game-page.component';
@@ -70,7 +71,7 @@ export const routes: Routes = [
       {
         path: 'profile-creation',
         component: ProfileCreationPageComponent,
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard, ProfileGuard],
       },
     ],
   },
