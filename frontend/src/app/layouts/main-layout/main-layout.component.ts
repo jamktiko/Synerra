@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/interfaces/user.model';
 import { CommonModule } from '@angular/common';
+import { timer } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-main-layout',
@@ -27,38 +29,47 @@ import { CommonModule } from '@angular/common';
 export class MainLayoutComponent implements OnInit, AfterViewInit {
   isNavbarCollapsed = false;
   showLoadingPage = false;
+  loggedInUser: User | null = null;
 
   constructor(
     private notificationService: NotificationService,
     private userStore: UserStore,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
   ) {
     // Checks for every possible login and load case where the user might be at the dashboard. To access the dashboard,
     // user must have authToken that is given when logging in with email. (this is being checked with authStore in app.routes)
-    effect(() => {
-      const user = this.userStore.user();
-      if (!user) {
-        // Shows loading page if the userdata isn't loaded yet
-        this.showLoadingPage = true;
-        console.log('loadings');
-      } else if (!user?.Username) {
-        // When the userdata is loaded, if the user hasn't set up the profile (so has no username), they get thrown to the profile-creation page.
-        this.showLoadingPage = false;
-        this.router.navigate(['/profile-creation']);
-      } else {
-        console.log('profile loaded succesfully!');
-        console.log('WebSocket connect in progress...');
-        this.notificationService.initConnection(); // opens notification connection
-        this.userService.initUsersOnlineStatus(); // initializes users online status through websocket-connection
-        this.showLoadingPage = false;
-      }
-    });
   }
   @ViewChild(NavbarComponent) navbar!: NavbarComponent;
 
   ngOnInit(): void {
-    this.loadLoggedInUserData();
+    this.showLoadingPage = true;
+
+    // Updates the userStore to have the most recent user data (basically for confirming that recently created account will load)
+    this.userService.getMe().subscribe({
+      next: (res) => {
+        this.userStore.setUser(res);
+        this.loggedInUser = res;
+        console.log('loggeinusrrrrrr', this.loggedInUser);
+
+        if (this.loggedInUser && !this.loggedInUser.Username) {
+          this.showLoadingPage = false;
+          console.log('EI OO PROFIILIA PENTELE');
+          this.router.navigate(['/profile-creation']);
+        }
+      },
+      error: (err) => {
+        console.log('error loading userdata', err);
+      },
+      complete: () => {
+        console.log('profile loaded succesfully!');
+        this.showLoadingPage = false;
+      },
+    });
+
+    this.notificationService.initConnection();
+    this.userService.initUsersOnlineStatus();
+    console.log('WebSocket Reconnect in progress...');
   }
   ngAfterViewInit(): void {
     this.navbar.collapsedChange.subscribe((collapsed: boolean) => {
@@ -66,15 +77,5 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
     });
 
     this.isNavbarCollapsed = this.navbar.isCollapsed;
-  }
-
-  // Updates the userStore to have the most recent user data (basically for confirming that recently created account will load)
-  loadLoggedInUserData() {
-    this.userService.getMe().subscribe({
-      next: (res) => {
-        this.userStore.setUser(res);
-      },
-      error: (err) => console.error('Error loading logged in users data', err),
-    });
   }
 }
