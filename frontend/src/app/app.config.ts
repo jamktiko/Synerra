@@ -9,17 +9,9 @@ import { importProvidersFrom, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { UserService } from './core/services/user.service';
 import { UserStore } from './core/stores/user.store';
-import { LoadingPageStore } from './core/stores/loadingPage.store';
 
-export function initUsers(
-  userService: UserService,
-  userStore: UserStore,
-  loadingPageStore: LoadingPageStore,
-) {
+export function initUsers(userService: UserService, userStore: UserStore) {
   return () => {
-    // Makes sure the loading page is not on
-    loadingPageStore.setAuthLayoutLoadingPageVisible(false);
-
     userService.getMe().subscribe({
       next: (res) => {
         userStore.setUser(res);
@@ -40,7 +32,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: initUsers,
-      deps: [UserService, UserStore, LoadingPageStore],
+      deps: [UserService, UserStore],
       multi: true,
     },
   ],

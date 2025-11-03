@@ -1,6 +1,6 @@
 .mainFrame {
   /* background-color: black; Tämä on turha */
-  background: linear-gradient(to bottom, #0f0101, #232323);
+  background: linear-gradient(to bottom, #808080, #232323);
   min-height: 100vh;
   gap: 1.25rem;
   padding: 2rem;
