@@ -22,6 +22,7 @@ export class DashboardComponent implements OnInit {
   filteredGames: Game[] = [];
   userGames: any[] = [];
   me: User | null = null;
+  greeting: string = '';
 
   constructor(
     private gameService: GameService,
@@ -42,9 +43,23 @@ export class DashboardComponent implements OnInit {
 
   //calls functions on init
   ngOnInit() {
+    this.setGreeting();
     this.loadgames();
   }
 
+  setGreeting() {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12) {
+      this.greeting = 'Good morning';
+    } else if (hour >= 12 && hour < 17) {
+      this.greeting = 'Good afternoon';
+    } else if (hour >= 17 && hour < 21) {
+      this.greeting = 'Good evening';
+    } else {
+      this.greeting = 'Good night';
+    }
+  }
   //gets games to the dashboard from endpoint
   loadgames() {
     this.gameService.listGames().subscribe({
@@ -55,7 +70,6 @@ export class DashboardComponent implements OnInit {
         this.sortedGames = [...this.games]
           .filter((game) => Number(game.Popularity) >= 1) // exclude unpopular games
           .sort((a, b) => Number(b.Popularity) - Number(a.Popularity));
-        console.log(this.sortedGames);
         this.filterUserGames();
         console.log('Users played games:', this.userGames);
       },

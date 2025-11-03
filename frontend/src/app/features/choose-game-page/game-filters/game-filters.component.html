@@ -5,16 +5,31 @@
     <input type="text" [formControl]="searchControl" placeholder="Search by game..." />
   </div>
   <div class="filters">
-    <select (change)="onGenreChange($event)" id="game-genre" name="game-genre">
-      <option value="">Select a category</option>
-      <option value="shooter">Shooter</option>
-      <option value="moba">Moba</option>
-      <option value="br">Battle Royale</option>
-      <option value="other">Other</option>
-    </select>
-    <button (click)="onToggleSort()">
-      Sort by Popularity
-    </button>
+    <div class="category-dropdown" [class.open]="genreDropdownOpen">
+      <button type="button" class="category-trigger" (click)="toggleGenreDropdown()"
+        [attr.aria-expanded]="genreDropdownOpen">
+        <span>{{ selectedGenreLabel }}</span>
+        <span class="category-trigger__arrow" aria-hidden="true">▾</span>
+      </button>
+
+      <div class="category-dropdown__list" *ngIf="genreDropdownOpen" role="listbox">
+        <button type="button" class="category-option" *ngFor="let genre of genres"
+          [class.is-active]="selectedGenre === genre.value" (click)="selectGenre(genre.value)" role="option"
+          [attr.aria-selected]="selectedGenre === genre.value">
+          {{ genre.label }}
+        </button>
+      </div>
+
+      <select class="category-native" (change)="onGenreChange($event)" id="game-genre" name="game-genre"
+        [value]="selectedGenre" aria-hidden="true" tabindex="-1">
+        <option *ngFor="let genre of genres" [value]="genre.value">{{ genre.label }}</option>
+      </select>
+    </div>
+    <app-button class="sort-button" [variant]="sortByPopularity ? 'highlight' : 'default'" size="medium"
+      [label]="sortByPopularity ? 'Sorted by Popularity' : 'Sort by Popularity'" (click)="onToggleSort()"
+      [state]="sortByPopularity ? 'active' : undefined" [attr.aria-pressed]="sortByPopularity"
+      aria-label="Toggle sort by popularity">
+    </app-button>
 
   </div>
 </div>

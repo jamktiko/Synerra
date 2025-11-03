@@ -36,8 +36,8 @@ Täysleveä nappi
 
 <button class="btn" [class.btn-default]="variant === 'default'" [class.btn-highlight]="variant === 'highlight'"
   [class.btn-sidebar]="variant === 'sidebar'" [class.btn-sidebar-active]="variant === 'sidebar' && state === 'active'"
-  [class.btn-small]="size === 'small'" [class.btn-medium]="size === 'medium'" [class.btn-large]="size === 'large'"
-  [class.btn-full]="fullWidth" [class.btn-left]="iconPosition === 'left'"
+  [class.btn-xsmall]="size === 'xsmall'" [class.btn-small]="size === 'small'" [class.btn-medium]="size === 'medium'"
+  [class.btn-large]="size === 'large'" [class.btn-full]="fullWidth" [class.btn-left]="iconPosition === 'left'"
   [class.btn-icon-right]="iconPosition === 'right'" [class.btn-active]="state === 'active'"
   [attr.aria-disabled]="state === 'disabled' ? true : null" [disabled]="state === 'disabled'" (click)="navigate()">
 
@@ -53,5 +53,7 @@ Täysleveä nappi
   <ng-container *ngIf="icon && iconPosition === 'right'">
     <img [src]="'assets/svg/' + icon + '.svg'" alt="{{ icon }} icon" class="btn-icon" />
   </ng-container>
+
+
 
 </button>

@@ -6,6 +6,7 @@ import { User } from '../interfaces/user.model';
 import { AuthStore } from '../stores/auth.store';
 import { forkJoin, map } from 'rxjs';
 import { UnreadMessage } from '../interfaces/chatMessage';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,18 +15,76 @@ export class UserService {
   private apiUrl = environment.AWS_USER_URL;
   private baseUrl = environment.AWS_BASE_URL;
 
+  //unread messages subject
   private unreadsSubject = new BehaviorSubject<any[]>([]);
   unreads$ = this.unreadsSubject.asObservable();
 
-  constructor(private http: HttpClient, private authStore: AuthStore) {}
+  // user-subject
+  private usersSubject = new BehaviorSubject<User[]>([]);
+  users$ = this.usersSubject.asObservable();
 
-  getUsers(): Observable<any> {
-    const token = this.authStore.getToken();
-    return this.http.get(`${this.apiUrl}`, {
-      headers: {
-        Authorization: `${token}`,
+  constructor(
+    private http: HttpClient,
+    private authStore: AuthStore,
+    private notificationService: NotificationService,
+  ) {
+    this.initUsersOnlineStatus();
+    // Make users$ always sorted with online users first
+    this.users$ = this.usersSubject.asObservable().pipe(
+      map((users) =>
+        [...users].sort((a, b) => {
+          if (a.Status === 'online' && b.Status !== 'online') return -1;
+          if (a.Status !== 'online' && b.Status === 'online') return 1;
+          return 0; // keep order otherwise
+        }),
+      ),
+    );
+  }
+
+  // adds online status to user-subject
+  public initUsersOnlineStatus() {
+    console.log('INITING USERS ONLINE STATUUS');
+
+    this.getUsers().subscribe({
+      next: (res) => {
+        const initialUsers = res.users || [];
+        console.log('Fetched initial users:', initialUsers);
+
+        // Set initial users
+        this.usersSubject.next(initialUsers);
+
+        // DEBUG: check if NotificationService works
+        this.notificationService.userStatus$.subscribe({
+          next: (statusMsg) => {
+            console.log('Received status message from WebSocket:', statusMsg);
+            if (!statusMsg) return;
+
+            const updatedUsers = this.usersSubject.value.map((user) => ({
+              ...user,
+              Status:
+                statusMsg.userId === user.UserId
+                  ? statusMsg.status
+                  : user.Status || 'offline',
+            }));
+
+            // user subject gets the updated users
+            this.usersSubject.next(updatedUsers);
+            console.log('Updated users with status:', updatedUsers);
+          },
+          error: (err) =>
+            console.error('Error in userStatus$ subscription:', err),
+        });
       },
+      error: (err) => console.error('Error fetching users:', err),
     });
+  }
+  getUsers(): Observable<{ users: User[] }> {
+    const token = this.authStore.getToken();
+    return this.http
+      .get<{ users: User[] }>(`${this.apiUrl}`, {
+        headers: { Authorization: `${token}` },
+      })
+      .pipe(tap((res) => this.usersSubject.next(res.users)));
   }
 
   getMe(): Observable<any> {
@@ -66,7 +125,7 @@ export class UserService {
         headers: {
           Authorization: `${token}`, // add "Bearer " if using JWT
         },
-      }
+      },
     );
   }
 
@@ -81,7 +140,7 @@ export class UserService {
 
   filterUsers(filters: {
     languages?: string[];
-    onlineStatus?: string;
+    Status?: string;
     games?: string[];
   }): Observable<any> {
     return this.http.post(`${this.apiUrl}/filter`, filters);
@@ -90,7 +149,7 @@ export class UserService {
   getUsersByUsernameAndFilters(filters: {
     username?: string;
     languages?: string[];
-    onlineStatus?: string;
+    Status?: string;
     games?: string[];
   }) {
     const { username, ...otherFilters } = filters;
@@ -112,7 +171,7 @@ export class UserService {
         }
         // Otherwise just return filtered results
         return filterRes.users;
-      })
+      }),
     );
   }
 
@@ -125,8 +184,7 @@ export class UserService {
       .pipe(
         tap((res: any) => {
           this.unreadsSubject.next(res); //Push to stream
-          console.log('STREAMI', this.unreadsSubject);
-        })
+        }),
       );
   }
 
@@ -153,7 +211,11 @@ export class UserService {
       .pipe(
         tap(() => {
           this.refreshUnreads();
-        })
+        }),
       );
+  }
+
+  refreshUsers(): void {
+    this.getUsers().subscribe(); // triggers next() via the tap
   }
 }

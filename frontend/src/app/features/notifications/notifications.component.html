@@ -1,92 +1,188 @@
 <div class="notification-wrapper">
-  <button class="notification-bell" (click)="toggleDropdown()">
+  <button class="notification-bell" (click)="toggleDropdown()" aria-haspopup="dialog"
+    [attr.aria-expanded]="showDropdown">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
       <path
         d="M8 16a2 2 0 0 0 1.985-1.75H6.015A2 2 0 0 0 8 16zm.104-14a4.002 4.002 0 0 1 3.978 3.001c.12.388.23.833.327 1.342.14.688.21 1.293.21 1.92v2.5l.9 1.2a.5.5 0 0 1-.4.8H3.861a.5.5 0 0 1-.4-.8l.9-1.2v-2.5c0-.627.07-1.232.21-1.92.097-.509.207-.954.327-1.342A4.002 4.002 0 0 1 7.896 2z" />
     </svg>
     <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
   </button>
+</div>
 
-  <!-- NON-REACTIVE CHAT NOTIFICATIONS -->
-  <div class="notifications-dropdown" *ngIf="showDropdown">
-    <div *ngFor="let msg of unreads" class="notification-item" (click)="userClicked(msg.SenderId)">
-      <img [src]="msg.ProfilePicture" alt="avatar" class="avatar" />
-      <div class="message-info">
-        <div class="sender">{{ msg.SenderUsername }}</div>
-        <div class="content">{{ msg.Content }}</div>
-        <div class="content">{{ msg.Timestamp | date:'short' }}</div>
+<!-- Inline version if host container is not defined -->
+<ng-container *ngIf="showDropdown && !inlineHost">
+  <ng-container *ngTemplateOutlet="panelTemplate; context: dropdownContext"></ng-container>
+</ng-container>
+
+<ng-template #panelTemplate let-inline="inline">
+  <div class="notifications-panel" [class.notifications-dropdown]="!inline" [class.notifications-inline]="inline"
+    [attr.role]="inline ? 'region' : 'dialog'" [attr.aria-label]="inline ? null : 'Notifications panel'">
+    <div class="panel-header">
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab tab-messages" role="tab" [class.active]="activeTab === 'messages'"
+          [attr.aria-selected]="activeTab === 'messages'" (click)="setActiveTab('messages', $event)"
+          [attr.aria-label]="'Messages (' + messageTabCount + ')'">
+          <span class="tab-main">
+            <span class="tab-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20" class="icon-envelope">
+                <rect x="3" y="6.5" width="14" height="9" rx="2" class="envelope-body"></rect>
+                <path d="M3 7l7 5.5L17 7" class="envelope-fold"></path>
+                <path d="M3 7l7-4 7 4" class="envelope-flap"></path>
+              </svg>
+            </span>
+            <span class="tab-label">Messages</span>
+          </span>
+          <span class="tab-count" aria-hidden="true">{{ messageTabCount }}</span>
+        </button>
+        <button type="button" class="tab tab-requests" role="tab" [class.active]="activeTab === 'requests'"
+          [attr.aria-selected]="activeTab === 'requests'" (click)="setActiveTab('requests', $event)"
+          [attr.aria-label]="'Requests (' + requestTabCount + ')'">
+          <span class="tab-main">
+            <span class="tab-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20" class="icon-profile">
+                <circle cx="10" cy="7" r="3" class="profile-head"></circle>
+                <path d="M4 16c0-3 2.5-5 6-5s6 2 6 5v1H4z" class="profile-body-fill"></path>
+                <path d="M4 16c0-3 2.5-5 6-5s6 2 6 5" class="profile-body-line"></path>
+              </svg>
+            </span>
+            <span class="tab-label">Requests</span>
+          </span>
+          <span class="tab-count" aria-hidden="true">{{ requestTabCount }}</span>
+        </button>
       </div>
+      <button class="mark-read icon-toggle" *ngIf="activeTab === 'messages' && (unreads.length || notifications.length)"
+        (click)="markAllAsRead()" [attr.aria-label]="'Mark all as read (' + unreads.length + ')'">
+        <span class="icon-wrapper" aria-hidden="true">
+          <svg viewBox="0 0 20 20" class="icon-trash">
+            <path d="M6 6v8c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V6" class="trash-body"></path>
+            <path d="M4 6h12" class="trash-lid"></path>
+            <path d="M8 6V4h4v2" class="trash-handle"></path>
+          </svg>
+        </span>
+        <span class="sr-only">Mark all read ({{ unreads.length }})</span>
+      </button>
+      <button class="mark-read icon-toggle"
+        *ngIf="activeTab === 'requests' && (pendingRequests.length || friendRequestNotifications.length)"
+        (click)="markRequestsAsRead()" [attr.aria-label]="'Mark all as read (' + unreads.length + ')'">
+        <span class="icon-wrapper" aria-hidden="true">
+          <svg viewBox="0 0 20 20" class="icon-trash">
+            <path d="M6 6v8c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V6" class="trash-body"></path>
+            <path d="M4 6h12" class="trash-lid"></path>
+            <path d="M8 6V4h4v2" class="trash-handle"></path>
+          </svg>
+        </span>
+        <span class="sr-only">Mark all read ({{ unreads.length }})</span>
+      </button>
     </div>
 
-
-    <!-- REACTIVE WEBSOCKET NOTIFICATIONS FOR CHAT MESsAGES -->
-    <div *ngFor="let notification of notifications">
-      <div *ngIf="notification.type === 'newMessage'" class="notification-item"
-        (click)="userClicked(notification.senderId)">
-        <img [src]="notification.profilePicture" alt="avatar" class="avatar" />
-        <div class="message-info">
-          <div class="sender">{{ notification.senderUsername }}</div>
-          <div class="content">{{ notification.content }}</div>
-          <div class="content">{{ notification.timestamp | date:'short' }}</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- REACTIVE WEBSOCKET NOTIFICATIONS FOR FRIEND REQUESTS -->
-    <div *ngFor="let notification of notifications">
-      <div *ngIf="
-  notification.type === 'friend_request' ||
-  notification.type === 'friend_request_accepted' ||
-  notification.type === 'friend_request_declined'
-" class="notification-item">
-        <img [src]="notification.fromPicture || '/assets/svg/user-avatar-placeholder.svg'" alt="avatar"
-          class="avatar" />
-        <div class="message-info">
-          <div class="content">{{ notification.message }}</div>
-          <div *ngIf="notification.type === 'friend_request'" class="friend-actions">
-            <button class="btn btn-success btn-sm" (click)="acceptRequest(notification.fromUserId)"
-              (click)="clearRequest(notification.fromUserId)">Accept</button>
-            <button class="btn btn-danger btn-sm" (click)="declineRequest(notification.fromUserId)"
-              (click)="clearRequest(notification.fromUserId)">Decline</button>
+    <div class="panel-body">
+      <!-- Recent chat messages -->
+      <div class="section" *ngIf="activeTab === 'messages' && unreads.length">
+        <div class="section-title">Recent messages</div>
+        <div *ngFor="let msg of unreads" class="notification-item" (click)="userClicked(msg.SenderId)">
+          <img [src]="msg.ProfilePicture" alt="avatar" class="avatar" />
+          <div class="message-info">
+            <div class="sender">{{ msg.SenderUsername }}</div>
+            <div class="content">{{ msg.Content }}</div>
+            <div class="content timestamp">{{ msg.Timestamp | date: 'short' }}</div>
           </div>
-          <div *ngIf=" notification.type==='friend_request_accepted' ||
-              notification.type==='friend_request_declined'" class=" friend-actions">
-            <button class="btn btn-success btn-sm" (click)="clearRequest(notification.fromUserId)">Clear</button>
+        </div>
+      </div>
+
+      <!-- Live message notifications -->
+      <div class="section" *ngIf="activeTab === 'messages' && messageNotifications.length">
+        <div class="section-title" *ngIf="unreads.length">Live updates</div>
+        <div *ngFor="let notification of messageNotifications" class="notification-item"
+          (click)="userClicked(notification.senderId)">
+          <img [src]="notification.profilePicture" alt="avatar" class="avatar" />
+          <div class="message-info">
+            <div class="sender">{{ notification.senderUsername }}</div>
+            <div class="content">{{ notification.content }}</div>
+            <div class="content timestamp">{{ notification.timestamp | date: 'short' }}</div>
           </div>
         </div>
       </div>
-    </div>
 
+      <!-- Non-reactive friend requests -->
+      <div class="section" *ngIf="activeTab === 'requests' && pendingRequests.length">
+        <div class="section-title">Friend requests</div>
+        <div *ngFor="let req of pendingRequests" class="notification-item friend-request">
+          <img [src]="req.SenderPicture || '/assets/svg/user-avatar-placeholder.svg'" alt="avatar" class="avatar" />
 
-    <!-- NON-REACTIVE FRIEND REQUEST NOTIFICATIONS -->
-    <div *ngFor="let req of pendingRequests" class="notification-item">
-      <img [src]="req.SenderPicture || '/assets/svg/user-avatar-placeholder.svg'" alt="avatar" class="avatar" />
-      <div *ngIf="req.Status === 'PENDING'" class="message-info">
-        <div class="sender">{{ req.SenderUsername }}</div>
-        <div class="content">sent you a friend request</div>
-        <div class="friend-actions">
-          <button class="btn btn-success btn-sm" (click)="acceptRequest(req.SenderId)">Accept</button>
-          <button class="btn btn-danger btn-sm" (click)="declineRequest(req.SenderId)">Decline</button>
+          <!-- Pending request -->
+          <div *ngIf="req.Status === 'PENDING' || !req.Status" class="message-info">
+            <div class="sender">{{ req.SenderUsername }}</div>
+            <div class="content">sent you a friend request
+            </div>
+            <div class="friend-actions">
+              <app-button label="Accept" size="xsmall" variant="highlight" (click)="acceptRequest(req.SenderId)">
+              </app-button>
+              <app-button label="Decline" size="xsmall" (click)="declineRequest(req.SenderId)">
+              </app-button>
+            </div>
+          </div>
+
+          <!-- Accepted request -->
+          <div *ngIf="req.Status === 'ACCEPTED'" class="message-info">
+            <div class="sender">{{ req.SenderUsername }}</div>
+            <div class="content">accepted your friend request</div>
+            <div class="friend-actions">
+              <app-button label="Clear" size="xsmall" variant="highlight"
+                (click)="clearRequest(req.SenderId)"></app-button>
+            </div>
+          </div>
+
+          <!-- Declined request -->
+          <div *ngIf="req.Status === 'DECLINED'" class="message-info">
+            <div class="sender">{{ req.SenderUsername }}</div>
+            <div class="content">declined your friend request</div>
+            <div class="friend-actions">
+              <app-button label="Clear" size="xsmall" variant="highlight" (click)="clearRequest(req.SenderId)">
+              </app-button>
+            </div>
+          </div>
         </div>
       </div>
-      <div *ngIf="req.Status === 'ACCEPTED'" class="message-info">
-        <div class="sender">{{ req.SenderUsername }}</div>
-        <div class="content">accepted your friend request</div>
-        <div class="friend-actions">
-          <button class="btn btn-success btn-sm" (click)="clearRequest(req.SenderId)">Clear</button>
-        </div>
-      </div>
-      <div *ngIf="req.Status === 'DECLINED'" class="message-info">
-        <div class="sender">{{ req.SenderUsername }}</div>
-        <div class="content">declined your friend request</div>
-        <div class="friend-actions">
-          <button class="btn btn-success btn-sm" (click)="clearRequest(req.SenderId)">Clear</button>
-        </div>
-      </div>
-    </div>
 
-    <div *ngIf="unreads.length === 0 && pendingRequests.length === 0 && notifications.length === 0" class="empty-msg">
-      No notifications
+      <!-- Reactive WebSocket notifications for friend requests -->
+      <div class="section" *ngIf="activeTab === 'requests' && friendRequestNotifications.length">
+        <div class="section-title" *ngIf="pendingRequests.length">Live updates</div>
+        <div *ngFor="let notification of friendRequestNotifications" class="notification-item friend-request">
+          <img [src]="notification.fromPicture || '/assets/svg/user-avatar-placeholder.svg'" alt="avatar"
+            class="avatar" />
+          <div class="message-info">
+            <div class="content">{{ notification.message }}</div>
+
+            <!-- Pending friend request actions -->
+            <div *ngIf="notification.type === 'friend_request'" class="friend-actions">
+              <app-button label="Accept" size="xsmall" variant="highlight"
+                (click)="acceptRequest(notification.fromUserId); clearRequest(notification.fromUserId)"></app-button>
+              <app-button label="Decline" size="xsmall"
+                (click)="declineRequest(notification.fromUserId); clearRequest(notification.fromUserId)"></app-button>
+            </div>
+
+            <!-- Accepted or declined friend request -->
+            <div *ngIf="
+                notification.type === 'friend_request_accepted' ||
+                notification.type === 'friend_request_declined'
+              " class="friend-actions">
+              <app-button label="Clear" size="xsmall" variant="highlight"
+                (click)="clearRequest(notification.fromUserId)"></app-button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No notifications -->
+      <div *ngIf="messageTabCount === 0 && requestTabCount === 0" class="empty-msg">
+        No notifications
+      </div>
+      <div *ngIf="activeTab === 'messages' && messageTabCount === 0 && requestTabCount > 0" class="empty-msg">
+        No messages
+      </div>
+      <div *ngIf="activeTab === 'requests' && requestTabCount === 0 && messageTabCount > 0" class="empty-msg">
+        No requests
+      </div>
     </div>
   </div>
-</div>
+</ng-template>

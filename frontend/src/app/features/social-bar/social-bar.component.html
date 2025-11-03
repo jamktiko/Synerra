@@ -1,33 +1,40 @@
-<div class="social-floating">
+<div class="social-floating" [class.notifications-open]="notificationsOpen">
 
   <!-- Header -->
   <div class="header">
     <div class="top-socialbar">
       <div class="social-text">Social</div>
-      <app-notifications></app-notifications>
+      <app-notifications [inlineHost]="inlineHost" [inlineHostElement]="inlineHostElement"
+        (dropdownChanged)="onNotificationsToggle($event)"></app-notifications>
     </div>
-    <div class="linebreak-horizontal-child"></div>
+    <div class="linebreak-horizontal-child" [class.linebreak-hidden]="notificationsOpen"></div>
 
   </div>
+
+  <div class="notifications-inline-host" #notificationsHost [class.is-active]="notificationsOpen"></div>
 
   <!-- Online players summary -->
   <div class="chatrooms-sum-wrapper">
     <div class="chatrooms-sum">
       <b class="my-chatrooms-container">
-        <span>PLAYERS ONLINE - </span>
-        <span class="sum">{{ (users$ | async)?.length }}</span>
+        <span>FRIENDS ONLINE - </span>
+        <span class="sum">{{ (onlineUsers$ | async)?.length }}</span>
       </b>
     </div>
   </div>
 
   <!-- Player list -->
-  <div class="friends-container">
+  <div class="friends-container" [class.shifted]="notificationsOpen">
     <div class="players">
-      <div class="player-card" *ngFor="let user of users$ | async" (click)="userClicked(user.UserId)">
-        <img class="acount-icon" [src]="user.ProfilePicture" alt="Player Avatar" />
-        <div class="player-name">{{ user.Username }}</div>
-        <div class="status">
-          <!-- statuksen kuva, jos halutaan -->
+      <div *ngFor="let user of users$ | async" (click)="userClicked(user.UserId)">
+        <div class="player-card">
+          <img class="acount-icon" [src]="user?.ProfilePicture ? user.ProfilePicture : 'assets/svg/Acount.svg'"
+            alt="Player Avatar" />
+          <div class="player-name">{{ user.Username }}</div>
+          <div class="status" [class.online]="user.Status==='online'" [class.offline]="user.Status!=='online'">
+            <span class="status-pulse"></span>
+            <span class="status-dot"></span>
+          </div>
         </div>
       </div>
     </div>

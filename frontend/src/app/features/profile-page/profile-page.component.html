@@ -1,9 +1,8 @@
 <div class="layout">
-  <div class="social-menu">
-    <app-profile />
-
-  </div>
-  <div class="social-floating">
-    <app-social-bar />
+  <div class="mid-container">
+    <app-profile-header [user]="user" [isOwnProfile]="isOwnProfile" [isFriend]="isFriend"
+      [genrePopularity]="genrePopularity" [completeGames]="completeGames"></app-profile-header>
+    <app-profile-content [user]="user" [isOwnProfile]="isOwnProfile" [isFriend]="isFriend"
+      (gamesLoaded)="onGamesLoaded($event)"></app-profile-content>
   </div>
 </div>

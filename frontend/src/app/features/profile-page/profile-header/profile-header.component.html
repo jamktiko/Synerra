@@ -1,0 +1,58 @@
+<div class="profile-header-container">
+  <div class="header-content" *ngIf="user">
+    <!-- Avatar Section -->
+    <div class="avatar-section">
+      <div class="avatar-wrapper">
+        <img [src]="user.ProfilePicture || 'assets/svg/Acount.svg'" alt="Profile picture" class="avatar" />
+      </div>
+    </div>
+
+    <!-- User Info Section -->
+    <div class="user-info-section">
+      <div class="user-main-info">
+        <h1 class="username">{{ user.Username }}</h1>
+        <span *ngIf="isFriend">Friend</span>
+        <div class="joined-date">
+          <span>Joined:</span>
+          <span class="date">{{ ((user.CreatedAt ?? 0) * 1000) | date:'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="description-section">
+        <p class="description" [class.expanded]="showFullDescription">
+          {{ user.Bio || 'No description yet.' }}
+        </p>
+        <button class="show-more-btn" (click)="toggleDescription()" *ngIf="user.Bio && user.Bio.length > 150">
+          {{ showFullDescription ? 'show less' : 'show more' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Action Buttons Section -->
+    <div class="actions-section">
+      <div *ngIf="isOwnProfile" class="action-buttons">
+        <button class="social-badge" (click)="onEditProfile()" aria-label="Edit profile" title="Edit profile">
+          <img src="assets/svg/edit-icon.svg" alt="Edit" class="profilesvg" />
+        </button>
+        <button class="social-badge" (click)="onUploadPhoto()" aria-label="Upload photo" title="Upload profile picture">
+          <img src="assets/svg/upload-icon.svg" alt="Upload" class="profilesvg" />
+        </button>
+      </div>
+      <div *ngIf="!isOwnProfile" class="action-buttons">
+        <button class="social-badge" *ngIf="!isFriend" (click)="addFriend(user)" aria-label="Add friend"
+          title="Add as friend">
+          <img src="/assets/svg/Add user.svg" alt="addfriend" class="profilesvg">
+        </button>
+        <button class="social-badge" (click)="userClicked(user.UserId)" aria-label="Start chat" title="Start chat">
+          <img src="/assets/svg/NoMessage.svg" alt="addfriend" class="profilesvg">
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Section: Social Badge -->
+
+
+
+  </div>
+</div>

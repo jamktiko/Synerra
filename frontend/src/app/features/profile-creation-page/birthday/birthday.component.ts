@@ -1,4 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
@@ -12,9 +20,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './birthday.component.html',
   styleUrl: './birthday.component.css',
 })
-export class BirthdayComponent {
+export class BirthdayComponent implements OnInit {
   //Input so that it gets the profile data from the previous modal
   @Input() profile: Partial<User> = {};
+
   // Output for the profileUpdate so that it can be used in the next modal too
   @Output() profileUpdate = new EventEmitter<Partial<User>>();
   languages: Language[] = [
@@ -31,7 +40,25 @@ export class BirthdayComponent {
     { code: 'fi', name: 'Finnish' },
     { code: 'sv', name: 'Swedish' },
   ];
+  // Acts as the current selected bday
+  selectedBirthday: string | null = null;
+
   selectedLanguages: string[] = [];
+
+  ngOnInit() {
+    // If the profile.birthday is Date, set selectedBirthday as a string of that date
+    if (this.profile.Birthday instanceof Date && this.profile.Birthday) {
+      // A quick AI conversion to get the string date in the right form
+      const yyyy = this.profile.Birthday.getFullYear();
+      const mm = String(this.profile.Birthday.getMonth() + 1).padStart(2, '0');
+      const dd = String(this.profile.Birthday.getDate()).padStart(2, '0');
+      this.selectedBirthday = `${yyyy}-${mm}-${dd}`;
+    }
+
+    if (this.profile?.Languages?.length) {
+      this.selectedLanguages = [...this.profile.Languages];
+    }
+  }
 
   constructor(private modalRef: NgbActiveModal) {}
 
@@ -51,7 +78,7 @@ export class BirthdayComponent {
 
   get hasDate(): boolean {
     // true when date has been selected in the date input
-    return !!this.profile.Birthday; // converts the value: boolean
+    return !!this.selectedBirthday; // converts the value: boolean
   }
 
   get canProceed(): boolean {
@@ -62,8 +89,8 @@ export class BirthdayComponent {
   next() {
     // Add birthday and languages to profile
     // Convert string to Date if necessary
-    if (typeof this.profile.Birthday === 'string' && this.profile.Birthday) {
-      this.profile.Birthday = new Date(this.profile.Birthday);
+    if (typeof this.selectedBirthday === 'string' && this.selectedBirthday) {
+      this.profile.Birthday = new Date(this.selectedBirthday);
     }
     this.profile.Languages = [...this.selectedLanguages];
     console.log(this.profile);
@@ -73,5 +100,17 @@ export class BirthdayComponent {
 
   back() {
     this.modalRef.dismiss('back');
+  }
+
+  // Same enter-key check as in the username component
+  @ViewChild('nextBtn', { read: ElementRef }) nextBtn!: ElementRef;
+
+  handleEnter(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter') {
+      keyboardEvent.preventDefault();
+      this.nextBtn.nativeElement.click();
+    }
+    keyboardEvent.preventDefault();
   }
 }

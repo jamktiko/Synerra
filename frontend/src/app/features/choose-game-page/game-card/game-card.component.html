@@ -1,7 +1,20 @@
-<div class="card" (click)="selectGame(game)">
-  <img [src]="game.Img_url" class="card-img-top" alt="Game picture" />
+<div class="card" (click)="selectGame(game)" aria-label="Select game" [attr.aria-label]="game.Name"
+  [attr.title]="game.Name">
+  <div class="card-img-wrapper">
+
+    <img [src]="game.Img_url" alt="{{ game.Name }}" loading="lazy" class="card-img-top">
+    <button class="fav-button" (click)="toggleFavourite($event)" [attr.aria-label]="'Add '+game.Name+ ' to favourites'"
+      [attr.title]="'Add '+game.Name+ ' to favourites'">
+      {{ isFavourite ? '★' : '☆' }}
+    </button>
+
+  </div>
+
   <div class="card-body">
+
     <div class="card-title">{{ game.Name }}</div>
     <div class="card-text">Genre: {{ game.Genre }}</div>
+
+
   </div>
 </div>

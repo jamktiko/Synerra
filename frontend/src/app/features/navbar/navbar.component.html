@@ -9,7 +9,8 @@
     </div>
 
     <button type="button" class="user-profile" (click)="onUserClick()" aria-label="User menu">
-      <img class="avatar" [src]="user?.ProfilePicture" alt="User avatar" />
+      <img class="avatar" [src]="user?.ProfilePicture ? user?.ProfilePicture : 'assets/svg/Acount.svg'"
+        alt="User avatar" />
       <div class="user-info">
         <span class="user-name">{{ user?.Username }}</span>
         <span class="user-email">{{ user?.Email }}</span>
@@ -21,11 +22,39 @@
 
   <!-- Navigointilinkit -->
   <div class="nav-links">
-    <a *ngFor="let item of navItems" class="nav-btn" [routerLink]="item.route" routerLinkActive="active"
-      [routerLinkActiveOptions]="{exact: true}">
-      <img [src]="'assets/svg/' + item.icon" alt="{{ item.label }} icon" />
-      <span>{{ item.label }}</span>
-    </a>
+    <ng-container *ngFor="let item of navItems; trackBy: trackByLabel">
+      <ng-container *ngIf="item.children?.length; else singleNavItem">
+        <div class="nav-group" [class.expanded]="isGroupExpanded(item)">
+          <button type="button" class="nav-group__trigger" [class.active]="isGroupExpanded(item) || isGroupActive(item)"
+            (click)="toggleGroup(item)" [attr.aria-expanded]="isGroupExpanded(item)">
+            <span class="nav-group__icon">
+              <img [src]="getIconPath(item.icon)" [alt]="item.label + ' icon'" />
+            </span>
+            <span class="nav-group__label">{{ item.label }}</span>
+            <span class="nav-group__chevron" aria-hidden="true"></span>
+          </button>
+
+          <div class="nav-submenu" [class.open]="isGroupExpanded(item)" [style.maxHeight]="getSubmenuHeight(item)">
+            <a *ngFor="let child of item.children" class="nav-subitem" [routerLink]="child.route"
+              [queryParams]="child.queryParams || null" routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: child.exact ?? true }">
+              <span class="nav-subitem__icon" *ngIf="child.icon">
+                <img [src]="getIconPath(child.icon)" alt="" aria-hidden="true" />
+              </span>
+              <span class="nav-subitem__label">{{ child.label }}</span>
+            </a>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #singleNavItem>
+        <app-button class="nav-btn" variant="sidebar" size="small" [fullWidth]="true" [label]="item.label"
+          [icon]="item.icon" [routerLink]="item.route" routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: true}" #rla="routerLinkActive"
+          [buttonState]="rla.isActive ? 'active' : undefined">
+        </app-button>
+      </ng-template>
+    </ng-container>
   </div>
 
   <!-- Collapse/Expand toggle painike -->
@@ -40,17 +69,17 @@
   <!-- Alaosa -->
   <div class="bottom-section">
     <div class="divider"></div>
-    <a class="nav-btn logout-btn" (click)="logOut()">
-      <img [src]="'assets/svg/' + logout.icon" alt="{{ logout.label }} icon" />
-      <span>{{ logout.label }}</span>
-    </a>
+    <app-button class="logout-btn" variant="sidebar" size="small" [fullWidth]="true" [label]="logout.label"
+      [icon]="logout.icon" (click)="logOut()">
+    </app-button>
   </div>
+
   <!-- Mobile bottom navbar -->
   <div class="mobile-nav">
     <div class="nav-content">
       <a *ngFor="let item of navItemsMobile" class="nav-icon" [routerLink]="item.route" routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }">
-        <img [src]="'assets/svg/' + item.icon" alt="{{ item.label }} icon" />
+        <img [src]="'assets/svg/' + item.icon + '.svg'" alt="{{ item.label }} icon" />
       </a>
     </div>
   </div>

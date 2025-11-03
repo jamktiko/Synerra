@@ -1,4 +1,8 @@
-<div class="layout" [class.collapsed]="isNavbarCollapsed">
+<div *ngIf="showLoadingPage" class="loadingPage">
+  <app-loading-page />
+</div>
+
+<div *ngIf="!showLoadingPage" class="layout" [class.collapsed]="isNavbarCollapsed">
   <div class="navbar">
     <app-navbar></app-navbar>
   </div>

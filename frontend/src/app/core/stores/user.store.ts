@@ -19,4 +19,9 @@ export class UserStore {
     console.log(this.user);
     return this.user();
   }
+
+  // update user locally and trigger reactivity
+  updateLocalUser(updatedUser: User): void {
+    this.user.set({ ...updatedUser });
+  }
 }

@@ -8,19 +8,19 @@ module.exports.handler = async (event) => {
     const body = event.body ? JSON.parse(event.body) : {};
 
     //parameters in body
-    const { languages, onlineStatus, games } = body;
+    const { languages, Status, games } = body;
 
     // Base query: all users
     let KeyConditionExpression = 'GSI3PK = :pk';
     let ExpressionAttributeValues = { ':pk': 'USER' };
     let ExpressionAttributeNames = {};
     let FilterExpressionParts = [];
-
-    // Filter by onlineStatus
-    if (onlineStatus) {
-      ExpressionAttributeNames['#OnlineStatus'] = 'OnlineStatus';
-      ExpressionAttributeValues[':onlineStatus'] = onlineStatus;
-      FilterExpressionParts.push('#OnlineStatus = :onlineStatus');
+    console.log('Statuuus: ', Status);
+    // Filter by Status
+    if (Status) {
+      ExpressionAttributeNames['#Status'] = 'Status';
+      ExpressionAttributeValues[':Status'] = Status;
+      FilterExpressionParts.push('#Status = :Status');
     }
 
     // Filter by languages (array contains any of the requested languages)
@@ -61,7 +61,7 @@ module.exports.handler = async (event) => {
 
     //send the query with the parameters to DynamoDb
     const result = await doccli.send(new QueryCommand(params));
-
+    console.log(result);
     // if the query succeeds return status code 200 and the data
     return sendResponse(200, { users: result.Items });
   } catch (err) {

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
+import { UserStore } from '../../core/stores/user.store';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { RouterLink, Router } from '@angular/router';
+import { AuthStore } from '../../core/stores/auth.store';
 
 @Component({
   selector: 'app-signup-page',
@@ -22,13 +24,20 @@ export class SignupPageComponent {
   showPassword = false; //the eye svg on input
   passwordsMatch = false;
   correctEmail = false;
+  passwordBlur = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private userStore: UserStore,
+    private authStore: AuthStore,
+    private router: Router,
+  ) {}
 
   checkPasswordReq() {
     const password = this.passwordInput;
     this.hasCapital = /[A-Z]/.test(password); // checks, is there CAPITAL
     this.hasNumber = /\d/.test(password); // checks, is the number
+    this.checkPasswordsMatch(); // re-check if passwords match automatically
   }
 
   checkPasswordsMatch() {
@@ -67,6 +76,10 @@ export class SignupPageComponent {
     this.correctEmail = isValid;
   }
 
+  get minLength(): boolean {
+    return this.passwordInput.length >= 6;
+  }
+
   get isFormValid(): boolean {
     return (
       !this.emailError &&
@@ -74,7 +87,7 @@ export class SignupPageComponent {
       this.hasCapital && // has a capital
       this.hasNumber && // has a number
       this.passwordInput === this.confirmPasswordInput && // is the input + confirm right
-      this.passwordInput.length > 0 // checks, if the input is empty
+      this.minLength
     );
   }
 
@@ -82,7 +95,15 @@ export class SignupPageComponent {
     this.showPassword = !this.showPassword;
   }
 
-  signup() {
+  async signup() {
+    const user = this.userStore.getUser();
+    const loggedIn = this.authStore.isLoggedIn();
+
+    if (user || loggedIn) {
+      await this.authService.logout();
+      console.log('signed out');
+    }
+
     this.submitted = true;
 
     // if (this.passwordInput !== this.confirmPasswordInput) --- Tämä siis se vanha
@@ -117,6 +138,7 @@ export class SignupPageComponent {
       },
     });
   }
+
   login() {
     const credentials = {
       email: this.emailInput,
@@ -134,5 +156,22 @@ export class SignupPageComponent {
         console.error('Login failed:', err);
       },
     });
+  }
+
+  handleEnter(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter') {
+      keyboardEvent.preventDefault();
+    }
+    keyboardEvent.preventDefault();
+  }
+
+  handleEnterOnPassword2(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter') {
+      keyboardEvent.preventDefault();
+      this.signup();
+    }
+    keyboardEvent.preventDefault();
   }
 }

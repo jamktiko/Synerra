@@ -18,17 +18,40 @@ module.exports.handler = async (event) => {
     };
     //sends the query to DynamoDb
     const result = await doccli.send(new QueryCommand(params));
+    const users = result.Items || [];
 
-    // successful response, status code 200
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ users: result.Items }),
-    };
+    // Check online status for each user
+    const usersWithStatus = await Promise.all(
+      users.map(async (user) => {
+        const userId = user.PK.replace('USER#', '');
+        const connectionResult = await doccli.send(
+          new QueryCommand({
+            TableName: process.env.CONNECTION_DB_TABLE,
+            IndexName: 'UserIdIndex', //Query by UserIdIndex
+            KeyConditionExpression: 'userId = :uid',
+            FilterExpression: '#t = :typeVal',
+            ExpressionAttributeNames: { '#t': 'type' },
+            ExpressionAttributeValues: {
+              ':uid': userId,
+              ':typeVal': 'notifications',
+            },
+          })
+        );
+
+        // returns the online status for each user
+        return {
+          ...user,
+          Status: connectionResult.Items?.length ? 'online' : 'offline',
+        };
+      })
+    );
+
+    return sendResponse(200, { users: usersWithStatus });
   } catch (err) {
     console.error(err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: 'Failed to fetch users' }),
-    };
+    return sendResponse(500, {
+      message: 'Failed to fetch users',
+      error: err.message,
+    });
   }
 };

@@ -126,6 +126,11 @@
   border-color: rgba(255, 122, 62, 0.4);
 }
 
+.btn-highlight.btn-active {
+  background: linear-gradient(180deg, #ff7a3e 0%, #e34b0e 100%);
+  border-color: rgba(255, 122, 62, 0.4);
+}
+
 /* Side Navigation bar variant */
 .btn-sidebar {
   background: transparent;
@@ -170,6 +175,13 @@
   padding: 0.5rem 1rem;
 }
 
+.btn-xsmall {
+  font-size: 0.8125rem;
+  min-height: 32px;
+  padding: 0.35rem 0.8rem;
+  gap: 0.4rem;
+}
+
 .btn-medium {
   font-size: 1rem;
 }
@@ -203,7 +215,7 @@
 }
 
 .btn-icon-right {
-  flex-direction: row-reverse;
+  flex-direction: row;
 }
 
 .btn-icon-right .btn-icon {

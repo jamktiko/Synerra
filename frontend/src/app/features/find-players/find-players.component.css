@@ -11,6 +11,7 @@
   box-sizing: border-box;
   position: relative;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.9);
+  overflow-x: hidden;
 }
 
 .users-container::before {
@@ -72,9 +73,13 @@
   }
 
   .main-content {
-    max-width: 100%; /* keskikontti venyy */
+    max-width: 100%;
     width: 100%;
     padding: 0 1rem;
+  }
+
+  .mid-container {
+    padding: 0 1.5rem 2rem;
   }
 
   .users-container {
@@ -97,5 +102,43 @@
       width: 100%;
       margin: 0 0 20px;
     }
+  }
+}
+
+@media (max-width: 700px) {
+  .mid-container {
+    padding: 0 1.25rem 1.75rem;
+    gap: 1.5rem;
+  }
+
+  .users-container {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .users-container {
+    padding: 20px 16px;
+    gap: 28px;
+    column-gap: 24px;
+    row-gap: 32px;
+    border-radius: 16px;
+    overflow-x: hidden;
+  }
+
+  .users-container::before {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .mid-container {
+    padding: 0 1rem 1.5rem;
+  }
+
+  .users-container {
+    padding: 18px 12px;
+    gap: 24px;
+    overflow-x: hidden;
   }
 }

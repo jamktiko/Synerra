@@ -49,7 +49,7 @@ export const routes: Routes = [
         component: ChooseGamePageComponent,
       },
       {
-        path: 'dashboard/profile',
+        path: 'dashboard/profile/:userId', // pass the userId in the route
         canActivate: [AuthGuard],
         component: ProfilePageComponent,
       },
