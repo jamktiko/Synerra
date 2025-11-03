@@ -3,11 +3,13 @@
   box-sizing: border-box;
   max-width: 960px;
 }
+.filters-container {
+  margin: 0 auto; /* Centers element */
+}
 
 .filters-container {
   background: var(--color-dark-gradient);
   border-radius: 20px;
-  margin: 2rem auto 60px; /* gap pelicontaineriin */
   padding: 40px 32px 48px;
   max-width: 1080px;
   text-align: center;
