@@ -10,7 +10,7 @@
   color: var(--color-text-dark);
   box-sizing: border-box;
   font-family: Inter, sans-serif;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
   transition: width 300ms ease, padding 300ms ease;
   z-index: 10000;

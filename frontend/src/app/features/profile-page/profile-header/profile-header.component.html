@@ -35,9 +35,7 @@
         <button class="social-badge" (click)="onEditProfile()" aria-label="Edit profile" title="Edit profile">
           <img src="assets/svg/edit-icon.svg" alt="Edit" class="profilesvg" />
         </button>
-        <button class="social-badge" (click)="onUploadPhoto()" aria-label="Upload photo" title="Upload profile picture">
-          <img src="assets/svg/upload-icon.svg" alt="Upload" class="profilesvg" />
-        </button>
+
       </div>
       <div *ngIf="!isOwnProfile" class="action-buttons">
         <button class="social-badge" *ngIf="!isFriend" (click)="addFriend(user)" aria-label="Add friend"

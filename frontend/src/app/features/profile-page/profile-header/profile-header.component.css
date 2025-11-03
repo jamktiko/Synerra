@@ -154,6 +154,8 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  fill: white;
+  stroke: white;
 }
 
 .btn-icon img {
@@ -200,10 +202,12 @@
   fill: currentColor; /* inherits button text color */
   flex-shrink: 0; /* prevent svg from shrinking */
   transition: transform 0.2s ease;
+  filter: brightness(0) invert(1);
 }
 
 .profilesvg:hover {
   transform: scale(1.1);
+  filter: brightness(0);
 }
 
 .action-buttons {

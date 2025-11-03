@@ -130,7 +130,7 @@
 
       <div class="game-card" *ngFor="let game of completeGames" [attr.aria-label]="game.Name" [attr.title]="game.Name">
         <div class="game-image-container">
-          <img class="game-image" [src]="game.Img_url" [alt]="game.Name" />
+          <img class="game-image" [src]="game.Img_url" [alt]="game.Name" loading="lazy" />
           <button *ngIf="isOwnProfile" class="delete-btn" (click)="onRemoveGame(game.PK)"
             [attr.aria-label]="'Remove '+game.Name+ ' from favourites'"
             [attr.title]="'Remove '+game.Name+ ' from favourites'">

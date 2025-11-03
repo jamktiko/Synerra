@@ -10,8 +10,10 @@
           [ngClass]="{'online': user.Status==='online', 'offline': user.Status!=='online'}"></span>
 
         <!-- Profile picture -->
-        <img *ngIf="user.ProfilePicture" [src]="user.ProfilePicture" class="card-img-top" alt="Profile picture" />
-        <img *ngIf="!user.ProfilePicture" src="assets/svg/Acount.svg" class="card-img-top" alt="Profile picture" />
+        <img *ngIf="user.ProfilePicture" [src]="user.ProfilePicture" class="card-img-top" alt="Profile picture"
+          loading="lazy" />
+        <img *ngIf="!user.ProfilePicture" src="assets/svg/Acount.svg" class="card-img-top" alt="Profile picture"
+          loading="lazy" />
       </div>
 
       <p class="user-name">{{ user.Username }}</p>
