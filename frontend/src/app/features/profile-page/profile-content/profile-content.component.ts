@@ -89,59 +89,38 @@ export class ProfileContentComponent implements OnInit {
   }
   // gets the users favourite games
   private loadGames(): void {
-    if (!this.user?.PlayedGames?.length) return;
+    const playedGames = this.user?.PlayedGames ?? [];
+    if (!playedGames.length) return;
 
-    const gameObservables = this.user.PlayedGames.map((game) =>
-      this.gameService.getGamesByName(game.gameName)
-    );
+    this.sub = this.gameService.listGames().subscribe({
+      next: (allGames: any[]) => {
+        // Map user games to full game objects
+        this.completeGames = playedGames
+          .map((userGame) =>
+            allGames.find(
+              (g) => g.Name_lower === userGame.gameName.toLowerCase()
+            )
+          )
+          .filter(Boolean); // remove any unmatched games
 
-    this.sub = forkJoin(gameObservables).subscribe({
-      next: (results) => {
-        // Flatten API response (unwrap first element if API returns array)
-        this.completeGames = results.map((res, index) => ({
-          ...this.user!.PlayedGames![index],
-          ...(Array.isArray(res) ? res[0] : res), // unwrap if array
-        }));
-        const genrePopularityMap: Record<string, number> = {};
-
+        // Calculate genre popularity
+        const genreCountMap: Record<string, number> = {};
         this.completeGames.forEach((game) => {
           const genre = game.Genre?.toLowerCase() || 'unknown';
-          const popularity = game.Popularity || 0;
-          genrePopularityMap[genre] =
-            (genrePopularityMap[genre] || 0) + popularity;
+          genreCountMap[genre] = (genreCountMap[genre] || 0) + 1;
         });
-        // Call genre frequency calculation
-        const genreStats = this.mapGenresByCount();
+
+        this.genrePopularity = Object.entries(genreCountMap)
+          .sort((a, b) => b[1] - a[1])
+          .map(([genre]) => genre.charAt(0).toUpperCase() + genre.slice(1));
+
         this.gamesLoaded.emit(this.completeGames);
         console.log('Complete games after fetch:', this.completeGames);
       },
-      error: (err) => console.error('Failed to fetch game info:', err),
+      error: (err) => console.error('Failed to fetch all games:', err),
     });
   }
 
-  // get genres from games and map them to array by popularity
-  private mapGenresByCount() {
-    if (!this.completeGames.length) return;
-
-    const genreCountMap: Record<string, number> = {};
-
-    // Count how many times each genre appears
-    this.completeGames.forEach((game) => {
-      const genre = game.Genre?.toLowerCase() || 'unknown';
-      genreCountMap[genre] = (genreCountMap[genre] || 0) + 1;
-    });
-
-    // Convert the object into a sorted array (most played genres first)
-    const sortedGenres = Object.entries(genreCountMap)
-      .map(([genre, count]) => ({ genre, count }))
-      .sort((a, b) => b.count - a.count);
-
-    this.genrePopularity = sortedGenres.map(
-      (g) => g.genre.charAt(0).toUpperCase() + g.genre.slice(1)
-    );
-
-    console.log('Genre frequency map:', sortedGenres);
-  }
   onRemoveGame(pk: string): void {
     const gameId = pk.replace('GAME#', '');
     console.log('DELETING GAME: ', gameId);
@@ -172,5 +151,8 @@ export class ProfileContentComponent implements OnInit {
   ngOnDestroy() {
     this.user = null;
     this.completeGames = [];
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 }

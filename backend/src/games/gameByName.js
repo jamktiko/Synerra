@@ -4,7 +4,7 @@ const { doccli } = require('../ddbconn');
 module.exports.handler = async (event) => {
   try {
     const search = event.pathParameters?.gamename.toLowerCase();
-
+    console.log('SEARCH PARAMS: ', search);
     if (!search) {
       return {
         statusCode: 400,
@@ -23,8 +23,11 @@ module.exports.handler = async (event) => {
       },
     };
 
+    console.log('FULL PARAMS: ', params);
+
     const data = await doccli.send(new QueryCommand(params));
 
+    console.log('DATA: ', data);
     return {
       statusCode: 200,
       body: JSON.stringify(data.Items),
