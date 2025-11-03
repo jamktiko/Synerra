@@ -12,7 +12,7 @@ import { ButtonComponent } from '../../../shared/components/button/button.compon
 @Component({
   selector: 'app-profile-header',
   standalone: true,
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule],
   templateUrl: './profile-header.component.html',
   styleUrl: './profile-header.component.css',
 })

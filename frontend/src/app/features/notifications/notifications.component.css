@@ -526,3 +526,15 @@
 .icon-trash .trash-body {
   transform-origin: 10px 12px;
 }
+
+.notification-item .content {
+  font-size: 13px;
+  color: var(--color-text-default);
+  line-height: 1.4; /* improves readability across multiple lines */
+  white-space: normal; /* allows wrapping */
+  word-break: break-word; /* ensures long words break instead of overflowing */
+  overflow: hidden; /* hides any overflow outside container */
+  flex: 1 1 auto; /* allows content to grow/shrink within flex layout */
+  text-align: left; /* align text consistently */
+  margin: 2px 0; /* optional spacing for multiple lines */
+}

@@ -145,10 +145,24 @@ export class ProfileContentComponent implements OnInit {
   onRemoveGame(pk: string): void {
     const gameId = pk.replace('GAME#', '');
     console.log('DELETING GAME: ', gameId);
+
     this.gameService.removeGame(gameId).subscribe({
       next: (res) => {
         console.log('Game removed successfully:', res);
+
+        // Update local arrays
         this.completeGames = this.completeGames.filter((g) => g.PK !== pk);
+
+        if (this.user?.PlayedGames) {
+          this.user.PlayedGames = this.user.PlayedGames.filter(
+            (g: any) => g.PK !== pk && g.gameId !== gameId
+          );
+        }
+
+        // Push updated user into the signal store
+        if (this.user) {
+          this.userStore.updateLocalUser(this.user);
+        }
       },
       error: (err) => {
         console.error('Failed to remove game:', err);
