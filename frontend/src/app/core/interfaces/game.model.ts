@@ -7,4 +7,5 @@ export interface Game {
   Img_url?: string; // testing.com
   Name?: string; // Minecraft
   Popularity: number; // 0
+  Img_url_webp?: string;
 }
