@@ -1,4 +1,4 @@
-/* Pelaajalista */
+/* Pelilista */
 .games-container {
   display: flex;
   flex-wrap: wrap;
@@ -30,13 +30,13 @@
 
 .layout {
   display: flex;
-  height: 100vh;
+  /* height: 100vh; */
   justify-content: center;
   position: relative;
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: flex-start;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .mid-container {
@@ -49,10 +49,10 @@
   justify-content: flex-start;
   flex-direction: column;
   align-items: stretch;
-  height: calc(100vh - 7.2%);
+  /* height: calc(100vh - 7.2%); */
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  /* overflow-y: auto;
+  overflow-x: hidden; */
   padding-right: 1.5%;
 }
 
