@@ -217,7 +217,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   get requestTabCount(): number {
     return (
-      (this.pendingRequests?.length || 0) + this.friendRequestNotifications.length
+      (this.pendingRequests?.length || 0) +
+      this.friendRequestNotifications.length
     );
   }
 
@@ -239,14 +240,42 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   // Mark all messages as read
   markAllAsRead() {
-    if (!this.unreads?.length) return;
-    const roomIds = Array.from(new Set(this.unreads.map((m) => m.RoomId)));
-    // Best-effort: fire requests and refresh; ignore individual failures
-    roomIds.forEach((roomId) => {
-      this.userService.markRoomMessagesAsRead(roomId).subscribe({
-        error: (err) => console.error('Failed to mark room read', roomId, err),
+    // Mark unread messages in rooms as read
+    if (this.unreads?.length) {
+      const roomIds = Array.from(new Set(this.unreads.map((m) => m.RoomId)));
+      roomIds.forEach((roomId) => {
+        this.userService.markRoomMessagesAsRead(roomId).subscribe({
+          error: (err) =>
+            console.error('Failed to mark room read', roomId, err),
+        });
       });
-    });
+    }
+
+    // Clear all message notifications
+    this.notifications = this.notifications.filter(
+      (n) => n.type !== 'newMessage'
+    );
+
+    // Clear unreads
+    this.unreads = [];
+
+    // Close the dropdown
+    this.setDropdownState(false);
+  }
+
+  markRequestsAsRead() {
+    // Remove all friend request notifications from notifications array
+    this.notifications = this.notifications.filter(
+      (n) =>
+        n.type !== 'friend_request' &&
+        n.type !== 'friend_request_accepted' &&
+        n.type !== 'friend_request_declined'
+    );
+
+    // clear pendingRequests if you want to mark them read locally
+    this.pendingRequests = [];
+
+    // Close the dropdown if needed
     this.setDropdownState(false);
   }
 

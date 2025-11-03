@@ -50,8 +50,20 @@
           <span class="tab-count" aria-hidden="true">{{ requestTabCount }}</span>
         </button>
       </div>
-      <button class="mark-read icon-toggle" *ngIf="activeTab === 'messages' && unreads.length"
+      <button class="mark-read icon-toggle" *ngIf="activeTab === 'messages' && (unreads.length || notifications.length)"
         (click)="markAllAsRead()" [attr.aria-label]="'Mark all as read (' + unreads.length + ')'">
+        <span class="icon-wrapper" aria-hidden="true">
+          <svg viewBox="0 0 20 20" class="icon-trash">
+            <path d="M6 6v8c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V6" class="trash-body"></path>
+            <path d="M4 6h12" class="trash-lid"></path>
+            <path d="M8 6V4h4v2" class="trash-handle"></path>
+          </svg>
+        </span>
+        <span class="sr-only">Mark all read ({{ unreads.length }})</span>
+      </button>
+      <button class="mark-read icon-toggle"
+        *ngIf="activeTab === 'requests' && (pendingRequests.length || friendRequestNotifications.length)"
+        (click)="markRequestsAsRead()" [attr.aria-label]="'Mark all as read (' + unreads.length + ')'">
         <span class="icon-wrapper" aria-hidden="true">
           <svg viewBox="0 0 20 20" class="icon-trash">
             <path d="M6 6v8c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V6" class="trash-body"></path>
@@ -98,37 +110,39 @@
           <img [src]="req.SenderPicture || '/assets/svg/user-avatar-placeholder.svg'" alt="avatar" class="avatar" />
 
           <!-- Pending request -->
-        <div *ngIf="req.Status === 'PENDING' || !req.Status" class="message-info">
-          <div class="sender">{{ req.SenderUsername }}</div>
-          <div class="content">sent you a friend request</div>
-          <div class="friend-actions">
-            <app-button label="Accept" size="xsmall" variant="highlight" (click)="acceptRequest(req.SenderId)">
-            </app-button>
-            <app-button label="Decline" size="xsmall" (click)="declineRequest(req.SenderId)">
-            </app-button>
+          <div *ngIf="req.Status === 'PENDING' || !req.Status" class="message-info">
+            <div class="sender">{{ req.SenderUsername }}</div>
+            <div class="content">sent you a friend request
+            </div>
+            <div class="friend-actions">
+              <app-button label="Accept" size="xsmall" variant="highlight" (click)="acceptRequest(req.SenderId)">
+              </app-button>
+              <app-button label="Decline" size="xsmall" (click)="declineRequest(req.SenderId)">
+              </app-button>
+            </div>
           </div>
-        </div>
 
-        <!-- Accepted request -->
-        <div *ngIf="req.Status === 'ACCEPTED'" class="message-info">
-          <div class="sender">{{ req.SenderUsername }}</div>
-          <div class="content">accepted your friend request</div>
-          <div class="friend-actions">
-            <app-button label="Clear" size="xsmall" variant="highlight" (click)="clearRequest(req.SenderId)"></app-button>
+          <!-- Accepted request -->
+          <div *ngIf="req.Status === 'ACCEPTED'" class="message-info">
+            <div class="sender">{{ req.SenderUsername }}</div>
+            <div class="content">accepted your friend request</div>
+            <div class="friend-actions">
+              <app-button label="Clear" size="xsmall" variant="highlight"
+                (click)="clearRequest(req.SenderId)"></app-button>
+            </div>
           </div>
-        </div>
 
-        <!-- Declined request -->
-        <div *ngIf="req.Status === 'DECLINED'" class="message-info">
-          <div class="sender">{{ req.SenderUsername }}</div>
-          <div class="content">declined your friend request</div>
-          <div class="friend-actions">
-            <app-button label="Clear" size="xsmall" variant="highlight" (click)="clearRequest(req.SenderId)">
-            </app-button>
+          <!-- Declined request -->
+          <div *ngIf="req.Status === 'DECLINED'" class="message-info">
+            <div class="sender">{{ req.SenderUsername }}</div>
+            <div class="content">declined your friend request</div>
+            <div class="friend-actions">
+              <app-button label="Clear" size="xsmall" variant="highlight" (click)="clearRequest(req.SenderId)">
+              </app-button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
       <!-- Reactive WebSocket notifications for friend requests -->
       <div class="section" *ngIf="activeTab === 'requests' && friendRequestNotifications.length">
@@ -152,17 +166,15 @@
                 notification.type === 'friend_request_accepted' ||
                 notification.type === 'friend_request_declined'
               " class="friend-actions">
-            <app-button label="Clear" size="xsmall" variant="highlight"
-              (click)="clearRequest(notification.fromUserId)"></app-button>
+              <app-button label="Clear" size="xsmall" variant="highlight"
+                (click)="clearRequest(notification.fromUserId)"></app-button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
       <!-- No notifications -->
-      <div
-        *ngIf="messageTabCount === 0 && requestTabCount === 0"
-        class="empty-msg">
+      <div *ngIf="messageTabCount === 0 && requestTabCount === 0" class="empty-msg">
         No notifications
       </div>
       <div *ngIf="activeTab === 'messages' && messageTabCount === 0 && requestTabCount > 0" class="empty-msg">

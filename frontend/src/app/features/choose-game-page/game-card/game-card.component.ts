@@ -28,6 +28,12 @@ export class GameCardComponent implements OnInit {
     const gameId = this.game.PK.replace('GAME#', '');
     this.currentUser = this.userStore.user();
     this.refreshFavouriteStatus();
+    if (this.game.Img_url) {
+      (this.game as any).Img_url_webp = this.game.Img_url.replace(
+        /\.(jpg|jpeg|png)$/i,
+        '.webp'
+      );
+    }
   }
   private refreshFavouriteStatus() {
     const gameId = this.game.PK.replace('GAME#', '');

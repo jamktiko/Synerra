@@ -17,8 +17,12 @@
 
 .modal-header {
   border: hidden;
-  padding: 2rem 0 0 0;
   justify-content: center;
+  padding: 0.2rem 0 0 0;
+}
+
+.modal-header h1 {
+  font-size: 24px;
 }
 
 .modal-body {
@@ -26,6 +30,43 @@
   height: fit-content;
   padding: 0 1rem 0 1rem;
   flex: 0;
+}
+
+.progress {
+  justify-content: center;
+  width: 100%;
+  gap: 5px;
+  background-color: var(--color-gray);
+  height: fit-content;
+  padding: 0 0 1rem 0;
+  align-items: center;
+}
+
+.done {
+  position: relative;
+  border-radius: 50%;
+  animation: breath 3s ease-in-out infinite;
+}
+
+@keyframes breath {
+  0% {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+  50% {
+    transform: scale(0.97);
+    filter: brightness(0.8);
+  }
+  100% {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+}
+
+.nextStep {
+  color: #f2680d;
+  font-size: 30px;
+  height: fit-content;
 }
 
 .gameCards {
@@ -86,11 +127,11 @@
 }
 
 @media (max-width: 592px) {
-  h1 {
-    font-size: 35px;
+  .progress {
+    display: none;
   }
-  .text-sm {
-    font-size: 14px;
+  h1 {
+    font-size: 27px;
   }
 }
 

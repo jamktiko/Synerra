@@ -1,4 +1,4 @@
-/* Pelaajalista */
+/* Pelilista */
 .games-container {
   display: flex;
   flex-wrap: wrap;
@@ -12,7 +12,6 @@
   position: relative;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.9);
   max-width: 100%;
-  margin-bottom: 40px;
 }
 
 .games-container::before {
@@ -28,32 +27,16 @@
   pointer-events: none;
 }
 
-.layout {
-  display: flex;
-  height: 100vh;
-  justify-content: center;
-  position: relative;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  overflow: hidden;
-}
-
 .mid-container {
-  margin-left: 6%;
-  margin-right: 0;
-  margin-top: 3.6%;
-  margin-bottom: 3.6%;
-  position: relative;
   display: flex;
   justify-content: flex-start;
+  gap: 32px;
   flex-direction: column;
   align-items: stretch;
-  height: calc(100vh - 7.2%);
+  /* height: calc(100vh - 7.2%); */
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 1.5%;
+  /* overflow-y: auto;
+  overflow-x: hidden; */
 }
 
 .mid-container::-webkit-scrollbar {

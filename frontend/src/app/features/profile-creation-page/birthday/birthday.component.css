@@ -31,11 +31,36 @@
 }
 
 .progress {
+  width: 100%;
   justify-content: center;
   gap: 5px;
   background: var(--color-gray);
   height: fit-content;
+  align-items: center;
 }
+
+.done {
+  position: relative;
+  border-radius: 50%;
+
+  animation: breath 3s ease-in-out infinite;
+}
+
+@keyframes breath {
+  0% {
+    transform: scale(1);
+    filter: brightness(1.2);
+  }
+  50% {
+    transform: scale(0.96);
+    filter: brightness(0.8);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1.2);
+  }
+}
+
 .knowledgeText {
   text-align: center;
   padding: 0 4rem 0 4rem;
@@ -47,7 +72,7 @@
 }
 
 .nextStep {
-  color: var(--color-primary);
+  color: #f2680d;
   font-size: 30px;
   height: fit-content;
 }
@@ -62,8 +87,8 @@
 
   /* border */
   background:
-    /* sisäpinta */
-    linear-gradient(var(--color-background)) padding-box,
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 }
 
@@ -72,8 +97,8 @@
   box-shadow: none;
   color: var(--color-text-default);
   background:
-    /* sisäpinta */
-    linear-gradient(var(--color-background)) padding-box,
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
     /* varsinainen reuna*/ var(--color-orange-gradient) border-box;
 }
 .form-control::placeholder {
@@ -126,24 +151,24 @@
   color: var(--color-text-dark);
   border: 1px solid transparent;
   background:
-    /* sisäpinta */
-    linear-gradient(var(--color-background)) padding-box,
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 }
 .btn-outline-primary:active {
   border: 1px solid transparent;
   transition: all 0.2s ease;
   background:
-    /* sisäpinta */
-    linear-gradient(var(--color-background)) padding-box,
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 }
 .btn-outline-primary:focus {
   color: var(--color-text-default);
   border: 1px solid transparent;
   background:
-    /* sisäpinta */
-    linear-gradient(var(--color-background)) padding-box,
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
     /* varsinainen reuna*/ var(--color-orange-gradient) border-box;
 }
 
@@ -156,8 +181,8 @@
   column-gap: 2rem;
 
   background:
-    /* sisäpinta */
-    linear-gradient(var(--color-background)) padding-box,
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 }
 

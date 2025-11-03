@@ -33,6 +33,9 @@ export class ChooseGamePageComponent implements OnInit {
     this.games = [];
   }
 
+  trackByGameId(index: number, game: Game) {
+    return game.PK; // unique identifier for each game
+  }
   // gets games from endpoint
   loadgames() {
     this.gameService.listGames().subscribe({
