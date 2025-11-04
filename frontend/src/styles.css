@@ -152,9 +152,9 @@ body {
   overflow-y: auto;
 }
 
-@supports (height: 100dvh) {
+@supports (height: 99dvh) {
   :root {
-    --viewport-height: 100dvh;
+    --viewport-height: 99dvh;
   }
 }
 
