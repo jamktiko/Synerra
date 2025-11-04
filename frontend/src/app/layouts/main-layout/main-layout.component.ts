@@ -36,10 +36,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
     private userStore: UserStore,
     private router: Router,
     private userService: UserService,
-  ) {
-    // Checks for every possible login and load case where the user might be at the dashboard. To access the dashboard,
-    // user must have authToken that is given when logging in with email. (this is being checked with authStore in app.routes)
-  }
+  ) {}
   @ViewChild(NavbarComponent) navbar!: NavbarComponent;
 
   ngOnInit(): void {
@@ -50,8 +47,9 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
       next: (res) => {
         this.userStore.setUser(res);
         this.loggedInUser = res;
-        console.log('loggeinusrrrrrr', this.loggedInUser);
 
+        // Checks for every possible login and load case where the user might be at the dashboard. To access the dashboard,
+        // user must have authToken that is given when logging in with email. (this is being checked with authStore in app.routes)
         if (this.loggedInUser && !this.loggedInUser.Username) {
           this.showLoadingPage = false;
           console.log('EI OO PROFIILIA PENTELE');

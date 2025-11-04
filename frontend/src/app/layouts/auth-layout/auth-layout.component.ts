@@ -16,6 +16,7 @@ export class AuthLayoutComponent {
 
   constructor(private loadingPageStore: LoadingPageStore) {
     effect(() => {
+      // Tracks the loading page status (used in html)
       this.showLoadingPage = this.loadingPageStore.authLayoutLoadingPage();
     });
   }

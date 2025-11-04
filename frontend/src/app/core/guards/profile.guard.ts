@@ -1,3 +1,5 @@
+// This guard keeps track of if the user has logged in and not made a profile
+
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { UserStore } from '../stores/user.store';
@@ -13,9 +15,9 @@ export class ProfileGuard implements CanActivate {
 
   async canActivate(): Promise<boolean> {
     // show loading page
-    this.loadingPageStore.setAuthLayoutLoadingPageVisible(false);
+    this.loadingPageStore.setAuthLayoutLoadingPageVisible(true);
 
-    // wait up to 2 seconds for user to load
+    // Tries to get the user data, up to 2 seconds
     const start = Date.now();
     while (!this.userStore.user() && Date.now() - start < 2000) {
       await new Promise((r) => setTimeout(r, 100));
