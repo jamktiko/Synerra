@@ -19,8 +19,6 @@ app-main-layout,
   padding: 0;
   width: 100%;
   min-height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
 }
 
 app-root,
@@ -257,6 +255,17 @@ body {
   max-width: 50rem;
   width: 100%; /* pitää sisällön skaalautuvana */
   margin: auto; /*Keskitys*/
+}
+
+@media (max-height: 768px) {
+  html,
+  body,
+  app-root,
+  app-main-layout,
+  .layout.collapsed {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 }
 
 /* tarkoitettu pienemmälle tietokoneruudulle */

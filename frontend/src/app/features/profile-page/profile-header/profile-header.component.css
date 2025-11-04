@@ -1,9 +1,9 @@
 .profile-header-container {
   background: var(--color-dark-gradient);
   border-radius: 20px;
-  margin: 2rem auto 40px;
+  margin: 0 auto;
   padding: 40px 32px;
-  max-width: 1080px;
+  max-width: 1100px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
   position: relative;
@@ -139,7 +139,7 @@
 /* Action Buttons */
 .actions-section {
   display: flex;
-  gap: 12px;
+  margin: auto 0;
   align-items: flex-start;
 }
 
@@ -175,8 +175,6 @@
 
 /* Social Badge */
 .social-badge {
-  padding: 12px 24px;
-
   border-radius: 10px;
   font-weight: 600;
   font-size: 1rem;
@@ -184,8 +182,7 @@
   box-shadow: 0 0 12px rgba(242, 104, 13, 0.3);
   align-self: flex-start;
   height: 50px;
-  display: flex;
-  justify-content: center;
+  width: 120px;
   align-items: center;
   color: var(--color-text-default);
   background: linear-gradient(180deg, #ff7a3e 0%, #e34b0e 100%);
@@ -217,7 +214,11 @@
 }
 
 /* Responsive */
-@media (max-width: 920px) {
+/* 1024-1200px so username and description wouldnt get hidden */
+@media (max-width: 1200px) and (min-width: 1024px), (max-width: 768px) {
+  .profile-header-container {
+    padding: 32px 0px;
+  }
   .header-content {
     grid-template-columns: 1fr;
     gap: 24px;
@@ -235,6 +236,14 @@
     justify-self: center;
   }
 
+  .p.description {
+    text-align: center;
+  }
+
+  .description-section {
+    margin: auto; /* Centers description */
+  }
+
   .username {
     font-size: 1.5rem;
     text-align: center;
@@ -242,6 +251,9 @@
 
   .joined-date {
     justify-content: center;
+  }
+  .action-buttons {
+    flex-direction: row;
   }
 }
 

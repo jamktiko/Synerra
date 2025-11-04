@@ -1,12 +1,17 @@
 /* Player card styles */
 .card {
   position: relative;
-  width: 190px;
-  height: 290px;
   background: linear-gradient(-45deg, #1d1d1d 0%, #414248 50%, #111111 100%);
   color: var(--color-text-default);
   display: flex;
+  height: 320px; /* So usercards would have the same height */
   flex-direction: column;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(#515151, #434343) padding-box,
+    linear-gradient(180deg, #929292 0%, #444444 100%) border-box;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+  text-align: center;
   align-items: flex-start;
   justify-content: flex-end;
   padding: 14px;
@@ -186,11 +191,10 @@
 .actions {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 8px;
   width: 100%;
-  margin-top: 14px;
-  padding: 0 4px;
+  margin: 14px auto 0px auto;
   z-index: 2;
 }
 
