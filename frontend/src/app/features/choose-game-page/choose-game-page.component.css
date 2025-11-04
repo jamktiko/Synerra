@@ -26,13 +26,25 @@
   pointer-events: none;
 }
 
+.layout {
+  display: flex;
+  min-height: var(--viewport-height);
+  height: var(--viewport-height);
+  justify-content: center;
+  position: relative;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
 .mid-container {
   display: flex;
   justify-content: flex-start;
   gap: 32px;
   flex-direction: column;
   align-items: stretch;
-  /* height: calc(100vh - 7.2%); */
+  height: calc(var(--viewport-height) * 0.928);
   flex: 1;
   /* overflow-y: auto;
   overflow-x: hidden; */

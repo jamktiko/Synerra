@@ -5,7 +5,8 @@
   top: 0;
   left: 0;
   width: 14rem;
-  height: 100vh;
+  min-height: var(--viewport-height);
+  height: var(--viewport-height);
   background: var(--color-dark-gradient);
   color: var(--color-text-dark);
   box-sizing: border-box;
@@ -16,12 +17,12 @@
   z-index: 10000;
 }
 
-:host ::ng-deep nav.navigation.collapsed .btn {
-  justify-content: center;
-  gap: 0.25rem;
+:host ::ng-deep nav.navigation.collapsed:not(.expanded-from-collapse) .btn {
+  justify-content: flex-start;
+  gap: 0;
 }
 
-:host ::ng-deep nav.navigation.collapsed .btn .btn-label {
+:host ::ng-deep nav.navigation.collapsed:not(.expanded-from-collapse) .btn .btn-label {
   display: none !important;
 }
 
@@ -46,7 +47,7 @@
 }
 
 /* Collapsed */
-.navigation.collapsed {
+.navigation.collapsed:not(.expanded-from-collapse) {
   width: 80px;
   padding: 1rem 0.5rem;
 }
@@ -60,7 +61,7 @@
   transition: padding 300ms ease;
 }
 
-.navigation.collapsed .top-section {
+.navigation.collapsed:not(.expanded-from-collapse) .top-section {
   padding: 0.5rem 0.5rem 0 0.5rem;
 }
 
@@ -73,7 +74,7 @@
   transition: padding 300ms ease;
 }
 
-.navigation.collapsed .logo-container {
+.navigation.collapsed:not(.expanded-from-collapse) .logo-container {
   padding-left: 0;
 }
 
@@ -86,7 +87,11 @@
   width: 7.5rem;
 }
 
-.navigation.collapsed .logo--big {
+.navigation.collapsed:not(.expanded-from-collapse) .logo--big {
+  display: none;
+}
+
+.navigation.collapsed.expanded-from-collapse .logo--small {
   display: none;
 }
 
@@ -138,14 +143,14 @@
   object-fit: cover;
 }
 
-.navigation.collapsed .user-profile {
+.navigation.collapsed:not(.expanded-from-collapse) .user-profile {
   justify-content: center;
   padding: 0.25rem;
   gap: 0;
   border-color: transparent;
 }
 
-.navigation.collapsed .avatar {
+.navigation.collapsed:not(.expanded-from-collapse) .avatar {
   width: 1.5rem;
   height: 1.5rem;
 }
@@ -158,7 +163,7 @@
   transition: opacity 200ms ease;
 }
 
-.navigation.collapsed .user-info {
+.navigation.collapsed:not(.expanded-from-collapse) .user-info {
   opacity: 0;
   pointer-events: none;
   position: absolute;
@@ -196,7 +201,7 @@
   position: relative;
 }
 
-.navigation.collapsed .nav-links {
+.navigation.collapsed:not(.expanded-from-collapse) .nav-links {
   padding: 0 0.25rem;
 }
 
@@ -210,8 +215,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.9rem 1rem;
+  gap: 0.65rem;
+  padding: 0.75rem 0.9rem;
   background: transparent;
   border: none;
   color: var(--color-text-dark);
@@ -222,7 +227,7 @@
   text-align: left;
   width: 100%;
   border-radius: 6px;
-  min-height: 48px;
+  min-height: 44px;
   transition: color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease,
     background 0.3s ease;
   text-decoration: none;
@@ -290,13 +295,7 @@
 }
 
 /* Active / Hover */
-.nav-btn ::ng-deep .btn:hover {
-  background: transparent;
-  color: var(--color-text-default);
-  box-shadow: 0 6px 18px rgba(34, 34, 34, 0.22);
-  transform: translateY(-1px);
-}
-
+.nav-btn ::ng-deep .btn:hover,
 .nav-btn ::ng-deep .btn.btn-active {
   background: rgba(100, 100, 105, 0.5);
   color: var(--color-text-default);
@@ -325,9 +324,9 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
   width: 100%;
-  padding: 0.9rem 1rem;
+  padding: 0.75rem 0.9rem;
   border-radius: 6px;
   border: none;
   background: transparent;
@@ -371,17 +370,12 @@
   opacity: 1;
 }
 
-.nav-group__trigger:hover {
-  background: transparent;
-  box-shadow: 0 6px 18px rgba(34, 34, 34, 0.22);
-  transform: translateY(-1px);
-  color: var(--color-text-default);
-}
-
+.nav-group__trigger:hover,
 .nav-group__trigger.active {
   background: rgba(100, 100, 105, 0.5);
   color: var(--color-text-default);
   box-shadow: 0 10px 26px rgba(50, 50, 50, 0.35);
+  transform: translateY(-1px);
 }
 
 .nav-group__trigger.active .nav-group__icon img,
@@ -432,7 +426,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  padding-left: 2.6rem;
+  padding-left: 0.4rem;
   max-height: 0;
   opacity: 0;
   overflow: hidden;
@@ -451,8 +445,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.55rem 0.85rem;
+  gap: 0.45rem;
+  padding: 0.4rem 0.55rem 0.4rem 0.65rem;
   border-radius: 6px;
   color: var(--color-text-dark);
   font-size: var(--fs-xs);
@@ -461,21 +455,9 @@
   background: transparent;
 }
 
-.nav-subitem:hover {
-  background: linear-gradient(
-    120deg,
-    rgba(60, 60, 70, 0.35),
-    rgba(30, 30, 36, 0.25)
-  );
-  color: var(--color-text-default);
-}
-
+.nav-subitem:hover,
 .nav-subitem.active {
-  background: linear-gradient(
-    120deg,
-    rgba(157, 157, 157, 0.35),
-    rgba(140, 140, 140, 0.25)
-  );
+  background: rgba(100, 100, 105, 0.5);
   color: var(--color-text-default);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
@@ -508,34 +490,39 @@
   text-overflow: ellipsis;
 }
 
-.navigation.collapsed .nav-btn ::ng-deep .btn {
-  justify-content: center;
-  padding: 0.8rem;
-  gap: 0.25rem;
-  transform: none;
-  min-height: 50px;
-  width: 100%;
-}
-
-.navigation.collapsed .nav-btn ::ng-deep .btn-label {
-  display: none !important;
-}
-
-.navigation.collapsed .nav-group__label,
-.navigation.collapsed .nav-group__chevron {
+.navigation.collapsed:not(.expanded-from-collapse) .nav-group__label,
+.navigation.collapsed:not(.expanded-from-collapse) .nav-group__chevron,
+.navigation.collapsed:not(.expanded-from-collapse) .nav-subitem__label {
   display: none;
 }
 
-.navigation.collapsed .nav-group__trigger {
-  justify-content: center;
-  padding: 0.8rem;
-}
-
-.navigation.collapsed .nav-submenu {
+.navigation.collapsed:not(.expanded-from-collapse) .nav-submenu {
   max-height: 0 !important;
   opacity: 0;
   pointer-events: none;
   padding-left: 0;
+}
+
+.navigation.collapsed:not(.expanded-from-collapse) .nav-btn ::ng-deep .btn {
+  justify-content: flex-start;
+  padding: 0.7rem 0.7rem;
+  gap: 0;
+}
+
+.navigation.collapsed:not(.expanded-from-collapse) .nav-btn ::ng-deep .btn-icon {
+  margin-right: 0;
+}
+
+.navigation.collapsed:not(.expanded-from-collapse) .nav-group__trigger {
+  justify-content: flex-start;
+  padding: 0.7rem 0.7rem;
+  gap: 0;
+}
+
+.navigation.collapsed:not(.expanded-from-collapse) .nav-subitem {
+  justify-content: flex-start;
+  gap: 0;
+  padding: 0.35rem 0.45rem;
 }
 
 /* .navigation.collapsed .nav-btn:hover,
@@ -662,9 +649,10 @@
 
 .logout-btn ::ng-deep .btn:hover {
   opacity: 1;
-  background: rgba(58, 58, 58, 0.5);
+  background: rgba(100, 100, 105, 0.5);
   color: var(--color-text-default) !important;
-  transform: scale(1.02);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(50, 50, 50, 0.35);
 }
 
 .logout-btn ::ng-deep .btn:hover .btn-label {
@@ -689,40 +677,40 @@
 
 /* Automaattinen pienentäminen pienemmillä näytöillä */
 @media (max-width: 64rem) {
-  .navigation {
+  .navigation.collapsed:not(.expanded-from-collapse) {
     width: 5rem;
     padding: 0.5rem 0.5rem;
   }
 
-  .navigation .top-section {
+  .navigation.collapsed:not(.expanded-from-collapse) .top-section {
     padding: 0.5rem 0.5rem 0 0.5rem;
   }
 
-  .navigation .logo-container {
+  .navigation.collapsed:not(.expanded-from-collapse) .logo-container {
     padding-left: 0;
   }
 
-  .navigation .logo--big {
+  .navigation.collapsed:not(.expanded-from-collapse) .logo--big {
     display: none;
   }
 
-  .navigation .logo--small {
+  .navigation.collapsed:not(.expanded-from-collapse) .logo--small {
     display: block !important;
   }
 
-  .navigation .user-profile {
+  .navigation.collapsed:not(.expanded-from-collapse) .user-profile {
     justify-content: center;
     padding: 0.25rem;
     gap: 0;
     border-color: transparent;
   }
 
-  .navigation .avatar {
+  .navigation.collapsed:not(.expanded-from-collapse) .avatar {
     width: 1.5rem;
     height: 1.5rem;
   }
 
-  .navigation .user-info {
+  .navigation.collapsed:not(.expanded-from-collapse) .user-info {
     opacity: 0;
     pointer-events: none;
     position: absolute;
@@ -732,18 +720,18 @@
     overflow: hidden;
   }
 
-  .navigation .nav-links {
+  .navigation.collapsed:not(.expanded-from-collapse) .nav-links {
     padding: 0 0.25rem;
   }
 
-  .navigation .nav-btn ::ng-deep .btn {
+  .navigation.collapsed:not(.expanded-from-collapse) .nav-btn ::ng-deep .btn {
     justify-content: center;
     padding: 0.8rem;
     gap: 0;
     transform: none;
   }
 
-  .navigation .nav-btn ::ng-deep .btn-label {
+  .navigation.collapsed:not(.expanded-from-collapse) .nav-btn ::ng-deep .btn-label {
     opacity: 0;
     pointer-events: none;
     position: absolute;
@@ -751,6 +739,11 @@
     width: 1px;
     height: 1px;
     overflow: hidden;
+  }
+  .navigation.collapsed:not(.expanded-from-collapse) .nav-group__label,
+  .navigation.collapsed:not(.expanded-from-collapse) .nav-group__chevron,
+  .navigation.collapsed:not(.expanded-from-collapse) .nav-subitem__label {
+    display: none;
   }
   .logout-btn {
     margin-left: 0em;

@@ -3,7 +3,9 @@
   top: 57px;
   right: 0; /* or right: 0; depending on your design */
   width: clamp(12rem, 20vw, 18rem); /* ✅ responsive width */
-  height: calc(100vh - 120px);
+  max-width: 18rem;
+  height: calc(var(--viewport-height) - 120px);
+  max-height: calc(var(--viewport-height) - 120px);
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -166,6 +168,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transform: translateY(-1px);
 }
 
 .status-dot {
@@ -244,7 +247,7 @@
 
 /* Chatroomit */
 .chatroom-items {
-  max-height: 40vh;
+  max-height: calc(var(--viewport-height) * 0.4);
   padding: 0.5rem 0;
   gap: 0.5rem;
 }

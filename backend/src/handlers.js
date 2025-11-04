@@ -72,31 +72,17 @@ module.exports.connectHandler = async (event) => {
   if (type === 'notifications') {
     try {
       //Queryes existing connections and checks to find the correct connection by userIdIndex
-      const existingConnections = await doccli.send(
-        new QueryCommand({
-          TableName: process.env.CONNECTION_DB_TABLE,
-          IndexName: 'UserIdIndex',
-          KeyConditionExpression: 'userId = :uid',
-          FilterExpression: '#t = :typeVal',
-          ExpressionAttributeNames: { '#t': 'type' },
-          ExpressionAttributeValues: { ':uid': userId, ':typeVal': type },
-        })
-      );
+      // const existingConnections = await doccli.send(
+      //   new QueryCommand({
+      //     TableName: process.env.CONNECTION_DB_TABLE,
+      //     IndexName: 'UserIdIndex',
+      //     KeyConditionExpression: 'userId = :uid',
+      //     FilterExpression: '#t = :typeVal',
+      //     ExpressionAttributeNames: { '#t': 'type' },
+      //     ExpressionAttributeValues: { ':uid': userId, ':typeVal': type },
+      //   })
+      // );
 
-      // if it finds old stale connections delete them
-      if (existingConnections.Items?.length) {
-        for (const item of existingConnections.Items) {
-          console.log(
-            `Deleting old connection ${item.connectionId} for user ${userId}`
-          );
-          await doccli.send(
-            new DeleteCommand({
-              TableName: process.env.CONNECTION_DB_TABLE,
-              Key: { roomId: item.roomId, connectionId: item.connectionId },
-            })
-          );
-        }
-      }
       // saves the new connection to connection-table
       await doccli.send(
         new PutCommand({

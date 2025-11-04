@@ -118,15 +118,11 @@ export class UserService {
 
   updateUser(userId: string, data: any): Observable<any> {
     const token = this.authStore.getToken();
-    return this.http.put(
-      `${this.apiUrl}/update/${userId}`, // URL
-      data, // body
-      {
-        headers: {
-          Authorization: `${token}`, // add "Bearer " if using JWT
-        },
+    return this.http.put(`${this.apiUrl}/update/${userId}`, data, {
+      headers: {
+        Authorization: `${token}`,
       },
-    );
+    });
   }
 
   deleteUser(userId: string): Observable<any> {
