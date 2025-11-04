@@ -5,7 +5,7 @@ h1 {
 
 .layout {
   display: flex;
-  height: 100vh;
+  min-height: var(--viewport-height);
 }
 
 body {

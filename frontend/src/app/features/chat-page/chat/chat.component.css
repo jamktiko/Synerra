@@ -1,14 +1,14 @@
 .chatElement {
   display: flex;
   flex-direction: column;
-  height: 90vh;
+  height: calc(var(--viewport-height) * 0.9);
   background: var(--color-background);
   border-radius: 8px;
   padding: 1rem;
   color: var(--color-text-default);
   font-family: Inter, sans-serif;
-  width: 100vh;
-  max-width: 100vh;
+  width: min(100%, var(--viewport-height));
+  max-width: min(100%, var(--viewport-height));
   box-sizing: border-box;
   overflow: hidden;
 }
