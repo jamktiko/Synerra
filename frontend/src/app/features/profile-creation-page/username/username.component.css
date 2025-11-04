@@ -140,14 +140,34 @@
   h1 {
     font-size: 33px;
   }
+
   .modal-body,
   .modal-footer {
     width: 20rem;
+  }
+  .modal-footer {
+    gap: 2rem;
   }
   .text-sm {
     font-size: 14px;
   }
   .text-sm-bold {
     font-size: 18px;
+  }
+}
+
+@media (max-width: 430px) {
+  input {
+    width: 20rem;
+  }
+  .modal-header {
+    width: 30rem;
+  }
+  .modal-body {
+    gap: 0.5rem;
+  }
+  .modal-footer {
+    padding: 2rem 0 0 0;
+    gap: 2rem;
   }
 }

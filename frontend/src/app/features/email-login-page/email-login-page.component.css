@@ -33,13 +33,11 @@ input {
 
   /* border */
   background:
-    /* sisäpinta */
-    linear-gradient(var(--color-background)) padding-box,
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 
-  transition:
-    background 0.4s ease,
-    transform 0.2s ease;
+  transition: background 0.4s ease, transform 0.2s ease;
 }
 
 input::placeholder {
@@ -49,8 +47,7 @@ input::placeholder {
 input:focus {
   box-shadow: none;
 
-  background:
-    linear-gradient(var(--color-background), var(--color-background))
+  background: linear-gradient(var(--color-background), var(--color-background))
       padding-box,
     var(--color-orange-gradient) border-box;
 
@@ -123,7 +120,23 @@ input:-webkit-autofill {
 
 /*Mobiili*/
 @media (max-width: 430px) {
+  input {
+    width: 360px;
+  }
+  .buttonFrame {
+    padding: 2rem 0 0 0;
+    gap: 4rem;
+  }
+  .buttonFrame app-button {
+    scale: 1.1;
+  }
   .main-frame {
-    scale: 0.88;
+    padding: 0 15px;
+    height: 28rem;
+  }
+  input,
+  textarea,
+  select {
+    font-size: 16px; /*vähän isompi fontti inputeissa*/
   }
 }

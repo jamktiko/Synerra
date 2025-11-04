@@ -27,7 +27,7 @@
   border: hidden;
   padding: 2rem 0 0 0;
   justify-content: center;
-  gap: 43px;
+  gap: 2rem;
 }
 
 .progress {
@@ -312,10 +312,17 @@
   .modal-footer {
     width: 20rem;
   }
+
   .progress {
     display: none;
   }
   .text-h1 {
     scale: 0.8;
+  }
+  .text-sm-18 {
+    font-size: 16px;
+  }
+  .knowledgeText {
+    width: 27rem;
   }
 }

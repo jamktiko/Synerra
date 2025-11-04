@@ -27,11 +27,10 @@ app-main-layout {
 /*================================================================*/
 :root {
   /* Font families */
-  --font-main:
-    "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  --font-title:
-    "Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Arial,
+  --font-main: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial,
     sans-serif;
+  --font-title: "Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto,
+    Arial, sans-serif;
 
   /* Font weights */
   --font-weight-light: 300;
@@ -247,8 +246,17 @@ body {
   margin: auto; /*Keskitys*/
 }
 
+/* tarkoitettu pienemmälle tietokoneruudulle */
 @media (max-height: 600px) {
   .modal-dialog {
     scale: 0.825;
+  }
+}
+
+/* Phones MODALS*/
+@media (max-width: 430px) {
+  .modal-dialog {
+    max-width: 23rem;
+    width: 100%;
   }
 }

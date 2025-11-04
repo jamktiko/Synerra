@@ -152,8 +152,23 @@ input:focus {
 
 /*Mobiili*/
 @media (max-width: 430px) {
+  input {
+    width: 365px;
+  }
+  .buttonFrame {
+    padding: 2rem 0 1.5rem 0;
+    gap: 2rem;
+  }
+  .buttonFrame app-button {
+    scale: 1.07;
+  }
   .main-frame {
-    scale: 0.88;
+    padding: 0 18px;
+  }
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* vähän isompi fontti inputeissa */
   }
 }
 
