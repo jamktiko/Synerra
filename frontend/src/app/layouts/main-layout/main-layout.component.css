@@ -10,7 +10,7 @@
   grid-template-columns: 14rem 1fr; /* navbar | main */
   width: 100%;
   column-gap: 0.25rem;
-  min-height: 100vh;
+  min-height: var(--viewport-height);
   position: relative;
 }
 
@@ -51,6 +51,7 @@
     20rem
   ); /* Allows navbar space to shrink a between 17, and 20rem */
   overflow: visible;
+  min-height: var(--viewport-height);
 }
 
 /* Social bar asetukset */
@@ -97,7 +98,7 @@ Mobiili näkymään flexbox, ja järjestys muutettu
     display: flex;
     flex-direction: column;
     width: 100%;
-    min-height: 100vh;
+    min-height: var(--viewport-height);
   }
 
   .main {

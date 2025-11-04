@@ -2,16 +2,17 @@
   color: var(--color-text-default);
   width: 100%;
   max-width: 60rem;
-  height: 35rem;
-  overflow: hidden;
+  /* Avoid fixed height so mobile can flow naturally */
+  height: auto;
+  overflow: visible;
   display: flex;
-  align-items: center; /* pystysuunta */
-  justify-content: center; /* vaakasuunta */
+  align-items: center; /* default center on desktop */
+  justify-content: center; /* horizontal center on desktop */
   border-radius: 18px;
   background: var(--color-gray);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
   border: 1px solid rgba(58, 58, 58, 1);
-  padding: 0 100px;
+  padding: 50px 100px;
   gap: 15px;
   flex-direction: column;
 }
@@ -128,6 +129,11 @@ input:focus {
     padding: 32px;
     gap: 24px;
     max-width: 680px;
+    /* On narrow screens, stop centering vertically and let content start at top */
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: auto;
+    overflow: visible;
   }
   .inputHeadings,
   .buttonFrame {
@@ -140,7 +146,13 @@ input:focus {
 
 @media (max-width: 500px) {
   .main-frame {
-    scale: 0.95;
+    /* increase vertical whitespace on mobile */
+    padding-top: 48px;
+    padding-bottom: 48px;
+    padding-left: 24px;
+    padding-right: 24px;
+    gap: 24px;
+    max-width: 680px;
   }
 }
 
@@ -154,6 +166,9 @@ input:focus {
 @media (max-width: 430px) {
   .main-frame {
     scale: 0.88;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 16px;
   }
 }
 

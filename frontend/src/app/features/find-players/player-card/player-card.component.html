@@ -1,52 +1,34 @@
-<div class="card">
-  <div class="card-body">
-    <!-- Vasen sarake -->
-    <div class="card-left">
-      <div class="card-img-wrapper" (click)="onProfile()" role="button" tabindex="0"
-        [attr.aria-label]="'Open profile of ' + user.Username" data-tooltip="View player profile">
+<div class="card" [ngClass]="{ online: user.Status === 'online', offline: user.Status !== 'online' }">
+  <button type="button" class="avatar-button" (click)="onProfile()"
+    [attr.aria-label]="'Open profile of ' + user.Username">
+    <img [src]="
+        user.ProfilePicture ||
+        'https://images.unsplash.com/photo-1575419268007-a9a5e6b1ce0b?fm=jpg&q=80&w=300'
+      " alt="Profile picture" class="avatar" />
+  </button>
 
-        <!-- Status ring -->
-        <span class="status-ring"
-          [ngClass]="{'online': user.Status==='online', 'offline': user.Status!=='online'}"></span>
+  <div class="bio">
+    {{ user.Bio || 'No bio text available' }}
+  </div>
 
-        <!-- Profile picture -->
-        <img *ngIf="user.ProfilePicture" [src]="user.ProfilePicture" class="card-img-top" alt="Profile picture"
-          loading="lazy" />
-        <img *ngIf="!user.ProfilePicture" src="assets/svg/Acount.svg" class="card-img-top" alt="Profile picture"
-          loading="lazy" />
-      </div>
+  <div class="heading">
+    {{ user.Username }}
+  </div>
 
-      <p class="user-name">{{ user.Username }}</p>
+  <div class="languages" *ngIf="getCommonLanguages(user.Languages).length > 0">
+    <ng-container *ngFor="let langCode of getCommonLanguages(user.Languages)">
+      <img [src]="getFlag(langCode)" alt="" class="flag-img" />
+    </ng-container>
+  </div>
 
-
-
-
-
-
-    </div>
-
-    <!-- Oikea sarake -->
-    <div class="card-right">
-
-
-      <div class="divider"></div>
-      <div>
-        <div class="languages" *ngIf="getCommonLanguages(user.Languages).length > 0">
-          <ng-container *ngFor="let langCode of getCommonLanguages(user.Languages)">
-            <img [src]="getFlag(langCode)" alt="" class="flag-img" />
-          </ng-container>
-        </div>
-        <div class="card-actions">
-          <button class="btn btn-primary" (click)="SendMsg(user.UserId)">
-            <img src="/assets/svg/Messages/NoMessage.svg" alt="" class="btn-icon" />
-            <span>Send Message</span>
-          </button>
-          <button class="btn btn-success" (click)="onAddFriend()">
-            <img src="/assets/svg/Plus_icon.svg" alt="" class="btn-icon" />
-            <span>Add Friend</span>
-          </button>
-        </div>
-      </div>
-    </div>
+  <div class="actions">
+    <button type="button" class="message-btn" (click)="SendMsg(user.UserId)">
+      <span class="icon">💬</span>
+      <span>Chat</span>
+    </button>
+    <button type="button" class="add-btn" (click)="onAddFriend()">
+      <span class="icon">+</span>
+      <span>Add</span>
+    </button>
   </div>
 </div>

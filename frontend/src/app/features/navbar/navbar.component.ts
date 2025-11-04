@@ -88,6 +88,10 @@ export class NavbarComponent implements OnInit {
 
   logout = { label: 'Logout', icon: 'Logout', route: '/login' };
 
+  get isTemporarilyExpanded(): boolean {
+    return this.isCollapsed && this.expandedGroups.size > 0;
+  }
+
   constructor(
     private userStore: UserStore,
     private router: Router,
@@ -123,7 +127,7 @@ export class NavbarComponent implements OnInit {
     if (saved !== null) {
       this.isCollapsed = saved === 'true';
       this.hasUserPreference = true;
-    } else if (typeof window !== 'undefined' && window.innerWidth < 900) {
+    } else if (typeof window !== 'undefined' && window.innerWidth < 1070) {
       this.isCollapsed = true;
     }
     this.checkAutoCollapse();
@@ -153,14 +157,35 @@ export class NavbarComponent implements OnInit {
 
   @HostListener('window:resize', [])
   checkAutoCollapse() {
-    if (this.hasUserPreference) return;
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth < 1070) {
+        if (!this.isCollapsed) {
+          this.isCollapsed = true;
+          this.collapsedChange.emit(this.isCollapsed);
+        }
+        return;
+      }
+    }
 
     const layout = document.querySelector('.layout') as HTMLElement;
     if (!layout) return;
 
-    const layoutRect = layout.getBoundingClientRect();
-    this.isCollapsed = layoutRect.top < 0;
-    this.collapsedChange.emit(this.isCollapsed);
+    const isOverflowing = layout.scrollWidth > layout.clientWidth + 1;
+
+    if (isOverflowing) {
+      if (!this.isCollapsed) {
+        this.isCollapsed = true;
+        this.collapsedChange.emit(this.isCollapsed);
+      }
+      return;
+    }
+
+    if (this.hasUserPreference) return;
+
+    if (this.isCollapsed) {
+      this.isCollapsed = false;
+      this.collapsedChange.emit(this.isCollapsed);
+    }
   }
 
   onUserClick(): void {
@@ -205,7 +230,10 @@ export class NavbarComponent implements OnInit {
   }
 
   getSubmenuHeight(item: NavItem): string {
-    if (!item.children || !this.isGroupExpanded(item) || this.isCollapsed) {
+    const collapsedWithoutExpansion =
+      this.isCollapsed && !this.isTemporarilyExpanded;
+
+    if (!item.children || !this.isGroupExpanded(item) || collapsedWithoutExpansion) {
       return '0px';
     }
     const rowHeight = 48;
