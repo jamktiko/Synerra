@@ -152,9 +152,9 @@ body {
   overflow-y: auto;
 }
 
-@supports (height: 100dvh) {
+@supports (height: 99dvh) {
   :root {
-    --viewport-height: 100dvh;
+    --viewport-height: 99dvh;
   }
 }
 
@@ -259,9 +259,18 @@ body {
   margin: auto; /*Keskitys*/
 }
 
+/* tarkoitettu pienemmälle tietokoneruudulle */
 @media (max-height: 600px) {
   .modal-dialog {
     scale: 0.825;
+  }
+}
+
+/* Phones MODALS*/
+@media (max-width: 430px) {
+  .modal-dialog {
+    max-width: 23rem;
+    width: 100%;
   }
 }
 
