@@ -49,7 +49,7 @@ module.exports.handler = async (event) => {
                 [process.env.MAIN_TABLE]: {
                   Keys: memberIds.map((id) => ({
                     PK: `USER#${id}`,
-                    SK: `META#USER#${id}`,
+                    SK: 'PROFILE',
                   })),
                 },
               },
