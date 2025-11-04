@@ -53,7 +53,7 @@
   width: 100%;
   max-width: 100%;
   background: var(--color-dark-gradient);
-  max-height: 80vh;
+  max-height: calc(var(--viewport-height) * 0.8);
   overflow-y: auto;
   border: 1px solid rgba(58, 58, 58, 1);
   border-radius: 8px;

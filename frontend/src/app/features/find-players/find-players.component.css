@@ -1,11 +1,14 @@
 /* Pelaajalista */
 .users-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  column-gap: 40px;
-  row-gap: 50px;
-  padding: 35px;
-  background: var(--color-dark-gradient);
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  column-gap: 28px;
+  row-gap: 36px;
+  padding: 28px;
+  justify-items: center;
+  align-items: start;
+  align-content: start;
+  background: var(--color-background);
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-sizing: border-box;
@@ -32,8 +35,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 40px;
-  min-height: 100vh;
+  gap: 1rem;
+  min-height: var(--viewport-height);
   margin: 0 auto;
 }
 
@@ -72,7 +75,9 @@
   }
 
   .users-container {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    column-gap: 24px;
+    row-gap: 32px;
     width: 100%;
     max-width: 100%;
   }
@@ -101,7 +106,10 @@
   }
 
   .users-container {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 20px;
+    row-gap: 24px;
+    justify-items: stretch;
   }
 }
 
@@ -109,8 +117,7 @@
   .users-container {
     padding: 20px 16px;
     gap: 28px;
-    column-gap: 24px;
-    row-gap: 32px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     border-radius: 16px;
     overflow-x: hidden;
   }
@@ -120,7 +127,7 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 520px) {
   .mid-container {
     padding: 0 1rem 1.5rem;
   }
@@ -128,6 +135,7 @@
   .users-container {
     padding: 18px 12px;
     gap: 24px;
+    grid-template-columns: minmax(0, 1fr);
     overflow-x: hidden;
   }
 }

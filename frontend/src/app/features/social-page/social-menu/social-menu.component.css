@@ -10,7 +10,7 @@
   font-family: Inter, sans-serif;
   height: 100%;
   width: auto;
-  max-height: 94vh; /* lock height to viewport */
+  max-height: calc(var(--viewport-height) * 0.94); /* lock height to viewport */
   box-sizing: border-box;
   overflow: visible;
 }

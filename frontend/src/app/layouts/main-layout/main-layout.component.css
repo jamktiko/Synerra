@@ -10,7 +10,7 @@
   grid-template-columns: 20% 1fr 300px; /* navbar | main | social bar */
   width: 100%;
   column-gap: 0.25rem;
-  min-height: 100vh;
+  min-height: var(--viewport-height);
   position: relative;
   transition: grid-template-columns 0.3s ease;
 }
@@ -48,7 +48,7 @@
   padding-left: 0;
   margin-left: 0;
   overflow: visible;
-  height: 100vh;
+  min-height: var(--viewport-height);
 }
 
 /* Social bar asetukset */
@@ -92,7 +92,7 @@ Mobiili näkymään flexbox, ja järjestys muutettu
     display: flex;
     flex-direction: column;
     width: 100%;
-    min-height: 100vh;
+    min-height: var(--viewport-height);
   }
 
   .main {
