@@ -91,14 +91,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.userService.markRoomMessagesAsRead(this.roomId).subscribe({
-      next: (res) => {
-        console.log(`Messages in room ${this.roomId} marked as read`, res);
-      },
-      error: (err) => {
-        console.error('Failed to mark messages as read', err);
-      },
-    });
+    this.clearNotifications();
   }
 
   // Runs once after the full component has been initialized. Since the scrollToBottom requires the html element,
@@ -106,7 +99,9 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     // Subscribing the chat logs for detecting a new message
     this.messages$.subscribe((make) => {
-      // Scrolls down (timeout for giving angular time to rendering the message)
+      // Clears message notifications when rendeting a new one
+      this.clearNotifications();
+      // Scrolls down (timeout for giving angular time to render the message)
       console.log('WOOOO', make);
       setTimeout(() => this.scrollToBottom(), 100);
     });
@@ -132,7 +127,18 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
     this.messageText = '';
   }
 
-  private scrollToBottom() {
+  clearNotifications() {
+    this.userService.markRoomMessagesAsRead(this.roomId).subscribe({
+      next: (res) => {
+        console.log(`Messages in room ${this.roomId} marked as read`, res);
+      },
+      error: (err) => {
+        console.error('Failed to mark messages as read', err);
+      },
+    });
+  }
+
+  scrollToBottom() {
     try {
       // Gets the actual exact html element via the ViewChild above.
       // Its not a copy or anything, but the exact element, so it can now be modified in ts.

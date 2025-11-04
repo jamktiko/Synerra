@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { RouterLink, Router } from '@angular/router';
 import { AuthStore } from '../../core/stores/auth.store';
+import { LoadingPageStore } from '../../core/stores/loadingPage.store';
 
 @Component({
   selector: 'app-signup-page',
@@ -30,6 +31,7 @@ export class SignupPageComponent {
     private authService: AuthService,
     private userStore: UserStore,
     private authStore: AuthStore,
+    private loadingPageStore: LoadingPageStore,
     private router: Router,
   ) {}
 
@@ -111,6 +113,8 @@ export class SignupPageComponent {
       console.error('Passwords do not match or too less data');
       return;
     }
+
+    this.loadingPageStore.setAuthLayoutLoadingPageVisible(true);
 
     const credentials = {
       email: this.emailInput,
