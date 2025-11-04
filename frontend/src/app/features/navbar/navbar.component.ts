@@ -16,6 +16,7 @@ import {
 } from '@angular/router';
 import { User } from '../../core/interfaces/user.model';
 import { UserStore } from '../../core/stores/user.store';
+import { LoadingPageStore } from '../../core/stores/loadingPage.store';
 import { AuthService } from '../../core/services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { filter } from 'rxjs/operators';
@@ -87,10 +88,15 @@ export class NavbarComponent implements OnInit {
 
   logout = { label: 'Logout', icon: 'Logout', route: '/login' };
 
+  get isTemporarilyExpanded(): boolean {
+    return this.isCollapsed && this.expandedGroups.size > 0;
+  }
+
   constructor(
     private userStore: UserStore,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private loadingPageStore: LoadingPageStore,
   ) {
     // Watch for user changes reactively
     effect(() => {
@@ -107,8 +113,8 @@ export class NavbarComponent implements OnInit {
     this.router.events
       .pipe(
         filter(
-          (event): event is NavigationEnd => event instanceof NavigationEnd
-        )
+          (event): event is NavigationEnd => event instanceof NavigationEnd,
+        ),
       )
       .subscribe((event) => {
         this.currentUrl = event.urlAfterRedirects;
@@ -121,7 +127,7 @@ export class NavbarComponent implements OnInit {
     if (saved !== null) {
       this.isCollapsed = saved === 'true';
       this.hasUserPreference = true;
-    } else if (typeof window !== 'undefined' && window.innerWidth < 900) {
+    } else if (typeof window !== 'undefined' && window.innerWidth < 1070) {
       this.isCollapsed = true;
     }
     this.checkAutoCollapse();
@@ -151,14 +157,35 @@ export class NavbarComponent implements OnInit {
 
   @HostListener('window:resize', [])
   checkAutoCollapse() {
-    if (this.hasUserPreference) return;
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth < 1070) {
+        if (!this.isCollapsed) {
+          this.isCollapsed = true;
+          this.collapsedChange.emit(this.isCollapsed);
+        }
+        return;
+      }
+    }
 
     const layout = document.querySelector('.layout') as HTMLElement;
     if (!layout) return;
 
-    const layoutRect = layout.getBoundingClientRect();
-    this.isCollapsed = layoutRect.top < 0;
-    this.collapsedChange.emit(this.isCollapsed);
+    const isOverflowing = layout.scrollWidth > layout.clientWidth + 1;
+
+    if (isOverflowing) {
+      if (!this.isCollapsed) {
+        this.isCollapsed = true;
+        this.collapsedChange.emit(this.isCollapsed);
+      }
+      return;
+    }
+
+    if (this.hasUserPreference) return;
+
+    if (this.isCollapsed) {
+      this.isCollapsed = false;
+      this.collapsedChange.emit(this.isCollapsed);
+    }
   }
 
   onUserClick(): void {
@@ -168,6 +195,7 @@ export class NavbarComponent implements OnInit {
 
   // Clearing authToken and rerouting to the login-page when logging off
   logOut() {
+    this.loadingPageStore.setAuthLayoutLoadingPageVisible(false);
     this.authService.logout();
     this.router.navigate(['/login']);
   }
@@ -197,12 +225,15 @@ export class NavbarComponent implements OnInit {
       return false;
     }
     return item.children.some((child) =>
-      this.matchesChildRoute(child, this.currentUrl)
+      this.matchesChildRoute(child, this.currentUrl),
     );
   }
 
   getSubmenuHeight(item: NavItem): string {
-    if (!item.children || !this.isGroupExpanded(item) || this.isCollapsed) {
+    const collapsedWithoutExpansion =
+      this.isCollapsed && !this.isTemporarilyExpanded;
+
+    if (!item.children || !this.isGroupExpanded(item) || collapsedWithoutExpansion) {
       return '0px';
     }
     const rowHeight = 48;
@@ -223,7 +254,7 @@ export class NavbarComponent implements OnInit {
         return;
       }
       const hasMatch = item.children.some((child) =>
-        this.matchesChildRoute(child, url)
+        this.matchesChildRoute(child, url),
       );
       if (hasMatch) {
         this.expandedGroups.add(item.label);
@@ -244,7 +275,7 @@ export class NavbarComponent implements OnInit {
     }
     const params = new URLSearchParams(search);
     return Object.entries(child.queryParams).every(
-      ([key, value]) => params.get(key) === String(value)
+      ([key, value]) => params.get(key) === String(value),
     );
   }
 }

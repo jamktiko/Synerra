@@ -27,17 +27,16 @@ export class ProfileCreationPageComponent implements OnInit {
     private userStore: UserStore,
     private authService: AuthService,
     private router: Router,
-  ) {
-    effect(() => {
-      const user = this.userStore.user();
-      if (user?.Username) {
-        // If the user already has a username, they get thrown to the dashboardn (must not be able to create the profile again)
-        this.router.navigate(['/dashboard']);
-      }
-    });
-  }
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // const user = this.userStore.user();
+    // console.log('MITÄ VITTUSAAA', user);
+    // if (user?.Username) {
+    //   // If the user already has a username, they get thrown to the dashboardn (must not be able to create the profile again)
+    //   this.router.navigate(['/dashboard']);
+    // }
+  }
 
   logOut() {
     this.authService.logout();

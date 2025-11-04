@@ -17,6 +17,8 @@ export class GameCardComponent implements OnInit {
   @Output() gameFavourited = new EventEmitter<Game>();
   isFavourite: boolean = false;
   currentUser: User | null = null;
+  favouriteMessage: string | null = '';
+  private messageTimeout: any = null;
 
   constructor(
     private router: Router,
@@ -52,13 +54,26 @@ export class GameCardComponent implements OnInit {
   toggleFavourite(event: MouseEvent) {
     event.stopPropagation();
     const gameId = this.game.PK.replace('GAME#', '');
+
     if (this.isFavourite) {
       this.removeFromFavourites(gameId);
-      console.log('Game removed', this.game.Name);
+      this.favouriteMessage = `${this.game.Name} has been removed from favourites.`;
     } else {
       this.addToFavourites(this.game);
-      console.log('Game added', this.game.Name);
+      this.favouriteMessage = `${this.game.Name} has been added to favourites!`;
     }
+
+    // Reset previous timeout if exists
+    if (this.messageTimeout) {
+      clearTimeout(this.messageTimeout);
+    }
+
+    // Set new timeout to hide message
+    this.messageTimeout = setTimeout(() => {
+      this.favouriteMessage = null;
+      this.messageTimeout = null;
+    }, 2000);
+
     this.userStore.getUser();
   }
 

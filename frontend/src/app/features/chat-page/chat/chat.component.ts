@@ -31,6 +31,8 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   // Sets an observable for the showing chat messages
   messages$: Observable<ChatMessage[]>;
   messageHistory: [] = [];
+  chatPartnerName: string = '';
+  chatPartnerPicture: any = '';
 
   messageText: string = '';
 
@@ -42,7 +44,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
     private chatService: ChatService,
     private userStore: UserStore,
     private userService: UserService,
-    private messageService: MessageService,
+    private messageService: MessageService
   ) {
     // Links the message observable to the chatService messages for reactive updating
     this.messages$ = this.chatService.logMessages$;
@@ -63,19 +65,33 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log('LOGGEDINUSER', this.loggedInUser);
         // Starts a chat with roomId
         this.chatService.startChat(undefined, this.roomId);
+
+        if (!this.chatPartnerName) {
+          this.messages$.subscribe((messages) => {
+            if (!messages || messages.length === 0) return;
+
+            const otherUser = messages.find(
+              (msg) =>
+                msg.SenderId &&
+                msg.SenderId !== this.loggedInUser?.UserId &&
+                msg.SenderUsername
+            );
+
+            console.log('TOINEN KÄYTTÄJÄ', otherUser);
+
+            if (otherUser) {
+              this.chatPartnerName = otherUser.SenderUsername;
+              this.chatPartnerPicture =
+                otherUser.ProfilePicture || 'assets/svg/Acount.svg';
+            }
+          });
+        }
       }
     });
   }
 
   ngOnInit() {
-    this.userService.markRoomMessagesAsRead(this.roomId).subscribe({
-      next: (res) => {
-        console.log(`Messages in room ${this.roomId} marked as read`, res);
-      },
-      error: (err) => {
-        console.error('Failed to mark messages as read', err);
-      },
-    });
+    this.clearNotifications();
   }
 
   // Runs once after the full component has been initialized. Since the scrollToBottom requires the html element,
@@ -83,7 +99,9 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     // Subscribing the chat logs for detecting a new message
     this.messages$.subscribe((make) => {
-      // Scrolls down (timeout for giving angular time to rendering the message)
+      // Clears message notifications when rendeting a new one
+      this.clearNotifications();
+      // Scrolls down (timeout for giving angular time to render the message)
       console.log('WOOOO', make);
       setTimeout(() => this.scrollToBottom(), 100);
     });
@@ -103,13 +121,24 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
       this.loggedInUser.UserId,
       this.loggedInUser.Username,
       this.loggedInUser.ProfilePicture,
-      this.roomId,
+      this.roomId
     );
     // Clears the input slot
     this.messageText = '';
   }
 
-  private scrollToBottom() {
+  clearNotifications() {
+    this.userService.markRoomMessagesAsRead(this.roomId).subscribe({
+      next: (res) => {
+        console.log(`Messages in room ${this.roomId} marked as read`, res);
+      },
+      error: (err) => {
+        console.error('Failed to mark messages as read', err);
+      },
+    });
+  }
+
+  scrollToBottom() {
     try {
       // Gets the actual exact html element via the ViewChild above.
       // Its not a copy or anything, but the exact element, so it can now be modified in ts.

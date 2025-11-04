@@ -1,8 +1,8 @@
 <div class="chatElement">
   <div class="headframe">
-    <img class="avatarframe-icon" src="assets/svg/Acount.svg" alt="avatar" />
+    <img class="avatarframe-icon" [src]="chatPartnerPicture || 'assets/svg/Acount.svg'" alt="avatar" />
     <div class="headerframe">
-      <div class="chatheading">Chat</div>
+      <div class="chatheading">{{chatPartnerName || 'Chat'}}</div>
 
     </div>
     <div class="headerButton">

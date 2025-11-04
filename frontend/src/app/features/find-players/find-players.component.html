@@ -1,17 +1,17 @@
 <div class="main-content">
-  <div class="mid-container">
-
-    <!-- Pelaajien filtteröintipalkki -->
-    <div class="filter-component">
-      <app-player-filters (filtersChanged)="onFiltersChanged($event)" [preSelectedGame]="preSelectedGame">
-      </app-player-filters>
-    </div>
-
-    <!-- Pelaajalista -->
-    <div class="users-container">
-      <app-player-card *ngFor="let user of (filteredUsers$ | async)" [user]="user">
-      </app-player-card>
-    </div>
-
+  <!-- Pelaajien filtteröintipalkki -->
+  <div class="filter-component">
+    <app-player-filters (filtersChanged)="onFiltersChanged($event)" [preSelectedGame]="preSelectedGame">
+    </app-player-filters>
   </div>
+
+  <!-- Pelaajalista -->
+  <div class="users-container">
+    <!-- Render priority: component.filteredUsers (if set) -> filteredUsers$ observable -> fallback to users array -->
+    <app-player-card
+      *ngFor="let user of (filteredUsers && filteredUsers.length ? filteredUsers : ((filteredUsers$ | async)?.length ? (filteredUsers$ | async) : users))"
+      [user]="user">
+    </app-player-card>
+  </div>
+
 </div>
