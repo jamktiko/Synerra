@@ -81,15 +81,15 @@ body {
     content: "";
   }
 
-  10% {
+  25% {
     content: ".";
   }
 
-  40% {
+  50% {
     content: "..";
   }
 
-  70% {
+  75% {
     content: "...";
   }
 
