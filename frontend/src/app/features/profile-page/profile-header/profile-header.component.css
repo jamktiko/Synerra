@@ -210,7 +210,7 @@
 }
 
 /* Responsive */
-/* Since navigation takes less space below 1024px it looked better  */
+/* 1024-1200px so username and description wouldnt get hidden */
 @media (max-width: 1200px) and (min-width: 1024px), (max-width: 768px) {
   .profile-header-container {
     padding: 32px 0px;

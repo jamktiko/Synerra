@@ -3,7 +3,7 @@
   display: grid;
   padding: 32px;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  /* gap: 16px; */ /* Removed due to game cards having margin */
   background: var(--color-dark-gradient);
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.12);

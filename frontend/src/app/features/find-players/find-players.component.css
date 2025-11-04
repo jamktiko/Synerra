@@ -1,18 +1,17 @@
 /* Pelaajalista */
 .users-container {
   display: grid;
-  padding: 32px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  column-gap: 16px;
-  row-gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  column-gap: 40px;
+  row-gap: 50px;
+  padding: 35px;
   background: var(--color-dark-gradient);
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-sizing: border-box;
   position: relative;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.9);
-  /* overflow-x: hidden; */
-  /* overflow-x removed, i thought it looked better when the profile pictures active glow was shown entirely on top row */
+  overflow-x: hidden;
 }
 
 .users-container::before {
