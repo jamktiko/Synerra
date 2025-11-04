@@ -2,7 +2,6 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-top: 24px;
   --page-horizontal-gap: clamp(1.5rem, 4vw, 3rem);
 }
 
@@ -12,25 +11,24 @@
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
-  padding: 0 calc(2rem + var(--page-horizontal-gap)) 3rem;
   box-sizing: border-box;
   margin: 0 auto;
 }
 
 @media (max-width: 900px) {
-  .mid-container {
+  /* .mid-container {
     padding: 0 calc(1.75rem + var(--page-horizontal-gap)) 2.5rem;
-  }
+  } */
 }
 
 @media (max-width: 600px) {
   .layout {
     padding-top: 16px;
-    --page-horizontal-gap: clamp(1rem, 6vw, 2rem);
+    /* --page-horizontal-gap: clamp(1rem, 6vw, 2rem); */
   }
 
   .mid-container {
-    padding: 0 calc(1.25rem + var(--page-horizontal-gap)) 2rem;
+    /* padding: 0 calc(1.25rem + var(--page-horizontal-gap)) 2rem; */
     gap: 2rem;
   }
 }
