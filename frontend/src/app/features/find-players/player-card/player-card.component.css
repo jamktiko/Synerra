@@ -4,10 +4,8 @@
 .card {
   position: relative;
   display: flex;
+  height: 320px; /* So usercards would have the same height */
   flex-direction: column;
-  min-width: 220px;
-  max-width: 220px;
-  height: 22rem;
   border-radius: var(--radius-xl);
   background: linear-gradient(#515151, #434343) padding-box,
     linear-gradient(180deg, #929292 0%, #444444 100%) border-box;
@@ -199,23 +197,12 @@
     grid-template-columns: repeat(auto-fill, minmax(220px, 220px));
     justify-content: center;
   }
-
-  .card {
-    width: 220px;
-    min-width: 220px;
-    max-width: 220px;
-  }
 }
 
 @media (max-width: 899px) and (min-width: 600px) {
   .cards-grid {
     grid-template-columns: repeat(auto-fill, minmax(220px, 220px));
     justify-content: center;
-  }
-
-  .card {
-    min-width: 220px;
-    max-width: 220px;
   }
 }
 
@@ -434,6 +421,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
+  flex-grow: 1;
 }
 .languages::-webkit-scrollbar {
   height: 6px;
