@@ -118,8 +118,29 @@ module.exports.handler = async (event) => {
     console.error('Error creating unread markers:', err);
   }
 
+  let activeConnections = [];
+  try {
+    const activeConnectionsData = await doccli.send(
+      new QueryCommand({
+        TableName: process.env.CONNECTION_DB_TABLE,
+        KeyConditionExpression: 'roomId = :rid',
+        ExpressionAttributeValues: { ':rid': RoomId },
+        ProjectionExpression: 'connectionId, userId', // Make sure userId is stored when connecting
+      })
+    );
+    activeConnections = activeConnectionsData.Items.map((c) => c.userId);
+    console.log('Active users in room:', activeConnections);
+  } catch (err) {
+    console.error('Error checking active connections:', err);
+  }
+
+  // Send notifications only to users who are NOT active in the room
   for (const uid of allParticipants) {
-    // calls sendnotification handler, which sends notifications to users
+    if (activeConnections.includes(uid)) {
+      console.log(`Skipping notification for active user ${uid}`);
+      continue;
+    }
+
     await sendNotification.handler({
       userId: uid,
       payload: {
