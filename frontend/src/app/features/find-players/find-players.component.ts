@@ -10,6 +10,7 @@ import { switchMap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { UserStore } from '../../core/stores/user.store';
 import { BehaviorSubject, combineLatest } from 'rxjs';
+import { FriendService } from '../../core/services/friend.service';
 @Component({
   selector: 'app-find-players',
   standalone: true,
@@ -26,11 +27,13 @@ export class FindPlayersComponent implements OnInit {
   users$: Observable<User[]>;
   onlineUsers$: Observable<User[]>;
   filteredUsers$ = new BehaviorSubject<User[]>([]);
+  friends: User[] = [];
 
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
-    private userStore: UserStore
+    private userStore: UserStore,
+    private friendService: FriendService
   ) {
     // Sets up a reactive watcher that updates user
     effect(() => {
@@ -40,8 +43,13 @@ export class FindPlayersComponent implements OnInit {
       }
     });
 
-    // base users stream
-    this.users$ = this.userService.users$;
+    // base users stream, filter out logged in user
+    this.users$ = this.userService.users$.pipe(
+      map((users) => {
+        if (!this.user) return users;
+        return users.filter((u) => u.PK !== this.user?.PK);
+      })
+    );
     this.onlineUsers$ = this.users$.pipe(
       map((users) => users.filter((user) => user.Status === 'online'))
     );
@@ -84,6 +92,15 @@ export class FindPlayersComponent implements OnInit {
 
       //  Apply the filters
       this.onFiltersChanged(initialGameFilter);
+    });
+
+    this.friendService.getFriends().subscribe({
+      next: (users) => {
+        this.friends = users;
+      },
+      error: (err) => {
+        console.error('Failed to fetch friends', err);
+      },
     });
   }
 
