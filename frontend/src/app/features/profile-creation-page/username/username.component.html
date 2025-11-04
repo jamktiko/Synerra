@@ -2,15 +2,15 @@
   <!--Progressbar-->
   <div class="progress">
     <div class="done">
-      <img src="assets/svg/Acount.svg" alt="step1" />
+      <img src="assets/svg/Acount_orange.svg" alt="step1" />
     </div>
-    <div class="nextStep">></div>
+    <div class="nextStep">-</div>
     <div class="step">
       <img src="assets/svg/Birthday.svg" alt="step2" />
     </div>
-    <div class="nextStep">></div>
+    <div class="nextStep">-</div>
     <div class="step">
-      <img src="assets/svg/Thumb.svg" alt="step2" />
+      <img src="assets/svg/Gamepad_large.svg" alt="step2" />
     </div>
   </div>
 
@@ -18,28 +18,49 @@
   <div class="modal-header">
     <h1 class="text-h1">Create Your Profile</h1>
   </div>
-
-  <!--Body-->
-  <div class="modal-body">
-    <h2 class="text-sm-bold">Choose your username</h2>
-    <input type="text" [(ngModel)]="username" class="form-control" placeholder="Username" (input)="onUsernameInput()" />
-    <!-- Tämä siis tulee näkyviin, jos käyttäjätunnus on varattu -->
-    <div class="warning-container" *ngIf="errorText">
-      <img src="assets/svg/StateKey/NotAllowed.svg" class="stateImage" />
-      <h2 class="text-xs error-text">Username taken</h2>
+  <form (ngSubmit)="next()">
+    <!--Body-->
+    <div class="modal-body">
+      <h2 class="text-sm-bold">Choose your username</h2>
+      <input
+        (keydown.enter)="handleEnter($event)"
+        type="text"
+        name="username"
+        [(ngModel)]="username"
+        class="form-control"
+        placeholder="Username"
+        (input)="onUsernameInput()"
+      />
+      <!-- Tämä siis tulee näkyviin, jos käyttäjätunnus on varattu -->
+      <div class="warning-container" *ngIf="errorText">
+        <img src="assets/svg/StateKey/NotAllowed.svg" class="stateImage" />
+        <h2 class="text-xs error-text">Username taken</h2>
+      </div>
     </div>
-  </div>
 
-  <!--The Hint-->
-  <div class="hint">
-    <h2 class="text-sm">Hint: 3-20 characters. Allowed: A-Z, a-z, 0-9,_</h2>
-  </div>
-  <!--Footer-->
-  <div class="modal-footer">
-    <!--<button class="btn btn-primary" (click)="next()">Next</button>-->
-    <app-button label="Back" icon="ArrowKey/LeftArrow" (click)="closeModal()" iconPosition="left"></app-button>
+    <!--The Hint-->
+    <div class="hint">
+      <h2 class="text-sm">Hint: 3-20 characters. Allowed: A-Z, a-z, 0-9,_</h2>
+    </div>
+    <!--Footer-->
+    <div class="modal-footer">
+      <!--<button class="btn btn-primary" (click)="next()">Next</button>-->
+      <app-button
+        label="Back"
+        icon="ArrowKey/LeftArrow"
+        (click)="closeModal()"
+        iconPosition="left"
+      ></app-button>
 
-    <app-button label="Next" variant="highlight" iconPosition="right" icon="ArrowKey/RightArrow" (click)="next()"
-      [state]="validUsername && !errorText ? 'active' : 'disabled'"></app-button>
-  </div>
+      <app-button
+        #nextBtn
+        label="Next"
+        variant="highlight"
+        iconPosition="right"
+        icon="ArrowKey/RightArrow"
+        (click)="next()"
+        [state]="validUsername && !errorText ? 'active' : 'disabled'"
+      ></app-button>
+    </div>
+  </form>
 </div>

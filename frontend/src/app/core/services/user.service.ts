@@ -26,7 +26,7 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private authStore: AuthStore,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
   ) {
     this.initUsersOnlineStatus();
     // Make users$ always sorted with online users first
@@ -36,13 +36,13 @@ export class UserService {
           if (a.Status === 'online' && b.Status !== 'online') return -1;
           if (a.Status !== 'online' && b.Status === 'online') return 1;
           return 0; // keep order otherwise
-        })
-      )
+        }),
+      ),
     );
   }
 
   // adds online status to user-subject
-  private initUsersOnlineStatus() {
+  public initUsersOnlineStatus() {
     console.log('INITING USERS ONLINE STATUUS');
 
     this.getUsers().subscribe({
@@ -118,15 +118,11 @@ export class UserService {
 
   updateUser(userId: string, data: any): Observable<any> {
     const token = this.authStore.getToken();
-    return this.http.put(
-      `${this.apiUrl}/update/${userId}`, // URL
-      data, // body
-      {
-        headers: {
-          Authorization: `${token}`, // add "Bearer " if using JWT
-        },
-      }
-    );
+    return this.http.put(`${this.apiUrl}/update/${userId}`, data, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
   }
 
   deleteUser(userId: string): Observable<any> {
@@ -171,7 +167,7 @@ export class UserService {
         }
         // Otherwise just return filtered results
         return filterRes.users;
-      })
+      }),
     );
   }
 
@@ -184,7 +180,7 @@ export class UserService {
       .pipe(
         tap((res: any) => {
           this.unreadsSubject.next(res); //Push to stream
-        })
+        }),
       );
   }
 
@@ -211,7 +207,7 @@ export class UserService {
       .pipe(
         tap(() => {
           this.refreshUnreads();
-        })
+        }),
       );
   }
 

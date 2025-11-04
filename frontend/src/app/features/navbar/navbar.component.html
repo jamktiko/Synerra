@@ -9,7 +9,8 @@
     </div>
 
     <button type="button" class="user-profile" (click)="onUserClick()" aria-label="User menu">
-      <img class="avatar" [src]="user?.ProfilePicture" alt="User avatar" />
+      <img class="avatar" [src]="user?.ProfilePicture ? user?.ProfilePicture : 'assets/svg/Acount.svg'"
+        alt="User avatar" />
       <div class="user-info">
         <span class="user-name">{{ user?.Username }}</span>
         <span class="user-email">{{ user?.Email }}</span>
@@ -24,9 +25,8 @@
     <ng-container *ngFor="let item of navItems; trackBy: trackByLabel">
       <ng-container *ngIf="item.children?.length; else singleNavItem">
         <div class="nav-group" [class.expanded]="isGroupExpanded(item)">
-          <button type="button" class="nav-group__trigger"
-            [class.active]="isGroupExpanded(item) || isGroupActive(item)" (click)="toggleGroup(item)"
-            [attr.aria-expanded]="isGroupExpanded(item)">
+          <button type="button" class="nav-group__trigger" [class.active]="isGroupExpanded(item) || isGroupActive(item)"
+            (click)="toggleGroup(item)" [attr.aria-expanded]="isGroupExpanded(item)">
             <span class="nav-group__icon">
               <img [src]="getIconPath(item.icon)" [alt]="item.label + ' icon'" />
             </span>
@@ -34,11 +34,10 @@
             <span class="nav-group__chevron" aria-hidden="true"></span>
           </button>
 
-          <div class="nav-submenu" [class.open]="isGroupExpanded(item)"
-            [style.maxHeight]="getSubmenuHeight(item)">
-            <a *ngFor="let child of item.children" class="nav-subitem"
-              [routerLink]="child.route" [queryParams]="child.queryParams || null"
-              routerLinkActive="active" [routerLinkActiveOptions]="{ exact: child.exact ?? true }">
+          <div class="nav-submenu" [class.open]="isGroupExpanded(item)" [style.maxHeight]="getSubmenuHeight(item)">
+            <a *ngFor="let child of item.children" class="nav-subitem" [routerLink]="child.route"
+              [queryParams]="child.queryParams || null" routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: child.exact ?? true }">
               <span class="nav-subitem__icon" *ngIf="child.icon">
                 <img [src]="getIconPath(child.icon)" alt="" aria-hidden="true" />
               </span>
@@ -49,8 +48,8 @@
       </ng-container>
 
       <ng-template #singleNavItem>
-        <app-button class="nav-btn" variant="sidebar" size="small" [fullWidth]="true"
-          [label]="item.label" [icon]="item.icon" [routerLink]="item.route" routerLinkActive="active"
+        <app-button class="nav-btn" variant="sidebar" size="small" [fullWidth]="true" [label]="item.label"
+          [icon]="item.icon" [routerLink]="item.route" routerLinkActive="active"
           [routerLinkActiveOptions]="{exact: true}" #rla="routerLinkActive"
           [buttonState]="rla.isActive ? 'active' : undefined">
         </app-button>

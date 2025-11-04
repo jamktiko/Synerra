@@ -11,46 +11,25 @@
         <h2 class="text-sm">Email</h2>
       </div>
 
-      <input
-        type="email"
-        [(ngModel)]="emailInput"
-        name="email"
-        placeholder="example@email.com"
-        class="text-xs"
-        (focus)="errorVisible = false"
-      />
+      <input #inputEmail type="email" [(ngModel)]="emailInput" name="email" placeholder="example@email.com"
+        class="text-xs" (focus)="errorVisible = false"
+        (keydown.enter)="handleEnterOnEmail($event); inputPassword.focus()" />
 
       <div class="inputHeadings">
         <h2 class="text-sm">Password</h2>
       </div>
 
-      <input
-        type="password"
-        [(ngModel)]="passwordInput"
-        name="password"
-        placeholder="**********"
-        class="text-xs"
-        (focus)="errorVisible = false"
-      />
+      <input #inputPassword type="password" [(ngModel)]="passwordInput" (keydown.enter)="handleEnterOnPassword($event)"
+        name="password" placeholder="**********" class="text-xs" (focus)="errorVisible = false" />
 
       <div class="buttonFrame">
-        <app-button
-          label="Back"
-          variant="default"
-          [routerLink]="'/login/'"
-        ></app-button>
-        <app-button
-          label="Login"
-          variant="highlight"
-          type="submit"
-        ></app-button>
+        <app-button label="Back" variant="default" [routerLink]="'/login/'"></app-button>
+        <app-button #nextBtn label="Login" variant="highlight" type="submit"
+          [state]="canLogin ? 'active' : 'disabled'"></app-button>
       </div>
     </form>
   </div>
-  <div
-    class="errorText"
-    [style.visibility]="errorVisible ? 'visible' : 'hidden'"
-  >
+  <div class="errorText" [style.visibility]="errorVisible ? 'visible' : 'hidden'">
     <img src="assets/svg/StateKey/NotAllowed.svg" class="stateImage" />
     <h2 class="text-xs">Wrong password or email</h2>
   </div>

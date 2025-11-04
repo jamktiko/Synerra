@@ -1,10 +1,8 @@
-<div class="layout">
-  <div class="mid-container">
-    <app-game-filters (filterChanged)="onFilterChanged($event)" (sortToggled)="toggleSortOrder()">
-    </app-game-filters>
+<div class="mid-container">
+  <app-game-filters (filterChanged)="onFilterChanged($event)" (sortToggled)="toggleSortOrder()">
+  </app-game-filters>
 
-    <div class=" games-container">
-      <app-game-card *ngFor="let game of filteredGames" [game]="game"></app-game-card>
-    </div>
+  <div class=" games-container">
+    <app-game-card *ngFor="let game of filteredGames" [game]="game"></app-game-card>
   </div>
 </div>

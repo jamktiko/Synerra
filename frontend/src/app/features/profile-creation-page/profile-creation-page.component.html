@@ -35,8 +35,8 @@
     <div class="linebreak">
       <div class="linebreak-child"></div>
     </div>
-    <div class="footerButton">
-      <app-button label="Create Profile" variant="highlight" (click)="start(1)"></app-button>
+    <div class="footerButton" tabindex="0"> <app-button #nextBtn label="Create Profile" variant="highlight"
+        (click)="start(1)"></app-button>
 
       <h2 class="login-link text-xs" (click)="logOut()">
         Or login with another user

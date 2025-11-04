@@ -31,11 +31,36 @@
 }
 
 .progress {
+  width: 100%;
   justify-content: center;
   gap: 5px;
   background: var(--color-gray);
   height: fit-content;
+  align-items: center;
 }
+
+.done {
+  position: relative;
+  border-radius: 50%;
+
+  animation: breath 3s ease-in-out infinite;
+}
+
+@keyframes breath {
+  0% {
+    transform: scale(1);
+    filter: brightness(1.2);
+  }
+  50% {
+    transform: scale(0.96);
+    filter: brightness(0.8);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1.2);
+  }
+}
+
 .knowledgeText {
   text-align: center;
   padding: 0 4rem 0 4rem;
@@ -47,7 +72,7 @@
 }
 
 .nextStep {
-  color: var(--color-primary);
+  color: #f2680d;
   font-size: 30px;
   height: fit-content;
 }
@@ -148,7 +173,7 @@
 }
 
 .dropBox {
-  max-height: 6.2rem;
+  max-height: 15rem;
   overflow-y: auto;
   width: 20rem;
   color: var(--color-text-default);

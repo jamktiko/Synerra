@@ -1,5 +1,5 @@
 // Bootstrap modal
-import { Component, effect } from '@angular/core';
+import { Component, effect, ViewChild, ElementRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BirthdayComponent } from './birthday/birthday.component';
 import { UsernameComponent } from './username/username.component';
@@ -10,6 +10,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { UserStore } from '../../core/stores/user.store';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-profile-creation-page',
@@ -19,23 +20,23 @@ import { Router } from '@angular/router';
 })
 export class ProfileCreationPageComponent implements OnInit {
   profile: Partial<User> = {};
+  currentStep: number = 0;
 
   constructor(
     private modalService: NgbModal,
     private userStore: UserStore,
     private authService: AuthService,
     private router: Router,
-  ) {
-    effect(() => {
-      const user = this.userStore.user();
-      if (user?.Username) {
-        // If the user already has a username, they get thrown to the dashboardn (must not be able to create the profile again)
-        this.router.navigate(['/dashboard']);
-      }
-    });
-  }
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // const user = this.userStore.user();
+    // console.log('MITÄ VITTUSAAA', user);
+    // if (user?.Username) {
+    //   // If the user already has a username, they get thrown to the dashboardn (must not be able to create the profile again)
+    //   this.router.navigate(['/dashboard']);
+    // }
+  }
 
   logOut() {
     this.authService.logout();
@@ -47,17 +48,22 @@ export class ProfileCreationPageComponent implements OnInit {
     try {
       // Step 1: Username
       if (step === 1) {
+        // The enter listener must immediately know that a modal is open (to prevent multiple simultanious modal renders)
+        this.currentStep++;
+
         const usernameModalRef = this.modalService.open(UsernameComponent, {
           centered: true,
           size: 'lg',
         });
         usernameModalRef.componentInstance.profile = this.profile; // In case of going back to this modal, sending the current username
         await usernameModalRef.result;
+        console.log(usernameModalRef.result);
         step++;
       }
 
       // Step 2: Birthday
       if (step === 2) {
+        this.currentStep++;
         const birthdayModalRef = this.modalService.open(BirthdayComponent, {
           centered: true,
           size: 'lg',
@@ -69,6 +75,7 @@ export class ProfileCreationPageComponent implements OnInit {
 
       // Step 3: Games
       if (step === 3) {
+        this.currentStep++;
         const gamesModalRef = this.modalService.open(GamesComponent, {
           centered: true,
           size: 'lg',
@@ -86,7 +93,19 @@ export class ProfileCreationPageComponent implements OnInit {
         console.log('Modal closed/cancelled');
       } else {
         console.log('Modal process closed');
+        step = 0;
+        this.currentStep = 0;
       }
+    }
+  }
+
+  @ViewChild('nextBtn', { read: ElementRef }) nextBtn!: ElementRef;
+
+  @HostListener('document:keydown.enter', ['$event'])
+  onEnter(event: KeyboardEvent) {
+    event.preventDefault();
+    if (this.nextBtn?.nativeElement && this.currentStep < 1) {
+      this.nextBtn.nativeElement.click();
     }
   }
 }

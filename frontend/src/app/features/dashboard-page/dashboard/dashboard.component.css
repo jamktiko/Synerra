@@ -30,8 +30,8 @@
   background: var(--color-dark-gradient);
   padding: 0.5rem 1rem;
   border: 1px solid rgba(58, 58, 58, 1);
-  border-radius: 8px;
-  max-width: 85%;
+  border-radius: 20px;
+  width: 100%;
 }
 
 .user-name {
@@ -56,7 +56,7 @@
   max-height: calc(var(--viewport-height) * 0.8);
   overflow-y: auto;
   border: 1px solid rgba(58, 58, 58, 1);
-  border-radius: 8px;
+  border-radius: 20px;
   box-sizing: border-box;
 }
 
@@ -113,6 +113,12 @@ app-dashboard-card img {
   .games-grid {
     padding: 1rem;
     gap: 1.25rem;
+  }
+
+  .top-navigation-bar {
+    flex-direction: column; /* Stack items vertically */
+    text-align: center;
+    gap: 4px;
   }
 }
 

@@ -16,6 +16,7 @@ import {
 } from '@angular/router';
 import { User } from '../../core/interfaces/user.model';
 import { UserStore } from '../../core/stores/user.store';
+import { LoadingPageStore } from '../../core/stores/loadingPage.store';
 import { AuthService } from '../../core/services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { filter } from 'rxjs/operators';
@@ -94,13 +95,15 @@ export class NavbarComponent implements OnInit {
   constructor(
     private userStore: UserStore,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private loadingPageStore: LoadingPageStore,
   ) {
-    // Sets up a reactive watcher that updates user
+    // Watch for user changes reactively
     effect(() => {
       const user = this.userStore.user();
-      if (user) {
+      if (user && user.UserId) {
         this.user = user;
+        this.buildNavItemsMobile(user.UserId);
       }
     });
 
@@ -110,8 +113,8 @@ export class NavbarComponent implements OnInit {
     this.router.events
       .pipe(
         filter(
-          (event): event is NavigationEnd => event instanceof NavigationEnd
-        )
+          (event): event is NavigationEnd => event instanceof NavigationEnd,
+        ),
       )
       .subscribe((event) => {
         this.currentUrl = event.urlAfterRedirects;
@@ -132,6 +135,19 @@ export class NavbarComponent implements OnInit {
     this.syncExpandedState(this.currentUrl);
   }
 
+  private buildNavItemsMobile(userId: string): void {
+    this.navItemsMobile = [
+      { label: 'Settings', icon: 'Settings', route: '/dashboard/settings' },
+      { label: 'Games', icon: 'Gamepad', route: '/dashboard/choose-game' },
+      { label: 'Home', icon: 'logo_small', route: '/dashboard' },
+      { label: 'Social', icon: 'NoMessage', route: '/dashboard/social' },
+      {
+        label: 'Profile',
+        icon: 'Acount',
+        route: `/dashboard/profile/${userId}`,
+      },
+    ];
+  }
   toggleCollapse(): void {
     this.isCollapsed = !this.isCollapsed;
     this.hasUserPreference = true;
@@ -174,11 +190,12 @@ export class NavbarComponent implements OnInit {
 
   onUserClick(): void {
     console.log('User button clicked');
-    this.router.navigate(['/dashboard/profile']);
+    this.router.navigate([`/dashboard/profile/${this.user?.UserId}`]);
   }
 
   // Clearing authToken and rerouting to the login-page when logging off
   logOut() {
+    this.loadingPageStore.setAuthLayoutLoadingPageVisible(false);
     this.authService.logout();
     this.router.navigate(['/login']);
   }
@@ -208,7 +225,7 @@ export class NavbarComponent implements OnInit {
       return false;
     }
     return item.children.some((child) =>
-      this.matchesChildRoute(child, this.currentUrl)
+      this.matchesChildRoute(child, this.currentUrl),
     );
   }
 
@@ -237,7 +254,7 @@ export class NavbarComponent implements OnInit {
         return;
       }
       const hasMatch = item.children.some((child) =>
-        this.matchesChildRoute(child, url)
+        this.matchesChildRoute(child, url),
       );
       if (hasMatch) {
         this.expandedGroups.add(item.label);
@@ -258,7 +275,7 @@ export class NavbarComponent implements OnInit {
     }
     const params = new URLSearchParams(search);
     return Object.entries(child.queryParams).every(
-      ([key, value]) => params.get(key) === String(value)
+      ([key, value]) => params.get(key) === String(value),
     );
   }
 }

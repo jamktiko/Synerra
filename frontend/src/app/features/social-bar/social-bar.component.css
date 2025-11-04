@@ -1,13 +1,12 @@
 .social-floating {
   position: fixed;
-  top: 52px;
-  right: 20px;
-  width: 320px;
+  top: 57px;
+  right: 0; /* or right: 0; depending on your design */
+  width: clamp(12rem, 20vw, 18rem); /* ✅ responsive width */
   max-width: 18rem;
   height: calc(var(--viewport-height) - 120px);
   max-height: calc(var(--viewport-height) - 120px);
   display: flex;
-  align-self: flex-start;
   flex-direction: column;
   gap: 0.35rem;
   padding: 1rem 0.95rem;
@@ -16,9 +15,9 @@
   box-sizing: border-box;
   border: 1px solid rgba(58, 58, 58, 1);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
-  scrollbar-gutter: stable;
-  overscroll-behavior: contain;
-  z-index: 2;
+  z-index: 10;
+  overflow-y: auto;
+  margin-right: 2rem;
 }
 
 .social-floating a {
@@ -60,8 +59,8 @@
 
 .top-socialbar {
   display: flex;
+  justify-content: space-between; /* pushes one item left, one right */
   align-items: center;
-  justify-content: space-between;
   width: 100%;
 }
 

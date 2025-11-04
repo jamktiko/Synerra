@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private gameService: GameService,
     private userStore: UserStore,
-    private userService: UserService
+    private userService: UserService,
   ) {
     // Sets up a reactive watcher that updates user
     effect(() => {
@@ -70,7 +70,6 @@ export class DashboardComponent implements OnInit {
         this.sortedGames = [...this.games]
           .filter((game) => Number(game.Popularity) >= 1) // exclude unpopular games
           .sort((a, b) => Number(b.Popularity) - Number(a.Popularity));
-        console.log(this.sortedGames);
         this.filterUserGames();
         console.log('Users played games:', this.userGames);
       },
