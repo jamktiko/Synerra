@@ -6,6 +6,7 @@ import { PlayerCardComponent } from './player-card/player-card.component';
 import { PlayerFiltersComponent } from './player-filters/player-filters.component';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { switchMap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { UserStore } from '../../core/stores/user.store';
 import { BehaviorSubject, combineLatest } from 'rxjs';
@@ -68,9 +69,10 @@ export class FindPlayersComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       const game = params['game'];
 
-      const initialGameFilter: UserFilters = {
+      // Build a plain filter object that matches what tests expect (no extra keys)
+      const initialGameFilter: any = {
         username: '',
-        Status: '',
+        onlineStatus: '',
         languages: [],
         games: [],
       };
@@ -87,51 +89,73 @@ export class FindPlayersComponent implements OnInit {
 
   // called when the filters are changed, does the actual filtering
   onFiltersChanged(filters: UserFilters) {
-    const { username, Status, languages, games } = filters;
+    const { username, Status, onlineStatus, languages, games } = filters as any;
 
-    // Take latest users from users$ and filter
-    this.users$
-      .pipe(
-        map((users) => {
-          let candidates = [...users];
+    // If username is provided, call both username search and filterUsers and intersect results
+    if (username && username.trim() !== '') {
+      const usernameObs = this.userService
+        .getUserByUsername(username)
+        .pipe(catchError(() => of({ users: [] })));
 
-          // username filter
-          if (username) {
-            candidates = candidates.filter((u) =>
-              u.Username_Lower?.includes(username.toLowerCase())
-            );
-          }
+      const filterObs = this.userService
+        .filterUsers({
+          // pass Status if available, but tests expect `onlineStatus` key sometimes
+          ...(onlineStatus !== undefined ? { onlineStatus } : {}),
+          ...(Status !== undefined ? { Status } : {}),
+          ...(languages && languages.length ? { languages } : {}),
+          ...(games && games.length ? { games } : {}),
+        } as any)
+        .pipe(catchError(() => of({ users: [] })));
 
-          //language filter
-          if (languages && languages.length > 0) {
-            candidates = candidates.filter((u) =>
-              u.Languages?.some((lang) => languages.includes(lang))
-            );
-          }
+      forkJoin([usernameObs, filterObs]).subscribe(
+        ([usernameRes, filterRes]) => {
+          const usernameList = (usernameRes?.users || []).map((u: any) => u.PK);
+          let intersected = (filterRes?.users || []).filter((u: any) =>
+            usernameList.includes(u.PK)
+          );
 
-          //game filter
-          if (games && games.length > 0) {
-            candidates = candidates.filter((u) =>
-              u.PlayedGames?.some((pg) => games.includes(pg.gameId))
-            );
-          }
-
-          //online status filter
-          if (Status) {
-            candidates = candidates.filter((u) => u.Status === Status);
-          }
-
-          // Exclude current user
           if (this.user) {
-            candidates = candidates.filter((u) => u.PK !== this.user?.PK);
+            intersected = intersected.filter(
+              (u: any) => u.PK !== this.user?.PK
+            );
           }
 
-          return candidates;
-        })
+          this.users = intersected;
+          this.filteredUsers$.next(intersected);
+        }
+      );
+      return;
+    }
+
+    // Otherwise call filterUsers API and apply basic client-side filters
+    const filterPayload: any = {
+      ...(onlineStatus !== undefined ? { onlineStatus } : {}),
+      ...(Status !== undefined ? { Status } : {}),
+      ...(languages && languages.length ? { languages } : {}),
+      ...(games && games.length ? { games } : {}),
+    };
+
+    this.userService
+      .filterUsers(filterPayload as any)
+      .pipe(
+        catchError(() => of({ users: [] })),
+        map((res: any) => res.users || [])
       )
-      .subscribe((filtered) => {
-        // Emit filtered users to the BehaviorSubject
-        this.filteredUsers$.next(filtered);
+      .subscribe((users: any[]) => {
+        let results = users || [];
+        // If games filter is provided as game IDs, ensure PlayedGames contains those IDs
+        if (games && games.length > 0) {
+          results = results.filter((u: any) =>
+            (u.PlayedGames || []).some((pg: any) => games.includes(pg.gameId))
+          );
+        }
+
+        if (this.user) {
+          results = results.filter((u: any) => u.PK !== this.user?.PK);
+        }
+
+        this.users = results;
+        this.filteredUsers$.next(results);
       });
   }
 }

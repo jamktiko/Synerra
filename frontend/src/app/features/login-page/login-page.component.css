@@ -2,6 +2,7 @@
   position: relative;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
+  margin: 0 auto;
   gap: 32px;
   padding: 5rem;
   border: 1px solid rgba(58, 58, 58, 1);
@@ -151,9 +152,130 @@
   }
 }
 
+/* Ensure mobile opens from top instead of vertically centering content */
+@media (max-width: 480px) {
+  .container-opaque {
+    padding-block: 20px;
+    padding-inline: 16px;
+    align-items: start;
+  }
+
+  .left-column {
+    justify-content: flex-start;
+  }
+
+  .right-column {
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .login-frame {
+    margin-top: 0;
+    width: 100%;
+  }
+}
+
+/* Make login page content fit on small phones without affecting desktop */
+@media (max-width: 420px) {
+  .container-opaque {
+    height: auto;
+    max-height: calc(100vh - 16px);
+    padding-top: 28px;
+    padding-bottom: 20px;
+    padding-left: 25px;
+    padding-right: 25px;
+    gap: 6px;
+    align-items: start;
+    overflow: hidden;
+    border-radius: 6px;
+    box-shadow: var(--shadow-1);
+    width: 22rem;
+    margin: 0 auto;
+  }
+
+  /* push left-column content down a bit to lower the top texts */
+  .left-column {
+    gap: 6px;
+    justify-content: flex-start;
+    padding-top: 20px;
+  }
+
+  .logo-big {
+    max-width: 120px;
+    height: auto;
+    display: block;
+  }
+
+  .welcome-block {
+    margin-top: 18px;
+    margin-bottom: 6px;
+  }
+
+  .welcome-block h1 {
+    font-size: 1.5rem;
+    line-height: 1.05;
+  }
+
+  .welcome-block p {
+    font-size: 0.8rem;
+    margin-top: 0.4rem;
+  }
+
+  .right-column {
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  .login-frame {
+    max-width: 100%;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .login-frame > app-button {
+    width: 100%;
+    margin: 0;
+  }
+
+  .login-frame > app-button .btn {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+    min-height: 38px;
+    font-size: 13px;
+  }
+
+  .linebreak {
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+
+  .cta-text {
+    font-size: 0.9rem;
+    margin-top: 6px;
+    margin-bottom: 4px;
+  }
+
+  .teksti {
+    font-size: 0.85rem;
+  }
+
+  /* Try to keep typography compact so everything fits vertically */
+  .container-opaque,
+  .container-opaque * {
+    font-size: 13px;
+  }
+}
+
 /* Kutistus pienelle näytölle -JH*/
 @media (max-height: 675px) {
   .container-opaque {
-    scale: 0.85;
+    padding: 2rem;
+    margin: 1rem;
   }
 }

@@ -16,6 +16,7 @@ import { UserStore } from '../../../core/stores/user.store';
 export class PlayerCardComponent implements OnInit {
   @Input() user!: User;
   currentUser: User | null = null;
+  friends: User[] = [];
   availableLanguages = [
     { value: 'en', flag: 'https://flagcdn.com/gb.svg' },
     { value: 'es', flag: 'https://flagcdn.com/es.svg' },
