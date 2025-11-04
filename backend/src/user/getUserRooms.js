@@ -22,7 +22,7 @@ module.exports.handler = async (event) => {
 
     const rooms = roomResult.Items || [];
 
-    // Getting the room and room user data for each room
+    // Getting metadata + member user data for each room
     const detailedRooms = await Promise.all(
       rooms.map(async (room) => {
         const roomId = room.RoomId;
@@ -31,8 +31,8 @@ module.exports.handler = async (event) => {
           new GetCommand({
             TableName: process.env.MAIN_TABLE,
             Key: {
-              PK: `ROOM#${roomId}`,
-              SK: `META#ROOM#${roomId}`,
+              PK: `CHAT#${roomId}`,
+              SK: `META#CHAT#${roomId}`,
             },
           })
         );
@@ -42,6 +42,7 @@ module.exports.handler = async (event) => {
 
         let members = [];
         if (memberIds.length > 0) {
+          // Getting all users
           const batchRes = await doccli.send(
             new BatchGetCommand({
               RequestItems: {
