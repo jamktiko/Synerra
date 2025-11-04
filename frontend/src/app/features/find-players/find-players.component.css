@@ -5,7 +5,6 @@
   column-gap: 28px;
   row-gap: 36px;
   padding: 28px;
-  justify-items: center;
   align-items: start;
   align-content: start;
   background: var(--color-background);
@@ -78,7 +77,6 @@
   .main-content {
     max-width: 100%;
     width: 100%;
-    padding: 0 1rem;
   }
 
   .mid-container {
@@ -144,7 +142,6 @@
   }
 
   .users-container {
-    padding: 18px 12px;
     gap: 24px;
     grid-template-columns: minmax(0, 1fr);
     overflow-x: hidden;
