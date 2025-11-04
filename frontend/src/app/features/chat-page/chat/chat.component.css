@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 90vh;
+  height: 90dvh;
   width: 100vw; /* fill available width */
   max-width: 900px; /* optional limit for large screens */
   background: var(--color-background);
@@ -13,6 +13,7 @@
   margin: 0 auto; /* stay centered */
   position: relative;
   top: -30px; /* move chat box upward */
+  left: -30px;
 }
 
 @media screen and (max-width: 1500px) {
@@ -24,12 +25,13 @@
 @media screen and (max-width: 768px) {
   .chatElement {
     width: 100vw;
-    height: calc(100vh - 85px); /* mobile navbar height ≈ 80–85px */
-    position: fixed;
-    top: 0;
+    height: calc(100vh - 120px); /* mobile navbar height ≈ 80–85px */
+    position: relative;
+    top: -50px;
     left: 0;
     overflow: hidden;
     margin-left: 0;
+    padding-top: 20px;
   }
 }
 

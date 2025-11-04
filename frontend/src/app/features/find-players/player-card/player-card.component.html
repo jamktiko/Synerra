@@ -1,4 +1,5 @@
-<div class="card" [ngClass]="{ online: user.Status === 'online', offline: user.Status !== 'online' }">
+<div class="card" *ngIf="user.UserId !== currentUser?.UserId"
+  [ngClass]="{ online: user.Status === 'online', offline: user.Status !== 'online' }">
   <button type="button" class="avatar-button" (click)="onProfile()"
     [attr.aria-label]="'Open profile of ' + user.Username">
     <img [src]="
@@ -9,10 +10,12 @@
 
   <div class="bio">
     {{ user.Bio || 'No bio text available' }}
+
   </div>
 
   <div class="heading">
     {{ user.Username }}
+    <img *ngIf="isFriend" src="/assets/svg/friend.svg" alt="friend" class="friendsvg">
   </div>
 
   <div class="languages" *ngIf="getCommonLanguages(user.Languages).length > 0">
@@ -26,7 +29,7 @@
       <span class="icon">💬</span>
       <span>Chat</span>
     </button>
-    <button type="button" class="add-btn" (click)="onAddFriend()">
+    <button *ngIf="!isFriend" type="button" class="add-btn" (click)="onAddFriend()">
       <span class="icon">+</span>
       <span>Add</span>
     </button>

@@ -188,6 +188,11 @@
   box-shadow: 0 0 6px rgba(32, 32, 32, 0.8);
 }
 
+.friendsvg {
+  filter: invert(1);
+  width: 20px;
+  height: 20px;
+}
 .actions {
   display: flex;
   align-items: center;
@@ -196,6 +201,9 @@
   width: 100%;
   margin: 14px auto 0px auto;
   z-index: 2;
+}
+.actions:has(:only-child) {
+  justify-content: center;
 }
 
 .actions button {
