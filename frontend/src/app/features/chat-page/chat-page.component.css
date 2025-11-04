@@ -4,10 +4,29 @@ h1 {
 }
 
 .layout {
-  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 100vh;
+  display: flex;
+  justify-content: center; /* center horizontally */
+  align-items: flex-start; /* push toward top instead of middle */
+  padding-top: 2rem; /* adjust distance from top */
+  overflow: hidden;
+  z-index: 0;
 }
 
+/* keep your existing media query overrides */
+@media screen and (max-width: 750px) {
+  .layout {
+    overflow: hidden;
+    justify-content: center;
+    align-items: flex-start; /* stay near top even on mobile */
+    padding-top: 1rem;
+    width: 100%;
+  }
+}
 body {
   height: 100%;
   overflow: hidden;
