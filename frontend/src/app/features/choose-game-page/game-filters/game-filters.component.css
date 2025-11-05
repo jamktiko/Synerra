@@ -264,9 +264,6 @@ input[type="text"]::placeholder {
 }
 
 .sort-button {
-  width: 280px;
-  min-width: 240px;
-  max-width: 280px;
   display: flex;
   justify-content: center;
 }

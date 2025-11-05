@@ -15,8 +15,8 @@ import { UserStore } from '../../../core/stores/user.store';
 })
 export class PlayerCardComponent implements OnInit {
   @Input() user!: User;
+  @Input() friends!: User[];
   currentUser: User | null = null;
-  friends: User[] = [];
   availableLanguages = [
     { value: 'en', flag: 'https://flagcdn.com/gb.svg' },
     { value: 'es', flag: 'https://flagcdn.com/es.svg' },
@@ -44,6 +44,11 @@ export class PlayerCardComponent implements OnInit {
   }
 
   dropdownOpen = false;
+
+  get isFriend(): boolean {
+    if (!this.user || !this.friends) return false;
+    return this.friends.some((f) => f.UserId === this.user.UserId);
+  }
 
   getCommonLanguages(userLanguages?: string[]): string[] {
     // If either array is missing, return empty
