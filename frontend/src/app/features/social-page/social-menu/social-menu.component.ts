@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { UserService } from '../../../core/services/user.service';
+import { UserStore } from '../../../core/stores/user.store';
 
 interface User {
   name: string;
@@ -14,96 +16,39 @@ interface User {
   templateUrl: './social-menu.component.html',
   styleUrl: './social-menu.component.css',
 })
-export class SocialMenuComponent {
+export class SocialMenuComponent implements OnInit {
   activeTab: 'users' | 'groups' = 'users';
-  users: User[] = [
-    {
-      name: 'Alice',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'Well Alice, it seems we both have autism.',
-    },
-    {
-      name: 'Bob',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'Last message',
-    },
-    {
-      name: 'Charlie',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage:
-        'Yo! Long message to test stuffLong message to test stuffLong message to test stuffLong message to test stuffLong message to test stuffLong message to test stuffLong message to test stuffLong message to test stuffLong message to test stuffLong message to test stuff',
-    },
-    {
-      name: 'David',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'What’s up?',
-    },
-    {
-      name: 'Eve',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'Good morning',
-    },
-    {
-      name: 'Frank',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'Check this out',
-    },
-    {
-      name: 'Grace',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'See you soon',
-    },
-    { name: 'Hannah', avatar: 'assets/svg/Acount.svg', lastMessage: 'LOL' },
-    { name: 'Isaac', avatar: 'assets/svg/Acount.svg', lastMessage: 'Thanks!' },
-    {
-      name: 'Jack',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'Sure thing',
-    },
-    {
-      name: 'Karen',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'On my way',
-    },
-    { name: 'Leo', avatar: 'assets/svg/Acount.svg', lastMessage: 'Cool' },
-    { name: 'Mia', avatar: 'assets/svg/Acount.svg', lastMessage: 'See ya' },
-    {
-      name: 'Nora',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'Interesting',
-    },
-    { name: 'Oscar', avatar: 'assets/svg/Acount.svg', lastMessage: 'Nice!' },
-    { name: 'Pam', avatar: 'assets/svg/Acount.svg', lastMessage: 'Got it' },
-    { name: 'Quinn', avatar: 'assets/svg/Acount.svg', lastMessage: 'Hello!' },
-    { name: 'Ralph', avatar: 'assets/svg/Acount.svg', lastMessage: 'Hi there' },
-    {
-      name: 'Sophia',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'Good night',
-    },
-    { name: 'Tom', avatar: 'assets/svg/Acount.svg', lastMessage: 'Bye!' },
-    {
-      name: 'Uma',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'See you later',
-    },
-    {
-      name: 'Victor',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'Cool beans',
-    },
-    { name: 'Wendy', avatar: 'assets/svg/Acount.svg', lastMessage: 'Alright' },
-    { name: 'Xander', avatar: 'assets/svg/Acount.svg', lastMessage: 'Yo yo' },
-    {
-      name: 'Yara',
-      avatar: 'assets/svg/Acount.svg',
-      lastMessage: 'Thanks a lot',
-    },
-    { name: 'Zane', avatar: 'assets/svg/Acount.svg', lastMessage: 'Peace' },
-  ];
 
-  rooms: User[] = [
-    { name: 'Room 1', avatar: 'assets/svg/Acount.svg', lastMessage: '' },
-    { name: 'Room 2', avatar: 'assets/svg/Acount.svg', lastMessage: '' },
-  ];
+  directChats: any[] = [];
+  groupChats: any[] = [];
+
+  constructor(
+    private userService: UserService,
+    private userStore: UserStore,
+  ) {}
+
+  ngOnInit(): void {
+    const loggedInUser = this.userStore.getUser();
+    if (loggedInUser?.UserId) {
+      this.userService.getUserRooms(loggedInUser.UserId).subscribe({
+        next: (res) => {
+          const allChatRooms = res.rooms;
+          console.log(allChatRooms);
+          for (let i of allChatRooms) {
+            if (i.Members.length === 2) {
+              console.log('pushiings', i);
+              this.directChats.push(i);
+            } else if (i.Members.length > 2) {
+              this.groupChats.push(i);
+            }
+          }
+        },
+        error: (err) => {
+          console.error('Failed to fetch rooms:', err);
+        },
+      });
+    } else {
+      console.error('No userId found');
+    }
+  }
 }

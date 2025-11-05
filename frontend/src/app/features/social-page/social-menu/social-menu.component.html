@@ -34,7 +34,7 @@
       'show-groups': activeTab === 'groups'
     }">
           <div class="tab-pane" id="users">
-            <div *ngFor="let user of users" class="card mb-2 p-2 text-white">
+            <div *ngFor="let user of directChats" class="card mb-2 p-2 text-white">
               <div class="d-flex align-items-center">
                 <img [src]="user.avatar" class="rounded-circle me-2" width="50" />
                 <div class="userTextBar">
@@ -46,7 +46,7 @@
           </div>
 
           <div class="tab-pane" id="groups">
-            <div *ngFor="let room of rooms" class="card mb-2 p-2 text-white">
+            <div *ngFor="let room of groupChats" class="card mb-2 p-2 text-white">
               <div class="d-flex align-items-center">
                 <img [src]="room.avatar" class="rounded-circle me-2" width="50" />
                 <div>
