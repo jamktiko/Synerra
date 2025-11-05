@@ -45,7 +45,7 @@
 .main {
   height: 100%;
   grid-column: 2;
-  padding: 57px 2rem 63px 3rem;
+  padding: 57px 2rem 75.35px 3rem;
   margin-right: clamp(
     14rem,
     20vw,

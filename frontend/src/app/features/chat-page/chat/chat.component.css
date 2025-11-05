@@ -1,18 +1,44 @@
 .chatElement {
   display: flex;
   flex-direction: column;
-  height: calc(var(--viewport-height) * 0.9);
+  justify-content: space-between;
+  height: 90dvh;
+  width: 100vw; /* fill available width */
+  max-width: 900px; /* optional limit for large screens */
   background: var(--color-background);
   border-radius: 8px;
   padding: 1rem;
-  color: var(--color-text-default);
-  font-family: Inter, sans-serif;
-  width: min(100%, var(--viewport-height));
-  max-width: min(100%, var(--viewport-height));
   box-sizing: border-box;
   overflow: hidden;
+  margin: 0 auto; /* stay centered */
+  position: relative;
+  top: -30px; /* move chat box upward */
+  left: -30px;
 }
 
+@media screen and (max-width: 1500px) {
+  .chatElement {
+    width: 600px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .chatElement {
+    width: 100vw;
+    height: calc(100vh - 120px); /* mobile navbar height ≈ 80–85px */
+    position: relative;
+    top: -50px;
+    left: 0;
+    overflow: hidden;
+    margin-left: 0;
+    padding-top: 20px;
+  }
+}
+
+/* Prevent horizontal scroll on page */
+body {
+  overflow-x: hidden;
+}
 .headframe {
   display: grid;
   grid-template-columns: 10% 75% 15%;
@@ -32,6 +58,7 @@
 .avatarframe-icon {
   width: 3.5rem;
   height: 3.5rem;
+  border-radius: 50px;
 }
 
 .chatheading {
@@ -46,6 +73,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  margin-right: 25px;
 }
 
 .headerButton img {

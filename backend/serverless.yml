@@ -368,6 +368,14 @@ functions:
       - websocket:
           route: exitroom
 
+  getUserRooms:
+    handler: src/user/getUserRooms.handler
+    events:
+      - httpApi:
+          path: /user/{userId}/rooms
+          method: get
+          authorizer: PrivateAuthorizer
+
   authHandler:
     handler: src/handlers.auth
 

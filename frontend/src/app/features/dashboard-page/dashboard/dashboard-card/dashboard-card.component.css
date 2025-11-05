@@ -50,3 +50,9 @@
   font-size: 0.9rem;
   opacity: 0.9;
 }
+
+@media (max-width: 460px) {
+  .card {
+    margin-left: 20px;
+  }
+}

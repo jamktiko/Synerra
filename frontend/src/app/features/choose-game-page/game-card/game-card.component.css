@@ -2,8 +2,6 @@
    Optimized Unified Card Style (Game Page)
    =========================== */
 .card {
-  width: 260px;
-  height: 400px;
   margin: 12px;
   display: inline-block;
   vertical-align: top;
@@ -98,25 +96,8 @@
 /* ===========================
    RESPONSIVE
    =========================== */
-@media (max-width: 1400px) {
-  .card {
-    width: 240px;
-    height: 370px;
-  }
-}
-
-@media (max-width: 1200px) {
-  .card {
-    width: 220px;
-    height: 350px;
-  }
-}
 
 @media (max-width: 900px) {
-  .card {
-    width: 200px;
-    height: 320px;
-  }
   .card-title {
     font-size: 1rem;
   }
@@ -126,11 +107,6 @@
 }
 
 @media (max-width: 600px) {
-  .card {
-    width: 180px;
-    height: 290px;
-    margin: 8px;
-  }
   .card-body {
     padding: 40px 0.5rem 0.5rem;
     min-height: 85px;
@@ -143,11 +119,7 @@
   }
 }
 
-@media (max-width: 480px) {
-  .card {
-    width: 160px;
-    height: 260px;
-  }
+@media (max-width: 520px) {
   .card-title {
     font-size: 0.9rem;
   }
@@ -209,4 +181,20 @@
   color: var(--color-primary);
   box-shadow: 0 0 12px rgba(232, 52, 29, 0.8);
   text-shadow: 0 0 12px rgba(232, 52, 29, 0.8);
+}
+
+.favourite-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 15px 25px;
+  border-radius: 10px;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  text-align: center;
 }

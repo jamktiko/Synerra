@@ -10,6 +10,9 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-width: 1080px; /* To make the element behave similarly as other pages filter sections */
+  margin: auto;
+  width: 100%;
   padding: 40px 3rem 48px 3rem;
   background: var(--color-dark-gradient);
   border-radius: 20px;
@@ -32,6 +35,7 @@
 }
 .title {
   font-size: 1.6rem;
+  width: 100%;
   text-align: center;
   font-weight: 700;
   letter-spacing: 0.5px;
