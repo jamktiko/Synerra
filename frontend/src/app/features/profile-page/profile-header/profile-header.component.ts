@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, NgModule, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserStore } from '../../../core/stores/user.store';
 import { User } from '../../../core/interfaces/user.model';
@@ -8,11 +8,14 @@ import { FriendService } from '../../../core/services/friend.service';
 import { Friend } from '../../../core/interfaces/friend.model';
 import { Game } from '../../../core/interfaces/game.model';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { ReputationService } from '../../../core/services/reputation.service';
 
 @Component({
   selector: 'app-profile-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, ButtonComponent],
   templateUrl: './profile-header.component.html',
   styleUrl: './profile-header.component.css',
 })
@@ -23,11 +26,17 @@ export class ProfileHeaderComponent implements OnInit {
   @Input() isFriend: boolean = false; //isFriend check from mothercomponent
   @Input() completeGames: Game[] = [];
   @Input() genrePopularity: any[] = [];
+  showReputationModal = false;
+
+  repComms = 1;
+  repMentality = 1;
+  repTeamwork = 1;
 
   constructor(
     private userStore: UserStore,
     private chatService: ChatService,
-    private friendService: FriendService
+    private friendService: FriendService,
+    private reputationService: ReputationService
   ) {}
 
   ngOnInit(): void {}
@@ -70,5 +79,34 @@ export class ProfileHeaderComponent implements OnInit {
         alert('Failed to send friend request');
       },
     });
+  }
+
+  //open modal
+  openReputationModal(): void {
+    this.showReputationModal = true;
+  }
+
+  //close modal
+  closeReputationModal(): void {
+    this.showReputationModal = false;
+  }
+
+  //submit reputation with service method
+  submitReputation() {
+    if (!this.user?.UserId) return;
+    this.reputationService
+      .giveReputation(
+        this.user.UserId,
+        this.repMentality,
+        this.repComms,
+        this.repTeamwork
+      )
+      .subscribe({
+        next: () => {
+          this.closeReputationModal();
+          window.location.reload(); // refresh UI to show new values
+        },
+        error: (err) => console.error(err),
+      });
   }
 }
