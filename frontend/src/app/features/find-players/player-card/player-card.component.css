@@ -1,7 +1,7 @@
 /* Player card styles */
 .card {
   position: relative;
-  width: 190px;
+  width: 210px;
   height: 290px;
   background-image: linear-gradient(
       rgba(10, 10, 10, 0.15),
@@ -16,8 +16,8 @@
   height: 320px; /* So usercards would have the same height */
   flex-direction: column;
   border-radius: var(--radius-xl);
-  background: linear-gradient(#515151, #434343) padding-box,
-    linear-gradient(180deg, #929292 0%, #444444 100%) border-box;
+  /* background: linear-gradient(#515151, #434343) padding-box,
+    linear-gradient(180deg, #929292 0%, #444444 100%) border-box; */
   border: 1px solid transparent;
   transition: all 0.3s ease;
   text-align: center;
@@ -82,8 +82,8 @@
   top: 25%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90px;
-  height: 90px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   border: none;
   background: transparent;

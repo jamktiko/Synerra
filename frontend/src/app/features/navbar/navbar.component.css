@@ -55,6 +55,23 @@
   padding: 1rem 0.5rem;
 }
 
+/* Strong visual hide: make any text inside collapsed navigation invisible and collapse font-size.
+   This is a last-resort safeguard so only icons (images) remain visible. */
+.navigation.collapsed,
+.navigation.collapsed .nav-links,
+.navigation.collapsed .nav-links * {
+  color: transparent !important;
+  font-size: 0 !important;
+}
+
+.navigation.collapsed .btn-icon img,
+.navigation.collapsed .nav-group__icon img,
+.navigation.collapsed .avatar {
+  /* icons are images so keep them visible by resetting font-size so they don't inherit 0 */
+  font-size: initial !important;
+  color: initial !important;
+}
+
 .top-section {
   display: flex;
   flex-direction: column;
@@ -214,8 +231,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.9rem 1rem;
+  gap: 0.65rem;
+  padding: 0.75rem 0.9rem;
   background: transparent;
   border: none;
   color: var(--color-text-dark);
@@ -226,7 +243,7 @@
   text-align: left;
   width: 100%;
   border-radius: 6px;
-  min-height: 48px;
+  min-height: 44px;
   transition: color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease,
     background 0.3s ease;
   text-decoration: none;
@@ -296,6 +313,12 @@
 /* Active / Hover */
 .nav-btn ::ng-deep .btn:hover {
   background: transparent;
+  /* Lighter hover background and ensure text color is default */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.04)
+  );
   color: var(--color-text-default);
   box-shadow: 0 6px 18px rgba(34, 34, 34, 0.22);
   transform: translateY(-1px);
@@ -329,9 +352,10 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  /* a bit more space between the icon and label so the text doesn't sit too close to the gear */
+  gap: 1rem;
   width: 100%;
-  padding: 0.9rem 1rem;
+  padding: 0.75rem 0.9rem;
   border-radius: 6px;
   border: none;
   background: transparent;
@@ -377,7 +401,12 @@
 
 .nav-group__trigger:hover {
   background: transparent;
-  box-shadow: 0 6px 18px rgba(34, 34, 34, 0.22);
+  /* Lighter hover background and default text color */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.04)
+  );
   transform: translateY(-1px);
   color: var(--color-text-default);
 }
@@ -436,7 +465,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  padding-left: 2.6rem;
+  /* move submenu items to the left side so they align to navbar edge */
+  padding-left: 0.4rem;
   max-height: 0;
   opacity: 0;
   overflow: hidden;
@@ -466,10 +496,11 @@
 }
 
 .nav-subitem:hover {
+  /* Lighter hover background for submenu items and ensure default text color */
   background: linear-gradient(
     120deg,
-    rgba(60, 60, 70, 0.35),
-    rgba(30, 30, 36, 0.25)
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.02)
   );
   color: var(--color-text-default);
 }
@@ -514,10 +545,10 @@
 
 .navigation.collapsed .nav-btn ::ng-deep .btn {
   justify-content: center;
-  padding: 0.8rem;
+  padding: 0.6rem;
   gap: 0.25rem;
   transform: none;
-  min-height: 50px;
+  min-height: 44px;
   width: 100%;
 }
 
@@ -530,9 +561,69 @@
   display: none;
 }
 
+/* Force-hide any label-like elements when fully collapsed and not temporarily expanded.
+   This avoids labels reappearing due to media-query or component-specific overrides. */
+.navigation.collapsed .nav-group__label,
+.navigation.collapsed .nav-group__chevron,
+.navigation.collapsed .nav-subitem__label,
+.navigation.collapsed .btn-label,
+.navigation.collapsed .nav-btn ::ng-deep .btn-label,
+.navigation.collapsed .logout-btn ::ng-deep .btn-label,
+.navigation.collapsed .user-info,
+.navigation.collapsed .user-name,
+.navigation.collapsed .user-email {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+}
+
+/* Fallback: ensure any nested component labels are hidden in collapsed mode
+  even if they come from deeply nested or component-scoped styles. */
+.navigation.collapsed ::ng-deep .btn-label,
+.navigation.collapsed ::ng-deep .nav-group__label,
+.navigation.collapsed ::ng-deep .nav-subitem__label,
+.navigation.collapsed ::ng-deep .user-info,
+.navigation.collapsed ::ng-deep .user-name,
+.navigation.collapsed ::ng-deep .user-email {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+}
+
+/* Extra safeguard: reduce font-size / visibility and remove padding so only icon remains
+   for any stubborn labels rendered by components or injected styles. */
+.navigation.collapsed .nav-links,
+.navigation.collapsed .nav-links * {
+  overflow: visible;
+}
+.navigation.collapsed .nav-btn ::ng-deep .btn-label,
+.navigation.collapsed .nav-group__label,
+.navigation.collapsed .nav-subitem__label {
+  visibility: hidden !important;
+  font-size: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.navigation.collapsed .nav-btn ::ng-deep .btn {
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
 .navigation.collapsed .nav-group__trigger {
   justify-content: center;
-  padding: 0.8rem;
+  padding: 0.6rem;
 }
 
 .navigation.collapsed .nav-submenu {
@@ -543,8 +634,9 @@
 }
 
 .navigation.collapsed:not(.expanded-from-collapse) .nav-btn ::ng-deep .btn {
-  justify-content: flex-start;
-  padding: 0.7rem 0.7rem;
+  /* Center icons in collapsed mode so all icons line up visually */
+  justify-content: center;
+  padding: 0.7rem;
   gap: 0;
 }
 
@@ -556,8 +648,9 @@
 }
 
 .navigation.collapsed:not(.expanded-from-collapse) .nav-group__trigger {
-  justify-content: flex-start;
-  padding: 0.7rem 0.7rem;
+  /* Center the icon in collapsed mode for group triggers (e.g. Settings) */
+  justify-content: center;
+  padding: 0.7rem;
   gap: 0;
 }
 
@@ -691,7 +784,7 @@
 
 .logout-btn ::ng-deep .btn:hover {
   opacity: 1;
-  background: rgba(58, 58, 58, 0.5);
+  background: rgba(80, 80, 80, 0.6);
   color: var(--color-text-default) !important;
   transform: scale(1.02);
 }
