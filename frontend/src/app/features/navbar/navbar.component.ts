@@ -217,15 +217,10 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleGroup(item: NavItem): void {
-    // If collapsed and the item is Settings, navigate to the settings page instead
-    // of trying to expand the submenu in-place. This keeps the collapsed layout
-    // stable and avoids showing labels unexpectedly.
-    if (this.isCollapsed && item.label === 'Settings') {
-      if (item.route) {
-        this.router.navigate([item.route]);
-      } else {
-        // fallback to main settings route
-        this.router.navigate(['/dashboard/settings']);
+    if (this.isCollapsed) {
+      const fallbackRoute = item.route || item.children?.[0]?.route;
+      if (fallbackRoute) {
+        this.router.navigate([fallbackRoute]);
       }
       return;
     }

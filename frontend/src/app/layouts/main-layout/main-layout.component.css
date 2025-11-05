@@ -101,8 +101,7 @@
     flex: 1 1 auto;
     min-height: 0; /* allow flex child to shrink and enable internal scrolling */
     width: 100%;
-    overflow-y: auto; /* make main the scrollable area on mobile */
-    padding: 1rem;
+    padding: 0 1rem 1rem 1rem;
   }
 
   .navbar {

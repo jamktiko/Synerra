@@ -55,6 +55,46 @@
   padding: 1rem 0.5rem;
 }
 
+.navigation.collapsed .nav-btn ::ng-deep .btn,
+.navigation.collapsed .nav-group__trigger {
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  padding: 0.5rem;
+  width: 72px;
+}
+
+.navigation.collapsed .nav-links {
+  align-items: center;
+}
+
+.navigation.collapsed .nav-group,
+.navigation.collapsed .nav-btn {
+  width: 72px;
+  margin: 0 auto;
+}
+
+.navigation.collapsed .nav-btn ::ng-deep .btn-icon,
+.navigation.collapsed .nav-group__icon {
+  margin: 0;
+}
+
+.navigation.collapsed .nav-btn ::ng-deep .btn-label,
+.navigation.collapsed .nav-group__label,
+.navigation.collapsed .nav-subitem__label,
+.navigation.collapsed .nav-group__chevron,
+.navigation.collapsed .user-info,
+.navigation.collapsed .user-name,
+.navigation.collapsed .user-email {
+  display: none !important;
+}
+
+.navigation.collapsed .nav-subitem {
+  justify-content: center;
+  gap: 0;
+  padding: 0.5rem;
+}
+
 /* Strong visual hide: make any text inside collapsed navigation invisible and collapse font-size.
    This is a last-resort safeguard so only icons (images) remain visible. */
 .navigation.collapsed,
@@ -910,13 +950,23 @@
   .navigation .mobile-nav {
     display: block;
     width: 100%;
+    max-width: 100%;
     position: fixed;
     bottom: 0;
+    left: 0;
+    right: 0;
     background: var(--color-background);
     box-shadow: 0px -2px 12.7px 4px rgba(0, 0, 0, 0.25);
     /* replaced with a smooth gradient top border via ::before */
-    padding: 3px 0;
+    padding: 3px 0 calc(3px + env(safe-area-inset-bottom, 0px));
     z-index: 10000;
+    margin: 0 auto;
+    transform: none;
+    touch-action: pan-y pinch-zoom;
+    overscroll-behavior-y: contain;
+    overscroll-behavior-x: none;
+    backface-visibility: hidden;
+    pointer-events: auto;
   }
 
   .navigation .mobile-nav .nav-content {
