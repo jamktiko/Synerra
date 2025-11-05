@@ -1,5 +1,15 @@
 <div class="main-content">
   <div class="social-menu">
-    <app-social-menu />
+    <app-social-menu [messagesTabShowing]="messagesTabShowing" (notificationsClicked)="tabSwitch($event)" />
+  </div>
+
+  <div class="tabs">
+    <div *ngIf="messagesTabShowing" class="messagesTab">
+      <app-messages-tab [directChats]="directChats" [groupChats]="groupChats" />
+    </div>
+
+    <div *ngIf="!messagesTabShowing" class="messagesTab">
+      <app-notifications-tab />
+    </div>
   </div>
 </div>
