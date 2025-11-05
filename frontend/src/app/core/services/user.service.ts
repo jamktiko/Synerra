@@ -212,6 +212,15 @@ export class UserService {
       );
   }
 
+  getUserRooms(userId: string): Observable<any> {
+    const token = this.authStore.getToken();
+    return this.http.get(`${this.apiUrl}/${userId}/rooms`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+  }
+
   refreshUsers(): void {
     this.getUsers().subscribe(); // triggers next() via the tap
   }
