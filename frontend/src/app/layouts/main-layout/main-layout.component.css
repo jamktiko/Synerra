@@ -7,7 +7,7 @@
 
 .layout {
   display: grid;
-  grid-template-columns: 14rem 1fr; /* navbar | main */
+  grid-template-columns: 14rem minmax(0, 1fr) minmax(16rem, 20rem); /* navbar | main | social */
   width: 100%;
   column-gap: 0.25rem;
   min-height: var(--viewport-height);
@@ -45,12 +45,8 @@
 .main {
   height: 100%;
   grid-column: 2;
-  padding: 57px 2rem 75.35px 3rem;
-  margin-right: clamp(
-    14rem,
-    20vw,
-    20rem
-  ); /* Allows navbar space to shrink a between 17, and 20rem */
+  padding: 57px 1.75rem 75.35px 1.25rem;
+  margin-right: 0;
   overflow: visible;
   min-height: var(--viewport-height);
 }
@@ -65,6 +61,7 @@
   height: fit-content;
   position: sticky;
   z-index: 1;
+  margin-left: 0.75rem;
 }
 
 /* MEDIA QUERYT */
@@ -85,6 +82,7 @@
   }
   .main {
     margin-right: 0;
+    padding-right: 2rem;
   }
 }
 @media (max-width: 768px) {

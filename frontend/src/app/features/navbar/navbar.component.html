@@ -11,7 +11,7 @@
     <button type="button" class="user-profile" (click)="onUserClick()" aria-label="User menu">
       <img class="avatar" [src]="user?.ProfilePicture ? user?.ProfilePicture : 'assets/svg/Acount.svg'"
         alt="User avatar" />
-      <div class="user-info" *ngIf="!isCollapsed">
+      <div class="user-info">
         <span class="user-name">{{ user?.Username }}</span>
         <span class="user-email">{{ user?.Email }}</span>
       </div>
@@ -26,20 +26,18 @@
       <ng-container *ngIf="item.children?.length; else singleNavItem">
         <div class="nav-group" [class.expanded]="isGroupExpanded(item)">
           <button type="button" class="nav-group__trigger" [class.active]="isGroupExpanded(item) || isGroupActive(item)"
-            (click)="toggleGroup(item)" [attr.aria-expanded]="!isCollapsed && isGroupExpanded(item)"
-            [attr.aria-label]="isCollapsed ? item.label : null">
+            (click)="toggleGroup(item)" [attr.aria-expanded]="isGroupExpanded(item)">
             <span class="nav-group__icon">
               <img [src]="getIconPath(item.icon)" [alt]="item.label + ' icon'" />
             </span>
-            <span class="nav-group__label" *ngIf="!isCollapsed">{{ item.label }}</span>
-            <span class="nav-group__chevron" aria-hidden="true" *ngIf="!isCollapsed"></span>
+            <span class="nav-group__label">{{ item.label }}</span>
+            <span class="nav-group__chevron" aria-hidden="true"></span>
           </button>
 
-          <div class="nav-submenu" *ngIf="!isCollapsed" [class.open]="isGroupExpanded(item)"
-            [style.maxHeight]="getSubmenuHeight(item)">
+          <div class="nav-submenu" [class.open]="isGroupExpanded(item)" [style.maxHeight]="getSubmenuHeight(item)">
             <a *ngFor="let child of item.children" class="nav-subitem" [routerLink]="child.route"
               [queryParams]="child.queryParams || null" routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: child.exact ?? true }" [attr.title]="child.label">
+              [routerLinkActiveOptions]="{ exact: child.exact ?? true }">
               <span class="nav-subitem__icon" *ngIf="child.icon">
                 <img [src]="getIconPath(child.icon)" alt="" aria-hidden="true" />
               </span>
@@ -50,19 +48,11 @@
       </ng-container>
 
       <ng-template #singleNavItem>
-        <ng-container *ngIf="isCollapsed; else expandedNavButton">
-          <app-button class="nav-btn" variant="sidebar" size="small" [fullWidth]="true" [icon]="item.icon"
-            [routerLink]="item.route" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-            #rla="routerLinkActive" [buttonState]="rla.isActive ? 'active' : undefined" align="center">
-          </app-button>
-        </ng-container>
-        <ng-template #expandedNavButton>
-          <app-button class="nav-btn" variant="sidebar" size="small" [fullWidth]="true" [label]="item.label"
-            [icon]="item.icon" [routerLink]="item.route" routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact: true}" #rla="routerLinkActive"
-            [buttonState]="rla.isActive ? 'active' : undefined">
-          </app-button>
-        </ng-template>
+        <app-button class="nav-btn" variant="sidebar" size="small" [fullWidth]="true" [label]="item.label"
+          [icon]="item.icon" [routerLink]="item.route" routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: true}" #rla="routerLinkActive"
+          [buttonState]="rla.isActive ? 'active' : undefined">
+        </app-button>
       </ng-template>
     </ng-container>
   </div>
@@ -79,14 +69,9 @@
   <!-- Alaosa -->
   <div class="bottom-section">
     <div class="divider"></div>
-    <ng-container *ngIf="isCollapsed; else expandedLogout">
-      <app-button class="logout-btn" variant="sidebar" size="small" [fullWidth]="true" [icon]="logout.icon"
-        (click)="logOut()" align="center"></app-button>
-    </ng-container>
-    <ng-template #expandedLogout>
-      <app-button class="logout-btn" variant="sidebar" size="small" [fullWidth]="true" [label]="logout.label"
-        [icon]="logout.icon" (click)="logOut()"></app-button>
-    </ng-template>
+    <app-button class="logout-btn" variant="sidebar" size="small" [fullWidth]="true" [label]="logout.label"
+      [icon]="logout.icon" (click)="logOut()">
+    </app-button>
   </div>
 
   <!-- Mobile bottom navbar -->

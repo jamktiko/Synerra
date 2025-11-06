@@ -157,38 +157,13 @@ export class NavbarComponent implements OnInit {
 
   @HostListener('window:resize', [])
   checkAutoCollapse() {
-    // If user has an explicit saved preference, respect it on resize
-    try {
-      const saved = localStorage.getItem('navbarCollapsed');
-      if (saved !== null) {
-        const savedCollapsed = saved === 'true';
-        this.hasUserPreference = true;
-        if (this.isCollapsed !== savedCollapsed) {
-          this.isCollapsed = savedCollapsed;
-          this.collapsedChange.emit(this.isCollapsed);
-        }
-        return;
-      }
-    } catch (e) {
-      // ignore localStorage errors (e.g., when running in restricted contexts)
+    if (typeof window === 'undefined') {
+      return;
     }
 
-    if (typeof window !== 'undefined') {
-      if (window.innerWidth < 1070) {
-        if (!this.isCollapsed) {
-          this.isCollapsed = true;
-          this.collapsedChange.emit(this.isCollapsed);
-        }
-        return;
-      }
-    }
+    const isBelowDesktopBreakpoint = window.innerWidth < 1070;
 
-    const layout = document.querySelector('.layout') as HTMLElement;
-    if (!layout) return;
-
-    const isOverflowing = layout.scrollWidth > layout.clientWidth + 1;
-
-    if (isOverflowing) {
+    if (isBelowDesktopBreakpoint) {
       if (!this.isCollapsed) {
         this.isCollapsed = true;
         this.collapsedChange.emit(this.isCollapsed);
@@ -196,9 +171,7 @@ export class NavbarComponent implements OnInit {
       return;
     }
 
-    if (this.hasUserPreference) return;
-
-    if (this.isCollapsed) {
+    if (!this.hasUserPreference && this.isCollapsed) {
       this.isCollapsed = false;
       this.collapsedChange.emit(this.isCollapsed);
     }
@@ -217,14 +190,6 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleGroup(item: NavItem): void {
-    if (this.isCollapsed) {
-      const fallbackRoute = item.route || item.children?.[0]?.route;
-      if (fallbackRoute) {
-        this.router.navigate([fallbackRoute]);
-      }
-      return;
-    }
-
     if (!item.children || !item.children.length) {
       if (item.route) {
         this.router.navigate([item.route]);

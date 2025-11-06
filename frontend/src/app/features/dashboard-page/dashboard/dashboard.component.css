@@ -1,6 +1,5 @@
 .dashboard {
-  --page-horizontal-gap: clamp(1.5rem, 4vw, 3rem);
-  margin-top: 0.78%;
+  --page-horizontal-gap: clamp(1.25rem, 3vw, 2.5rem);
   width: min(100%, clamp(720px, 58vw, 960px));
   max-width: clamp(720px, 58vw, 960px);
   padding: 3rem calc(2rem + var(--page-horizontal-gap));
@@ -11,7 +10,10 @@
   flex-direction: column;
   gap: 2rem;
   overflow-x: hidden;
-  margin: 0 auto;
+  margin: 0;
+  margin-top: 0.78%;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .dashboard-inner {
@@ -25,7 +27,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-size: 2.2rem; /* slightly larger greeting */
+  font-size: 2rem;
   color: var(--color-text-default);
   background: var(--color-dark-gradient);
   padding: 0.5rem 1rem;
@@ -33,7 +35,7 @@
   border-radius: 20px;
   width: 100%;
   justify-content: center;
-  flex-wrap: nowrap; /* keep greeting and name on a single line when possible */
+  flex-wrap: nowrap;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -88,8 +90,8 @@ app-dashboard-card img {
   position: absolute;
   top: -5px;
   right: -5px;
-  background: red;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-text-default);
   border-radius: 50%;
   padding: 2px 6px;
   font-size: 12px;
@@ -122,7 +124,6 @@ app-dashboard-card img {
     gap: 1.25rem;
   }
 
-  /* Keep top bar on one line on small screens if space allows; reduce gap */
   .top-navigation-bar {
     text-align: center;
     gap: 0.5rem;
@@ -142,9 +143,6 @@ app-dashboard-card img {
   -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
-
-  /* Allow the games row to use full width; removing earlier 85% cap so the
-     menu can be wider on larger viewports. */
   max-width: 100%;
   width: 100%;
 }
@@ -195,7 +193,7 @@ app-dashboard-card {
   bottom: 0;
   width: 56px;
   pointer-events: none;
-  z-index: 6;
+  z-index: 0;
 }
 .games-row-wrap::before {
   left: 0;
@@ -213,10 +211,14 @@ app-dashboard-card {
 .scroll-arrow {
   appearance: none;
   border: none;
-  background: linear-gradient(145deg, rgba(24, 29, 40, 0.85), rgba(34, 39, 51, 0.75));
+  background: linear-gradient(
+    145deg,
+    rgba(24, 29, 40, 0.85),
+    rgba(34, 39, 51, 0.75)
+  );
   color: transparent;
   width: clamp(42px, 9vw, 52px);
-  height: clamp(42px, 9vw, 52px);
+  height: clamp(42px, 9vw, 100px);
   border-radius: 18px;
   display: flex;
   align-items: center;
@@ -227,7 +229,6 @@ app-dashboard-card {
   position: absolute;
   top: 50%;
   overflow: hidden;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.38);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -252,7 +253,11 @@ app-dashboard-card {
 }
 
 .scroll-arrow:hover {
-  background: linear-gradient(145deg, rgba(32, 38, 52, 0.92), rgba(44, 50, 66, 0.82));
+  background: linear-gradient(
+    145deg,
+    rgba(32, 38, 52, 0.92),
+    rgba(44, 50, 66, 0.82)
+  );
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);
 }
 
@@ -337,5 +342,11 @@ app-dashboard-card {
   .games-row-wrap::before,
   .games-row-wrap::after {
     width: 40px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .dashboard {
+    margin-right: 0;
   }
 }

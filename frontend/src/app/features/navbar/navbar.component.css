@@ -21,12 +21,13 @@
   gap: 0.25rem;
 }
 
-:host
-  ::ng-deep
-  nav.navigation.collapsed:not(.expanded-from-collapse)
-  .btn
-  .btn-label {
+:host ::ng-deep nav.navigation.collapsed .btn .btn-label {
   display: none !important;
+}
+
+:host ::ng-deep nav.navigation.collapsed .btn .btn-icon {
+  margin-right: 0;
+  margin-left: 0;
 }
 
 .navigation::after {
@@ -53,63 +54,6 @@
 .navigation.collapsed {
   width: 80px;
   padding: 1rem 0.5rem;
-}
-
-.navigation.collapsed .nav-btn ::ng-deep .btn,
-.navigation.collapsed .nav-group__trigger {
-  justify-content: center;
-  align-items: center;
-  gap: 0;
-  padding: 0.5rem;
-  width: 72px;
-}
-
-.navigation.collapsed .nav-links {
-  align-items: center;
-}
-
-.navigation.collapsed .nav-group,
-.navigation.collapsed .nav-btn {
-  width: 72px;
-  margin: 0 auto;
-}
-
-.navigation.collapsed .nav-btn ::ng-deep .btn-icon,
-.navigation.collapsed .nav-group__icon {
-  margin: 0;
-}
-
-.navigation.collapsed .nav-btn ::ng-deep .btn-label,
-.navigation.collapsed .nav-group__label,
-.navigation.collapsed .nav-subitem__label,
-.navigation.collapsed .nav-group__chevron,
-.navigation.collapsed .user-info,
-.navigation.collapsed .user-name,
-.navigation.collapsed .user-email {
-  display: none !important;
-}
-
-.navigation.collapsed .nav-subitem {
-  justify-content: center;
-  gap: 0;
-  padding: 0.5rem;
-}
-
-/* Strong visual hide: make any text inside collapsed navigation invisible and collapse font-size.
-   This is a last-resort safeguard so only icons (images) remain visible. */
-.navigation.collapsed,
-.navigation.collapsed .nav-links,
-.navigation.collapsed .nav-links * {
-  color: transparent !important;
-  font-size: 0 !important;
-}
-
-.navigation.collapsed .btn-icon img,
-.navigation.collapsed .nav-group__icon img,
-.navigation.collapsed .avatar {
-  /* icons are images so keep them visible by resetting font-size so they don't inherit 0 */
-  font-size: initial !important;
-  color: initial !important;
 }
 
 .top-section {
@@ -271,8 +215,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.75rem 0.9rem;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
   background: transparent;
   border: none;
   color: var(--color-text-dark);
@@ -283,7 +227,7 @@
   text-align: left;
   width: 100%;
   border-radius: 6px;
-  min-height: 44px;
+  min-height: 48px;
   transition: color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease,
     background 0.3s ease;
   text-decoration: none;
@@ -353,12 +297,6 @@
 /* Active / Hover */
 .nav-btn ::ng-deep .btn:hover {
   background: transparent;
-  /* Lighter hover background and ensure text color is default */
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.12),
-    rgba(255, 255, 255, 0.04)
-  );
   color: var(--color-text-default);
   box-shadow: 0 6px 18px rgba(34, 34, 34, 0.22);
   transform: translateY(-1px);
@@ -392,10 +330,9 @@
   position: relative;
   display: flex;
   align-items: center;
-  /* a bit more space between the icon and label so the text doesn't sit too close to the gear */
-  gap: 1rem;
+  gap: 0.75rem;
   width: 100%;
-  padding: 0.75rem 0.9rem;
+  padding: 0.9rem 1rem;
   border-radius: 6px;
   border: none;
   background: transparent;
@@ -441,12 +378,7 @@
 
 .nav-group__trigger:hover {
   background: transparent;
-  /* Lighter hover background and default text color */
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.12),
-    rgba(255, 255, 255, 0.04)
-  );
+  box-shadow: 0 6px 18px rgba(34, 34, 34, 0.22);
   transform: translateY(-1px);
   color: var(--color-text-default);
 }
@@ -505,8 +437,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  /* move submenu items to the left side so they align to navbar edge */
-  padding-left: 0.4rem;
+  padding-left: 0.85rem;
   max-height: 0;
   opacity: 0;
   overflow: hidden;
@@ -536,11 +467,10 @@
 }
 
 .nav-subitem:hover {
-  /* Lighter hover background for submenu items and ensure default text color */
   background: linear-gradient(
     120deg,
-    rgba(255, 255, 255, 0.06),
-    rgba(255, 255, 255, 0.02)
+    rgba(60, 60, 70, 0.35),
+    rgba(30, 30, 36, 0.25)
   );
   color: var(--color-text-default);
 }
@@ -585,10 +515,10 @@
 
 .navigation.collapsed .nav-btn ::ng-deep .btn {
   justify-content: center;
-  padding: 0.6rem;
+  padding: 0.8rem;
   gap: 0.25rem;
   transform: none;
-  min-height: 44px;
+  min-height: 50px;
   width: 100%;
 }
 
@@ -601,103 +531,30 @@
   display: none;
 }
 
-/* Force-hide any label-like elements when fully collapsed and not temporarily expanded.
-   This avoids labels reappearing due to media-query or component-specific overrides. */
-.navigation.collapsed .nav-group__label,
-.navigation.collapsed .nav-group__chevron,
-.navigation.collapsed .nav-subitem__label,
-.navigation.collapsed .btn-label,
-.navigation.collapsed .nav-btn ::ng-deep .btn-label,
-.navigation.collapsed .logout-btn ::ng-deep .btn-label,
-.navigation.collapsed .user-info,
-.navigation.collapsed .user-name,
-.navigation.collapsed .user-email {
-  display: none !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  overflow: hidden !important;
-  clip: rect(0 0 0 0) !important;
-}
-
-/* Fallback: ensure any nested component labels are hidden in collapsed mode
-  even if they come from deeply nested or component-scoped styles. */
-.navigation.collapsed ::ng-deep .btn-label,
-.navigation.collapsed ::ng-deep .nav-group__label,
-.navigation.collapsed ::ng-deep .nav-subitem__label,
-.navigation.collapsed ::ng-deep .user-info,
-.navigation.collapsed ::ng-deep .user-name,
-.navigation.collapsed ::ng-deep .user-email {
-  display: none !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  overflow: hidden !important;
-  clip: rect(0 0 0 0) !important;
-}
-
-/* Extra safeguard: reduce font-size / visibility and remove padding so only icon remains
-   for any stubborn labels rendered by components or injected styles. */
-.navigation.collapsed .nav-links,
-.navigation.collapsed .nav-links * {
-  overflow: visible;
-}
-.navigation.collapsed .nav-btn ::ng-deep .btn-label,
-.navigation.collapsed .nav-group__label,
-.navigation.collapsed .nav-subitem__label {
-  visibility: hidden !important;
-  font-size: 0 !important;
-  width: 0 !important;
-  height: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-.navigation.collapsed .nav-btn ::ng-deep .btn {
-  padding-left: 0.5rem !important;
-  padding-right: 0.5rem !important;
-}
-
 .navigation.collapsed .nav-group__trigger {
   justify-content: center;
-  padding: 0.6rem;
+  padding: 0.8rem;
 }
 
 .navigation.collapsed .nav-submenu {
-  max-height: 0 !important;
+  max-height: 0;
   opacity: 0;
   pointer-events: none;
   padding-left: 0;
 }
 
-.navigation.collapsed:not(.expanded-from-collapse) .nav-btn ::ng-deep .btn {
-  /* Center icons in collapsed mode so all icons line up visually */
-  justify-content: center;
-  padding: 0.7rem;
-  gap: 0;
+.navigation.collapsed.expanded-from-collapse .nav-submenu {
+  padding: 0.4rem 0.5rem;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  margin-left: -0.75rem;
+  width: calc(100% + 0.75rem);
 }
 
-.navigation.collapsed:not(.expanded-from-collapse)
-  .nav-btn
-  ::ng-deep
-  .btn-icon {
-  margin-right: 0;
-}
-
-.navigation.collapsed:not(.expanded-from-collapse) .nav-group__trigger {
-  /* Center the icon in collapsed mode for group triggers (e.g. Settings) */
-  justify-content: center;
-  padding: 0.7rem;
-  gap: 0;
-}
-
-.navigation.collapsed:not(.expanded-from-collapse) .nav-subitem {
+.navigation.collapsed.expanded-from-collapse .nav-subitem {
   justify-content: flex-start;
-  gap: 0;
-  padding: 0.35rem 0.45rem;
+  padding-left: 0.4rem;
 }
 
 /* .navigation.collapsed .nav-btn:hover,
@@ -824,7 +681,7 @@
 
 .logout-btn ::ng-deep .btn:hover {
   opacity: 1;
-  background: rgba(80, 80, 80, 0.6);
+  background: rgba(58, 58, 58, 0.5);
   color: var(--color-text-default) !important;
   transform: scale(1.02);
 }
@@ -905,10 +762,7 @@
     transform: none;
   }
 
-  .navigation.collapsed:not(.expanded-from-collapse)
-    .nav-btn
-    ::ng-deep
-    .btn-label {
+  .navigation .nav-btn ::ng-deep .btn-label {
     opacity: 0;
     pointer-events: none;
     position: absolute;
@@ -950,23 +804,13 @@
   .navigation .mobile-nav {
     display: block;
     width: 100%;
-    max-width: 100%;
     position: fixed;
     bottom: 0;
-    left: 0;
-    right: 0;
     background: var(--color-background);
     box-shadow: 0px -2px 12.7px 4px rgba(0, 0, 0, 0.25);
-    /* replaced with a smooth gradient top border via ::before */
-    padding: 3px 0 calc(3px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 3px 0 0 0;
     z-index: 10000;
-    margin: 0 auto;
-    transform: none;
-    touch-action: pan-y pinch-zoom;
-    overscroll-behavior-y: contain;
-    overscroll-behavior-x: none;
-    backface-visibility: hidden;
-    pointer-events: auto;
   }
 
   .navigation .mobile-nav .nav-content {
@@ -998,29 +842,6 @@
     object-fit: contain;
     padding: 4px;
     opacity: 0.8;
-  }
-
-  /* Smooth gradient top border similar to .linebreak-horizontal-child */
-  .navigation .mobile-nav::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    pointer-events: none;
-    z-index: 10001;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(88, 88, 88, 0.3) 10%,
-      rgba(88, 88, 88, 0.6) 25%,
-      rgba(88, 88, 88, 0.8) 50%,
-      rgba(88, 88, 88, 0.6) 75%,
-      rgba(88, 88, 88, 0.3) 90%,
-      transparent 100%
-    );
-    transition: opacity 200ms ease;
   }
 
   .navigation .mobile-nav .nav-icon.active {

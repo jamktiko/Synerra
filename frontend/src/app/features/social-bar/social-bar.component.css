@@ -15,7 +15,7 @@
   box-sizing: border-box;
   border: 1px solid rgba(58, 58, 58, 1);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
-  z-index: 10;
+  z-index: 14000;
   overflow-y: auto;
   margin-right: 2rem;
 }
