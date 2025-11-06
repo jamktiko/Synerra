@@ -33,6 +33,9 @@ export class SocialPageComponent implements OnInit {
   unreads: UnreadMessage[] = [];
   pendingRequests: FriendRequest[] = [];
   notifications: any[] = [];
+  messageNotifications: any[] = [];
+  friendRequestNotifications: any[] = [];
+
   private sub: Subscription | null = null;
 
   constructor(
@@ -86,15 +89,90 @@ export class SocialPageComponent implements OnInit {
         console.error('Failed to load pending requests ON SOCIAL PAGE', err),
     });
 
+    // Listens to unread messages
+    this.userService.unreads$.subscribe({
+      next: (messages) => {
+        // Filter out friend requests
+        this.unreads = messages.filter(
+          (msg) => msg.Relation !== 'FRIEND_REQUEST'
+        );
+        console.log('Unread messages IN SOCIAL PAGEEEEE:', this.unreads);
+      },
+      error: (err) => console.error('Failed to load unread messages', err),
+    });
+
     // Fetch initial data
     this.friendService.getPendingRequests().subscribe();
+    this.userService.getUnreadMessages().subscribe();
+    this.userService.fetchUnreadMessages();
 
     // Subscribe to incoming notifications
-    this.sub = this.notificationService.notifications$.subscribe((data) => {
-      console.log('Received notification in SOCIAL:', data);
-      this.notifications.push(data);
-      console.log(this.notifications);
-    });
+    this.sub = this.notificationService.notifications$.subscribe(
+      (data: any) => {
+        console.log('Received notification in SOCIAL:', data);
+
+        this.notifications = [...this.notifications, data];
+
+        const type = (data.type ?? '').toString().toLowerCase();
+
+        // Real time messages
+        const isMessage =
+          type === 'newmessage' ||
+          type === 'message' ||
+          (data.Relation ?? '').toString().toUpperCase() === 'MESSAGE';
+
+        if (isMessage) {
+          const notif = {
+            senderUsername:
+              data.senderUsername ?? data.SenderUsername ?? 'Unknown',
+            profilePicture:
+              data.profilePicture ??
+              data.ProfilePicture ??
+              'assets/default-avatar.png',
+            content: data.content ?? data.Content ?? '',
+            timestamp: data.timestamp ?? data.Timestamp ?? Date.now(),
+            senderId: data.senderId ?? data.SenderId,
+          };
+
+          this.messageNotifications = [...this.messageNotifications, notif];
+          console.log(
+            'messageNotifications updated:',
+            this.messageNotifications
+          );
+        }
+
+        // Real time friend requests
+        const isFriendRequest =
+          type === 'friend_request' ||
+          type === 'friend_request_accepted' ||
+          type === 'friend_request_declined' ||
+          (data.Relation ?? '').toString().toUpperCase() === 'FRIEND_REQUEST';
+
+        if (isFriendRequest) {
+          const req = {
+            fromUserId: data.fromUserId ?? data.senderId ?? data.SenderId,
+            fromUsername:
+              data.fromUsername ?? data.senderUsername ?? data.SenderUsername,
+            senderPicture:
+              data.fromPicture ??
+              data.senderPicture ??
+              data.SenderPicture ??
+              'assets/svg/Acount.svg',
+            type: type,
+            timestamp: data.timestamp ?? Date.now(),
+          };
+
+          this.friendRequestNotifications = [
+            ...this.friendRequestNotifications,
+            req,
+          ];
+          console.log(
+            'friendRequestNotifications updated:',
+            this.friendRequestNotifications
+          );
+        }
+      }
+    );
   }
 
   tabSwitch(tab: string) {

@@ -3,6 +3,10 @@ import { Component, Input, input, output, SimpleChanges } from '@angular/core';
 import { FriendRequest } from '../../../core/interfaces/friendrequest.model';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { FriendService } from '../../../core/services/friend.service';
+import { UnreadMessage } from '../../../core/interfaces/chatMessage';
+import { ChatService } from '../../../core/services/chat.service';
+import { UserService } from '../../../core/services/user.service';
+import { User } from '../../../core/interfaces/user.model';
 @Component({
   standalone: true,
   selector: 'app-notifications-tab',
@@ -11,18 +15,25 @@ import { FriendService } from '../../../core/services/friend.service';
   styleUrl: './notifications-tab.component.css',
 })
 export class NotificationsTabComponent {
-  @Input() notifications!: any[];
+  @Input() friendRequestNotifications!: any[];
+  @Input() messageNotifications!: any[];
   @Input() pendingRequests!: FriendRequest[];
+  @Input() unreads!: UnreadMessage[];
+  @Input() notifications!: any[];
 
-  constructor(private friendService: FriendService) {}
-  get friendRequestNotifications() {
-    return this.notifications.filter(
-      (n) =>
-        n.type === 'friend_request' ||
-        n.type === 'friend_request_accepted' ||
-        n.type === 'friend_request_declined'
-    );
-  }
+  constructor(
+    private friendService: FriendService,
+    private chatService: ChatService,
+    private userService: UserService
+  ) {}
+  // get friendRequestNotifications() {
+  //   return this.notifications.filter(
+  //     (n) =>
+  //       n.type === 'friend_request' ||
+  //       n.type === 'friend_request_accepted' ||
+  //       n.type === 'friend_request_declined'
+  //   );
+  // }
 
   // Accept friend request
   acceptRequest(targetUserId: string) {
@@ -75,10 +86,12 @@ export class NotificationsTabComponent {
     });
 
     // Remove notifications from this sender
-    this.notifications = this.notifications.filter((n) => {
-      const senderId = n.senderId || n.senderID || n.fromUserId || n.SenderId;
-      return senderId !== userId;
-    });
+    this.friendRequestNotifications = this.friendRequestNotifications.filter(
+      (n) => {
+        const senderId = n.senderId || n.senderID || n.fromUserId || n.SenderId;
+        return senderId !== userId;
+      }
+    );
 
     // Remove requests from local list
     this.pendingRequests = this.pendingRequests.filter(
@@ -86,5 +99,49 @@ export class NotificationsTabComponent {
     );
 
     console.log(`Cleared requests from user ${userId}`);
+  }
+
+  // Starts chat when clicking notification and removes notifications from that sender
+  userClicked(userId: string) {
+    this.notifications = this.notifications.filter((n) => {
+      const senderId = n.senderId || n.senderID || n.fromUserId || n.SenderId;
+      return senderId !== userId;
+    });
+    this.chatService.startChat([userId]);
+  }
+
+  // Mark all messages as read
+  markAllAsRead() {
+    // Mark unread messages in rooms as read
+    if (this.unreads?.length) {
+      const roomIds = Array.from(new Set(this.unreads.map((m) => m.RoomId)));
+      roomIds.forEach((roomId) => {
+        this.userService.markRoomMessagesAsRead(roomId).subscribe({
+          error: (err) =>
+            console.error('Failed to mark room read', roomId, err),
+        });
+      });
+    }
+
+    // Clear all message notifications
+    this.notifications = this.notifications.filter(
+      (n) => n.type !== 'newMessage'
+    );
+
+    // Clear unreads
+    this.unreads = [];
+  }
+
+  markRequestsAsRead() {
+    // Remove all friend request notifications from notifications array
+    this.notifications = this.notifications.filter(
+      (n) =>
+        n.type !== 'friend_request' &&
+        n.type !== 'friend_request_accepted' &&
+        n.type !== 'friend_request_declined'
+    );
+
+    // clear pendingRequests if you want to mark them read locally
+    this.pendingRequests = [];
   }
 }
