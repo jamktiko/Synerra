@@ -13,6 +13,7 @@
   border: 1px solid rgba(58, 58, 58, 1);
   gap: 35px;
   flex-direction: column;
+  z-index: 99999;
 }
 
 .modal-footer {
@@ -99,11 +100,13 @@
 
   /* border */
   background:
-    /* sisäpinta */ linear-gradient(var(--color-background))
-      padding-box,
+    /* sisäpinta */
+    linear-gradient(var(--color-background)) padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 
-  transition: background 0.4s ease, transform 0.2s ease;
+  transition:
+    background 0.4s ease,
+    transform 0.2s ease;
 }
 
 .form-control::placeholder {
@@ -113,7 +116,8 @@
 .form-control:focus {
   box-shadow: none;
 
-  background: linear-gradient(var(--color-background), var(--color-background))
+  background:
+    linear-gradient(var(--color-background), var(--color-background))
       padding-box,
     var(--color-orange-gradient) border-box;
 

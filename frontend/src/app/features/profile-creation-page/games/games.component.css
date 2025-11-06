@@ -91,13 +91,16 @@
 
   border: 1px solid transparent;
   filter: brightness(0.8);
-  transition: filter 0.4s ease, transform 0.4s ease;
+  transition:
+    filter 0.4s ease,
+    transform 0.4s ease;
 }
 .card:hover {
   transform: scale(0.98);
   filter: brightness(1.2);
 
-  background: linear-gradient(var(--color-background), var(--color-background))
+  background:
+    linear-gradient(var(--color-background), var(--color-background))
       padding-box,
     var(--color-orange-gradient) border-box;
 
