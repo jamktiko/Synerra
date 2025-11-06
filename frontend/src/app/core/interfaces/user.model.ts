@@ -17,6 +17,10 @@ export interface User {
   PlayedGames?: { gameId: string; gameName: string }[]; // [{gameName:'Valorant',gameId:'asfiphqwiphgiåqhå'}]
   Birthday?: Date;
   Status?: string;
+  AverageTeamwork?: number;
+  AverageComms?: number;
+  AverageMentality?: number;
+  MainReputation?: number;
 }
 
 export interface UserFilters {

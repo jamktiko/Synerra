@@ -74,8 +74,9 @@
 
 /* ===== REPUTATION SECTION ===== */
 .reputation-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
+  /* grid-template-columns: repeat(2, 1fr); */
   gap: 20px;
 }
 
@@ -129,11 +130,11 @@
 
 .rep-bar {
   height: 100%;
-  background: var(--color-primary);
-  border-radius: 4px;
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 6px;
+  position: relative;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.4s ease, box-shadow 0.4s ease;
 }
-
 /* ===== GAMES SECTION ===== */
 .section-title {
   font-size: 16px;
@@ -371,4 +372,83 @@
   align-items: center;
   text-align: center;
   flex-direction: column;
+}
+
+.no-reps {
+  justify-content: center;
+  text-align: center;
+}
+
+/* Highlight styling to make Overall stand out */
+
+/* Stronger label emphasis */
+.overall-highlight .rep-label {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.rep-bar.green {
+  background: linear-gradient(90deg, #34d399, #25a45f);
+}
+
+.rep-bar.yellow {
+  background: linear-gradient(90deg, #fbbf24, #d97706);
+}
+
+.rep-bar.red {
+  background: linear-gradient(90deg, #f87171, #b91c1c);
+}
+
+/* Adds a glossy glow light beam */
+.rep-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.05) 30%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+.rep-icon.green {
+  color: #34d399;
+}
+
+.rep-icon.yellow {
+  color: #fbbf24;
+}
+
+.rep-icon.red {
+  color: #f87171;
+}
+
+.game-button {
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-text-default);
+  box-shadow: 0 0 12px rgba(242, 104, 13, 0.3);
+  align-self: flex-start;
+  height: 50px;
+  width: 120px;
+  align-items: center;
+  color: var(--color-text-default);
+  background: linear-gradient(180deg, #ff7a3e 0%, #e34b0e 100%);
+  border-color: rgba(255, 122, 62, 0.4);
+}
+
+.game-button:hover {
+  transform: scale(1.1);
+}
+
+.add-game {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 }
