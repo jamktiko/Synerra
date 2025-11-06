@@ -87,6 +87,7 @@
 
 @media (max-width: 768px) {
   .games-container {
-    height: calc(var(--viewport-height) * 0.928);
+    /* height: calc(var(--viewport-height) * 0.928); */
+    height: auto;
   }
 }
