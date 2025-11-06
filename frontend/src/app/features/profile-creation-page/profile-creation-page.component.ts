@@ -11,6 +11,7 @@ import { UserStore } from '../../core/stores/user.store';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HostListener } from '@angular/core';
+import { LoadingPageStore } from '../../core/stores/loadingPage.store';
 
 @Component({
   selector: 'app-profile-creation-page',
@@ -18,7 +19,7 @@ import { HostListener } from '@angular/core';
   styleUrls: ['./profile-creation-page.component.css'],
   imports: [ButtonComponent],
 })
-export class ProfileCreationPageComponent implements OnInit {
+export class ProfileCreationPageComponent {
   profile: Partial<User> = {};
   currentStep: number = 0;
 
@@ -27,16 +28,8 @@ export class ProfileCreationPageComponent implements OnInit {
     private userStore: UserStore,
     private authService: AuthService,
     private router: Router,
+    private loadingPageStore: LoadingPageStore,
   ) {}
-
-  ngOnInit(): void {
-    // const user = this.userStore.user();
-    // console.log('MITÄ VITTUSAAA', user);
-    // if (user?.Username) {
-    //   // If the user already has a username, they get thrown to the dashboardn (must not be able to create the profile again)
-    //   this.router.navigate(['/dashboard']);
-    // }
-  }
 
   logOut() {
     this.authService.logout();
@@ -55,8 +48,11 @@ export class ProfileCreationPageComponent implements OnInit {
           centered: true,
           size: 'lg',
         });
+
         usernameModalRef.componentInstance.profile = this.profile; // In case of going back to this modal, sending the current username
+
         await usernameModalRef.result;
+
         console.log(usernameModalRef.result);
         step++;
       }
@@ -102,8 +98,10 @@ export class ProfileCreationPageComponent implements OnInit {
   @ViewChild('nextBtn', { read: ElementRef }) nextBtn!: ElementRef;
 
   @HostListener('document:keydown.enter', ['$event'])
-  onEnter(event: KeyboardEvent) {
+  onEnter(event: Event) {
     event.preventDefault();
+
+    const keyboardEvent = event as KeyboardEvent;
     if (this.nextBtn?.nativeElement && this.currentStep < 1) {
       this.nextBtn.nativeElement.click();
     }

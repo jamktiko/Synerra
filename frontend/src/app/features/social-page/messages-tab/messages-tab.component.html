@@ -35,11 +35,15 @@
         <div class="tab-pane" id="users">
           <div *ngIf="directChats().length > 0; else noDirects">
             <div *ngFor="let chat of directChats()" class="card mb-2 p-2 text-white">
-              <div *ngFor="let member of chat.Members" (click)="userClicked(member.UserId)"
-                class="d-flex align-items-center">
+              <!-- Whole member block clickable -->
+              <div class="d-flex align-items-center user-card" (click)="userClicked(member.UserId)"
+                *ngFor="let member of chat.Members">
                 <img [src]="member.ProfilePicture" class="rounded-circle me-2" width="50" />
                 <div class="userTextBar">
-                  <strong>{{ member.Username }}</strong><br />
+                  <!-- Username clickable for different action -->
+                  <strong (click)="openProfile(member.UserId, $event)" class="username-link">
+                    {{ member.Username }}
+                  </strong><br />
                   <small class="lMessage">{{ member.Username }}</small>
                 </div>
               </div>
@@ -50,6 +54,7 @@
             <p>No chats yet.</p>
           </ng-template>
         </div>
+
 
         <div class="tab-pane" id="groups">
           <div *ngIf="groupChats().length > 0; else noGroups">

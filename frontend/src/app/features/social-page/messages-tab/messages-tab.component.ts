@@ -20,4 +20,9 @@ export class MessagesTabComponent {
   userClicked(userId: any) {
     this.chatService.startChat([userId]);
   }
+
+  openProfile(userId: string, event: MouseEvent) {
+    event.stopPropagation();
+    console.log('moro', userId);
+  }
 }
