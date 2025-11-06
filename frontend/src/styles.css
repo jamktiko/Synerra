@@ -150,9 +150,9 @@ body {
   overflow-y: auto;
 }
 
-@supports (height: 99dvh) {
+@supports (height: 99vh) {
   :root {
-    --viewport-height: 99dvh;
+    --viewport-height: 99vh;
   }
 }
 
@@ -255,6 +255,14 @@ body {
   max-width: 50rem;
   width: 100%; /* pitää sisällön skaalautuvana */
   margin: auto; /*Keskitys*/
+}
+
+.modal-dialog,
+.modal,
+.cdk-overlay-container {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
 }
 
 @media (max-height: 768px) {
