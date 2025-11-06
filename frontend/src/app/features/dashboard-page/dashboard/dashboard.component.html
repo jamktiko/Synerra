@@ -10,7 +10,7 @@
 
 
   <!-- Favorite Games -->
-  <section class="favorite-games">
+  <section *ngIf="filteredGames.length" class="favorite-games">
     <div class="section-title"> Your favorite games</div>
     <div class="games-row-wrap">
       <button class="scroll-arrow left" aria-label="Scroll left" (click)="scrollRowLeft(favRow)">

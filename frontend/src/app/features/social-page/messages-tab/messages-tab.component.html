@@ -1,5 +1,6 @@
 <div class="messagesTab">
-  <div class="messagesHeader">
+  <!-- ALEMPI TAKASIN HAKIJAPÄIVÄN JÄLKEEN -->
+  <!-- <div class="messagesHeader">
     <div class="filterButtons">
       <app-button label="Online" variant="default" size="small" [fullWidth]="true"></app-button>
       <app-button label="All" variant="default" size="small" [fullWidth]="true"></app-button>
@@ -10,7 +11,7 @@
       <img src="assets/svg/Search_icon.svg" alt="Search" class="search-icon" />
       <input type="text" placeholder="Search users..." />
     </div>
-  </div>
+  </div> -->
   <!-- Tabs -->
   <div class="tabsConts">
     <ul class="nav nav-tabs" id="chatTabs" role="tablist">
@@ -35,11 +36,16 @@
         <div class="tab-pane" id="users">
           <div *ngIf="directChats().length > 0; else noDirects">
             <div *ngFor="let chat of directChats()" class="card mb-2 p-2 text-white">
-              <div *ngFor="let member of chat.Members" (click)="userClicked(member.UserId)"
-                class="d-flex align-items-center">
-                <img [src]="member.ProfilePicture" class="rounded-circle me-2" width="50" />
+              <!-- Whole member block clickable -->
+              <div class="d-flex align-items-center user-card" (click)="userClicked(member.UserId)"
+                *ngFor="let member of chat.Members">
+                <img class="account-icon"
+                  [src]="member?.ProfilePicture ? member.ProfilePicture : 'assets/svg/Acount.svg'" />
                 <div class="userTextBar">
-                  <strong>{{ member.Username }}</strong><br />
+                  <!-- Username clickable for different action -->
+                  <strong (click)="openProfile(member.UserId, $event)" class="username-link">
+                    {{ member.Username }}
+                  </strong><br />
                   <small class="lMessage">{{ member.Username }}</small>
                 </div>
               </div>
@@ -51,11 +57,14 @@
           </ng-template>
         </div>
 
+
         <div class="tab-pane" id="groups">
           <div *ngIf="groupChats().length > 0; else noGroups">
             <div *ngFor="let group of groupChats()" class="card mb-2 p-2 text-white">
               <div *ngFor="let member of group.Members" class="d-flex align-items-center">
-                <img [src]="member.ProfilePicture" class="rounded-circle me-2" width="50" />
+                <img class="account-icon"
+                  [src]="member?.ProfilePicture ? member.ProfilePicture : 'assets/svg/Acount.svg'"
+                  class="rounded-circle me-2" width="50" />
                 <div class="userTextBar">
                   <strong>{{ member.Username }}</strong><br />
                   <small class="lMessage">{{ member.Username}}</small>

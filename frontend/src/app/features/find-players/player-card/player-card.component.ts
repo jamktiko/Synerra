@@ -5,6 +5,7 @@ import { FriendService } from '../../../core/services/friend.service';
 import { ChatService } from '../../../core/services/chat.service';
 import { Router } from '@angular/router';
 import { UserStore } from '../../../core/stores/user.store';
+import { NgbNavItem } from '../../../../../node_modules/@ng-bootstrap/ng-bootstrap/nav/nav';
 
 @Component({
   selector: 'app-player-card',

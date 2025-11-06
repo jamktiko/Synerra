@@ -1,7 +1,138 @@
 <div class="notificationsTab">
-  <!-- Tabs -->
+  <div class="noti-clear">
+    <h3 *ngIf="!pendingRequests.length && !notifications.length && !unreads.length && !messageNotifications.length">
+      No notifications!
+    </h3>
+  </div>
+
   <div class="tabsConts">
     <div class="conts">
+
+      <!-- UNREAD + LIVE MESSAGE NOTIFICATIONS -->
+      <div class="tab-content" *ngIf="unreads.length || messageNotifications.length">
+        <div class="tab-pane">
+
+          <!-- Unread messages -->
+          <div *ngIf="unreads.length">
+            <div *ngFor="let msg of unreads" class="card mb-2 p-2 text-white">
+              <div class="d-flex align-items-center w-100">
+
+                <img [src]="msg.ProfilePicture" class="rounded-circle me-2" width="50" />
+
+                <div class="userTextBar flex-grow">
+                  <strong>{{ msg.SenderUsername }}</strong><br />
+                  <small>{{ msg.Content }}</small><br />
+                  <small class="timestamp">{{ msg.Timestamp | date:'short' }}</small>
+                </div>
+
+                <div class="friend-actions">
+                  <app-button label="Open" size="xsmall" variant="highlight" (click)="userClicked(msg.SenderId)">
+                  </app-button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Live message notifications -->
+          <div *ngIf="messageNotifications.length">
+            <div *ngFor="let notification of messageNotifications" class="card mb-2 p-2 text-white">
+              <div class="d-flex align-items-center w-100">
+
+                <img [src]="notification.profilePicture" class="rounded-circle me-2" width="50" />
+
+                <div class="userTextBar flex-grow">
+                  <strong>{{ notification.senderUsername }}</strong><br />
+                  <small>{{ notification.content }}</small><br />
+                  <small class="timestamp">{{ notification.timestamp | date:'short' }}</small>
+                </div>
+
+                <div class="friend-actions">
+                  <app-button label="Open" size="xsmall" variant="highlight"
+                    (click)="userClicked(notification.senderId)">
+                  </app-button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- Reactive Friend Request Notifications -->
+      <div class="tab-content" *ngIf="friendRequestNotifications.length > 0">
+        <div class="tab-pane">
+
+          <div *ngFor="let n of friendRequestNotifications" class="card mb-2 p-2 text-white">
+            <div class="d-flex align-items-center">
+
+              <img [src]="n.senderPicture" class="rounded-circle me-2" width="50" />
+
+              <div class="userTextBar flex-grow">
+                <strong>{{ n.fromUsername }}</strong><br />
+                <small *ngIf="n.type === 'friend_request'">Sent you a friend request</small>
+                <small *ngIf="n.type === 'friend_request_accepted'">Accepted your friend request</small>
+                <small *ngIf="n.type === 'friend_request_declined'">Declined your friend request</small>
+              </div>
+
+              <div class="actions" *ngIf="n.type === 'friend_request'">
+                <app-button label="Accept" size="xsmall" variant="highlight"
+                  (click)="acceptRequest(n.fromUserId); clearRequest(n.fromUserId)">
+                </app-button>
+                <app-button label="Decline" size="xsmall"
+                  (click)="declineRequest(n.fromUserId); clearRequest(n.fromUserId)">
+                </app-button>
+              </div>
+
+              <div class="friend-actions"
+                *ngIf="n.type === 'friend_request_accepted' || n.type === 'friend_request_declined'">
+                <app-button label="Clear" size="xsmall" variant="highlight" (click)="clearRequest(n.fromUserId)">
+                </app-button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- Pending Friend Requests -->
+      <div class="tab-content" *ngIf="pendingRequests.length > 0">
+        <div class="tab-pane">
+
+          <div *ngFor="let req of pendingRequests" class="card mb-2 p-2 text-white">
+            <div class="d-flex align-items-center w-100">
+
+              <img [src]="req.SenderPicture" class="rounded-circle me-2" width="50" />
+
+              <div class="userTextBar flex-grow">
+                <strong>{{ req.SenderUsername }}</strong><br />
+                <small *ngIf="req.Status === 'PENDING'">Sent you a friend request</small>
+                <small *ngIf="req.Status === 'ACCEPTED'">Accepted your friend request</small>
+                <small *ngIf="req.Status === 'DECLINED'">Declined your friend request</small>
+              </div>
+
+              <div class="actions" *ngIf="req.Status === 'PENDING'">
+                <app-button label="Accept" size="xsmall" variant="highlight" (click)="acceptRequest(req.SenderId)">
+                </app-button>
+                <app-button label="Decline" size="xsmall" (click)="declineRequest(req.SenderId)">
+                </app-button>
+              </div>
+
+              <div class="friend-actions" *ngIf="req.Status === 'ACCEPTED' || req.Status === 'DECLINED'">
+                <app-button label="Clear" size="xsmall" variant="highlight" (click)="clearRequest(req.SenderId)">
+                </app-button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
