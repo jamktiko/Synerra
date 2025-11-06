@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { ChatService } from '../../../core/services/chat.service';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-messages-tab',
@@ -15,14 +16,16 @@ export class MessagesTabComponent {
 
   activeTab: 'users' | 'groups' = 'users';
 
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    private router: Router,
+  ) {}
 
   userClicked(userId: any) {
     this.chatService.startChat([userId]);
   }
 
   openProfile(userId: string, event: MouseEvent) {
-    event.stopPropagation();
-    console.log('moro', userId);
+    this.router.navigate([`/dashboard/profile/${userId}`]);
   }
 }
