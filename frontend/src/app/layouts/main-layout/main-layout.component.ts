@@ -35,7 +35,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
     private notificationService: NotificationService,
     private userStore: UserStore,
     private router: Router,
-    private userService: UserService,
+    private userService: UserService
   ) {}
   @ViewChild(NavbarComponent) navbar!: NavbarComponent;
 
@@ -48,6 +48,8 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
         this.userStore.setUser(res);
         this.loggedInUser = res;
 
+        this.notificationService.initConnection();
+        this.userService.initUsersOnlineStatus();
         // Checks for every possible login and load case where the user might be at the dashboard. To access the dashboard,
         // user must have authToken that is given when logging in with email. (this is being checked with authStore in app.routes)
         if (this.loggedInUser && !this.loggedInUser.Username) {
@@ -65,8 +67,8 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
       },
     });
 
-    this.notificationService.initConnection();
-    this.userService.initUsersOnlineStatus();
+    // this.notificationService.initConnection();
+    // this.userService.initUsersOnlineStatus();
     console.log('WebSocket Reconnect in progress...');
   }
   ngAfterViewInit(): void {

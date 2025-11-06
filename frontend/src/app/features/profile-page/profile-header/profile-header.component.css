@@ -204,7 +204,6 @@
 
 .profilesvg:hover {
   transform: scale(1.1);
-  filter: brightness(0);
 }
 .friend-badge {
   display: flex;
@@ -305,7 +304,7 @@
   border-radius: 18px;
   padding: 28px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.9), 0 0 15px rgba(0, 255, 150, 0.25);
+  box-shadow: 0 0 20px var(--color-primary), 0 0 15px rgba(19, 16, 15, 0.25);
   position: relative;
   opacity: 0;
   transform: translateY(20px);
