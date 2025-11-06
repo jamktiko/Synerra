@@ -1,58 +1,117 @@
 /* ===========================
-   Unified Card Style (Dashboard)
+   Dashboard Card Visuals Aligned with Choose-Game Page
    =========================== */
 .card {
-  width: 220px;
-  min-width: 220px;
-  max-width: 220px;
+  position: relative;
+  width: clamp(210px, 32vw, 250px);
+  min-width: clamp(210px, 32vw, 250px);
+  max-width: 260px;
   margin: 12px;
   display: inline-block;
   vertical-align: top;
-  background: linear-gradient(145deg, #2a2a2a, #1e1e1e);
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  text-align: center;
   color: var(--color-text-default);
+  border: 1px solid rgba(58, 58, 58, 0.9);
+  background: linear-gradient(145deg, #22252b, #181b20);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
   flex-shrink: 0;
+  will-change: transform;
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
+}
+
+.card-img-wrapper {
+  position: relative;
+  overflow: hidden;
+  background: #101217;
+  line-height: 0;
 }
 
 .card-img-top {
   width: 100%;
-  height: 270px;
+  height: 100%;
   object-fit: cover;
   display: block;
-  transition: filter 0.3s ease;
+  transition: transform 0.25s ease, filter 0.25s ease;
+  will-change: transform, filter;
 }
 
 .card:hover .card-img-top {
+  transform: scale(1.05);
   filter: brightness(1.05);
 }
 
 .card-body {
-  padding: 1rem;
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 48px 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.6) 50%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  gap: 0.35rem;
 }
 
 .card-title {
-  font-size: 1.1rem;
+  font-family: var(--font-title, var(--font-header, inherit));
+  font-size: 1.05rem;
   font-weight: 600;
-  margin-top: 0.5rem;
+  margin: 0;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .card-text {
-  font-size: 0.9rem;
-  opacity: 0.9;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  opacity: 0.92;
 }
 
-@media (max-width: 460px) {
+@media (max-width: 900px) {
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .card-text {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 600px) {
   .card {
-    margin-left: 20px;
+    width: clamp(210px, 78vw, 250px) !important;
+    min-width: clamp(210px, 78vw, 250px) !important;
+    max-width: 260px !important;
+    margin: 0 auto 1.25rem !important;
+  }
+
+  .card-body {
+    padding: 40px 0.75rem 0.75rem;
+  }
+
+  .card-title {
+    font-size: 0.95rem;
+  }
+
+  .card-text {
+    font-size: 0.7rem;
   }
 }
