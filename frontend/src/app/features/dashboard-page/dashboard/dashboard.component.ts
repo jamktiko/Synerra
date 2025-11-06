@@ -1,4 +1,10 @@
-import { Component, effect } from '@angular/core';
+import {
+  Component,
+  effect,
+  AfterViewInit,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { GameService } from '../../../core/services/game.service';
 import { Game } from '../../../core/interfaces/game.model';
 import { OnInit } from '@angular/core';
@@ -16,7 +22,7 @@ import { UserService } from '../../../core/services/user.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
   games: Game[] = [];
   sortedGames: Game[] = [];
   filteredGames: Game[] = [];
@@ -24,10 +30,13 @@ export class DashboardComponent implements OnInit {
   me: User | null = null;
   greeting: string = '';
 
+  @ViewChild('favRow', { static: false }) favRow?: ElementRef<HTMLElement>;
+  @ViewChild('popRow', { static: false }) popRow?: ElementRef<HTMLElement>;
+
   constructor(
     private gameService: GameService,
     private userStore: UserStore,
-    private userService: UserService,
+    private userService: UserService
   ) {
     // Sets up a reactive watcher that updates user
     effect(() => {
@@ -41,10 +50,24 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // Scroll helpers for the horizontal games rows. Accepts the native element from template ref.
+  scrollRowLeft(row: HTMLElement | null) {
+    this.scrollRowBy(row, -1);
+  }
+
+  scrollRowRight(row: HTMLElement | null) {
+    this.scrollRowBy(row, 1);
+  }
+
   //calls functions on init
   ngOnInit() {
     this.setGreeting();
     this.loadgames();
+  }
+
+  ngAfterViewInit(): void {
+    // Ensure rows start scrolled to the left. Delay slightly to allow content to render.
+    setTimeout(() => this.resetRows(), 60);
   }
 
   setGreeting() {
@@ -90,5 +113,55 @@ export class DashboardComponent implements OnInit {
     console.log('Filtered games', this.filteredGames);
     // Optional: sort by popularity
     this.filteredGames.sort((a, b) => b.Popularity - a.Popularity);
+    // If the view exists, ensure favorite row is scrolled to start when the filtered list updates
+    setTimeout(() => this.resetRows(), 0);
+  }
+
+  private resetRows() {
+    try {
+      if (this.favRow && this.favRow.nativeElement) {
+        this.favRow.nativeElement.scrollTo({ left: 0, behavior: 'auto' });
+      }
+      if (this.popRow && this.popRow.nativeElement) {
+        this.popRow.nativeElement.scrollTo({ left: 0, behavior: 'auto' });
+      }
+    } catch (e) {
+      // defensive: ignore if DOM not ready
+      console.debug('resetRows failed', e);
+    }
+  }
+
+  private scrollRowBy(row: HTMLElement | null, direction: -1 | 1) {
+    if (!row) return;
+    try {
+      const container = row;
+      const firstCard = container.querySelector<HTMLElement>(
+        'app-dashboard-card'
+      );
+
+      let step = container.clientWidth * 0.85;
+
+      if (firstCard) {
+        const cardRect = firstCard.getBoundingClientRect();
+        const cardWidth = cardRect.width;
+        const cardStyles = window.getComputedStyle(firstCard);
+        const gapStyles = window.getComputedStyle(container);
+        const marginLeft = parseFloat(cardStyles.marginLeft || '0') || 0;
+        const marginRight = parseFloat(cardStyles.marginRight || '0') || 0;
+        const gap =
+          parseFloat(gapStyles.columnGap || gapStyles.gap || '0') || 0;
+        step = cardWidth + marginLeft + marginRight + gap;
+      }
+
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      const next =
+        direction === 1
+          ? Math.min(container.scrollLeft + step, maxScroll)
+          : Math.max(container.scrollLeft - step, 0);
+
+      container.scrollTo({ left: next, behavior: 'smooth' });
+    } catch (e) {
+      console.debug('scrollRowBy failed', e);
+    }
   }
 }

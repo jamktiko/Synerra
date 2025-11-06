@@ -25,6 +25,11 @@
   display: none !important;
 }
 
+:host ::ng-deep nav.navigation.collapsed .btn .btn-icon {
+  margin-right: 0;
+  margin-left: 0;
+}
+
 .navigation::after {
   content: "";
   position: absolute;
@@ -432,7 +437,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  padding-left: 2.6rem;
+  padding-left: 0.85rem;
   max-height: 0;
   opacity: 0;
   overflow: hidden;
@@ -532,10 +537,24 @@
 }
 
 .navigation.collapsed .nav-submenu {
-  max-height: 0 !important;
+  max-height: 0;
   opacity: 0;
   pointer-events: none;
   padding-left: 0;
+}
+
+.navigation.collapsed.expanded-from-collapse .nav-submenu {
+  padding: 0.4rem 0.5rem;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  margin-left: -0.75rem;
+  width: calc(100% + 0.75rem);
+}
+
+.navigation.collapsed.expanded-from-collapse .nav-subitem {
+  justify-content: flex-start;
+  padding-left: 0.4rem;
 }
 
 /* .navigation.collapsed .nav-btn:hover,

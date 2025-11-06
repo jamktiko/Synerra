@@ -277,11 +277,16 @@ select {
   height: 16px;
 }
 
-/* Kaksi ensimmäistä filterboxia */
+/* Kaksi ensimmäistä filterboxia: dropdown leveydeltään täsmää napin leveyteen
+   Nyt asetetaan dropdownin leveys 100% suhteessa kontrolleriin, mutta pidetään
+   pienin min-width turvana desktopissa. Tämä tekee "Any status" ja
+   "Select Languages" alasvetovalikoista saman levyisiä kuin niiden napit. */
 .filters .checkbox-collapsible:nth-child(1) .checkbox-list,
 .filters .checkbox-collapsible:nth-child(2) .checkbox-list {
-  width: 180px;
+  width: 100%;
   min-width: 180px;
+  left: 0; /* snap to the left edge of the button */
+  right: auto;
 }
 
 /* Viimeinen filtterboxi */

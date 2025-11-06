@@ -198,3 +198,11 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   text-align: center;
 }
+
+/* Keep choose-game cards compact even when few results */
+.games-container ::ng-deep .card {
+  max-width: 240px !important;
+  width: 100% !important;
+  margin: 12px auto !important;
+}
+

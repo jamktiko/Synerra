@@ -157,22 +157,13 @@ export class NavbarComponent implements OnInit {
 
   @HostListener('window:resize', [])
   checkAutoCollapse() {
-    if (typeof window !== 'undefined') {
-      if (window.innerWidth < 1070) {
-        if (!this.isCollapsed) {
-          this.isCollapsed = true;
-          this.collapsedChange.emit(this.isCollapsed);
-        }
-        return;
-      }
+    if (typeof window === 'undefined') {
+      return;
     }
 
-    const layout = document.querySelector('.layout') as HTMLElement;
-    if (!layout) return;
+    const isBelowDesktopBreakpoint = window.innerWidth < 1070;
 
-    const isOverflowing = layout.scrollWidth > layout.clientWidth + 1;
-
-    if (isOverflowing) {
+    if (isBelowDesktopBreakpoint) {
       if (!this.isCollapsed) {
         this.isCollapsed = true;
         this.collapsedChange.emit(this.isCollapsed);
@@ -180,9 +171,7 @@ export class NavbarComponent implements OnInit {
       return;
     }
 
-    if (this.hasUserPreference) return;
-
-    if (this.isCollapsed) {
+    if (!this.hasUserPreference && this.isCollapsed) {
       this.isCollapsed = false;
       this.collapsedChange.emit(this.isCollapsed);
     }
