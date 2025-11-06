@@ -28,7 +28,7 @@
   /* GPU-kiihdytys ja kevyempi renderöinti */
   transform: translateZ(0);
   backface-visibility: hidden;
-  z-index: 10000;
+  /* z-index: 10000; */
 }
 
 .layout::before {
