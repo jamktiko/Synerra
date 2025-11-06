@@ -65,6 +65,7 @@
   display: block !important;
   min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Animates slide between Users and Groups */
@@ -149,6 +150,7 @@ input[type="text"]::placeholder {
 
 .card {
   width: 100%;
+  overflow: hidden;
 }
 
 .d-flex.align-items-center {

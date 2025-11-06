@@ -9,7 +9,9 @@
     </div>
 
     <div *ngIf="!messagesTabShowing" class="messagesTab">
-      <app-notifications-tab [notifications]="notifications" [pendingRequests]="pendingRequests" />
+      <app-notifications-tab [friendRequestNotifications]="friendRequestNotifications"
+        [messageNotifications]="messageNotifications" [pendingRequests]="pendingRequests" [unreads]="unreads"
+        [notifications]="notifications" />
     </div>
   </div>
 </div>
