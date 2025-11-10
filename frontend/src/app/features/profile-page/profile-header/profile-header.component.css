@@ -443,3 +443,8 @@
     transform: translateY(0);
   }
 }
+@media (max-width: 468px) {
+  .action-buttons {
+    flex-direction: column;
+  }
+}

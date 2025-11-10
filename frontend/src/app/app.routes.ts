@@ -15,6 +15,7 @@ import { SocialPageComponent } from './features/social-page/social-page.componen
 import { ChatPageComponent } from './features/chat-page/chat-page.component';
 import { ProfilePageComponent } from './features/profile-page/profile-page.component';
 import { SettingsPageComponent } from './features/settings-page/settings-page.component';
+import { ProfileSettingsComponent } from './features/settings-page/profile-settings/profile-settings.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -58,6 +59,11 @@ export const routes: Routes = [
         path: 'dashboard/settings',
         canActivate: [AuthGuard],
         component: SettingsPageComponent,
+      },
+      {
+        path: 'dashboard/settings/profile',
+        canActivate: [AuthGuard],
+        component: ProfileSettingsComponent,
       },
     ],
   },

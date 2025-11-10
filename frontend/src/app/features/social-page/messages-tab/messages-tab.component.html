@@ -25,7 +25,11 @@
           Groups
         </button>
       </li>
+
+      <app-button label="New chat +" [fullWidth]="true" size="small" (click)="openNewChatModal()"></app-button>
     </ul>
+
+
 
 
     <div class="conts">
@@ -60,23 +64,65 @@
 
         <div class="tab-pane" id="groups">
           <div *ngIf="groupChats().length > 0; else noGroups">
-            <div *ngFor="let group of groupChats()" class="card mb-2 p-2 text-white">
-              <div *ngFor="let member of group.Members" class="d-flex align-items-center">
-                <img class="account-icon"
-                  [src]="member?.ProfilePicture ? member.ProfilePicture : 'assets/svg/Acount.svg'"
-                  class="rounded-circle me-2" width="50" />
-                <div class="userTextBar">
-                  <strong>{{ member.Username }}</strong><br />
-                  <small class="lMessage">{{ member.Username}}</small>
+            <div *ngFor="let group of groupChats()" class="card mb-2 p-2 text-white"
+              (click)="groupChatClicked(group.RoomId)">
+
+              <div class="d-flex align-items-center">
+                <!-- Avatars loop -->
+                <div class="group-avatars">
+                  <img *ngFor="let member of group.Members" class="account-icon"
+                    [src]="member.ProfilePicture || 'assets/svg/Acount.svg'" />
+                </div>
+
+                <!-- Usernames loop -->
+                <div class="group-usernames">
+                  <ng-container *ngFor="let member of group.Members; let last = last">
+                    {{ member.Username }}<span *ngIf="!last">, </span>
+                  </ng-container>
                 </div>
               </div>
+
+
             </div>
           </div>
           <ng-template #noGroups>
             <p>No group chats yet.</p>
           </ng-template>
         </div>
+
       </div>
     </div>
+  </div>
+</div>
+
+<div class="friendsModal" *ngIf="newChatModalOpen">
+  <div class="modalOverlay"></div>
+  <div class="modalContent">
+    <h3 class="modalTitle">Add friends to chat</h3>
+
+    <!-- Voi lisätä myöhemmin input filtterin jos jaksaa -->
+    <!-- <div class="input-container">
+      <img src="assets/svg/Search_icon.svg" alt="Search" class="search-icon" />
+      <input type="text" placeholder="Search friends..." />
+    </div> -->
+
+    <div class="friendsList">
+      <div class="card mb-2 p-2 text-white" *ngFor="let friend of friendsList" [class.selected]="isSelected(friend)"
+        (click)="toggleFriendSelection(friend)">
+        <div class="d-flex align-items-center user-card">
+          <img class="account-icon" [src]="friend.ProfilePicture || 'assets/svg/Acount.svg'" alt="Friend" />
+          <div class="userTextBar">
+            <strong>{{ friend.Username }}</strong><br />
+            <small class="lMessage">{{ friend.Status || 'Offline' }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modalButtons">
+      <app-button label="Close" [fullWidth]="true" size="small" (click)="closeNewChatModal()"></app-button>
+      <app-button label="Start chat" [fullWidth]="true" size="small" variant="highlight"
+        [state]="selectedFriends.length !== 0 ? 'active' : 'disabled'" (click)="startChat()"></app-button>
+    </div>
+
   </div>
 </div>

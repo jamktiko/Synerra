@@ -108,7 +108,7 @@ export class FriendService {
 
   declineFriendRequest(targetUserId: string): Observable<any> {
     const jwt = this.authStore.getToken();
-
+    console.log('DECLINE REQUEST CALLED: ', targetUserId);
     return this.http
       .post(
         `${this.baseUrl}/friendrequest`,
@@ -183,7 +183,7 @@ export class FriendService {
   // delete the accepted/declined request when the user clears it from notifications
   clearAcceptedDeclinedRequests(targetUserId: string): Observable<any> {
     const jwt = this.authStore.getToken();
-
+    console.log('CLEAR REQUESTS CALLED');
     return this.http
       .delete(`${this.mostBasicUrl}/friendRequests/delete`, {
         headers: { Authorization: `${jwt}` },
@@ -204,5 +204,8 @@ export class FriendService {
           );
         })
       );
+  }
+  clearAllRequests(): void {
+    this.pendingRequestsSubject.next([]); // Clear the array
   }
 }
