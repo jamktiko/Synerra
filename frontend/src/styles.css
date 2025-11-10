@@ -61,7 +61,7 @@ app-main-layout {
   --fs-2xs: 0.75rem; /* 12px  | Inter Extra Small (Regular) */
 
   /* Colors and gradients  */
-  --color-primary: #e8341d;
+  --color-primary: #f02a10;
   --color-highlight: #ffb31c;
   --color-success: #14ae5c;
   --color-text-default: #f2f2f2;
@@ -84,7 +84,7 @@ app-main-layout {
     #8e8e8e 100%
   );
 
-  --color-dark-gradient: linear-gradient(145deg, #161719, #34353f, #0d0e11);
+  --color-dark-gradient: linear-gradient(145deg, #161719, #2a2b30, #111216);
 
   --color-transparent-gradient: linear-gradient(
     90deg,
@@ -255,14 +255,6 @@ body {
   max-width: 50rem;
   width: 100%; /* pitää sisällön skaalautuvana */
   margin: auto; /*Keskitys*/
-}
-
-.modal-dialog,
-.modal,
-.cdk-overlay-container {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 99999 !important;
 }
 
 @media (max-height: 768px) {

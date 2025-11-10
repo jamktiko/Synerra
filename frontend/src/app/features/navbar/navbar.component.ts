@@ -140,7 +140,7 @@ export class NavbarComponent implements OnInit {
       { label: 'Settings', icon: 'Settings', route: '/dashboard/settings' },
       { label: 'Games', icon: 'Gamepad', route: '/dashboard/choose-game' },
       { label: 'Home', icon: 'logo_small', route: '/dashboard' },
-      { label: 'Social', icon: 'NoMessage', route: '/dashboard/social' },
+      { label: 'Social', icon: 'yesMessage', route: '/dashboard/social' },
       {
         label: 'Profile',
         icon: 'Acount',
