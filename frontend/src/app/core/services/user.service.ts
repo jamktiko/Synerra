@@ -201,6 +201,7 @@ export class UserService {
 
   markRoomMessagesAsRead(roomId: string): Observable<any> {
     const token = this.authStore.getToken();
+    console.log('MARK AS READ CALLED: ', roomId);
     return this.http
       .delete(`${this.baseUrl}/rooms/${roomId}/unreads`, {
         headers: { Authorization: `${token}` },
@@ -223,5 +224,10 @@ export class UserService {
 
   refreshUsers(): void {
     this.getUsers().subscribe(); // triggers next() via the tap
+  }
+
+  clearAllUnreads(): void {
+    console.log('CLEAR ALL UNREADS CALLED');
+    this.unreadsSubject.next([]); // Clear the array
   }
 }

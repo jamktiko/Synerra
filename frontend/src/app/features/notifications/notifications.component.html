@@ -79,7 +79,7 @@
       <!-- Recent chat messages -->
       <div class="section" *ngIf="activeTab === 'messages' && unreads.length">
         <div class="section-title">Recent messages</div>
-        <div *ngFor="let msg of unreads" class="notification-item" (click)="userClicked(msg.SenderId)">
+        <div *ngFor="let msg of unreads" class="notification-item" (click)="userClicked(msg.RoomId)">
           <img [src]="msg.ProfilePicture" alt="avatar" class="avatar" />
           <div class="message-info">
             <div class="sender">{{ msg.SenderUsername }}</div>
@@ -93,7 +93,7 @@
       <div class="section" *ngIf="activeTab === 'messages' && messageNotifications.length">
         <div class="section-title" *ngIf="unreads.length">Live updates</div>
         <div *ngFor="let notification of messageNotifications" class="notification-item"
-          (click)="userClicked(notification.senderId)">
+          (click)="userClicked(notification.roomId)">
           <img [src]="notification.profilePicture" alt="avatar" class="avatar" />
           <div class="message-info">
             <div class="sender">{{ notification.senderUsername }}</div>

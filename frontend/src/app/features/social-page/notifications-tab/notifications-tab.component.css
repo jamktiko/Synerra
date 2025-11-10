@@ -178,3 +178,26 @@ input[type="text"]::placeholder {
   text-align: center;
   margin-top: 25px;
 }
+
+.icon-trash path {
+  stroke: white !important; /* ensures lines are white */
+  fill: none; /* remove any fill */
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.icon-wrapper {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clear-button {
+  margin-right: 25px;
+}
+
+.noti-heading {
+  margin-left: 25px;
+}
