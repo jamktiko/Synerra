@@ -67,6 +67,26 @@
   overflow-y: auto;
 }
 
+/* Tabs container */
+#chatTabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* push button to right edge */
+  width: 100%;
+  padding: 0 1rem;
+}
+
+/* Tabs group on left */
+#chatTabs .nav-item {
+  margin-right: 0.5rem;
+  display: inline-block;
+}
+
+/* Keep the button on the right */
+#chatTabs app-button {
+  margin-left: auto; /* optional, ensures button stays right */
+}
+
 /* Animates slide between Users and Groups */
 #chatTabsContent.show-users {
   transform: translateX(0%);
