@@ -37,8 +37,12 @@ export class MessagesTabComponent implements OnInit {
     });
   }
 
-  userClicked(userId: any) {
+  userClicked(userId: string) {
     this.chatService.startChat([userId]);
+  }
+
+  groupChatClicked(roomId: string) {
+    this.chatService.startChat(undefined, roomId);
   }
 
   openProfile(userId: string, event: MouseEvent) {
