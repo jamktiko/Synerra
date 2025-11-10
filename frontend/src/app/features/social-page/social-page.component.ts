@@ -109,8 +109,33 @@ export class SocialPageComponent implements OnInit {
     // Subscribe to incoming notifications
     this.sub = this.notificationService.notifications$.subscribe(
       (data: any) => {
+        console.log(data.type);
+        // Handle global clears first
+        if (data.type === 'CLEAR_ALL_MESSAGES') {
+          console.log('CLEARING MESSAGES');
+          this.notifications = this.notifications.filter(
+            (n) => n.type !== 'newMessage'
+          );
+          this.messageNotifications = [];
+
+          return; // exit early
+        }
+
+        if (data.type === 'CLEAR_ALL_REQUESTS') {
+          console.log('CLEARING REQUESTS');
+          this.notifications = this.notifications.filter(
+            (n) =>
+              n.type !== 'friend_request' &&
+              n.type !== 'friend_request_accepted' &&
+              n.type !== 'friend_request_declined'
+          );
+          this.friendRequestNotifications = [];
+          return; // exit early
+        }
+
         console.log('Received notification in SOCIAL:', data);
 
+        // Add to generic notifications
         this.notifications = [...this.notifications, data];
 
         const type = (data.type ?? '').toString().toLowerCase();
