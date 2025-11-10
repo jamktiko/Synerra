@@ -1,0 +1,113 @@
+.main-container {
+  background: var(--color-dark-gradient);
+  border-radius: 20px;
+  margin: 0 auto;
+  padding: 40px 32px;
+  max-width: 1100px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
+  position: relative;
+}
+
+.main-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(58, 58, 58, 0.2),
+    rgba(58, 58, 58, 0.9)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 32px;
+  align-items: start;
+  position: relative;
+}
+
+.action-button {
+  margin: 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-text-default);
+  box-shadow: 0 0 12px rgba(242, 104, 13, 0.3);
+  align-self: flex-start;
+  height: 50px;
+  width: 120px;
+  align-items: center;
+  color: var(--color-text-default);
+  background: linear-gradient(180deg, #ff7a3e 0%, #e34b0e 100%);
+  border-color: rgba(255, 122, 62, 0.4);
+  transition: transform 150ms ease;
+}
+
+.action-button:hover {
+  transform: scale(1.1);
+}
+
+.profile-settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.file-upload-wrapper {
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.upload-btn {
+  background: linear-gradient(180deg, #ff7a3e 0%, #e34b0e 100%);
+  border-color: rgba(255, 122, 62, 0.4);
+  box-shadow: 0 0 12px rgba(242, 104, 13, 0.3);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s ease;
+  transition: transform 150ms ease;
+}
+
+.upload-btn:hover {
+  transform: scale(1.1);
+}
+
+.file-name {
+  font-size: 0.875rem;
+  color: #ffffffa0;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-pic-preview {
+  margin: 20px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 350ms ease;
+}
+
+.profile-pic-preview:hover {
+  transform: scale(1.5);
+}
