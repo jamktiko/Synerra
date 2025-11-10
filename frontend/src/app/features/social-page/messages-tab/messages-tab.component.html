@@ -25,7 +25,11 @@
           Groups
         </button>
       </li>
+
+      <app-button label="New chat +" [fullWidth]="true" size="small" (click)="openNewChatModal()"></app-button>
     </ul>
+
+
 
 
     <div class="conts">
@@ -78,5 +82,37 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="friendsModal" *ngIf="newChatModalOpen">
+  <div class="modalOverlay"></div>
+  <div class="modalContent">
+    <h3 class="modalTitle">Add friends to chat</h3>
+
+    <!-- Voi lisätä myöhemmin input filtterin jos jaksaa -->
+    <!-- <div class="input-container">
+      <img src="assets/svg/Search_icon.svg" alt="Search" class="search-icon" />
+      <input type="text" placeholder="Search friends..." />
+    </div> -->
+
+    <div class="friendsList">
+      <div class="card mb-2 p-2 text-white" *ngFor="let friend of friendsList" [class.selected]="isSelected(friend)"
+        (click)="toggleFriendSelection(friend)">
+        <div class="d-flex align-items-center user-card">
+          <img class="account-icon" [src]="friend.ProfilePicture || 'assets/svg/Acount.svg'" alt="Friend" />
+          <div class="userTextBar">
+            <strong>{{ friend.Username }}</strong><br />
+            <small class="lMessage">{{ friend.Status || 'Offline' }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modalButtons">
+      <app-button label="Close" [fullWidth]="true" size="small" (click)="closeNewChatModal()"></app-button>
+      <app-button label="Start chat" [fullWidth]="true" size="small" variant="highlight"
+        [state]="selectedFriends.length !== 0 ? 'active' : 'disabled'" (click)="startChat()"></app-button>
+    </div>
+
   </div>
 </div>

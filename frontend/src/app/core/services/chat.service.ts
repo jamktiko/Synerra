@@ -55,6 +55,7 @@ export class ChatService {
       this.ws.onopen = () => {
         // Tells the server to create/enter a room with either targetUserIds or chatRoomId, depending on how the startChat() was called.
         if (targetUserId && !targetRoomId) {
+          console.log('TARGETUSERIDDDDDDD: ', targetUserId);
           this.ws!.send(
             JSON.stringify({
               action: 'enterroom',

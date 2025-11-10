@@ -8,7 +8,7 @@
       <app-messages-tab [directChats]="directChats" [groupChats]="groupChats" />
     </div>
 
-    <div *ngIf="!messagesTabShowing" class="messagesTab">
+    <div *ngIf="!messagesTabShowing" class="notificationsTab">
       <app-notifications-tab [friendRequestNotifications]="friendRequestNotifications"
         [messageNotifications]="messageNotifications" [pendingRequests]="pendingRequests" [unreads]="unreads"
         [notifications]="notifications" />
