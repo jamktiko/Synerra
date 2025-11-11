@@ -1,7 +1,7 @@
 /* Player card styles */
 .card {
   position: relative;
-  width: 200px;
+  width: 220px;
   height: 290px;
   background-image: linear-gradient(
       rgba(10, 10, 10, 0.15),
@@ -27,7 +27,6 @@
   align-items: flex-start;
   justify-content: flex-end;
   padding: 14px;
-  border-radius: 10px;
   cursor: pointer;
   overflow: hidden;
   font-family: var(--font-main);
@@ -37,6 +36,7 @@
     inset 0 -2px 8px rgba(0, 0, 0, 0.65);
   background-origin: border-box;
   background-clip: padding-box, border-box;
+  margin: 28px auto 0px auto;
 }
 
 .card::before {
@@ -236,7 +236,6 @@
 }
 .actions {
   display: flex;
-  align-items: center;
   justify-content: center;
   gap: 8px;
   width: 100%;

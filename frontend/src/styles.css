@@ -25,6 +25,7 @@ app-root,
 app-main-layout {
   display: inline-block;
 }
+
 /*================================================================*/
 :root {
   --viewport-height: 100vh;
