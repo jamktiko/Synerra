@@ -7,6 +7,7 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
   position: relative;
+  margin-top: 25px;
 }
 
 .main-container::before {
@@ -110,4 +111,81 @@ input[type="file"] {
 
 .profile-pic-preview:hover {
   transform: scale(1.5);
+}
+
+.field-group {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+input,
+textarea {
+  padding: 6px;
+  border: 1px solid #444;
+  background: #222;
+  color: white;
+  border-radius: 4px;
+  margin-left: 20px;
+}
+
+button {
+  width: fit-content;
+}
+
+h3 {
+  margin-left: 20px;
+}
+
+.profile-checkbox {
+  width: 20px;
+  height: 20px;
+  transform: scale(1.5); /* scales the checkbox size */
+  margin-right: 8px;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+.language-option {
+  margin-left: 20px;
+}
+.profile-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 200px; /* adjust as needed */
+
+  background-size: 12px 12px;
+
+  margin: 20px;
+}
+
+.top-heading {
+  margin: 20px;
+  text-align: center;
+  justify-content: center;
+}
+
+.message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 15px 25px;
+  border-radius: 10px;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  text-align: center;
 }

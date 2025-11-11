@@ -23,6 +23,8 @@ module.exports.handler = async (event) => {
       'languages',
       'games',
       'birthday',
+      'playstyle',
+      'platform',
     ];
 
     //variables for ddb update
@@ -57,15 +59,11 @@ module.exports.handler = async (event) => {
       TableName: process.env.MAIN_TABLE, //table that is changed
       Key: { PK: `USER#${userId}`, SK: 'PROFILE' }, //partition key and sort key that defines the item
       UpdateExpression: 'SET ' + updateExp.join(', '),
-      // A string telling DynamoDB which fields to update and how.
-      // 'updateExp' is an array of expressions like "#username = :username"
-      // Joining with ', ' turns it into a single UpdateExpression.
+
       ExpressionAttributeNames: expAttrNames,
-      // Maps placeholders (like "#username") to actual attribute names in DynamoDB.
-      // Needed in case attribute names are reserved words or have special characters.
+
       ExpressionAttributeValues: expAttrValues,
-      // Maps placeholders (like ":username") to the actual values you want to write.
-      // Only fields included in the request body are here.
+
       ReturnValues: 'ALL_NEW',
       // return the updated item and send it back to the client
 

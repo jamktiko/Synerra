@@ -9,7 +9,7 @@
           <span *ngIf="user?.Languages?.length">
             {{ getLanguageNames(user?.Languages) }}
           </span>
-          <span *ngIf="stats.languages.length === 0" class="empty">---</span>
+          <span *ngIf="(user?.Languages ?? []).length === 0" class="empty">---</span>
         </div>
       </div>
 
@@ -17,8 +17,8 @@
       <div class="attribute-card">
         <h3 class="attribute-title">Playstyle</h3>
         <div class="attribute-value">
-          <span *ngIf="stats.playstyle">{{ stats.playstyle }}</span>
-          <span *ngIf="!stats.playstyle" class="empty">---</span>
+          <span *ngIf="user?.Playstyle ?? false">{{ user?.Playstyle }}</span>
+          <span *ngIf="!(user?.Playstyle ?? false)" class="empty">---</span>
         </div>
       </div>
 
@@ -35,8 +35,10 @@
       <div class="attribute-card">
         <h3 class="attribute-title">Platforms</h3>
         <div class="attribute-value">
-          <span *ngIf="stats.platforms.length > 0">{{ stats.platforms.join(', ') }}</span>
-          <span *ngIf="stats.platforms.length === 0" class="empty">---</span>
+          <span *ngIf="(user?.Platform ?? []).length > 0">
+            {{ (user?.Platform ?? []).join(', ') }}
+          </span>
+          <span *ngIf="(user?.Platform ?? []).length === 0" class="empty">---</span>
         </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ import { ButtonComponent } from '../../../shared/components/button/button.compon
 import { NgModel } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ReputationService } from '../../../core/services/reputation.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-header',
@@ -28,15 +29,16 @@ export class ProfileHeaderComponent implements OnInit {
   @Input() genrePopularity: any[] = [];
   showReputationModal = false;
 
-  repComms = 1;
-  repMentality = 1;
-  repTeamwork = 1;
+  repComms = 50;
+  repMentality = 50;
+  repTeamwork = 50;
 
   constructor(
     private userStore: UserStore,
     private chatService: ChatService,
     private friendService: FriendService,
-    private reputationService: ReputationService
+    private reputationService: ReputationService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {}
@@ -48,6 +50,7 @@ export class ProfileHeaderComponent implements OnInit {
   onEditProfile(): void {
     // TODO: Navigate to edit profile or open edit modal
     console.log('Edit profile clicked');
+    this.router.navigate(['/dashboard/settings/profile']);
   }
 
   onUploadPhoto(): void {
