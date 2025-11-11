@@ -16,9 +16,12 @@
   height: 320px; /* So usercards would have the same height */
   flex-direction: column;
   border-radius: var(--radius-xl);
+
+  /* Default background */
   /* background: linear-gradient(#515151, #434343) padding-box,
     linear-gradient(180deg, #929292 0%, #444444 100%) border-box; */
-  border: 1px solid transparent;
+
+  border: none;
   transition: all 0.3s ease;
   text-align: center;
   align-items: flex-start;
@@ -29,8 +32,9 @@
   overflow: hidden;
   font-family: var(--font-main);
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.5);
-  border: 3px solid rgba(71, 71, 71, 0.4);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -2px 8px rgba(0, 0, 0, 0.65);
   background-origin: border-box;
   background-clip: padding-box, border-box;
   margin: 28px auto 0px auto;
@@ -41,20 +45,32 @@
   position: absolute;
   inset: 0;
   border-radius: 14px;
-  padding: 1px;
+  padding: 2px;
   background: linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0.9) 0%,
-    rgba(40, 40, 40, 0.7) 45%,
-    rgba(0, 0, 0, 0.9) 100%
-  );
+      130deg,
+      rgba(255, 255, 255, 0.15),
+      transparent 35%
+    ),
+    linear-gradient(320deg, rgba(34, 227, 163, 0.6), rgba(66, 133, 244, 0.35));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   z-index: 0;
   pointer-events: none;
-  /* subtle inner shadow on the ring for perceived depth */
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.65);
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(30, 25, 25, 0.08), transparent 45%),
+    radial-gradient(circle at 80% -20%, rgba(57, 30, 0, 0.3), transparent 70%);
+  opacity: 0.9;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  z-index: 1;
 }
 
 /* .card.online {
@@ -142,6 +158,16 @@
 .card.online .avatar {
   box-shadow: 0 0 18px rgba(20, 174, 92, 0.2), 0 0 18px rgba(19, 19, 19, 0.08),
     0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 700px) {
+  .card {
+    width: clamp(240px, 85vw, 380px);
+  }
+
+  .avatar-button {
+    top: 32%;
+  }
 }
 
 @keyframes avatar-ring-pulse {

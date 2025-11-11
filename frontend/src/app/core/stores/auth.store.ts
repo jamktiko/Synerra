@@ -4,13 +4,10 @@
 // We are mainly using the extra seperate token variable, as it's much more efficient to get that instead of getting the token from localstorage every time.
 
 import { Injectable, signal } from '@angular/core';
-import { UserStore } from './user.store';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
   private tokenKey = 'auth_token';
-
-  constructor(private userStore: UserStore) {}
 
   // Token updates reactively
   token = signal<string | null>(localStorage.getItem(this.tokenKey));
