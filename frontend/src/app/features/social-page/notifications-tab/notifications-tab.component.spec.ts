@@ -2,18 +2,37 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NotificationsTabComponent } from './notifications-tab.component';
 
-xdescribe('NotificationsTabComponent', () => {
+describe('NotificationsTabComponent', () => {
   let component: NotificationsTabComponent;
-  let fixture: ComponentFixture<NotificationsTabComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [NotificationsTabComponent],
-    }).compileComponents();
+  // instantiate component by calling constructor with minimal stubs
+  beforeEach(() => {
+    const fakeFriendService: any = {
+      acceptFriendRequest: () => ({ subscribe: (arg: any) => {} }),
+      declineFriendRequest: () => ({ subscribe: (arg: any) => {} }),
+      clearAcceptedDeclinedRequests: () => ({ subscribe: (arg: any) => {} }),
+      clearAllRequests: () => {},
+    };
+    const fakeChatService: any = { startChat: () => {} };
+    const fakeUserService: any = {
+      markRoomMessagesAsRead: () => ({ subscribe: () => {} }),
+      clearAllUnreads: () => {},
+    };
+    const fakeNotificationService: any = {
+      clearNotifications: () => {},
+      clearRequests: () => {},
+    };
 
-    fixture = TestBed.createComponent(NotificationsTabComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = new NotificationsTabComponent(
+      fakeFriendService,
+      fakeChatService,
+      fakeUserService,
+      fakeNotificationService
+    );
+    // initialize input arrays
+    component.pendingRequests = [];
+    component.notifications = [];
+    component.unreads = [];
   });
 
   it('should create', () => {

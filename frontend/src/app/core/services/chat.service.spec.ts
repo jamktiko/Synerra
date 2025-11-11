@@ -23,7 +23,7 @@ jest.mock('@angular/core', () => {
 
 const testRoom = 'testRoom123';
 
-xdescribe('ChatService', () => {
+describe('ChatService', () => {
   let chatService: ChatService;
   let mockAuthStore: AuthStore;
   let mockUserStore: UserStore;
