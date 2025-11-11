@@ -107,17 +107,27 @@
     </div> -->
 
     <div class="friendsList">
-      <div class="card mb-2 p-2 text-white" *ngFor="let friend of friendsList" [class.selected]="isSelected(friend)"
-        (click)="toggleFriendSelection(friend)">
-        <div class="d-flex align-items-center user-card">
-          <img class="account-icon" [src]="friend.ProfilePicture || 'assets/svg/Acount.svg'" alt="Friend" />
-          <div class="userTextBar">
-            <strong>{{ friend.Username }}</strong><br />
-            <small class="lMessage">{{ friend.Status || 'Offline' }}</small>
+      <ng-container *ngIf="friendsList && friendsList.length > 0; else noFriends">
+        <div class="card mb-2 p-2 text-white" *ngFor="let friend of friendsList" [class.selected]="isSelected(friend)"
+          (click)="toggleFriendSelection(friend)">
+          <div class="d-flex align-items-center user-card">
+            <img class="account-icon" [src]="friend.ProfilePicture || 'assets/svg/Acount.svg'" alt="Friend" />
+            <div class="userTextBar">
+              <strong>{{ friend.Username }}</strong><br />
+              <small class="lMessage">{{ friend.Status || 'Offline' }}</small>
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
+
+      <ng-template #noFriends>
+        <p>
+          You need friends first!
+        </p>
+      </ng-template>
     </div>
+
+
     <div class="modalButtons">
       <app-button label="Close" [fullWidth]="true" size="small" (click)="closeNewChatModal()"></app-button>
       <app-button label="Start chat" [fullWidth]="true" size="small" variant="highlight"
