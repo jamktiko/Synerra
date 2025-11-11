@@ -21,6 +21,8 @@ export interface User {
   AverageComms?: number;
   AverageMentality?: number;
   MainReputation?: number;
+  Playstyle?: string;
+  Platform?: string[];
 }
 
 export interface UserFilters {

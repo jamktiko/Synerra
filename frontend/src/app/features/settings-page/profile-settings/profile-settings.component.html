@@ -1,3 +1,4 @@
+<h2 class="top-heading">Edit Profile</h2>
 <div class="main-container">
   <div>
     <h3>Upload Profile Picture</h3>
@@ -29,6 +30,56 @@
   <div *ngIf="uploadedUrl">
     Uploaded successfully! <a [href]="uploadedUrl" target="_blank">View</a>
   </div>
+</div>
+
+<div class="main-container">
+  <div class="field-group">
+    <h3>Username</h3>
+    <input type="text" [(ngModel)]="username" (input)="onUsernameInput()" (blur)="validateUsername()" />
+    <button class="action-button" (click)="validateUsername()">Save</button>
+  </div>
+
+</div>
+<div class="main-container">
+  <div class="field-group">
+    <h3>Bio</h3>
+    <textarea [(ngModel)]="bio"></textarea>
+    <button class="action-button" (click)="saveBio()">Save</button>
+  </div>
+
+</div>
+<div class="main-container">
+  <div class="languages-selection">
+    <h3>Languages</h3>
+    <div *ngFor="let lang of languages" class="language-option">
+      <input type="checkbox" class="profile-checkbox" [id]="lang.code" [checked]="selectedLanguages.includes(lang.code)"
+        (change)="toggleLanguage(lang.code)" />
+      <label [for]="lang.code">{{ lang.name }}</label>
+    </div>
+  </div>
+  <!-- <p>Selected languages: {{ selectedLanguageNames.join(', ') }}</p> -->
+  <button class="action-button" (click)="saveLanguages()">Save</button>
 
 
+</div>
+<div class="main-container">
+  <h3>Playstyle</h3>
+  <select class="profile-select" [(ngModel)]="playstyle">
+    <option value="Competitive">Competitive</option>
+    <option value="Casual">Casual</option>
+
+  </select>
+
+  <h3>Platform</h3>
+  <div *ngFor="let platform of availablePlatforms" class="language-option">
+    <label>
+      <input type="checkbox" class="profile-checkbox" [value]="platform"
+        [checked]="selectedPlatforms.includes(platform)" (change)="togglePlatform(platform)" />
+      {{ platform }}
+    </label>
+  </div>
+  <button class="action-button" (click)="savePlaystyleAndPlatform()">Save</button>
+</div>
+<div *ngIf="showNotification" class="message">
+  {{ notificationMessage }}
 </div>
