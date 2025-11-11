@@ -2,19 +2,20 @@
 .games-container {
   display: grid;
   padding: 32px;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 240px));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   justify-content: center;
   justify-items: center;
   gap: 20px;
   background: var(--color-dark-gradient);
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  box-sizing: border-box;
   position: relative;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.9);
   max-width: 100%;
 }
-
+.games-container ::ng-deep .card {
+  display: block !important;
+}
 .games-container::before {
   content: "";
   position: absolute;
@@ -49,7 +50,9 @@
   /* overflow-y: auto;
   overflow-x: hidden; */
 }
-
+app-game-card {
+  display: block;
+}
 .mid-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -106,7 +109,6 @@
   display: block !important;
   width: 100% !important;
   max-width: 240px !important;
-  box-sizing: border-box !important;
   margin: 12px auto !important;
 }
 

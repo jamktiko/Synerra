@@ -2,127 +2,127 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardCardComponent } from './dashboard-card.component';
 import { Router } from '@angular/router';
 
-describe('DashboardCardComponent - UI & Funktiotestit', () => {
- let component: DashboardCardComponent;
- let fixture: ComponentFixture<DashboardCardComponent>;
- let mockRouter: jest.Mocked<Router>;
+describe('DashboardCardComponent - UI & function tests', () => {
+  let component: DashboardCardComponent;
+  let fixture: ComponentFixture<DashboardCardComponent>;
+  let mockRouter: jest.Mocked<Router>;
 
- const mockGame = {
- PK: 'GAME#cs2',
- SK: 'METADATA',
- Name: 'Counter-Strike 2',
- genre: 'FPS',
- Popularity: 100,
- Img_url: 'cs2.jpg',
- };
+  const mockGame = {
+    PK: 'GAME#cs2',
+    SK: 'METADATA',
+    Name: 'Counter-Strike 2',
+    genre: 'FPS',
+    Popularity: 100,
+    Img_url: 'cs2.jpg',
+  };
 
- beforeEach(async () => {
- mockRouter = {
- navigate: jest.fn(),
- } as any;
+  beforeEach(async () => {
+    mockRouter = {
+      navigate: jest.fn(),
+    } as any;
 
- await TestBed.configureTestingModule({
- imports: [DashboardCardComponent],
- providers: [{ provide: Router, useValue: mockRouter }],
- }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [DashboardCardComponent],
+      providers: [{ provide: Router, useValue: mockRouter }],
+    }).compileComponents();
 
- fixture = TestBed.createComponent(DashboardCardComponent);
- component = fixture.componentInstance;
- component.game = mockGame; // Asetetaan mock-data
- fixture.detectChanges();
- });
+    fixture = TestBed.createComponent(DashboardCardComponent);
+    component = fixture.componentInstance;
+    component.game = mockGame; // set mock data
+    fixture.detectChanges();
+  });
 
- describe('Component Initialization', () => {
- it('should create', () => {
- expect(component).toBeTruthy();
- });
+  describe('Component Initialization', () => {
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
 
- it('should initialize game input empty', () => {
- const newComponent = TestBed.createComponent(
- DashboardCardComponent
- ).componentInstance;
- expect(newComponent.game).toBeUndefined();
- });
+    it('should initialize game input empty', () => {
+      const newComponent = TestBed.createComponent(
+        DashboardCardComponent
+      ).componentInstance;
+      expect(newComponent.game).toBeUndefined();
+    });
 
- it('should vastaanottaa game input-parametri', () => {
- expect(component.game).toEqual(mockGame);
- });
- });
+    it('should receive game input parameter', () => {
+      expect(component.game).toEqual(mockGame);
+    });
+  });
 
- describe('selectGame() metodi', () => {
- it('should navigate to find-players page when peli select', () => {
- component.selectGame(mockGame);
+  describe('selectGame() method', () => {
+    it('should navigate to find-players page when a game is selected', () => {
+      component.selectGame(mockGame);
 
- expect(mockRouter.navigate).toHaveBeenCalledWith(
- ['dashboard/find-players'],
- {
- queryParams: { game: 'cs2' },
- }
- );
- });
+      expect(mockRouter.navigate).toHaveBeenCalledWith(
+        ['dashboard/find-players'],
+        {
+          queryParams: { game: 'cs2' },
+        }
+      );
+    });
 
- it('should remove "GAME#" etuliite PK:sta', () => {
- const gameWithPrefix = {
- PK: 'GAME#valorant',
- Name: 'Valorant',
- };
+    it('should remove "GAME#" etuliite PK:sta', () => {
+      const gameWithPrefix = {
+        PK: 'GAME#valorant',
+        Name: 'Valorant',
+      };
 
- component.selectGame(gameWithPrefix);
+      component.selectGame(gameWithPrefix);
 
- expect(mockRouter.navigate).toHaveBeenCalledWith(
- ['dashboard/find-players'],
- {
- queryParams: { game: 'valorant' },
- }
- );
- });
+      expect(mockRouter.navigate).toHaveBeenCalledWith(
+        ['dashboard/find-players'],
+        {
+          queryParams: { game: 'valorant' },
+        }
+      );
+    });
 
- it('should work different peleillä', () => {
- const lolGame = {
- PK: 'GAME#lol',
- Name: 'League of Legends',
- };
+    it('should work with different games', () => {
+      const lolGame = {
+        PK: 'GAME#lol',
+        Name: 'League of Legends',
+      };
 
- component.selectGame(lolGame);
+      component.selectGame(lolGame);
 
- expect(mockRouter.navigate).toHaveBeenCalledWith(
- ['dashboard/find-players'],
- {
- queryParams: { game: 'lol' },
- }
- );
- });
- });
+      expect(mockRouter.navigate).toHaveBeenCalledWith(
+        ['dashboard/find-players'],
+        {
+          queryParams: { game: 'lol' },
+        }
+      );
+    });
+  });
 
- describe('Template renderöinti', () => {
- it('should show game tiedot templatessa', () => {
- const compiled = fixture.nativeElement;
- expect(compiled).toBeTruthy();
- });
+  describe('Template rendering', () => {
+    it('should show game details in template', () => {
+      const compiled = fixture.nativeElement;
+      expect(compiled).toBeTruthy();
+    });
 
- it('should käyttää game inputia templatessa', () => {
- expect(component.game.Name).toBe('Counter-Strike 2');
- expect(component.game.Img_url).toBe('cs2.jpg');
- });
- });
+    it('should use game input in template', () => {
+      expect(component.game.Name).toBe('Counter-Strike 2');
+      expect(component.game.Img_url).toBe('cs2.jpg');
+    });
+  });
 
- describe('Edge caset', () => {
- it('should handle undefined game without renderöintiä', () => {
- component.game = undefined;
- // Ei kutsuta detectChanges(), jotta vältetään templatessa virheet
- expect(component.game).toBeUndefined();
- });
+  describe('Edge caset', () => {
+    it('should handle undefined game without rendering', () => {
+      component.game = undefined;
+      // Do not call detectChanges() to avoid template errors
+      expect(component.game).toBeUndefined();
+    });
 
- it('should handle null game without renderöintiä', () => {
- component.game = null;
- // Ei kutsuta detectChanges(), jotta vältetään templatessa virheet
- expect(component.game).toBeNull();
- });
+    it('should handle null game without rendering', () => {
+      component.game = null;
+      // Do not call detectChanges() to avoid template errors
+      expect(component.game).toBeNull();
+    });
 
- it('should throw error jos PK-field missing', () => {
- const invalidGame = { Name: 'Invalid Game' };
- // selectGame olettaa että PK on olemassa
- expect(() => component.selectGame(invalidGame)).toThrow();
- });
- });
+    it('should throw error if PK field is missing', () => {
+      const invalidGame = { Name: 'Invalid Game' };
+      // selectGame assumes that PK exists
+      expect(() => component.selectGame(invalidGame)).toThrow();
+    });
+  });
 });

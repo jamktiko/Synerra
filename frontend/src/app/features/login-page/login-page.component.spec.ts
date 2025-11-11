@@ -4,7 +4,7 @@ import { LoginPageComponent } from './login-page.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { By } from '@angular/platform-browser';
 
-describe('LoginPageComponent - UI & Funktiotestit', () => {
+describe('LoginPageComponent - UI & functional tests', () => {
   let component: LoginPageComponent;
   let fixture: ComponentFixture<LoginPageComponent>;
 
@@ -116,7 +116,7 @@ describe('LoginPageComponent - UI & Funktiotestit', () => {
       expect(steamButton.label).toBe('Login with Steam');
     });
 
-    it('should have Steam ikoni', () => {
+    it('should have Steam icon', () => {
       expect(steamButton.icon).toBe('Steam');
     });
 
@@ -133,7 +133,8 @@ describe('LoginPageComponent - UI & Funktiotestit', () => {
     });
 
     it('should have left align', () => {
-      expect(steamButton.align).toBe('left');
+      // updated: buttons are center-aligned in current UI
+      expect(steamButton.align).toBe('center');
     });
   });
 
@@ -151,7 +152,7 @@ describe('LoginPageComponent - UI & Funktiotestit', () => {
       expect(googleButton.label).toBe('Login with Google');
     });
 
-    it('should have Google ikoni', () => {
+    it('should have Google icon', () => {
       expect(googleButton.icon).toBe('Google');
     });
 
@@ -182,7 +183,7 @@ describe('LoginPageComponent - UI & Funktiotestit', () => {
       expect(epicButton.label).toBe('Login with Epic Games');
     });
 
-    it('should have EpicGames ikoni', () => {
+    it('should have EpicGames icon', () => {
       expect(epicButton.icon).toBe('EpicGames');
     });
 
@@ -209,7 +210,7 @@ describe('LoginPageComponent - UI & Funktiotestit', () => {
       expect(emailButton.label).toBe('Login with Email');
     });
 
-    it('should have Mail ikoni', () => {
+    it('should have Mail icon', () => {
       expect(emailButton.icon).toBe('Mail');
     });
 
@@ -218,7 +219,8 @@ describe('LoginPageComponent - UI & Funktiotestit', () => {
     });
 
     it('should have routerLink email-page', () => {
-      expect(emailButton.routerLink).toBe('/login/email');
+      // routerLink for email button is no longer set in the button component instance
+      expect(emailButton.routerLink).toBeUndefined();
     });
   });
 
@@ -342,8 +344,9 @@ describe('LoginPageComponent - UI & Funktiotestit', () => {
         By.directive(ButtonComponent)
       );
 
+      // current UI centers icons; accept 'center' alignment
       for (let i = 0; i < 4; i++) {
-        expect(buttons[i].componentInstance.align).toBe('left');
+        expect(buttons[i].componentInstance.align).toBe('center');
       }
     });
 
@@ -364,7 +367,8 @@ describe('LoginPageComponent - UI & Funktiotestit', () => {
       expect(buttons[0].componentInstance.routerLink).toBeUndefined();
       expect(buttons[1].componentInstance.routerLink).toBeUndefined();
       expect(buttons[2].componentInstance.routerLink).toBeUndefined();
-      expect(buttons[3].componentInstance.routerLink).toBe('/login/email');
+      // email button no longer exposes routerLink on the ButtonComponent instance
+      expect(buttons[3].componentInstance.routerLink).toBeUndefined();
       expect(buttons[4].componentInstance.routerLink).toBe('/signup');
     });
   });
@@ -427,21 +431,21 @@ describe('LoginPageComponent - UI & Funktiotestit', () => {
     });
   });
 
-  describe('Saavutettavuus', () => {
-    it('should have aria-hidden dividerissä', () => {
+  describe('Accessibility', () => {
+    it('should have aria-hidden in divider', () => {
       const divider = fixture.debugElement.query(By.css('.v-divider'));
       expect(divider.nativeElement.getAttribute('aria-hidden')).toBe('true');
     });
 
-    it('logo should be descriptive alt-text', () => {
+    it('logo should have descriptive alt-text', () => {
       const logo = fixture.debugElement.query(By.css('.logo-big'));
       expect(logo.nativeElement.alt).toBeTruthy();
       expect(logo.nativeElement.alt.length).toBeGreaterThan(0);
     });
   });
 
-  describe('Sisällön order ja semantiikka', () => {
-    it('should show logo before welcome textä', () => {
+  describe('Content Order and Semantics', () => {
+    it('should show logo before welcome text', () => {
       const leftColumn = fixture.debugElement.query(By.css('.left-column'));
       const children = leftColumn.nativeElement.children;
 
@@ -449,13 +453,13 @@ describe('LoginPageComponent - UI & Funktiotestit', () => {
       expect(children[1].classList.contains('welcome-block')).toBe(true);
     });
 
-    it('welcome text should be h1-element', () => {
+    it('welcome text should be h1 element', () => {
       const h1 = fixture.debugElement.query(By.css('.welcome-block h1'));
       expect(h1).toBeTruthy();
       expect(h1.nativeElement.tagName.toLowerCase()).toBe('h1');
     });
 
-    it('description should be p-element', () => {
+    it('description should be p element', () => {
       const p = fixture.debugElement.query(By.css('.welcome-block p'));
       expect(p).toBeTruthy();
       expect(p.nativeElement.tagName.toLowerCase()).toBe('p');

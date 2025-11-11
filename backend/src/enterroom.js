@@ -29,9 +29,9 @@ module.exports.handler = async (event) => {
     console.log('BODY: ', body);
 
     if (body.targetUserId) {
-      await enterRoomWithUserId();
+      return await enterRoomWithUserId();
     } else if (body.targetRoomId) {
-      await enterRoomwithRoomId();
+      return await enterRoomwithRoomId();
     } else {
       throw new Error('no targetUserId or targetRoomId');
     }
@@ -100,7 +100,7 @@ module.exports.handler = async (event) => {
         })
       );
 
-      console.log('Success: connected to room', roomId);
+      console.log('Success: connected to room', targetRoomId);
       return { statusCode: 200 };
     }
 
