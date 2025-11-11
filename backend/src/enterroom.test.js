@@ -76,12 +76,12 @@ describe('enterRoomHandler', () => {
     };
 
     const result = await handler(event);
+    // Test passes when receiving success (200) and the mocked ApiGateWay was called
     expect(result.statusCode).toBe(200);
     expect(ApiGatewayManagementApiClient).toHaveBeenCalled();
   });
 
   it('creates new room when targetUserId given and no match found', async () => {
-    // 2 users queried, no common room found
     doccli.send
       .mockResolvedValueOnce({ Items: [] }) // user1 rooms
       .mockResolvedValueOnce({ Items: [] }) // user2 rooms
@@ -98,8 +98,9 @@ describe('enterRoomHandler', () => {
     };
 
     const res = await handler(event);
+    // Test passes when receiving success (200) and the mocked doccli.send (searches db for existing rooms) and ApiGateWay was called
     expect(res.statusCode).toBe(200);
-    expect(doccli.send).toHaveBeenCalled(); // multiple times
+    expect(doccli.send).toHaveBeenCalled();
     expect(ApiGatewayManagementApiClient).toHaveBeenCalled();
   });
 });
