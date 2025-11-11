@@ -26,7 +26,7 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private authStore: AuthStore,
-    private notificationService: NotificationService,
+    private notificationService: NotificationService
   ) {
     this.initUsersOnlineStatus();
     // Make users$ always sorted with online users first
@@ -36,8 +36,8 @@ export class UserService {
           if (a.Status === 'online' && b.Status !== 'online') return -1;
           if (a.Status !== 'online' && b.Status === 'online') return 1;
           return 0; // keep order otherwise
-        }),
-      ),
+        })
+      )
     );
   }
 
@@ -139,6 +139,7 @@ export class UserService {
     Status?: string;
     games?: string[];
   }): Observable<any> {
+    console.log('FILTERIIIT: ', filters);
     return this.http.post(`${this.apiUrl}/filter`, filters);
   }
 
@@ -167,7 +168,7 @@ export class UserService {
         }
         // Otherwise just return filtered results
         return filterRes.users;
-      }),
+      })
     );
   }
 
@@ -180,7 +181,7 @@ export class UserService {
       .pipe(
         tap((res: any) => {
           this.unreadsSubject.next(res); //Push to stream
-        }),
+        })
       );
   }
 
@@ -200,6 +201,7 @@ export class UserService {
 
   markRoomMessagesAsRead(roomId: string): Observable<any> {
     const token = this.authStore.getToken();
+    console.log('MARK AS READ CALLED: ', roomId);
     return this.http
       .delete(`${this.baseUrl}/rooms/${roomId}/unreads`, {
         headers: { Authorization: `${token}` },
@@ -207,11 +209,25 @@ export class UserService {
       .pipe(
         tap(() => {
           this.refreshUnreads();
-        }),
+        })
       );
+  }
+
+  getUserRooms(userId: string): Observable<any> {
+    const token = this.authStore.getToken();
+    return this.http.get(`${this.apiUrl}/${userId}/rooms`, {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
   }
 
   refreshUsers(): void {
     this.getUsers().subscribe(); // triggers next() via the tap
+  }
+
+  clearAllUnreads(): void {
+    console.log('CLEAR ALL UNREADS CALLED');
+    this.unreadsSubject.next([]); // Clear the array
   }
 }

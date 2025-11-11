@@ -8,11 +8,11 @@ h1 {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100vh; /* fallback for most browsers */
   display: flex;
-  justify-content: center; /* center horizontally */
-  align-items: flex-start; /* push toward top instead of middle */
-  padding-top: 2rem; /* adjust distance from top */
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 2rem;
   overflow: hidden;
   z-index: 0;
 }
@@ -24,6 +24,7 @@ h1 {
     justify-content: center;
     align-items: flex-start; /* stay near top even on mobile */
     padding-top: 1rem;
+    height: calc(100vh - 85px);
     width: 100%;
   }
 }

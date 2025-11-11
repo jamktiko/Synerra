@@ -10,13 +10,21 @@ export class ReputationService {
 
   constructor(private http: HttpClient, private authStore: AuthStore) {}
 
-  giveReputation(targetUserId: string, amount: number): Observable<any> {
+  giveReputation(
+    toUserId: string,
+    mentality: number,
+    comms: number,
+    teamwork: number
+  ): Observable<any> {
     const token = this.authStore.getToken();
+
     return this.http.post(
       `${this.baseUrl}/reputation`,
       {
-        targetUserId,
-        amount,
+        toUserId,
+        mentality,
+        comms,
+        teamwork,
       },
       {
         headers: {

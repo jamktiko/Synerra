@@ -3,26 +3,32 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environment';
 import { AuthStore } from '../stores/auth.store';
+import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
   private baseUrl = environment.AWS_GAMES_URL;
   private basicUrl = environment.AWS_BASE_URL;
 
-  constructor(private http: HttpClient, private authStore: AuthStore) {}
+  constructor(
+    private http: HttpClient,
+    private authStore: AuthStore,
+  ) {}
 
   // Add a game for a user
   addGame(gameId: string, gameName: string): Observable<any> {
     const token = this.authStore.getToken();
-    return this.http.post(
-      `${this.basicUrl}/relations/usergame`,
-      { gameId, gameName },
-      {
-        headers: {
-          Authorization: `${token}`,
+    return this.http
+      .post(
+        `${this.basicUrl}/relations/usergame`,
+        { gameId, gameName },
+        {
+          headers: { Authorization: `${token}` },
         },
-      }
-    );
+      )
+      .pipe(
+        tap((response) => console.log('addGame response:', response)), // <-- added logging
+      );
   }
 
   listGames(): Observable<any> {

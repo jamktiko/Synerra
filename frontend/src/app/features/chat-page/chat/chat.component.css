@@ -2,17 +2,19 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 90vh;
+  height: 90dvh;
   width: 100vw; /* fill available width */
   max-width: 900px; /* optional limit for large screens */
   background: var(--color-background);
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.7rem 1rem 1rem 1rem;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 36px);
   box-sizing: border-box;
   overflow: hidden;
   margin: 0 auto; /* stay centered */
   position: relative;
-  top: -30px; /* move chat box upward */
+  top: -38px; /* raise panel closer to top nav */
+  left: -30px;
 }
 
 @media screen and (max-width: 1500px) {
@@ -24,12 +26,15 @@
 @media screen and (max-width: 768px) {
   .chatElement {
     width: 100vw;
-    height: calc(100vh - 85px); /* mobile navbar height ≈ 80–85px */
-    position: fixed;
-    top: 0;
+    height: calc(100dvh - 96px); /* leave room for fixed bottom nav */
+    position: relative;
+    top: -30px;
     left: 0;
     overflow: hidden;
     margin-left: 0;
+    padding-top: 10px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 36px);
+    margin-bottom: 0;
   }
 }
 
@@ -86,11 +91,12 @@ body {
 .chat-log {
   flex: 1;
   overflow-y: auto;
-  margin: 1rem 0;
+  margin: 0.4rem 0 0.9rem 0;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   overflow-x: hidden;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
 }
 
 .chats {

@@ -99,11 +99,28 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.userService.fetchUnreadMessages();
 
     // Subscribe to incoming notifications
-    this.sub = this.notificationService.notifications$.subscribe((data) => {
-      console.log('Received notification in component:', data);
-      this.notifications.push(data);
-      console.log(this.notifications);
-    });
+    this.sub = this.notificationService.notifications$.subscribe(
+      (data: any) => {
+        switch (data.type) {
+          case 'CLEAR_ALL_MESSAGES':
+            this.notifications = this.notifications.filter(
+              (n) => n.type !== 'newMessage'
+            );
+            break;
+          case 'CLEAR_ALL_REQUESTS':
+            this.notifications = this.notifications.filter(
+              (n) =>
+                n.type !== 'friend_request' &&
+                n.type !== 'friend_request_accepted' &&
+                n.type !== 'friend_request_declined'
+            );
+            break;
+          default:
+            // push normal notifications (messages, friend requests, etc.)
+            this.notifications.push(data);
+        }
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -223,12 +240,12 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   // Starts chat when clicking notification and removes notifications from that sender
-  userClicked(userId: string) {
-    this.notifications = this.notifications.filter((n) => {
-      const senderId = n.senderId || n.senderID || n.fromUserId || n.SenderId;
-      return senderId !== userId;
-    });
-    this.chatService.startChat([userId]);
+  userClicked(roomId: string) {
+    // Also remove from the generic notifications list
+    this.notifications = this.notifications.filter((n) => n.roomId !== roomId);
+
+    // Start the chat
+    this.chatService.startChat(undefined, roomId);
   }
 
   setActiveTab(tab: 'messages' | 'requests', event?: MouseEvent) {
@@ -240,45 +257,111 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   // Mark all messages as read
   markAllAsRead() {
-    // Mark unread messages in rooms as read
-    if (this.unreads?.length) {
-      const roomIds = Array.from(new Set(this.unreads.map((m) => m.RoomId)));
-      roomIds.forEach((roomId) => {
-        this.userService.markRoomMessagesAsRead(roomId).subscribe({
-          error: (err) =>
-            console.error('Failed to mark room read', roomId, err),
-        });
-      });
-    }
+    // Normalize reactive notifications
+    const reactiveMessages = this.notifications
+      .filter((n) => n.type === 'newMessage')
+      .map((n) => ({
+        roomId: n.roomId,
+      }));
 
-    // Clear all message notifications
+    // Normalize database messages
+    const dbMessages = this.unreads.map((n) => ({
+      roomId: n.RoomId,
+    }));
+
+    // Merge and deduplicate by roomId
+    const uniqueRoomIds = Array.from(
+      new Set([...reactiveMessages, ...dbMessages].map((m) => m.roomId))
+    );
+
+    // Mark each room as read on the backend
+    uniqueRoomIds.forEach((roomId) => {
+      this.userService.markRoomMessagesAsRead(roomId).subscribe({
+        error: (err) => console.error('Failed to mark room read', roomId, err),
+      });
+    });
+
+    // Clear notifications and unreads locally
     this.notifications = this.notifications.filter(
       (n) => n.type !== 'newMessage'
     );
-
-    // Clear unreads
     this.unreads = [];
+    this.notificationService.clearNotifications();
+    this.userService.clearAllUnreads();
 
     // Close the dropdown
     this.setDropdownState(false);
   }
 
   markRequestsAsRead() {
-    // Remove all friend request notifications from notifications array
+    console.log('MARK REQUESTS AS READ CALLED');
+
+    // Normalize reactive notifications
+    const reactiveRequests = this.notifications
+      .filter((n) => n.type === 'friend_request')
+      .map((n) => ({
+        userId: n.fromUserId,
+        status: 'PENDING',
+        username: n.fromUsername,
+        picture: n.fromPicture,
+      }));
+
+    // Normalize DB pending requests
+    const dbRequests = this.pendingRequests.map((req) => ({
+      userId: req.SenderId,
+      status: req.Status, // PENDING / ACCEPTED / DECLINED
+      username: req.SenderUsername,
+      picture: req.SenderPicture,
+    }));
+
+    // Merge and deduplicate by userId
+    const allRequestsMap = new Map<
+      string,
+      { userId: string; status: string }
+    >();
+    [...reactiveRequests, ...dbRequests].forEach((r) => {
+      if (!allRequestsMap.has(r.userId)) {
+        allRequestsMap.set(r.userId, { userId: r.userId, status: r.status });
+      }
+    });
+    const uniqueRequests = Array.from(allRequestsMap.values());
+
+    console.log('Unique requests to process:', uniqueRequests);
+
+    // Process requests
+    uniqueRequests.forEach(({ userId, status }) => {
+      if (!userId) return;
+
+      if (status === 'PENDING') {
+        // Pending requests are declined
+        this.friendService.declineFriendRequest(userId).subscribe({
+          error: (err) =>
+            console.error('Failed to decline pending request for', userId, err),
+        });
+      } else {
+        // Accepted or declined requests are cleared
+        this.friendService.clearAcceptedDeclinedRequests(userId).subscribe({
+          error: (err) =>
+            console.error(
+              'Failed to clear accepted/declined requests for',
+              userId,
+              err
+            ),
+        });
+      }
+    });
+
+    // Clear UI arrays
     this.notifications = this.notifications.filter(
-      (n) =>
-        n.type !== 'friend_request' &&
-        n.type !== 'friend_request_accepted' &&
-        n.type !== 'friend_request_declined'
+      (n) => n.type !== 'friend_request'
     );
-
-    // clear pendingRequests if you want to mark them read locally
+    this.notificationService.clearRequests();
     this.pendingRequests = [];
+    this.friendService.clearAllRequests();
 
-    // Close the dropdown if needed
+    //  Close dropdown
     this.setDropdownState(false);
   }
-
   // Close when clicking outside of the component
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {

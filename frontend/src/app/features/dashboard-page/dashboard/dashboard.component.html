@@ -1,27 +1,45 @@
 <div class="dashboard">
   <!-- Top Navigation -->
   <header class="top-navigation-bar">
-    <b class="welcome-text">{{ greeting }}, </b>
-    <b class="user-name">{{ me?.Username }}</b>
+    <div class="welcome-wrapper">
+      <b class="welcome-text">{{ greeting }}, </b>
+      <b class="user-name">{{ me?.Username }}</b>
+    </div>
   </header>
 
 
 
   <!-- Favorite Games -->
-  <section class="favorite-games">
-    <div class="section-title">Favorite games</div>
-    <div class="games-row">
-      <app-dashboard-card *ngFor="let game of filteredGames" [game]="game">
-      </app-dashboard-card>
+  <section *ngIf="filteredGames.length" class="favorite-games">
+    <div class="section-title"> Your favorite games</div>
+    <div class="games-row-wrap">
+      <button class="scroll-arrow left" aria-label="Scroll left" (click)="scrollRowLeft(favRow)">
+        <span class="arrow-icon" aria-hidden="true"></span>
+      </button>
+      <div class="games-row" #favRow>
+        <app-dashboard-card *ngFor="let game of filteredGames" [game]="game">
+        </app-dashboard-card>
+      </div>
+      <button class="scroll-arrow right" aria-label="Scroll right" (click)="scrollRowRight(favRow)">
+        <span class="arrow-icon" aria-hidden="true"></span>
+      </button>
     </div>
   </section>
 
   <!-- Popular Games -->
   <section class="popular-games">
     <div class="section-title">Popular games</div>
-    <div class="games-row">
-      <app-dashboard-card *ngFor="let game of sortedGames" [game]="game">
-      </app-dashboard-card>
+    <div class="games-row-wrap">
+      <button class="scroll-arrow left" aria-label="Scroll left" (click)="scrollRowLeft(popRow)">
+        <span class="arrow-icon" aria-hidden="true"></span>
+      </button>
+      <div class="games-row" #popRow>
+        <app-dashboard-card *ngFor="let game of sortedGames" [game]="game">
+        </app-dashboard-card>
+      </div>
+      <button class="scroll-arrow right" aria-label="Scroll right" (click)="scrollRowRight(popRow)">
+        <span class="arrow-icon" aria-hidden="true"></span>
+      </button>
     </div>
   </section>
 </div>

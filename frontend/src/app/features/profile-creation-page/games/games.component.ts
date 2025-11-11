@@ -7,10 +7,7 @@ import { GameService } from '../../../core/services/game.service';
 import { OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../../core/services/user.service';
-import { forkJoin } from 'rxjs';
 import { UserStore } from '../../../core/stores/user.store';
-import { User } from '../../../core/interfaces/user.model';
-import { HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingPageStore } from '../../../core/stores/loadingPage.store';
 
@@ -55,7 +52,7 @@ export class GamesComponent implements OnInit {
     this.loadgames();
     console.log(this.profile);
   }
-  finish() {
+  async finish() {
     // First, get the current user
 
     const updatedData = {
@@ -69,6 +66,14 @@ export class GamesComponent implements OnInit {
       return;
     }
 
+    // For each selected game, call the Lambda
+    for (const game of this.selectedGames) {
+      console.log('GAMEEEEEEEEEEEEEEEEEEEEEEE', game);
+      const gameId = game.PK.split('#')[1];
+      await this.gameService.addGame(gameId, game.Name!).toPromise();
+      console.log('Game added successfully:', game.Name);
+    }
+
     // Update username, languages, birthday
     this.userService.updateUser(this.user.UserId, updatedData).subscribe({
       next: (res) => {
@@ -80,12 +85,6 @@ export class GamesComponent implements OnInit {
         this.loadingPageStore.setAuthLayoutLoadingPageVisible(true);
       },
       error: (err) => console.error('Failed to update user:', err),
-    });
-
-    // For each selected game, call the Lambda
-    const requests = this.selectedGames.map((game) => {
-      const gameId = game.PK.split('#')[1];
-      return this.gameService.addGame(gameId, game.Name!);
     });
   }
 
@@ -130,11 +129,12 @@ export class GamesComponent implements OnInit {
 
   @ViewChild('nextBtn', { read: ElementRef }) nextBtn!: ElementRef;
 
-  @HostListener('document:keydown.enter', ['$event'])
-  onEnter(event: KeyboardEvent) {
-    event.preventDefault();
-    if (this.nextBtn?.nativeElement) {
+  handleEnter(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter') {
+      keyboardEvent.preventDefault();
       this.nextBtn.nativeElement.click();
     }
+    keyboardEvent.preventDefault();
   }
 }

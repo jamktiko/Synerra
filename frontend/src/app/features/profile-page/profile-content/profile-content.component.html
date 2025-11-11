@@ -42,12 +42,19 @@
     </div>
   </section>
 
+  <section *ngIf="(user?.ReputationCount ?? 0) === 0" class="reputation-section card-surface no-reps">
+    <p>No reputation ratings have been given to this user yet.</p>
+  </section>
   <!-- Reputation Bars Section -->
-  <section class="reputation-section card-surface">
+  <section *ngIf="(user?.ReputationCount ?? 0) > 0" class="reputation-section card-surface">
     <div class="reputation-grid">
       <!-- Comms -->
       <div class="reputation-item">
-        <div class="rep-icon">
+        <div class="rep-icon" [ngClass]="{
+      green: (user?.AverageComms ?? 0) >= 50,
+      yellow: (user?.AverageComms ?? 0) < 50 && (user?.AverageComms ?? 0) >= 25,
+      red: (user?.AverageComms ?? 0) < 25
+    }">
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
             <path
               d="M24 4C12.95 4 4 12.95 4 24C4 35.05 12.95 44 24 44C35.05 44 44 35.05 44 24C44 12.95 35.05 4 24 4ZM24 40C15.16 40 8 32.84 8 24C8 15.16 15.16 8 24 8C32.84 8 40 15.16 40 24C40 32.84 32.84 40 24 40ZM18 18H14V30H18V18ZM34 18H30V30H34V18ZM26 14H22V34H26V14Z"
@@ -57,14 +64,23 @@
         <div class="rep-info">
           <div class="rep-label">Comms</div>
           <div class="rep-bar-container">
-            <div class="rep-bar" [style.width.%]="stats.comms"></div>
+            <div class="rep-bar" [style.width.%]="user?.AverageComms ?? 0" [ngClass]="{
+       'green': (user?.AverageComms ?? 0) >= 50,
+       'yellow': (user?.AverageComms ?? 0) < 50 && (user?.AverageComms ?? 0) > 25,
+       'red': (user?.AverageComms ?? 0) <= 25
+     }">
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Mentality -->
       <div class="reputation-item">
-        <div class="rep-icon">
+        <div class="rep-icon" [ngClass]="{
+      green: (user?.AverageMentality ?? 0) >= 50,
+      yellow: (user?.AverageMentality ?? 0) < 50 && (user?.AverageMentality ?? 0) >= 25,
+      red: (user?.AverageMentality ?? 0) < 25
+    }">
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
             <path
               d="M24 4C12.95 4 4 12.95 4 24C4 35.05 12.95 44 24 44C35.05 44 44 35.05 44 24C44 12.95 35.05 4 24 4ZM24 40C15.16 40 8 32.84 8 24C8 15.16 15.16 8 24 8C32.84 8 40 15.16 40 24C40 32.84 32.84 40 24 40Z"
@@ -74,14 +90,23 @@
         <div class="rep-info">
           <div class="rep-label">Mentality</div>
           <div class="rep-bar-container">
-            <div class="rep-bar" [style.width.%]="stats.mentality"></div>
+            <div class="rep-bar" [style.width.%]="user?.AverageMentality ?? 0" [ngClass]="{
+       'green': (user?.AverageMentality ?? 0) >= 50,
+       'yellow': (user?.AverageMentality ?? 0) < 50 && (user?.AverageMentality ?? 0) > 25,
+       'red': (user?.AverageMentality ?? 0) <= 25
+     }">
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Teamwork -->
       <div class="reputation-item">
-        <div class="rep-icon">
+        <div class="rep-icon" [ngClass]="{
+      green: (user?.AverageTeamwork ?? 0) >= 50,
+      yellow: (user?.AverageTeamwork ?? 0) < 50 && (user?.AverageTeamwork?? 0) >= 25,
+      red: (user?.AverageTeamwork ?? 0) < 25
+    }">
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
             <path
               d="M16 20C18.21 20 20 18.21 20 16C20 13.79 18.21 12 16 12C13.79 12 12 13.79 12 16C12 18.21 13.79 20 16 20ZM32 20C34.21 20 36 18.21 36 16C36 13.79 34.21 12 32 12C29.79 12 28 13.79 28 16C28 18.21 29.79 20 32 20ZM16 24C12.67 24 6 25.67 6 29V32H26V29C26 25.67 19.33 24 16 24ZM32 24C31.6 24 31.13 24.02 30.62 24.07C32.47 25.39 34 27.18 34 29V32H42V29C42 25.67 35.33 24 32 24Z"
@@ -91,14 +116,23 @@
         <div class="rep-info">
           <div class="rep-label">Teamwork</div>
           <div class="rep-bar-container">
-            <div class="rep-bar" [style.width.%]="stats.teamwork"></div>
+            <div class="rep-bar" [style.width.%]="user?.AverageTeamwork ?? 0" [ngClass]="{
+       'green': (user?.AverageTeamwork ?? 0) >= 50,
+       'yellow': (user?.AverageTeamwork ?? 0) < 50 && (user?.AverageTeamwork ?? 0) > 25,
+       'red': (user?.AverageTeamwork ?? 0) <= 25
+     }">
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Overall -->
-      <div class="reputation-item">
-        <div class="rep-icon">
+      <div class="reputation-item overall-highlight full-width">
+        <div class="rep-icon" [ngClass]="{
+      green: (user?.MainReputation ?? 0) >= 50,
+      yellow: (user?.MainReputation ?? 0) < 50 && (user?.MainReputation ?? 0) >= 25,
+      red: (user?.MainReputation ?? 0) < 25
+    }">
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
             <path
               d="M24 4C12.95 4 4 12.95 4 24C4 35.05 12.95 44 24 44C35.05 44 44 35.05 44 24C44 12.95 35.05 4 24 4ZM24 40C15.16 40 8 32.84 8 24C8 15.16 15.16 8 24 8C32.84 8 40 15.16 40 24C40 32.84 32.84 40 24 40ZM15 28H33C33 31.31 30.31 34 27 34H21C17.69 34 15 31.31 15 28Z"
@@ -108,7 +142,12 @@
         <div class="rep-info">
           <div class="rep-label">Overall</div>
           <div class="rep-bar-container">
-            <div class="rep-bar" [style.width.%]="stats.overall"></div>
+            <div class="rep-bar" [style.width.%]="user?.MainReputation ?? 0" [ngClass]="{
+       'green': (user?.MainReputation ?? 0) > 50,
+       'yellow': (user?.MainReputation ?? 0) <= 50 && (user?.MainReputation ?? 0) > 25,
+       'red': (user?.MainReputation ?? 0) <= 25
+     }">
+            </div>
           </div>
         </div>
       </div>
@@ -122,8 +161,7 @@
     <div *ngIf="completeGames.length<1" class="empty-games">
       <p>{{user?.Username}} has no favorite games!</p>
 
-      <app-button *ngIf="completeGames.length<1 && isOwnProfile" label="Add games" variant="highlight" size="xsmall"
-        [fullWidth]="false" align="center" [routerLink]="'/dashboard/choose-game'"></app-button>
+
     </div>
     <div *ngIf="completeGames.length>0" class="games-grid">
       <!-- game cards -->
@@ -146,5 +184,10 @@
 
       </div>
     </div>
+    <div class="add-game">
+      <app-button *ngIf="isOwnProfile" label="Add games" variant="highlight" size="xsmall" [fullWidth]="false"
+        align="center" [routerLink]="'/dashboard/choose-game'"></app-button>
+    </div>
+
   </section>
 </div>

@@ -61,7 +61,11 @@ export class NavbarComponent implements OnInit {
       label: 'Settings',
       icon: 'Settings',
       children: [
-        { label: 'Profile', icon: 'Acount', route: '/dashboard/profile' },
+        {
+          label: 'Profile',
+          icon: 'Acount',
+          route: '/dashboard/settings/profile',
+        },
         {
           label: 'Account',
           icon: 'Settings',
@@ -96,7 +100,7 @@ export class NavbarComponent implements OnInit {
     private userStore: UserStore,
     private router: Router,
     private authService: AuthService,
-    private loadingPageStore: LoadingPageStore,
+    private loadingPageStore: LoadingPageStore
   ) {
     // Watch for user changes reactively
     effect(() => {
@@ -113,8 +117,8 @@ export class NavbarComponent implements OnInit {
     this.router.events
       .pipe(
         filter(
-          (event): event is NavigationEnd => event instanceof NavigationEnd,
-        ),
+          (event): event is NavigationEnd => event instanceof NavigationEnd
+        )
       )
       .subscribe((event) => {
         this.currentUrl = event.urlAfterRedirects;
@@ -157,22 +161,13 @@ export class NavbarComponent implements OnInit {
 
   @HostListener('window:resize', [])
   checkAutoCollapse() {
-    if (typeof window !== 'undefined') {
-      if (window.innerWidth < 1070) {
-        if (!this.isCollapsed) {
-          this.isCollapsed = true;
-          this.collapsedChange.emit(this.isCollapsed);
-        }
-        return;
-      }
+    if (typeof window === 'undefined') {
+      return;
     }
 
-    const layout = document.querySelector('.layout') as HTMLElement;
-    if (!layout) return;
+    const isBelowDesktopBreakpoint = window.innerWidth < 1070;
 
-    const isOverflowing = layout.scrollWidth > layout.clientWidth + 1;
-
-    if (isOverflowing) {
+    if (isBelowDesktopBreakpoint) {
       if (!this.isCollapsed) {
         this.isCollapsed = true;
         this.collapsedChange.emit(this.isCollapsed);
@@ -180,9 +175,7 @@ export class NavbarComponent implements OnInit {
       return;
     }
 
-    if (this.hasUserPreference) return;
-
-    if (this.isCollapsed) {
+    if (!this.hasUserPreference && this.isCollapsed) {
       this.isCollapsed = false;
       this.collapsedChange.emit(this.isCollapsed);
     }
@@ -225,7 +218,7 @@ export class NavbarComponent implements OnInit {
       return false;
     }
     return item.children.some((child) =>
-      this.matchesChildRoute(child, this.currentUrl),
+      this.matchesChildRoute(child, this.currentUrl)
     );
   }
 
@@ -233,7 +226,11 @@ export class NavbarComponent implements OnInit {
     const collapsedWithoutExpansion =
       this.isCollapsed && !this.isTemporarilyExpanded;
 
-    if (!item.children || !this.isGroupExpanded(item) || collapsedWithoutExpansion) {
+    if (
+      !item.children ||
+      !this.isGroupExpanded(item) ||
+      collapsedWithoutExpansion
+    ) {
       return '0px';
     }
     const rowHeight = 48;
@@ -254,7 +251,7 @@ export class NavbarComponent implements OnInit {
         return;
       }
       const hasMatch = item.children.some((child) =>
-        this.matchesChildRoute(child, url),
+        this.matchesChildRoute(child, url)
       );
       if (hasMatch) {
         this.expandedGroups.add(item.label);
@@ -275,7 +272,7 @@ export class NavbarComponent implements OnInit {
     }
     const params = new URLSearchParams(search);
     return Object.entries(child.queryParams).every(
-      ([key, value]) => params.get(key) === String(value),
+      ([key, value]) => params.get(key) === String(value)
     );
   }
 }

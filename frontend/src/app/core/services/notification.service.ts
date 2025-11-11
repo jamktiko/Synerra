@@ -75,6 +75,7 @@ export class NotificationService implements OnDestroy {
       console.log('Notification WebSocket disconnected, reconnecting...');
       this.socket = null;
       this.reconnecting = true;
+      this.hasSentType = false;
       clearInterval(this.pingInterval);
       setTimeout(() => this.initConnection(), this.reconnectInterval);
     };
@@ -100,6 +101,7 @@ export class NotificationService implements OnDestroy {
       console.log('CLOSING WEBSOCKET CONNECTION');
       this.socket.close(); // properly closes the connection
       this.socket = null;
+      this.hasSentType = false;
       clearInterval(this.pingInterval); // stop pinging
       this.reconnecting = false;
     }
@@ -116,5 +118,14 @@ export class NotificationService implements OnDestroy {
     if (this.socket) this.socket.close();
     if (this.userSub) this.userSub.unsubscribe();
     this.notificationsSubject.complete();
+  }
+  clearNotifications() {
+    console.log('CLEAR MESSAGE NOTIFICATIONS CALLED');
+    this.notificationsSubject.next({ type: 'CLEAR_ALL_MESSAGES' });
+  }
+
+  clearRequests() {
+    console.log('CLEAR REQUEST NOTIFICATIONS CALLED');
+    this.notificationsSubject.next({ type: 'CLEAR_ALL_REQUESTS' });
   }
 }

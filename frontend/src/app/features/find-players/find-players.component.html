@@ -10,7 +10,7 @@
     <!-- Render priority: component.filteredUsers (if set) -> filteredUsers$ observable -> fallback to users array -->
     <app-player-card
       *ngFor="let user of (filteredUsers && filteredUsers.length ? filteredUsers : ((filteredUsers$ | async)?.length ? (filteredUsers$ | async) : users))"
-      [user]="user">
+      [user]="user" [friends]="friends">
     </app-player-card>
   </div>
 

@@ -2,7 +2,11 @@
   <!--Leftcolumn alkaa-->
   <div class="left-column">
     <div class="speechBubbleFrame">
-      <img src="assets/svg/logo_big.svg" style="width: 100%" class="logoFrame" />
+      <img
+        src="assets/svg/logo_big.svg"
+        style="width: 100%"
+        class="logoFrame"
+      />
 
       <div class="headFrameL">
         <h2 class="text-lg-bold">Welcome to Synerra!</h2>
@@ -35,8 +39,13 @@
     <div class="linebreak">
       <div class="linebreak-child"></div>
     </div>
-    <div class="footerButton" tabindex="0"> <app-button #nextBtn label="Create Profile" variant="highlight"
-        (click)="start(1)"></app-button>
+    <div class="footerButton" tabindex="0">
+      <app-button
+        #nextBtn
+        label="Create Profile"
+        variant="highlight"
+        (click)="start(1)"
+      ></app-button>
 
       <h2 class="login-link text-xs" (click)="logOut()">
         Or login with another user

@@ -148,6 +148,7 @@ export class ProfileContentComponent implements OnInit {
       },
     });
   }
+
   ngOnDestroy() {
     this.user = null;
     this.completeGames = [];

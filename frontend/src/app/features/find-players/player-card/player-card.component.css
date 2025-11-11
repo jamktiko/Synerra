@@ -1,27 +1,36 @@
 /* Player card styles */
 .card {
   position: relative;
-  background: linear-gradient(-45deg, #1d1d1d 0%, #414248 50%, #111111 100%);
+  width: 210px;
+  height: 290px;
+  background-image: linear-gradient(
+      rgba(10, 10, 10, 0.15),
+      rgba(20, 20, 20, 0.85)
+    ),
+    url("/assets/textures/card_background3.jpg");
+  background-size: cover, cover;
+  background-position: center center, center center;
+  background-repeat: no-repeat, no-repeat;
   color: var(--color-text-default);
   display: flex;
   height: 320px; /* So usercards would have the same height */
   flex-direction: column;
   border-radius: var(--radius-xl);
-  background: linear-gradient(#515151, #434343) padding-box,
-    linear-gradient(180deg, #929292 0%, #444444 100%) border-box;
+  /* background: linear-gradient(#515151, #434343) padding-box,
+    linear-gradient(180deg, #929292 0%, #444444 100%) border-box; */
   border: 1px solid transparent;
   transition: all 0.3s ease;
   text-align: center;
   align-items: flex-start;
   justify-content: flex-end;
   padding: 14px;
-  border-radius: 14px;
+  border-radius: 10px;
   cursor: pointer;
   overflow: hidden;
   font-family: var(--font-main);
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 3px solid rgba(71, 71, 71, 0.4);
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
@@ -32,12 +41,19 @@
   inset: 0;
   border-radius: 14px;
   padding: 1px;
-  background: linear-gradient(135deg, #3a3b3f, #5c5d63, #3a3b3f);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(40, 40, 40, 0.7) 45%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   z-index: 0;
   pointer-events: none;
+  /* subtle inner shadow on the ring for perceived depth */
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
 /* .card.online {
@@ -46,7 +62,6 @@
 
 .card.offline {
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
-  border-color: rgba(80, 80, 80, 0.28);
 }
 
 .card:hover {
@@ -67,8 +82,8 @@
   top: 25%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90px;
-  height: 90px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   border: none;
   background: transparent;
@@ -183,11 +198,16 @@
 .flag-img {
   width: 20px;
   height: 13px;
-  border-radius: 2px;
+  border-radius: 3px;
   object-fit: cover;
-  box-shadow: 0 0 6px rgba(32, 32, 32, 0.8);
+  box-shadow: 0 0 10px rgba(32, 32, 32, 1);
 }
 
+.friendsvg {
+  filter: invert(1);
+  width: 20px;
+  height: 20px;
+}
 .actions {
   display: flex;
   justify-content: center;
@@ -195,6 +215,9 @@
   width: 100%;
   margin: 14px auto 0px auto;
   z-index: 2;
+}
+.actions:has(:only-child) {
+  justify-content: center;
 }
 
 .actions button {
