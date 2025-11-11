@@ -272,7 +272,7 @@ describe('GameFiltersComponent - UI & State Management', () => {
       component.onToggleSort(); // toggles to true and triggers emit
     });
 
-    it('should emit correct values when only genre on asetettu', (done) => {
+    it('should emit correct values when only genre is set', (done) => {
       component.selectedGenre = 'MOBA';
 
       component.filterChanged.subscribe((filters) => {
@@ -288,7 +288,7 @@ describe('GameFiltersComponent - UI & State Management', () => {
       component.onGenreChange(mockEvent);
     });
 
-    it('should emit correct values when all filters on tyhjinä', (done) => {
+    it('should emit correct values when all filters are empty', (done) => {
       component.filterChanged.subscribe((filters) => {
         expect(filters.genre).toBe('');
         expect(filters.search).toBe('');
@@ -319,7 +319,7 @@ describe('GameFiltersComponent - UI & State Management', () => {
       expect(button).toBeTruthy();
     });
 
-    it('should render select element joka update selectedGenre', () => {
+    it('should render select element that updates selectedGenre', () => {
       const select = fixture.debugElement.query(By.css('select'));
       expect(select).toBeTruthy();
 
@@ -338,7 +338,7 @@ describe('GameFiltersComponent - UI & State Management', () => {
       expect(component.searchControl.value).toBe('Counter');
     });
 
-    it('should togglettaa sortByPopularity when button klikataan', () => {
+    it('should toggle sortByPopularity when button is clicked', () => {
       const button = fixture.debugElement.query(By.directive(ButtonComponent));
 
       component.sortByPopularity = false;

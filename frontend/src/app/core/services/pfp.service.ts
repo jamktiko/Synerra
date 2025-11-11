@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { environment } from '../../../environment';
 import { AuthStore } from '../stores/auth.store';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
@@ -12,18 +13,29 @@ export class ProfileService {
 
   uploadProfilePicture(file: File): Observable<any> {
     const token = this.authStore.getToken();
-    const formData = new FormData();
-    formData.append('file', file);
-    return this.http.post(
-      `${this.baseUrl}/profile-picture/upload`,
-      {
-        formData,
-      },
-      {
-        headers: {
-          Authorization: `${token}`,
-        },
-      }
+
+    return from(this.convertFileToBase64(file)).pipe(
+      switchMap((base64: string) => {
+        const body = {
+          fileName: file.name,
+          fileType: file.type,
+          fileContentBase64: base64,
+        };
+        return this.http.post(`${this.baseUrl}s/profile-picture/upload`, body, {
+          headers: {
+            Authorization: `${token}`,
+          },
+        });
+      })
     );
+  }
+
+  private convertFileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
+    });
   }
 }
