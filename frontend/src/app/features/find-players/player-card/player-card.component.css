@@ -1,7 +1,7 @@
 /* Player card styles */
 .card {
   position: relative;
-  width: 210px;
+  width: 220px;
   height: 290px;
   background-image: linear-gradient(
       rgba(10, 10, 10, 0.15),
@@ -33,6 +33,7 @@
   border: 3px solid rgba(71, 71, 71, 0.4);
   background-origin: border-box;
   background-clip: padding-box, border-box;
+  margin: 28px auto 0px auto;
 }
 
 .card::before {
