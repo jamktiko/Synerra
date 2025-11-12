@@ -78,7 +78,7 @@ app-game-card {
 
 @media (max-width: 1280px) {
   .games-container {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 220px));
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     justify-content: center;
     justify-items: center;
     gap: 16px;

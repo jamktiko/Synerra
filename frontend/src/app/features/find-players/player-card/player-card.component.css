@@ -71,9 +71,15 @@
   z-index: 1;
 }
 
-/* .card.online {
-  box-shadow: 0 0 18px rgba(20, 174, 92, 0.24), 0 18px 30px rgba(0, 0, 0, 0.4);
-} */
+.card.online {
+  box-shadow: 0 0 32px 8px rgba(20, 174, 92, 0), 0 20px 34px rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.5s ease;
+}
+
+.card.online:hover {
+  box-shadow: 0 0 32px 8px rgba(20, 174, 92, 0.15),
+    0 20px 34px rgba(0, 0, 0, 0.5);
+}
 
 .card.offline {
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
@@ -81,11 +87,6 @@
 
 .card:hover {
   transform: scale(1.03);
-}
-
-.card.online:hover {
-  box-shadow: 0 0 32px 8px rgba(20, 174, 92, 0.15),
-    0 20px 34px rgba(0, 0, 0, 0.5);
 }
 
 .card.offline:hover {
