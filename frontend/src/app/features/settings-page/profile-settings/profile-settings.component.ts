@@ -109,7 +109,9 @@ export class ProfileSettingsComponent implements OnInit {
 
   onUsernameInput() {
     const pattern = /^[A-Za-z0-9_]{3,20}$/;
-    this.validUsername = pattern.test(this.username);
+    const value = this.username.trim();
+    this.validUsername = pattern.test(value);
+    console.log('ONKO VALIDI', this.validUsername);
     this.usernameTaken = false; // clear backend error message while typing
   }
   // save username and send it to backend for update
@@ -213,33 +215,35 @@ export class ProfileSettingsComponent implements OnInit {
     }, duration);
   }
   validateUsername() {
-    // First check local format rule
     if (!this.validUsername) {
       this.showPopUp(
-        'Username must be 3-20 characters (letters, numbers, underscores).'
+        'Username must be 3–20 characters (letters, numbers, underscores).'
       );
       return;
     }
 
-    // Request backend to check availability
     this.userService.getUserByUsername(this.username).subscribe({
       next: (res) => {
-        // Check if returned users contain someone other than the logged-in user
         const taken = res?.users?.some(
           (u: any) => u.UserId !== this.user?.UserId
         );
-
         if (taken) {
           this.usernameTaken = true;
           this.showPopUp('Username is already taken.');
         } else {
           this.usernameTaken = false;
-          this.saveUsername(); // username is valid and available
+          this.saveUsername();
         }
       },
       error: (err) => {
-        console.error('Username validation failed:', err);
-        this.showPopUp('Could not validate username.');
+        if (err.status === 404) {
+          // 404 = no user found → username is available
+          this.usernameTaken = false;
+          this.saveUsername();
+        } else {
+          console.error('Username validation failed:', err);
+          this.showPopUp('Could not validate username.');
+        }
       },
     });
   }

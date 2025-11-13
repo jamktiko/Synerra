@@ -106,7 +106,7 @@ export class FindPlayersComponent implements OnInit {
 
   // called when the filters are changed, does the actual filtering
   onFiltersChanged(filters: UserFilters) {
-    const { username, Status, languages, games } = filters;
+    const { username, Status, languages, games, platform, playstyle } = filters;
 
     // Take latest users from users$ and filter
     this.users$
@@ -138,6 +138,18 @@ export class FindPlayersComponent implements OnInit {
           //online status filter
           if (Status) {
             candidates = candidates.filter((u) => u.Status === Status);
+          }
+
+          // Playstyle filter
+          if (playstyle) {
+            candidates = candidates.filter((u) => u.Playstyle === playstyle);
+          }
+
+          // Platform filter
+          if (platform && platform.length > 0) {
+            candidates = candidates.filter((u) =>
+              u.Platform?.some((p: string) => platform.includes(p))
+            );
           }
 
           // Exclude current user
