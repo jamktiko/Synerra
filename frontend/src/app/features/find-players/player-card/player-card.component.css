@@ -2,7 +2,7 @@
 .card {
   position: relative;
   width: 220px;
-  height: 290px;
+  height: 320px;
   background-image: linear-gradient(
       rgba(10, 10, 10, 0.15),
       rgba(20, 20, 20, 0.85)
@@ -13,7 +13,6 @@
   background-repeat: no-repeat, no-repeat;
   color: var(--color-text-default);
   display: flex;
-  height: 320px; /* So usercards would have the same height */
   flex-direction: column;
   border-radius: var(--radius-xl);
 
