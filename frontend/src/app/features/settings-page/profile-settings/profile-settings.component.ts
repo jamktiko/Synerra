@@ -110,7 +110,9 @@ export class ProfileSettingsComponent implements OnInit {
 
   onUsernameInput() {
     const pattern = /^[A-Za-z0-9_]{3,20}$/;
-    this.validUsername = pattern.test(this.username);
+    const value = this.username.trim();
+    this.validUsername = pattern.test(value);
+    console.log('ONKO VALIDI', this.validUsername);
     this.usernameTaken = false;
   }
 

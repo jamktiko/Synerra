@@ -44,8 +44,8 @@ interface NavChild {
 })
 export class NavbarComponent implements OnInit {
   isCollapsed = false;
-  private hasUserPreference = false;
-
+  // private hasUserPreference = false; //REMOVED for UX, seemed like a bug more than a feature
+  // Lines 133 & 157 also removed
   @Output() collapsedChange = new EventEmitter<boolean>();
 
   user: User | null = null;
@@ -129,7 +129,7 @@ export class NavbarComponent implements OnInit {
     const saved = localStorage.getItem('navbarCollapsed');
     if (saved !== null) {
       this.isCollapsed = saved === 'true';
-      this.hasUserPreference = true;
+      // this.hasUserPreference = true; //REMOVED for UX
     } else if (typeof window !== 'undefined' && window.innerWidth < 1070) {
       this.isCollapsed = true;
     }
@@ -153,16 +153,14 @@ export class NavbarComponent implements OnInit {
   }
   toggleCollapse(): void {
     this.isCollapsed = !this.isCollapsed;
-    this.hasUserPreference = true;
+    // this.hasUserPreference = true; //REMOVED for UX
     localStorage.setItem('navbarCollapsed', String(this.isCollapsed));
     this.collapsedChange.emit(this.isCollapsed);
   }
 
   @HostListener('window:resize', [])
   checkAutoCollapse() {
-    if (typeof window === 'undefined') {
-      return;
-    }
+    if (typeof window === 'undefined') return;
 
     const isBelowDesktopBreakpoint = window.innerWidth < 1070;
 
@@ -174,7 +172,8 @@ export class NavbarComponent implements OnInit {
       return;
     }
 
-    if (!this.hasUserPreference && this.isCollapsed) {
+    // Always expand when resizing back up (even if user had preference)
+    if (this.isCollapsed) {
       this.isCollapsed = false;
       this.collapsedChange.emit(this.isCollapsed);
     }

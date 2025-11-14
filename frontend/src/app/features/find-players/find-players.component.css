@@ -10,7 +10,7 @@
   /* background: var(--color-dark-gradient-2); */
   background-image: linear-gradient(
       rgba(10, 10, 10, 0.15),
-      rgba(20, 20, 20, 0.85)
+      rgba(20, 20, 20, 0.902)
     ),
     url("/assets/textures/black_paper.jpg");
   border-radius: 8px;
@@ -141,4 +141,12 @@
     justify-items: center;
     justify-content: center;
   }
+}
+
+.not-found {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  margin: 25px;
 }
