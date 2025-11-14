@@ -14,7 +14,7 @@ provider:
     USER_POOL_ID: { Ref: UserPool } # cogniton user pool
     USER_CLIENT_ID: { Ref: UserClient } # cogniton client id
     COGNITO_DOMAIN: 'https://synerra.auth.eu-north-1.amazoncognito.com'
-    REDIRECT_URI: 'http://localhost:4200/auth/callback'
+    REDIRECT_URI: 'https://d2lqv34okdzcq4.cloudfront.net/auth/callback'
     PFP_BUCKET: synerra-pfp
     SECRET_NAME: arn:aws:secretsmanager:eu-north-1:810251959934:secret:GameApiSecrets-lyqEj3
     OFFLINE_MESSAGE_TOPIC:
