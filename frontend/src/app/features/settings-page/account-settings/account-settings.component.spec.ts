@@ -49,6 +49,23 @@ describe('AccountSettingsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should flag mismatch when confirmation differs', () => {
+    component.passwordForm.setValue({
+      currentPassword: 'old',
+      newPassword: 'new-pass',
+      confirmPassword: 'other',
+    });
+    expect(component.passwordForm.hasError('mismatch')).toBeTruthy();
+  });
+
+  it('should toggle linked account state', () => {
+    expect(component.isLinked('steam')).toBeFalsy();
+    component.toggleLink('steam');
+    expect(component.isLinked('steam')).toBeTruthy();
+    component.toggleLink('steam');
+    expect(component.isLinked('steam')).toBeFalsy();
+  });
+
   it('should logout through services', () => {
     component.logOut();
     expect(loadingPageStore.setAuthLayoutLoadingPageVisible).toHaveBeenCalledWith(false);
