@@ -1,0 +1,170 @@
+<section class="account-settings-page">
+  <div class="main-content">
+    <article class="account-panel">
+      <header class="card-header">
+        <p class="breadcrumbs">Settings > Account</p>
+        <h1>Account security & links</h1>
+        <p class="lede">
+          Update your password, connect external launchers and keep control of your data.
+        </p>
+      </header>
+
+      <ul class="page-overview">
+        <li>
+          <span class="label">Password status</span>
+          <strong>{{ lastPasswordChange }}</strong>
+          <small>Last change</small>
+        </li>
+        <li>
+          <span class="label">Linked accounts</span>
+          <strong>{{ linkedCount }} / {{ linkProviders.length }}</strong>
+          <small>Connections in sync</small>
+        </li>
+        <li>
+          <span class="label">Data exports</span>
+          <strong>Manual</strong>
+          <small>Download on request</small>
+        </li>
+      </ul>
+
+      <div class="feedback-banner" *ngIf="feedbackMessage" [class.success]="feedbackType === 'success'"
+        [class.warning]="feedbackType === 'warning'">
+        {{ feedbackMessage }}
+      </div>
+
+      <div class="section-divider"></div>
+
+      <section class="form-section form-section--password">
+        <div class="section-heading">
+          <div>
+            <h2>Change password</h2>
+            <p>Use a strong, unique password to keep your Synerra profile secure.</p>
+          </div>
+          <span class="section-meta">Last changed: {{ lastPasswordChange }}</span>
+        </div>
+
+        <div class="settings-grid">
+          <form class="password-form" [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
+            <div class="form-grid">
+              <label class="field">
+                <span>Current password</span>
+                <input type="password" placeholder="Password" formControlName="currentPassword"
+                  autocomplete="current-password" />
+                <span class="field-error"
+                  *ngIf="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid">
+                  Enter your current password.
+                </span>
+              </label>
+
+              <label class="field">
+                <span>New password</span>
+                <input type="password" placeholder="Password" formControlName="newPassword"
+                  autocomplete="new-password" />
+                <span class="field-error"
+                  *ngIf="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('minlength')">
+                  Minimum 8 characters required.
+                </span>
+              </label>
+
+              <label class="field">
+                <span>Confirm new password</span>
+                <input type="password" placeholder="Password" formControlName="confirmPassword"
+                  autocomplete="new-password" />
+                <span class="field-error" *ngIf="passwordMismatch">
+                  Passwords do not match.
+                </span>
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <app-button label="Change password" variant="highlight" size="small" (click)="onSubmitPassword()"
+                [state]="passwordForm.valid ? 'active' : 'disabled'">
+              </app-button>
+            </div>
+          </form>
+
+          <aside class="guide-card">
+            <p class="eyebrow">Synerra tip</p>
+            <h3>Keep intruders out</h3>
+            <ul class="guide-list">
+              <li>At least 12 characters mixing numbers, symbols and case.</li>
+              <li>Avoid reusing passwords from other launchers.</li>
+              <li>Refresh the password whenever you detect suspicious activity.</li>
+            </ul>
+            <p class="guide-footnote">
+              Two-factor authentication is rolling out later this season.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="form-section link-section">
+        <div class="section-heading stacked">
+          <div>
+            <h2>Link account</h2>
+            <p>Connect your favorite platforms to keep stats aligned.</p>
+          </div>
+          <div class="link-meta">
+            <span class="label">Sync overview</span>
+            <strong>{{ linkedCount }} connected</strong>
+            <small>Used for stats, presence and loadouts.</small>
+          </div>
+        </div>
+
+        <div class="link-grid">
+          <button class="link-button" type="button" *ngFor="let provider of linkProviders"
+            (click)="toggleLink(provider.id)" [class.connected]="isLinked(provider.id)">
+            <div class="provider-icon" [ngClass]="'provider-' + provider.id" [class.has-initials]="!provider.icon">
+              <img *ngIf="provider.icon" [src]="provider.icon" alt="{{ provider.label }} icon" />
+              <span *ngIf="!provider.icon">{{ provider.initials }}</span>
+            </div>
+            <div class="provider-meta">
+              <span class="provider-label">{{ provider.label }}</span>
+              <span class="provider-description">{{ provider.description }}</span>
+            </div>
+            <span class="link-status">{{ isLinked(provider.id) ? 'Connected' : 'Connect' }}</span>
+          </button>
+        </div>
+
+        <div class="link-footer">
+          <p>
+            Linking enables cross-play invites, stat syncing and Discord presence updates. Disconnect anytime without
+            affecting your Synerra account.
+          </p>
+          <p class="mini-note">Synerra never stores your launcher passwords.</p>
+        </div>
+      </section>
+
+      <section class="danger-zone">
+        <div class="danger-copy">
+          <p class="eyebrow warning">Danger zone</p>
+          <h2>Delete account</h2>
+          <p>This removes your profile, match history and friends permanently.</p>
+        </div>
+        <app-button label="Delete account" size="small" class="delete-button" (click)="requestDeletion()">
+        </app-button>
+      </section>
+
+      <div class="danger-confirmation" *ngIf="showDeleteConfirmation">
+        <p>This action cannot be undone. Are you sure you want to continue?</p>
+        <div class="confirm-actions">
+          <app-button label="Cancel" size="xsmall" (click)="cancelDeletion()"></app-button>
+          <app-button label="Confirm delete" size="xsmall" variant="highlight" (click)="confirmDeletion()">
+          </app-button>
+        </div>
+      </div>
+
+      <div class="account-footer">
+        <div class="logout-card">
+          <div class="logout-copy">
+            <h3>Need a break?</h3>
+            <p>Log out safely and pick up where you left off later.</p>
+          </div>
+          <app-button label="Logout" variant="highlight" size="small" icon="Logout" (click)="logOut()">
+          </app-button>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>

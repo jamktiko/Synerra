@@ -49,7 +49,7 @@
 
       <ng-template #singleNavItem>
         <app-button class="nav-btn" variant="sidebar" size="small" [fullWidth]="true" [label]="item.label"
-          [icon]="item.icon" [routerLink]="item.route" routerLinkActive="active"
+          [icon]="item.icon" [routerLink]="item.route" routerLinkActive="active" (click)="closeExpandedGroups()"
           [routerLinkActiveOptions]="{exact: true}" #rla="routerLinkActive"
           [buttonState]="rla.isActive ? 'active' : undefined">
         </app-button>
@@ -70,7 +70,7 @@
   <div class="bottom-section">
     <div class="divider"></div>
     <app-button class="logout-btn" variant="sidebar" size="small" [fullWidth]="true" [label]="logout.label"
-      [icon]="logout.icon" (click)="logOut()">
+      [icon]="logout.icon" (click)="logOut(); closeExpandedGroups()">
     </app-button>
   </div>
 
@@ -78,6 +78,7 @@
   <div class="mobile-nav">
     <div class="nav-content">
       <a *ngFor="let item of navItemsMobile" class="nav-icon" [routerLink]="item.route" routerLinkActive="active"
+        (click)="closeExpandedGroups()"
         [routerLinkActiveOptions]="{ exact: true }">
         <img [src]="'assets/svg/' + item.icon + '.svg'" alt="{{ item.label }} icon" />
       </a>
