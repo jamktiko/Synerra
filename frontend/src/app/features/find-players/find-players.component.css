@@ -8,6 +8,7 @@
   align-items: start;
   align-content: start;
   /* background: var(--color-dark-gradient-2); */
+  /* Taustaväri */
   background-image: linear-gradient(
       rgba(10, 10, 10, 0.15),
       rgba(20, 20, 20, 0.902)
