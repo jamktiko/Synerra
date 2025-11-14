@@ -39,7 +39,7 @@ export class AuthCallBacksComponent implements OnInit {
       return;
     }
 
-    // Sends the code to backend for JWT
+    // Sends the code to backend for JWT data
     this.http
       .post<{
         id_token: string;
@@ -47,17 +47,20 @@ export class AuthCallBacksComponent implements OnInit {
       }>(`${this.baseUrl}/auth/cognito/exchange`, { code })
       .subscribe({
         next: (res) => {
+          // Gets JWT and refreshtoken
           console.log('Received tokens from backend:', res);
+          // JWT to the authStore
           this.authStore.setToken(res.id_token);
 
           // Fetch the user after successful login
           this.userService.getMe().subscribe({
             next: (user) => {
+              // Updates the user data for the whole app
               this.userStore.setUser(user);
               console.log('Loaded user:', user);
               this.notificationService.initConnection();
 
-              // Navigate based on updated user
+              // Navigates based on the user profile status
               if (user.Username) {
                 this.router.navigate(['/dashboard']);
               } else {
