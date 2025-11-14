@@ -1,85 +1,134 @@
-<h2 class="top-heading">Edit Profile</h2>
-<div class="main-container">
-  <div>
-    <h3>Upload Profile Picture</h3>
+<section class="profile-settings-page">
+  <div class="main-content">
+    <article class="profile-panel">
+      <header class="card-header">
+        <p class="breadcrumbs">Settings &gt; Profile</p>
+        <h1>Profile &amp; presence</h1>
+        <p class="lede">
+          Refresh how other Synerra players see you. Keep your avatar, story and preferred squad info aligned.
+        </p>
+      </header>
 
-    <div class="file-upload-wrapper">
-      <input type="file" id="fileInput" (change)="onFileSelected($event)" />
+      <div class="profile-grid">
+        <section class="media-card">
+          <div class="media-header">
+            <div>
+              <h2>Avatar</h2>
+              <p>Upload a fresh portrait so teammates can spot you at a glance.</p>
+            </div>
+            <span class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</span>
+          </div>
 
-      <!-- This looks like your button -->
-      <label for="fileInput" class="upload-btn">Choose File</label>
+          <div class="avatar-stack">
+            <div class="avatar-preview" [class.placeholder]="!previewUrl">
+              <img *ngIf="previewUrl; else avatarPlaceholder" [src]="previewUrl" alt="Profile preview" />
+              <ng-template #avatarPlaceholder>
+                <span class="placeholder-text">No image selected</span>
+              </ng-template>
+            </div>
 
-      <!-- Show file name if selected -->
-      <span *ngIf="selectedFileName" class="file-name">{{ selectedFileName }}</span>
-    </div>
+            <div class="upload-controls">
+              <label class="upload-label">
+                <input type="file" class="visually-hidden" (change)="onFileSelected($event)" />
+                <span>Select file</span>
+              </label>
+              <app-button label="Upload" size="small" variant="highlight" (click)="upload()"
+                [state]="!selectedFile ? 'disabled' : undefined">
+              </app-button>
+            </div>
 
+            <p class="progress" *ngIf="uploadProgress">Uploading {{ uploadProgress }}%</p>
+            <p class="success" *ngIf="uploadedUrl">
+              Uploaded! <a [href]="uploadedUrl" target="_blank">View image</a>
+            </p>
+          </div>
+        </section>
 
+        <section class="identity-card">
+          <div class="field">
+            <label for="username">Display name</label>
+            <div class="input-wrapper" [class.invalid]="!validUsername || usernameTaken">
+              <input id="username" type="text" [(ngModel)]="username" (input)="onUsernameInput()" placeholder="Synerra Legend" />
+            </div>
+            <small class="hint">Letters, numbers or underscores · 3-20 characters</small>
+          </div>
+
+          <div class="field">
+            <label for="bio">Bio</label>
+            <textarea id="bio" rows="5" [(ngModel)]="bio" placeholder="Share tactics, mains or a friendly hello."></textarea>
+            <small class="hint">Visible across game invites, squads and chat.</small>
+          </div>
+
+          <div class="field-actions">
+            <app-button label="Save changes" size="small" (click)="saveIdentity()"></app-button>
+          </div>
+          <p class="inline-feedback" *ngIf="feedbackMessages.username">{{ feedbackMessages.username }}</p>
+          <p class="inline-feedback" *ngIf="feedbackMessages.bio">{{ feedbackMessages.bio }}</p>
+        </section>
+      </div>
+
+      <section class="preference-section">
+        <div class="section-heading">
+          <div>
+            <h2>Languages</h2>
+            <p>Let players know how they can best coordinate with you.</p>
+          </div>
+          <span class="selected-count">{{ selectedLanguages.length }} selected</span>
+        </div>
+
+        <div class="language-grid">
+          <label class="language-chip" *ngFor="let lang of languages">
+            <input type="checkbox" class="visually-hidden" [id]="lang.code" [checked]="selectedLanguages.includes(lang.code)"
+              (change)="toggleLanguage(lang.code)" />
+            <span>{{ lang.name }}</span>
+          </label>
+        </div>
+
+        <div class="section-actions">
+          <app-button label="Save languages" size="small" (click)="saveLanguages()"></app-button>
+        </div>
+        <p class="inline-feedback" *ngIf="feedbackMessages.languages">{{ feedbackMessages.languages }}</p>
+      </section>
+
+      <section class="preference-section">
+        <div class="section-heading">
+          <div>
+            <h2>Playstyle &amp; platforms</h2>
+            <p>Set expectations for matchmaking and co-op sessions.</p>
+          </div>
+        </div>
+
+        <div class="preference-grid">
+          <div class="field">
+            <label for="playstyle">Playstyle</label>
+            <div class="input-wrapper">
+              <select id="playstyle" [(ngModel)]="playstyle">
+                <option value="">Select playstyle</option>
+                <option value="Competitive">Competitive</option>
+                <option value="Casual">Casual</option>
+                <option value="Creator">Creator / Streamer</option>
+                <option value="Support">Support / Shotcaller</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Platforms</label>
+            <div class="platform-grid">
+              <label class="platform-pill" *ngFor="let platform of availablePlatforms">
+                <input type="checkbox" class="visually-hidden" [value]="platform"
+                  [checked]="selectedPlatforms.includes(platform)" (change)="togglePlatform(platform)" />
+                <span>{{ platform }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-actions">
+          <app-button label="Save preferences" size="small" (click)="savePlaystyleAndPlatform()"></app-button>
+        </div>
+        <p class="inline-feedback" *ngIf="feedbackMessages.playstyle">{{ feedbackMessages.playstyle }}</p>
+      </section>
+    </article>
   </div>
-
-  <div *ngIf="uploadProgress">
-    Uploading: {{ uploadProgress }}%
-  </div>
-
-  <div *ngIf="previewUrl" class="preview">
-    <h4>Preview:</h4>
-    <img [src]="previewUrl" alt="Preview" class="profile-pic-preview" />
-  </div>
-  <button class="action-button" (click)="upload()" [disabled]="!selectedFile">
-    Upload
-  </button>
-  <div *ngIf="uploadedUrl">
-    Uploaded successfully! <a [href]="uploadedUrl" target="_blank">View</a>
-  </div>
-</div>
-
-<div class="main-container">
-  <div class="field-group">
-    <h3>Username</h3>
-    <input type="text" [(ngModel)]="username" (input)="onUsernameInput()" (blur)="validateUsername()" />
-    <button class="action-button" (click)="validateUsername()">Save</button>
-  </div>
-
-</div>
-<div class="main-container">
-  <div class="field-group">
-    <h3>Bio</h3>
-    <textarea [(ngModel)]="bio"></textarea>
-    <button class="action-button" (click)="saveBio()">Save</button>
-  </div>
-
-</div>
-<div class="main-container">
-  <div class="languages-selection">
-    <h3>Languages</h3>
-    <div *ngFor="let lang of languages" class="language-option">
-      <input type="checkbox" class="profile-checkbox" [id]="lang.code" [checked]="selectedLanguages.includes(lang.code)"
-        (change)="toggleLanguage(lang.code)" />
-      <label [for]="lang.code">{{ lang.name }}</label>
-    </div>
-  </div>
-  <!-- <p>Selected languages: {{ selectedLanguageNames.join(', ') }}</p> -->
-  <button class="action-button" (click)="saveLanguages()">Save</button>
-
-
-</div>
-<div class="main-container">
-  <h3>Playstyle</h3>
-  <select class="profile-select" [(ngModel)]="playstyle">
-    <option value="Competitive">Competitive</option>
-    <option value="Casual">Casual</option>
-
-  </select>
-
-  <h3>Platform</h3>
-  <div *ngFor="let platform of availablePlatforms" class="language-option">
-    <label>
-      <input type="checkbox" class="profile-checkbox" [value]="platform"
-        [checked]="selectedPlatforms.includes(platform)" (change)="togglePlatform(platform)" />
-      {{ platform }}
-    </label>
-  </div>
-  <button class="action-button" (click)="savePlaystyleAndPlatform()">Save</button>
-</div>
-<div *ngIf="showNotification" class="message">
-  {{ notificationMessage }}
-</div>
+</section>

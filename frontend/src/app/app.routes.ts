@@ -16,6 +16,7 @@ import { ChatPageComponent } from './features/chat-page/chat-page.component';
 import { ProfilePageComponent } from './features/profile-page/profile-page.component';
 import { SettingsPageComponent } from './features/settings-page/settings-page.component';
 import { ProfileSettingsComponent } from './features/settings-page/profile-settings/profile-settings.component';
+import { AccountSettingsComponent } from './features/settings-page/account-settings/account-settings.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -64,6 +65,11 @@ export const routes: Routes = [
         path: 'dashboard/settings/profile',
         canActivate: [AuthGuard],
         component: ProfileSettingsComponent,
+      },
+      {
+        path: 'dashboard/settings/account',
+        canActivate: [AuthGuard],
+        component: AccountSettingsComponent,
       },
     ],
   },

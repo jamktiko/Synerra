@@ -63,6 +63,7 @@ app-main-layout {
 
   /* Colors and gradients  */
   --color-primary: #f02a10;
+  --color-primary-rgb: 240, 42, 16;
   --color-highlight: #ffb31c;
   --color-success: #14ae5c;
   --color-text-default: #f2f2f2;
