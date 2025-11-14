@@ -6,10 +6,13 @@ import { UserService } from '../core/services/user.service';
 import { UserStore } from '../core/stores/user.store';
 import { NotificationService } from '../core/services/notification.service';
 import { AuthService } from '../core/services/auth.service';
+import { LoadingPageComponent } from '../features/loading-page/loading-page.component';
 
 @Component({
   selector: 'app-auth-callback',
-  template: `<p>Logging you in...</p>`,
+  imports: [LoadingPageComponent],
+  templateUrl: './auth-call-backs.component.html',
+  styleUrl: './auth-call-backs.component.css',
 })
 export class AuthCallBacksComponent implements OnInit {
   private baseUrl = 'https://aswrur56pa.execute-api.eu-north-1.amazonaws.com';
