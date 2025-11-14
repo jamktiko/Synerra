@@ -28,6 +28,7 @@ export class ProfileHeaderComponent implements OnInit {
   @Input() completeGames: Game[] = [];
   @Input() genrePopularity: any[] = [];
   showReputationModal = false;
+  sentRequests: string[] = [];
 
   repComms = 50;
   repMentality = 50;
@@ -41,8 +42,23 @@ export class ProfileHeaderComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.user) {
+      this.friendService.getOutgoingPendingRequests().subscribe({
+        next: (requests) => {
+          // Keep only receiver IDs with status PENDING
+          this.sentRequests = requests
+            .filter((r: any) => r.Status === 'PENDING')
+            .map((r: any) => r.SK.replace('FRIEND_REQUEST#', ''));
+        },
+        error: (err) => console.error('Failed to fetch sent requests', err),
+      });
+    }
+  }
 
+  get alreadySent(): boolean {
+    return !!this.user?.UserId && this.sentRequests.includes(this.user.UserId);
+  }
   toggleDescription(): void {
     this.showFullDescription = !this.showFullDescription;
   }
@@ -76,6 +92,7 @@ export class ProfileHeaderComponent implements OnInit {
       next: (res) => {
         console.log('Friend request sent:', res);
         alert(`Friend request sent to ${user.Username}`);
+        this.sentRequests.push(user.UserId);
       },
       error: (err) => {
         console.error('Error sending friend request', err);

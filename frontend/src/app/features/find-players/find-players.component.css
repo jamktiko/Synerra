@@ -142,3 +142,11 @@
     justify-content: center;
   }
 }
+
+.not-found {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  margin: 25px;
+}

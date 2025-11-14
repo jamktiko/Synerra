@@ -12,7 +12,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { GameService } from '../../../core/services/game.service';
 import { Game } from '../../../core/interfaces/game.model';
 
-type DropdownKey = 'languages' | 'games' | 'status';
+type DropdownKey = 'languages' | 'games' | 'status' | 'platform' | 'playstyle';
 
 @Component({
   selector: 'app-player-filters',
@@ -29,6 +29,8 @@ export class PlayerFiltersComponent implements OnInit {
     languages: [] as string[],
     Status: '',
     games: [] as string[],
+    playstyle: '',
+    platform: [] as string[],
   };
 
   searchControl = new FormControl('');
@@ -50,6 +52,9 @@ export class PlayerFiltersComponent implements OnInit {
     { value: 'fi', label: 'Finnish' },
     { value: 'sv', label: 'Swedish' },
   ].sort((a, b) => a.label.localeCompare(b.label));
+  availablePlaystyles = ['Competitive', 'Casual'];
+
+  availablePlatforms = ['PC', 'PlayStation', 'Xbox', 'Mobile'];
 
   @Output() filtersChanged = new EventEmitter<typeof this.filters>();
   @Input() preSelectedGame: string | null = null;
@@ -122,6 +127,20 @@ export class PlayerFiltersComponent implements OnInit {
     this.filters.games = checked
       ? [...this.filters.games, gameId]
       : this.filters.games.filter((g) => g !== gameId);
+    this.onFilterChange();
+  }
+
+  onPlaystyleChange(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    this.filters.playstyle = value;
+    this.onFilterChange();
+  }
+
+  onPlatformToggle(event: Event, platform: string): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.filters.platform = checked
+      ? [...this.filters.platform, platform]
+      : this.filters.platform.filter((p) => p !== platform);
     this.onFilterChange();
   }
 
