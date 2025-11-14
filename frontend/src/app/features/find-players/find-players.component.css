@@ -1,16 +1,16 @@
 /* Pelaajalista */
 .users-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  column-gap: 28px;
-  row-gap: 36px;
-  padding: 28px;
+  grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+  /* column-gap: 28px;
+  row-gap: 36px; */ /* Commented out so the margin can be only adjusted in player cards */
+  padding: 0px 28px 28px 28px;
   align-items: start;
   align-content: start;
   /* background: var(--color-dark-gradient-2); */
   background-image: linear-gradient(
       rgba(10, 10, 10, 0.15),
-      rgba(20, 20, 20, 0.85)
+      rgba(20, 20, 20, 0.902)
     ),
     url("/assets/textures/black_paper.jpg");
   border-radius: 8px;
@@ -34,18 +34,9 @@
   pointer-events: none;
 }
 
-/* Layout */
-.layout {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-  min-height: var(--viewport-height);
-  margin: 0 auto;
-}
-
 .filter-component {
   width: 100%; /* Allows as much space as possible for child element (filters-container) */
+  position: relative;
 }
 
 /* Keskikontti */
@@ -86,14 +77,6 @@
 
   .mid-container {
     padding: 0 1.5rem 2rem;
-  }
-
-  .users-container {
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    column-gap: 24px;
-    row-gap: 32px;
-    width: 100%;
-    max-width: 100%;
   }
 
   .main {
@@ -158,4 +141,12 @@
     justify-items: center;
     justify-content: center;
   }
+}
+
+.not-found {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  margin: 25px;
 }

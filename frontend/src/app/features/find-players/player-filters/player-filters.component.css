@@ -34,8 +34,10 @@
 .filters-container::before {
   content: "";
   position: absolute;
+  max-width: 1080px;
+  margin: 0 auto;
   inset: 0;
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 1px;
   background: linear-gradient(
     180deg,

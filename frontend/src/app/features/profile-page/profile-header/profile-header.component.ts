@@ -11,6 +11,7 @@ import { ButtonComponent } from '../../../shared/components/button/button.compon
 import { NgModel } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ReputationService } from '../../../core/services/reputation.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-header',
@@ -27,20 +28,37 @@ export class ProfileHeaderComponent implements OnInit {
   @Input() completeGames: Game[] = [];
   @Input() genrePopularity: any[] = [];
   showReputationModal = false;
+  sentRequests: string[] = [];
 
-  repComms = 1;
-  repMentality = 1;
-  repTeamwork = 1;
+  repComms = 50;
+  repMentality = 50;
+  repTeamwork = 50;
 
   constructor(
     private userStore: UserStore,
     private chatService: ChatService,
     private friendService: FriendService,
-    private reputationService: ReputationService
+    private reputationService: ReputationService,
+    private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.user) {
+      this.friendService.getOutgoingPendingRequests().subscribe({
+        next: (requests) => {
+          // Keep only receiver IDs with status PENDING
+          this.sentRequests = requests
+            .filter((r: any) => r.Status === 'PENDING')
+            .map((r: any) => r.SK.replace('FRIEND_REQUEST#', ''));
+        },
+        error: (err) => console.error('Failed to fetch sent requests', err),
+      });
+    }
+  }
 
+  get alreadySent(): boolean {
+    return !!this.user?.UserId && this.sentRequests.includes(this.user.UserId);
+  }
   toggleDescription(): void {
     this.showFullDescription = !this.showFullDescription;
   }
@@ -48,6 +66,7 @@ export class ProfileHeaderComponent implements OnInit {
   onEditProfile(): void {
     // TODO: Navigate to edit profile or open edit modal
     console.log('Edit profile clicked');
+    this.router.navigate(['/dashboard/settings/profile']);
   }
 
   onUploadPhoto(): void {
@@ -73,6 +92,7 @@ export class ProfileHeaderComponent implements OnInit {
       next: (res) => {
         console.log('Friend request sent:', res);
         alert(`Friend request sent to ${user.Username}`);
+        this.sentRequests.push(user.UserId);
       },
       error: (err) => {
         console.error('Error sending friend request', err);

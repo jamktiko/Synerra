@@ -9,30 +9,27 @@ module.exports.handler = async (event) => {
     const authUserId = event.requestContext?.authorizer?.jwt?.claims?.sub;
     if (!authUserId) return sendResponse(401, { message: 'Unauthorized' });
 
+    // Query all friend requests sent by the authenticated user
     const result = await doccli.send(
       new QueryCommand({
         TableName: MAIN_TABLE,
-        IndexName: 'OnlineStatusIndex',
-        KeyConditionExpression:
-          'GSI1PK = :userId AND begins_with(GSI1SK, :prefix)',
+        KeyConditionExpression: 'PK = :sender AND begins_with(SK, :prefix)',
         ExpressionAttributeValues: {
-          ':userId': `USER#${authUserId}`,
+          ':sender': `USER#${authUserId}`,
           ':prefix': 'FRIEND_REQUEST#',
         },
       })
     );
 
-    const pendingRequests = result.Items || [];
-    console.log(pendingRequests);
+    // Filter only pending requests
+    const pendingRequests =
+      result.Items?.filter((item) => item.Status === 'PENDING') || [];
 
-    return sendResponse(200, {
-      message: 'Pending friend requests retrieved successfully',
-      pendingRequests,
-    });
+    return sendResponse(200, { pendingRequests });
   } catch (err) {
-    console.error('Get pending friend requests error:', err);
+    console.error('Get outgoing pending friend requests error:', err);
     return sendResponse(500, {
-      message: 'Failed to retrieve pending friend requests',
+      message: 'Failed to retrieve outgoing pending friend requests',
       error: err.message,
     });
   }

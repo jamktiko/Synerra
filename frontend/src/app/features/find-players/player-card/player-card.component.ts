@@ -6,6 +6,7 @@ import { ChatService } from '../../../core/services/chat.service';
 import { Router } from '@angular/router';
 import { UserStore } from '../../../core/stores/user.store';
 import { NgbNavItem } from '../../../../../node_modules/@ng-bootstrap/ng-bootstrap/nav/nav';
+import { FriendRequest } from '../../../core/interfaces/friendrequest.model';
 
 @Component({
   selector: 'app-player-card',
@@ -17,6 +18,7 @@ import { NgbNavItem } from '../../../../../node_modules/@ng-bootstrap/ng-bootstr
 export class PlayerCardComponent implements OnInit {
   @Input() user!: User;
   @Input() friends!: User[];
+  @Input() sentRequests: string[] = [];
   currentUser: User | null = null;
   availableLanguages = [
     { value: 'en', flag: 'https://flagcdn.com/gb.svg' },
@@ -50,6 +52,9 @@ export class PlayerCardComponent implements OnInit {
     if (!this.user || !this.friends) return false;
     return this.friends.some((f) => f.UserId === this.user.UserId);
   }
+  get alreadySent(): boolean {
+    return !!this.user?.UserId && this.sentRequests.includes(this.user.UserId);
+  }
 
   getCommonLanguages(userLanguages?: string[]): string[] {
     // If either array is missing, return empty
@@ -78,15 +83,20 @@ export class PlayerCardComponent implements OnInit {
   }
 
   onAddFriend() {
-    if (!this.user?.UserId) return;
+    const userId = this.user?.UserId;
+    const senderId = this.currentUser?.UserId;
 
-    this.friendService.sendFriendRequest(this.user.UserId).subscribe({
-      next: (res) => {
-        console.log('Friend request sent:', res);
-        alert(`Friend request sent to ${this.user.Username}`);
+    if (!userId || !senderId) return;
+
+    if (this.alreadySent) return; // already sent, do nothing
+
+    this.friendService.sendFriendRequest(userId).subscribe({
+      next: () => {
+        alert(`Friend request sent to ${this.user?.Username}`);
+        this.sentRequests.push(userId);
       },
       error: (err) => {
-        console.error('Error sending friend request', err);
+        console.error('Failed to send friend request', err);
         alert('Failed to send friend request');
       },
     });

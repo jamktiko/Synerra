@@ -21,6 +21,8 @@ export interface User {
   AverageComms?: number;
   AverageMentality?: number;
   MainReputation?: number;
+  Playstyle?: string;
+  Platform?: string[];
 }
 
 export interface UserFilters {
@@ -28,6 +30,8 @@ export interface UserFilters {
   languages?: string[];
   games?: string[];
   Status?: string;
+  playstyle?: string;
+  platform?: string[];
 }
 
 export interface Country {
