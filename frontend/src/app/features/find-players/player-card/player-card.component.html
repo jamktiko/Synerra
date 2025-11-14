@@ -29,9 +29,10 @@
       <span class="icon">💬</span>
       <span>Chat</span>
     </button>
-    <button *ngIf="!isFriend" type="button" class="add-btn" (click)="onAddFriend()">
-      <span class="icon">+</span>
-      <span>Add</span>
+    <button *ngIf="!isFriend" type="button" class="add-btn" (click)="onAddFriend()" [disabled]="alreadySent">
+      <span class="icon" *ngIf="!alreadySent">+</span>
+      <span>{{ alreadySent ? 'Request Sent' : 'Add' }}</span>
     </button>
+
   </div>
 </div>

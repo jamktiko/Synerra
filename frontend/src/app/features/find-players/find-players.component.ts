@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserStore } from '../../core/stores/user.store';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { FriendService } from '../../core/services/friend.service';
+import { FriendRequest } from '../../core/interfaces/friendrequest.model';
 @Component({
   selector: 'app-find-players',
   standalone: true,
@@ -28,7 +29,7 @@ export class FindPlayersComponent implements OnInit {
   onlineUsers$: Observable<User[]>;
   filteredUsers$ = new BehaviorSubject<User[]>([]);
   friends: User[] = [];
-
+  sentRequests: string[] = [];
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
@@ -101,6 +102,16 @@ export class FindPlayersComponent implements OnInit {
       error: (err) => {
         console.error('Failed to fetch friends', err);
       },
+    });
+
+    this.friendService.getOutgoingPendingRequests().subscribe({
+      next: (requests) => {
+        // Keep only receiver IDs with status PENDING
+        this.sentRequests = requests
+          .filter((r: any) => r.Status === 'PENDING')
+          .map((r: any) => r.SK.replace('FRIEND_REQUEST#', ''));
+      },
+      error: (err) => console.error('Failed to fetch sent requests', err),
     });
   }
 

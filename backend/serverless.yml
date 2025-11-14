@@ -393,6 +393,13 @@ functions:
       - httpApi:
           path: /auth/cognito/exchange
           method: post
+  hasSentRequest:
+    handler: src/relations/hasSentRequest.handler
+    events:
+      - httpApi:
+          path: /relations/hassent
+          method: get
+          authorizer: PrivateAuthorizer
 
 resources:
   Resources:

@@ -208,4 +208,19 @@ export class FriendService {
   clearAllRequests(): void {
     this.pendingRequestsSubject.next([]); // Clear the array
   }
+
+  getOutgoingPendingRequests(): Observable<any[]> {
+    const jwt = this.authStore.getToken();
+    return this.http
+      .get<{ pendingRequests: any[] }>(
+        `${this.mostBasicUrl}/relations/hassent`,
+        { headers: { Authorization: `${jwt}` } }
+      )
+      .pipe(
+        tap((res) => {
+          console.log('Outgoing pending requests:', res.pendingRequests);
+        }),
+        map((res) => res.pendingRequests || [])
+      );
+  }
 }

@@ -42,9 +42,9 @@
 
       </div>
       <div *ngIf="!isOwnProfile" class="action-buttons">
-        <button class="social-badge" *ngIf="!isFriend" (click)="addFriend(user)" aria-label="Add friend"
-          title="Add as friend">
-          <img src="/assets/svg/Add user.svg" alt="addfriend" class="profilesvg">
+        <button class="social-badge" *ngIf="!isFriend" (click)="addFriend(user)" [disabled]="alreadySent"
+          aria-label="Add friend">
+          {{ alreadySent ? 'Request Sent' : 'Add Friend' }}
         </button>
         <button class="social-badge" (click)="userClicked(user.UserId)" aria-label="Start chat" title="Start chat">
           <img src="/assets/svg/NoMessage.svg" alt="addfriend" class="profilesvg">
