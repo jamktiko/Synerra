@@ -26,7 +26,7 @@
 }
 
 .notification-bell:hover svg {
-  color: var(--color-highlight);
+  color: var(--color-primary);
   transition: color 0.2s ease;
 }
 
@@ -260,7 +260,10 @@
   background: rgba(30, 30, 30, 0.85);
   color: var(--color-text-default);
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
   min-width: 0;
   margin-right: 2px;
 }
@@ -329,7 +332,10 @@
   max-width: 0;
   opacity: 0;
   margin-left: 0;
-  transition: max-width 200ms ease, opacity 200ms ease, margin-left 200ms ease;
+  transition:
+    max-width 200ms ease,
+    opacity 200ms ease,
+    margin-left 200ms ease;
 }
 
 .tab.active .tab-label {
@@ -433,7 +439,10 @@
   stroke-width: 1.4;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: transform 220ms ease, stroke 220ms ease, fill 220ms ease;
+  transition:
+    transform 220ms ease,
+    stroke 220ms ease,
+    fill 220ms ease;
 }
 
 .icon-envelope path,
@@ -450,7 +459,9 @@
 .icon-trash .trash-lid,
 .icon-trash .trash-body,
 .icon-trash .trash-handle {
-  transition: transform 260ms ease, opacity 220ms ease;
+  transition:
+    transform 260ms ease,
+    opacity 220ms ease;
   transform-origin: center;
 }
 
@@ -481,7 +492,9 @@
 
 .icon-profile .profile-head {
   fill: rgba(255, 255, 255, 0.05);
-  transition: fill 220ms ease, stroke 220ms ease;
+  transition:
+    fill 220ms ease,
+    stroke 220ms ease;
 }
 
 .icon-profile .profile-body-fill {
