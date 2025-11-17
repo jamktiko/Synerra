@@ -265,6 +265,14 @@ input[type="text"]::placeholder {
   margin-bottom: 1rem;
 }
 
+/* No friends message in modal */
+.friendsList p {
+  text-align: center;
+  color: var(--color-text-dark);
+  margin: 1rem 0;
+  font-size: 0.95rem;
+}
+
 .card {
   background: var(--color-transparent-gradient);
   border-radius: 8px;

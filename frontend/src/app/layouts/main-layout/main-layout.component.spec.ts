@@ -21,7 +21,17 @@ describe('MainLayoutComponent', () => {
 
     fixture = TestBed.createComponent(MainLayoutComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    // Provide a minimal navbar stub to avoid AfterViewInit errors.
+    // Instead of calling fixture.detectChanges() (which lets Angular attempt to
+    // resolve the real ViewChild and may overwrite our stub), call the
+    // lifecycle hook manually after stubbing to keep the test isolated.
+    component.navbar = {
+      collapsedChange: { subscribe: (fn: any) => ({ unsubscribe: () => {} }) },
+      isCollapsed: false,
+    } as any;
+    // Manually invoke the lifecycle method rather than running full change
+    // detection so the test doesn't require the real NavbarComponent.
+    component.ngAfterViewInit();
   });
 
   it('should create', () => {

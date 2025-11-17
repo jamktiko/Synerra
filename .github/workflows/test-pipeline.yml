@@ -1,0 +1,38 @@
+# This file runs chosen tests
+name: Test pipeline
+
+# Runs when pushing to any branch
+on:
+  push:
+    branches: ['**']
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Frontend tests
+      - name: Install and test frontend
+        run: |
+          cd frontend
+          npm ci
+          npm test -- --watch=false --browsers=ChromeHeadless || npm run test
+
+      # Backend tests
+      - name: Install and test backend
+        run: |
+          cd backend
+          npm ci
+          npm test

@@ -45,6 +45,7 @@ export class NotificationService implements OnDestroy {
   // creates the websocket
   private createWebSocket() {
     const user = this.userStore.user();
+    this.token = this.authStore.getToken();
     if (!user || !this.token) return;
 
     //Websocket-url

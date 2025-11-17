@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { UserStore } from '../../core/stores/user.store';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-login-page',
@@ -13,9 +14,11 @@ import { Router } from '@angular/router';
   host: { class: 'auth-card auth-card--wide' },
 })
 export class LoginPageComponent {
+  isAuthenticated = false;
   constructor(
     private userStore: UserStore,
     private router: Router,
+    private authService: AuthService
   ) {}
 
   emailLogin() {

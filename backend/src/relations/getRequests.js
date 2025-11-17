@@ -12,7 +12,7 @@ module.exports.handler = async (event) => {
     const result = await doccli.send(
       new QueryCommand({
         TableName: MAIN_TABLE,
-        IndexName: 'OnlineStatusIndex', // replace with your actual GSI for friend requests
+        IndexName: 'OnlineStatusIndex',
         KeyConditionExpression:
           'GSI1PK = :userId AND begins_with(GSI1SK, :prefix)',
         ExpressionAttributeValues: {

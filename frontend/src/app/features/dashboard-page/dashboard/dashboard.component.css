@@ -111,8 +111,8 @@ app-dashboard-card img {
 
 @media (max-width: 1024px) {
   .dashboard {
-    width: 100%;
-    max-width: 100%;
+    /* width: 100%;
+    max-width: 100%; */
     margin: 0 auto;
     padding: 2.5rem 1.5rem;
     overflow-x: hidden;

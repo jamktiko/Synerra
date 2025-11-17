@@ -25,14 +25,16 @@ app-root,
 app-main-layout {
   display: inline-block;
 }
+
 /*================================================================*/
 :root {
   --viewport-height: 100vh;
   /* Font families */
-  --font-main: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial,
+  --font-main:
+    "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --font-title:
+    "Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto, Arial,
     sans-serif;
-  --font-title: "Space Grotesk", system-ui, -apple-system, Segoe UI, Roboto,
-    Arial, sans-serif;
 
   /* Font weights */
   --font-weight-light: 300;
@@ -62,7 +64,7 @@ app-main-layout {
 
   /* Colors and gradients  */
   --color-primary: #f02a10;
-  --color-highlight: #ffb31c;
+  --color-primary-rgb: 240, 42, 16;
   --color-success: #14ae5c;
   --color-text-default: #f2f2f2;
   --color-text-grey: #bfbfbf;
@@ -256,8 +258,8 @@ body {
   width: 100%; /* pitää sisällön skaalautuvana */
   margin: auto; /*Keskitys*/
 }
-
-@media (max-height: 768px) {
+/* Already done for all resolutions above. Useless query */
+/* @media (max-height: 768px) {
   html,
   body,
   app-root,
@@ -266,7 +268,7 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
   }
-}
+} */
 
 /* tarkoitettu pienemmälle tietokoneruudulle */
 @media (max-height: 600px) {
