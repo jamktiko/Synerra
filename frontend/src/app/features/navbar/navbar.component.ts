@@ -20,6 +20,13 @@ import { LoadingPageStore } from '../../core/stores/loadingPage.store';
 import { AuthService } from '../../core/services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { filter } from 'rxjs/operators';
+import { NotificationService } from '../../core/services/notification.service';
+import { UserService } from '../../core/services/user.service';
+import { FriendService } from '../../core/services/friend.service';
+import { Subscription } from 'rxjs';
+import { FriendRequest } from '../../core/interfaces/friendrequest.model';
+import { UnreadMessage } from '../../core/interfaces/chatMessage';
+
 interface NavItem {
   label: string;
   icon: string;
@@ -47,10 +54,13 @@ export class NavbarComponent implements OnInit {
   // private hasUserPreference = false; //REMOVED for UX, seemed like a bug more than a feature
   // Lines 133 & 157 also removed
   @Output() collapsedChange = new EventEmitter<boolean>();
-
+  notifications: any[] = [];
   user: User | null = null;
+  unreads: UnreadMessage[] = [];
+  pendingRequests: FriendRequest[] = [];
   currentUrl = '';
   expandedGroups = new Set<string>();
+  private sub: Subscription | null = null;
 
   navItems: NavItem[] = [
     { label: 'Home', icon: 'Home', route: '/dashboard' },
@@ -94,12 +104,22 @@ export class NavbarComponent implements OnInit {
   get isTemporarilyExpanded(): boolean {
     return this.isCollapsed && this.expandedGroups.size > 0;
   }
+  get totalNotifications(): number {
+    return (
+      this.pendingRequests.length +
+      this.unreads.length +
+      this.notifications.length
+    );
+  }
 
   constructor(
     private userStore: UserStore,
     private router: Router,
     private authService: AuthService,
-    private loadingPageStore: LoadingPageStore
+    private loadingPageStore: LoadingPageStore,
+    private notificationService: NotificationService,
+    private userService: UserService,
+    private friendService: FriendService
   ) {
     // Watch for user changes reactively
     effect(() => {
@@ -136,6 +156,49 @@ export class NavbarComponent implements OnInit {
     this.checkAutoCollapse();
     this.collapsedChange.emit(this.isCollapsed);
     this.syncExpandedState(this.currentUrl);
+    // Listens to friend requests
+    this.friendService.pendingRequests$.subscribe({
+      next: (requests) => {
+        this.pendingRequests = requests;
+        console.log('Pending friend requests in NAVBAR:', this.pendingRequests);
+      },
+      error: (err) => console.error('Failed to load pending requests', err),
+    });
+
+    // Listens to unread messages
+    this.userService.unreads$.subscribe({
+      next: (messages) => {
+        // Filter out friend requests
+        this.unreads = messages.filter(
+          (msg) => msg.Relation !== 'FRIEND_REQUEST'
+        );
+        console.log('Unread messages in NAVBAR:', this.unreads);
+      },
+      error: (err) => console.error('Failed to load unread messages', err),
+    });
+    this.sub = this.notificationService.notifications$.subscribe(
+      (data: any) => {
+        switch (data.type) {
+          case 'CLEAR_ALL_MESSAGES':
+            this.notifications = this.notifications.filter(
+              (n) => n.type !== 'newMessage'
+            );
+            break;
+          case 'CLEAR_ALL_REQUESTS':
+            this.notifications = this.notifications.filter(
+              (n) =>
+                n.type !== 'friend_request' &&
+                n.type !== 'friend_request_accepted' &&
+                n.type !== 'friend_request_declined'
+            );
+            break;
+          default:
+            // push normal notifications (messages, friend requests, etc.)
+            this.notifications.push(data);
+            console.log('NOTIFICATIONS IN NAVBAR', this.notifications);
+        }
+      }
+    );
   }
 
   private buildNavItemsMobile(userId: string): void {

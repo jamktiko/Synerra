@@ -78,9 +78,14 @@
   <div class="mobile-nav">
     <div class="nav-content">
       <a *ngFor="let item of navItemsMobile" class="nav-icon" [routerLink]="item.route" routerLinkActive="active"
-        (click)="closeExpandedGroups()"
-        [routerLinkActiveOptions]="{ exact: true }">
-        <img [src]="'assets/svg/' + item.icon + '.svg'" alt="{{ item.label }} icon" />
+        (click)="closeExpandedGroups()" [routerLinkActiveOptions]="{ exact: true }">
+
+        <span class="badge-wrapper">
+          <img [src]="'assets/svg/' + item.icon + '.svg'" alt="{{ item.label }} icon" />
+          <span class="badge" *ngIf="item.label === 'Social' && totalNotifications > 0">
+            {{ totalNotifications }}
+          </span>
+        </span>
       </a>
     </div>
   </div>

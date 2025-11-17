@@ -86,6 +86,10 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         message: 'Profile added to dynamodb!',
         data: updatedItem,
+        tokens: {
+          id_token: response.data.id_token,
+          refresh_token: response.data.refresh_token,
+        },
       }),
     };
   } catch (err) {
