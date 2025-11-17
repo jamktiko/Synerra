@@ -128,6 +128,15 @@ export class NavbarComponent implements OnInit {
         this.syncExpandedState(this.currentUrl);
       });
   }
+  // Controls the visibility of the Settings submenu in mobilenav
+  isMobileSettingsOpen = false;
+
+  toggleMobileSettings() {
+    // Toggles mobile settings menu between collapsed and expanded
+    this.isMobileSettingsOpen = !this.isMobileSettingsOpen;
+  }
+  settingsChildren =
+    this.navItems.find((i) => i.label === 'Settings')?.children ?? [];
 
   ngOnInit(): void {
     const saved = localStorage.getItem('navbarCollapsed');
