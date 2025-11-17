@@ -82,7 +82,11 @@ export class NavbarComponent implements OnInit {
   ];
 
   navItemsMobile: NavItem[] = [
-    { label: 'Settings', icon: 'Settings', route: '/dashboard/settings' },
+    {
+      label: 'Settings',
+      icon: 'Settings',
+      route: '/dashboard/settings',
+    },
     { label: 'Games', icon: 'Gamepad', route: '/dashboard/choose-game' },
     { label: 'Home', icon: 'logo_small', route: '/dashboard' },
     { label: 'Social', icon: 'NoMessage', route: '/dashboard/social' },
@@ -124,6 +128,15 @@ export class NavbarComponent implements OnInit {
         this.syncExpandedState(this.currentUrl);
       });
   }
+  // Controls the visibility of the Settings submenu in mobilenav
+  isMobileSettingsOpen = false;
+
+  toggleMobileSettings() {
+    // Toggles mobile settings menu between collapsed and expanded
+    this.isMobileSettingsOpen = !this.isMobileSettingsOpen;
+  }
+  settingsChildren =
+    this.navItems.find((i) => i.label === 'Settings')?.children ?? [];
 
   ngOnInit(): void {
     const saved = localStorage.getItem('navbarCollapsed');
@@ -140,7 +153,11 @@ export class NavbarComponent implements OnInit {
 
   private buildNavItemsMobile(userId: string): void {
     this.navItemsMobile = [
-      { label: 'Settings', icon: 'Settings', route: '/dashboard/settings' },
+      {
+        label: 'Settings',
+        icon: 'Settings',
+        route: '/dashboard/settings/profile',
+      },
       { label: 'Games', icon: 'Gamepad', route: '/dashboard/choose-game' },
       { label: 'Home', icon: 'logo_small', route: '/dashboard' },
       { label: 'Social', icon: 'NoMessage', route: '/dashboard/social' },
