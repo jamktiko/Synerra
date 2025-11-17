@@ -64,10 +64,13 @@ exports.handler = async (event) => {
         PK: `USER#${payload.sub}`,
         SK: 'PROFILE',
       },
-      UpdateExpression: 'SET Email = :email, UpdatedAt = :updatedAt',
+      UpdateExpression:
+        'SET Email = :email, UpdatedAt = :updatedAt, UserId = :userId, GSI3PK = :gsi3pk',
       ExpressionAttributeValues: {
         ':email': payload.email,
         ':updatedAt': now,
+        ':userId': payload.sub,
+        ':gsi3pk': 'USER',
       },
       ReturnValues: 'ALL_NEW', // returns the updated item
     };
@@ -86,6 +89,10 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         message: 'Profile added to dynamodb!',
         data: updatedItem,
+        tokens: {
+          id_token: response.data.id_token,
+          refresh_token: response.data.refresh_token,
+        },
       }),
     };
   } catch (err) {
