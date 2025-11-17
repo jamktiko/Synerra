@@ -35,7 +35,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
     private notificationService: NotificationService,
     private userStore: UserStore,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
   ) {}
   @ViewChild(NavbarComponent) navbar!: NavbarComponent;
 
@@ -46,6 +46,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
     this.userService.getMe().subscribe({
       next: (res) => {
         this.userStore.setUser(res);
+        console.log('MAINLEIAUT RESPONSE', res);
         this.loggedInUser = res;
 
         this.notificationService.initConnection();
