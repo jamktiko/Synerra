@@ -6,6 +6,7 @@
   width: 100vw; /* fill available width */
   max-width: 900px; /* optional limit for large screens */
   background: var(--color-background);
+  border: 1px solid #5c5c5c; /*voi poistaa jos ei käy -> vain "isommalla ruudulla" */
   border-radius: 8px;
   padding: 0.7rem 1rem 1rem 1rem;
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 36px);
@@ -17,27 +18,6 @@
   left: -30px;
 }
 
-@media screen and (max-width: 1500px) {
-  .chatElement {
-    width: 600px;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .chatElement {
-    width: 100vw;
-    height: calc(100dvh - 96px); /* leave room for fixed bottom nav */
-    position: relative;
-    top: -30px;
-    left: 0;
-    overflow: hidden;
-    margin-left: 0;
-    padding-top: 10px;
-    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 36px);
-    margin-bottom: 0;
-  }
-}
-
 /* Prevent horizontal scroll on page */
 body {
   overflow-x: hidden;
@@ -47,11 +27,12 @@ body {
   grid-template-columns: 10% 75% 15%;
   align-items: center;
   padding: 0.5rem 1rem;
-  background: var(--color-background);
+  /* background: var(--color-background); */
+  /* background: var(--color-primary); */
   border-radius: 8px;
   gap: 1rem;
   text-align: center;
-  background: linear-gradient(135deg, #1f1f1f, #2c2c2c);
+  background: linear-gradient(360deg, #f02a10, #f2680d);
   background-size: 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -111,7 +92,7 @@ body {
 
 .sentMessage,
 .receivedMessage {
-  max-width: 90%;
+  max-width: 100%; /*Oli aiemmin 90%*/
   box-sizing: border-box;
   padding: 0.5rem 0.75rem;
   font-size: 0.95rem;
@@ -119,9 +100,14 @@ body {
   overflow-wrap: break-word;
   white-space: pre-wrap; /* keep line breaks but wrap long words */
 }
+.receivedMessage p,
+.sentMessage p {
+  margin: 0.2rem;
+}
 
 .sentMessage {
-  background: rgba(58, 58, 58, 0.5);
+  background: var(--color-orange-gradient);
+  /* background: var(--color-primary); */
   align-self: flex-end;
   border-radius: 8px 8px 0px 8px;
 }
@@ -130,18 +116,36 @@ body {
   background: rgba(58, 58, 58, 0.5);
   align-self: flex-start;
   border-radius: 8px 8px 8px 0px;
+  box-shadow: -1px 1px 3px #a09f9f70;
+  /* border: 1px solid #ff7124; */
+  /* #a09f9f70; */
+}
+
+/*Lähettäjän nimi*/
+.senderName {
+  display: inline-block;
+  min-width: fit-content;
+  max-width: 20ch;
+  font-weight: 600;
+  color: #ff7124;
 }
 
 .sentMessageWrapper {
   display: flex;
   flex-direction: column;
   margin-bottom: 0.5rem;
+  animation: slideUpFade 0.6s ease-out;
+}
+
+.receivedMessageWrapper > div {
+  min-width: 0;
 }
 
 .receivedMessageWrapper {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
+  animation: slideUpFade 0.6s ease-out;
 }
 
 .messageAvatar {
@@ -149,6 +153,9 @@ body {
   height: 40px;
   border-radius: 50%;
   margin-top: 1%;
+  object-fit: cover;
+  box-shadow: 0 0px 4px #ff7124;
+  border: 1px solid #ff7124;
 }
 
 /* Input row */
@@ -169,16 +176,70 @@ body {
 .chat-input input:focus {
   border-color: var(--color-primary);
   outline: none;
+  box-shadow: 0 0px 5px var(--color-primary);
 }
 
-.chat-input button {
+/* Sendmessage button */
+:host ::ng-deep app-button.chatSendBtn .btn {
+  background: var(--color-primary);
+  width: 60px;
+  height: 44px;
+  min-height: 0;
+  padding: 0;
+  gap: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host ::ng-deep app-button.chatSendBtn .btn-icon {
+  width: auto;
+  height: 28px;
+  display: block;
+  margin-right: 0 !important;
+}
+
+/* Closechat button */
+:host ::ng-deep app-button.closeChatBtn .btn {
+  width: auto;
+  height: 32px;
+  min-height: 0;
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  background: transparent;
+  transform: none;
+}
+:host ::ng-deep app-button.closeChatBtn .btn:hover {
+  scale: 1.05;
+  filter: brightness(1.5);
+}
+
+:host ::ng-deep app-button.closeChatBtn .btn-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  margin-right: 0 !important;
+  filter: brightness(0.75);
+}
+/* napin hoveri efekti pois! */
+:host ::ng-deep app-button.closeChatBtn .btn:after {
+  transform: none;
+}
+
+/* :host ::ng-deep app-button.closeChatBtn .btn-icon:hover {
+  scale: 1.05;
+  filter: brightness(1.1);
+} */
+
+/* .chat-input button {
   padding: 0.5rem 1rem;
   border-radius: 8px;
   border: none;
   background: var(--color-primary);
   color: var(--color-text-default);
   cursor: pointer;
-}
+} */
 
 .sentTimestamp {
   font-size: 0.75rem; /* smaller text */
@@ -192,4 +253,53 @@ body {
   color: #aaa; /* light gray */
   margin-top: 0.25rem; /* small spacing below bubble */
   text-align: left; /* align to right for sent, optional */
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media screen and (max-width: 1500px) {
+  .chatElement {
+    width: 600px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .chatElement {
+    border: none;
+    width: 100vw;
+    height: calc(100dvh - 96px); /* leave room for fixed bottom nav */
+    position: relative;
+    top: -30px;
+    left: 0;
+    overflow: hidden;
+    margin-left: 0;
+    padding-top: 10px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 36px);
+    margin-bottom: 0;
+  }
+  .headframe {
+    grid-template-columns: auto 1fr 8%;
+  }
+  .headerframe {
+    min-width: 0;
+    overflow: hidden;
+  }
+  .senderName {
+    min-width: 0;
+    max-width: 100%;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sentMessage {
+    max-width: 86%;
+  }
 }

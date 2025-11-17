@@ -1,16 +1,14 @@
 <div class="chatElement">
   <div class="headframe">
-    <ng-container *ngFor="let pic of chatPartnerPictures; let i = index">
-      <img class="avatarframe-icon" [src]="pic" [alt]="chatPartnerName.split(', ')[i] || 'avatar'" />
-    </ng-container>
-
+    <img class="avatarframe-icon" [src]="chatPartnerPicture || 'assets/svg/Acount.svg'" alt="avatar" />
     <div class="headerframe">
-      <div class="chatheading">
-        {{ chatPartnerName || 'Chat' }}
-      </div>
+      <div class="chatheading">{{ chatPartnerName || "Chat" }}</div>
     </div>
     <div class="headerButton">
-      <button [routerLink]="['/dashboard/social']"><img src="/assets/svg/Cross.svg" alt="" /></button>
+      <!-- <button [routerLink]="['/dashboard/social']">
+        <img src="/assets/svg/Cross.svg" alt="" />
+      </button> -->
+      <app-button class="closeChatBtn" variant="default" icon="Cross" routerLink="/dashboard/social"></app-button>
     </div>
   </div>
 
@@ -19,32 +17,36 @@
     <div *ngFor="let msg of messages$ | async" class="chats">
       <div *ngIf="msg.SenderId === loggedInUser?.UserId" class="sentMessageWrapper">
         <div class="sentMessage">
-          <p>{{msg.Content}}</p>
+          <p>{{ msg.Content }}</p>
         </div>
-        <p class="sentTimestamp">{{ msg.Timestamp | date:'d.MM.yyyy, HH.mm' }}</p>
+        <p class="sentTimestamp">
+          {{ msg.Timestamp | date : "d.MM.yyyy, HH.mm" }}
+        </p>
       </div>
 
       <div *ngIf="msg.SenderId !== loggedInUser?.UserId" class="receivedMessageWrapper">
-        <img src="{{msg.ProfilePicture || 'assets/svg/Acount.svg'}}" alt="avatar" class="messageAvatar" />
+        <img src="{{ msg.ProfilePicture || 'assets/svg/Acount.svg' }}" alt="avatar" class="messageAvatar" />
         <div>
           <div class="receivedMessage">
-            <p>{{msg.SenderUsername}}</p>
-            <p>{{msg.Content}}</p>
+            <div class="senderName">
+              <p>{{ msg.SenderUsername }}</p>
+            </div>
+            <p>{{ msg.Content }}</p>
           </div>
-          <p class="receivedTimestamp">{{ msg.Timestamp | date:'dd/MM/yyyy, HH:mm' }}</p>
+          <p class="receivedTimestamp">
+            {{ msg.Timestamp | date : "dd/MM/yyyy, HH:mm" }}
+          </p>
         </div>
       </div>
-
-
     </div>
   </div>
 
   <div class="chat-input">
-    <input [(ngModel)]="messageText" (keyup.enter)="sendMessage(messageText)" />
-    <button (click)="sendMessage(messageText)">
-      <img src="assets/svg/Send.svg" alt="">
-    </button>
-
-
+    <input [(ngModel)]="messageText" (keyup.enter)="sendMessage(messageText)" placeholder="Type your message" />
+    <!-- <button (click)="sendMessage(messageText)">
+      <img src="assets/svg/Send.svg" alt="" />
+    </button> -->
+    <app-button class="chatSendBtn" variant="highlight" icon="Send" (click)="sendMessage(messageText)" size="small">
+    </app-button>
   </div>
 </div>

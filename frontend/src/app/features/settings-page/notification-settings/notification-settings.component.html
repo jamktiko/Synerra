@@ -1,1 +1,60 @@
-<p>notification-settings works!</p>
+<section class="notification-settings-page">
+  <div class="main-content">
+    <div class="page-grid">
+      <article class="notifications-panel">
+        <header class="page-header">
+          <p class="breadcrumbs">Settings &gt; Notifications</p>
+          <h1>Notification preferences</h1>
+          <p class="lede">
+            Decide how Synerra keeps you in the loop. Tune emails, push alerts and weekly digests to fit your focus.
+          </p>
+        </header>
+
+        <form class="notifications-form" [formGroup]="notificationForm" (ngSubmit)="saveChanges()">
+          <div class="master-toggle">
+            <label class="switch">
+              <input type="checkbox" formControlName="allowEmails" />
+              <span class="switch-track">
+                <span class="switch-thumb"></span>
+              </span>
+              <div class="switch-copy">
+                <span class="switch-label">Allow emails from Synerra</span>
+                <small>Disabling stops all inbox updates.</small>
+              </div>
+            </label>
+          </div>
+
+          <section class="preference-block" [formGroup]="emailTopicsGroup">
+            <div class="block-heading">
+              <h3>Email me about…</h3>
+              <p>Choose the stories that deserve space in your inbox.</p>
+            </div>
+            <div class="option-grid">
+              <label class="option-card" *ngFor="let option of emailTopics; trackBy: trackByKey">
+                <input class="visually-hidden" type="checkbox" [formControlName]="option.key" />
+                <span class="checkbox">
+                  <span class="checkbox-indicator"></span>
+                </span>
+                <div class="option-copy">
+                  <span class="option-label">{{ option.label }}</span>
+                  <small *ngIf="option.description">{{ option.description }}</small>
+                </div>
+              </label>
+            </div>
+          </section>
+
+          <div class="form-footer">
+            <div class="save-copy">
+              <p class="save-note">
+                Saved information becomes visible to your squads right after syncing.
+              </p>
+              <p class="save-feedback" *ngIf="saveFeedback">{{ saveFeedback }}</p>
+            </div>
+            <app-button label="Save changes" variant="highlight" size="small" (click)="saveChanges()">
+            </app-button>
+          </div>
+        </form>
+      </article>
+    </div>
+  </div>
+</section>
