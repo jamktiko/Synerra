@@ -17,12 +17,15 @@ export class NotificationService implements OnDestroy {
   private pingInterval: any;
   private userSub: Subscription | null = null;
 
-  constructor(private authStore: AuthStore, private userStore: UserStore) {
+  constructor(
+    private authStore: AuthStore,
+    private userStore: UserStore,
+  ) {
     this.token = this.authStore.getToken(); //get the users jwt token
   }
 
   public notifications$ = this.notificationsSubject.asObservable().pipe(
-    filter((msg) => msg.type !== 'USER_STATUS') // ignore online_status messages
+    filter((msg) => msg.type !== 'USER_STATUS'), // ignore online_status messages
   );
 
   public userStatus$ = this.notificationsSubject
@@ -50,7 +53,7 @@ export class NotificationService implements OnDestroy {
 
     //Websocket-url
     const url = `${environment.WSS_URL}?Auth=${encodeURIComponent(
-      this.token
+      this.token,
     )}&type=notifications`;
     this.socket = new WebSocket(url);
 
@@ -64,11 +67,14 @@ export class NotificationService implements OnDestroy {
       }
 
       // Ping the connection so it doesn't close after a while of in-activity
-      this.pingInterval = setInterval(() => {
-        if (this.socket?.readyState === WebSocket.OPEN) {
-          this.socket.send(JSON.stringify({ type: 'ping' }));
-        }
-      }, 5 * 60 * 1000);
+      this.pingInterval = setInterval(
+        () => {
+          if (this.socket?.readyState === WebSocket.OPEN) {
+            this.socket.send(JSON.stringify({ type: 'ping' }));
+          }
+        },
+        5 * 60 * 1000,
+      );
     };
 
     // When the socket connection is closed
