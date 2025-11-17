@@ -49,6 +49,11 @@ export class AuthCallBacksComponent implements OnInit {
         next: (res) => {
           // Gets JWT and refreshtoken
           console.log('Received tokens from backend:', res);
+
+          const payload = JSON.parse(atob(res.id_token.split('.')[1]));
+          console.log(payload.email);
+          console.log(payload);
+
           // JWT to the authStore
           this.authStore.setToken(res.id_token);
 

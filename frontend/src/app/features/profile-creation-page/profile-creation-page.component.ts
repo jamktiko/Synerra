@@ -12,6 +12,7 @@ import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HostListener } from '@angular/core';
 import { LoadingPageStore } from '../../core/stores/loadingPage.store';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-profile-creation-page',
@@ -19,7 +20,7 @@ import { LoadingPageStore } from '../../core/stores/loadingPage.store';
   styleUrls: ['./profile-creation-page.component.css'],
   imports: [ButtonComponent],
 })
-export class ProfileCreationPageComponent {
+export class ProfileCreationPageComponent implements OnInit {
   profile: Partial<User> = {};
   currentStep: number = 0;
 
@@ -29,7 +30,18 @@ export class ProfileCreationPageComponent {
     private authService: AuthService,
     private router: Router,
     private loadingPageStore: LoadingPageStore,
+    private userService: UserService,
   ) {}
+
+  ngOnInit(): void {
+    this.userService.getMe().subscribe({
+      next: (res: any) => {
+        this.userStore.setUser(res);
+        console.log('USERJUMALAUTAPERKELEJASJAJJABHJS VHEDGEV: ', res);
+      },
+      error: (err) => console.error('Error loading userssssssssss', err),
+    });
+  }
 
   logOut() {
     this.authService.logout();
