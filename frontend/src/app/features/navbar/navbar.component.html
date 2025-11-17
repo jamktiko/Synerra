@@ -77,12 +77,37 @@
   <!-- Mobile bottom navbar -->
   <div class="mobile-nav">
     <div class="nav-content">
-      <a *ngFor="let item of navItemsMobile" class="nav-icon" [routerLink]="item.route" routerLinkActive="active"
-        (click)="closeExpandedGroups()"
-        [routerLinkActiveOptions]="{ exact: true }">
-        <img [src]="'assets/svg/' + item.icon + '.svg'" alt="{{ item.label }} icon" />
-      </a>
+      <!-- SETTINGS item with submenu toggle -->
+      <ng-container *ngFor="let item of navItemsMobile">
+
+        <!-- If item is Settings, override behavior -->
+        <ng-container *ngIf="item.label === 'Settings'; else normalMobileItem">
+          <div class="nav-icon" [class.active]="isMobileSettingsOpen" (click)="toggleMobileSettings()">
+            <img [src]="'assets/svg/' + item.icon + '.svg'" alt="Settings icon" />
+          </div>
+
+          <!-- The submenu -->
+          <div class="mobile-submenu-inside" *ngIf="isMobileSettingsOpen">
+            <a *ngFor="let child of settingsChildren" class="mobile-subitem" [routerLink]="child.route"
+              [queryParams]="child.queryParams || null" (click)="isMobileSettingsOpen = false">
+              <img *ngIf="child.icon" [src]="getIconPath(child.icon)" />
+              <span>{{ child.label }}</span>
+            </a>
+          </div>
+        </ng-container>
+
+        <!-- Normal icons -->
+        <ng-template #normalMobileItem>
+          <a class="nav-icon" [routerLink]="item.route" routerLinkActive="active" (click)="isMobileSettingsOpen = false"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <img [src]="'assets/svg/' + item.icon + '.svg'" alt="{{ item.label }} icon" />
+          </a>
+        </ng-template>
+
+      </ng-container>
+
     </div>
+
   </div>
 
 </nav>
