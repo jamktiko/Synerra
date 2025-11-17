@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, effect } from '@angular/core';
 import { filter, Subject, Subscription } from 'rxjs';
 import { environment } from '../../../environment';
 import { AuthStore } from '../stores/auth.store';
@@ -21,7 +21,13 @@ export class NotificationService implements OnDestroy {
     private authStore: AuthStore,
     private userStore: UserStore,
   ) {
-    this.token = this.authStore.getToken(); //get the users jwt token
+    effect(() => {
+      const token = this.authStore.token();
+      const user = this.userStore.user();
+      if (token && user && !this.socket) {
+        this.initConnection();
+      }
+    });
   }
 
   public notifications$ = this.notificationsSubject.asObservable().pipe(
@@ -34,15 +40,8 @@ export class NotificationService implements OnDestroy {
   //Initialize the connection
   public initConnection() {
     console.log('INIT CONNECTION CALLED');
-    const tryConnect = () => {
-      const user = this.userStore.user(); // get the logged in user
-      if (!user || !this.token) {
-        setTimeout(tryConnect, 200); // retry in 200ms
-        return;
-      }
-      this.createWebSocket();
-    };
-    tryConnect();
+
+    this.createWebSocket();
   }
 
   // creates the websocket
