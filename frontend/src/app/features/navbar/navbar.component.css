@@ -281,6 +281,25 @@
   z-index: 2;
 }
 
+/* Small wiggle the nav icons make when hovered */
+@keyframes iconHoveranimation {
+  0% {
+  }
+  20% {
+    transform: rotate(5deg);
+  }
+
+  80% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(5deg);
+  }
+}
+.nav-btn:hover ::ng-deep .btn-icon {
+  animation-name: iconHoveranimation;
+  animation-duration: 0.4s;
+}
 .nav-btn ::ng-deep .btn-label {
   flex: 1;
   transition: color 0.3s ease, opacity 0.2s ease, transform 0.2s ease;
@@ -884,6 +903,50 @@
   .navigation .mobile-nav .nav-icon.active img {
     background: radial-gradient(#e15c23 0%, #00000000 70%);
   }*/
+
+  .mobile-submenu-inside {
+    position: absolute;
+    bottom: 92px; /* above the icons */
+    width: auto;
+    background: rgba(20, 20, 20, 0.95);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    animation: submenuSlide 200ms ease-out;
+    z-index: 10002;
+    border-radius: 0px 16px 0px 0px;
+  }
+
+  @keyframes submenuSlide {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  .mobile-subitem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: var(--color-text-default);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .mobile-subitem img {
+    width: 1.25rem;
+    height: 1.25rem;
+    opacity: 0.85;
+  }
+
+  .mobile-subitem:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
 }
 
 .badge-wrapper {

@@ -78,7 +78,7 @@ app-game-card {
 
 @media (max-width: 1280px) {
   .games-container {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 220px));
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     justify-content: center;
     justify-items: center;
     gap: 16px;
@@ -89,13 +89,13 @@ app-game-card {
 @media (max-width: 768px) {
   .games-container {
     /* Allow tighter columns and less padding so more cards show on small screens */
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    justify-content: center;
-    justify-items: center;
     gap: 12px;
     padding: 12px;
   }
-
+  .mid-container {
+    gap: 16px;
+    margin-top: 16px;
+  }
   /* Override per-card outer margin inside this container to avoid extra spacing
      coming from the .card margin set in the child component. */
   .games-container ::ng-deep .card {
@@ -118,9 +118,4 @@ app-game-card {
   width: 100% !important;
   height: auto !important;
   display: block !important;
-}
-
-/* Keep the grid from letting items overflow horizontally */
-.games-container {
-  /* keep normal flow; scrolling is enabled on small screens below */
 }
