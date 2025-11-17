@@ -963,7 +963,7 @@
 
 .badge-wrapper .badge {
   position: absolute;
-  top: 0px; /* move it slightly higher */
+  top: 15px; /* move it slightly higher */
   right: 15px; /* move it slightly to the right */
   min-width: 22px; /* slightly bigger */
   height: 22px;
