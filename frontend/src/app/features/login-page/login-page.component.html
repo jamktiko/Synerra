@@ -15,7 +15,8 @@
         iconPosition="left"></app-button>
 
       <app-button label="Login with Google" icon="Google" variant="default" size="large" [fullWidth]="true"
-        iconPosition="left"></app-button>
+        iconPosition="left" (click)="redirectToHostedUI()">
+      </app-button>
 
       <app-button label="Login with Epic Games" icon="EpicGames" variant="default" size="large" [fullWidth]="true"
         iconPosition="left"></app-button>

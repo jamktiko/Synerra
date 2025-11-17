@@ -28,4 +28,8 @@ export class LoginPageComponent {
       this.router.navigate(['login/email']);
     }
   }
+  redirectToHostedUI() {
+    window.location.href =
+      'https://synerra.auth.eu-north-1.amazoncognito.com/login?client_id=4cmtlinvnblsbs96h53k0h8jku&response_type=code&scope=email+openid+phone+profile&redirect_uri=https%3A%2F%2Fd2lqv34okdzcq4.cloudfront.net%2Fauth%2Fcallback';
+  }
 }

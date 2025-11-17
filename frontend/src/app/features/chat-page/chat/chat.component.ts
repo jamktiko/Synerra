@@ -32,8 +32,9 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   messages$: Observable<ChatMessage[]>;
   messageHistory: [] = [];
   chatPartnerName: string = '';
-  chatPartnerPicture: any = '';
-
+  chatPartnerPictures: string[] = [];
+  otherMembers: any[] = [];
+  roomMembers: any[] = [];
   messageText: string = '';
 
   // Points to the <div #chatLog> for ts usage
@@ -68,40 +69,48 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
         this.chatService.startChat(undefined, this.roomId);
 
         // Fetch the chat partner from the server
+        // Fetch room members
         this.messageService.getUserRooms(this.loggedInUser.UserId).subscribe({
           next: (res) => {
             const room = res.rooms.find((r: any) => r.RoomId === this.roomId);
             if (room) {
-              const otherMember = room.Members.find(
+              this.otherMembers = room.Members.filter(
                 (m: any) =>
                   m.PK.replace('USER#', '') !== this.loggedInUser.UserId
               );
-              if (otherMember) {
-                this.chatPartnerName = otherMember.Username;
-                this.chatPartnerPicture =
-                  otherMember.ProfilePicture || 'assets/svg/Acount.svg';
-              }
+
+              // Combine names for display
+              this.chatPartnerName = this.otherMembers
+                .map((m: any) => m.Username)
+                .join(', ');
+
+              // Collect pictures for display
+              this.chatPartnerPictures = this.otherMembers.map(
+                (m: any) => m.ProfilePicture || 'assets/svg/Acount.svg'
+              );
             }
           },
           error: (err) => console.error('Failed to fetch room members', err),
         });
 
-        // Fallback: update chat partner from existing messages if not set
+        // Fallback from messages if no members yet
         if (!this.chatPartnerName) {
           this.messages$.subscribe((messages) => {
             if (!messages || messages.length === 0) return;
-
-            const otherUser = messages.find(
-              (msg) =>
-                msg.SenderId &&
-                msg.SenderId !== this.loggedInUser?.UserId &&
-                msg.SenderUsername
+            const otherUsers = messages.filter(
+              (msg) => msg.SenderId && msg.SenderId !== this.loggedInUser.UserId
             );
-
-            if (otherUser) {
-              this.chatPartnerName = otherUser.SenderUsername;
-              this.chatPartnerPicture =
-                otherUser.ProfilePicture || 'assets/svg/Acount.svg';
+            if (otherUsers.length) {
+              this.chatPartnerName = [
+                ...new Set(otherUsers.map((u) => u.SenderUsername)),
+              ].join(', ');
+              this.chatPartnerPictures = [
+                ...new Set(
+                  otherUsers.map(
+                    (u) => u.ProfilePicture || 'assets/svg/Acount.svg'
+                  )
+                ),
+              ];
             }
           });
         }

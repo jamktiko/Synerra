@@ -1,9 +1,13 @@
 <div class="chatElement">
   <div class="headframe">
-    <img class="avatarframe-icon" [src]="chatPartnerPicture || 'assets/svg/Acount.svg'" alt="avatar" />
-    <div class="headerframe">
-      <div class="chatheading">{{chatPartnerName || 'Chat'}}</div>
+    <ng-container *ngFor="let pic of chatPartnerPictures; let i = index">
+      <img class="avatarframe-icon" [src]="pic" [alt]="chatPartnerName.split(', ')[i] || 'avatar'" />
+    </ng-container>
 
+    <div class="headerframe">
+      <div class="chatheading">
+        {{ chatPartnerName || 'Chat' }}
+      </div>
     </div>
     <div class="headerButton">
       <button [routerLink]="['/dashboard/social']"><img src="/assets/svg/Cross.svg" alt="" /></button>
