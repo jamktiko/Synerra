@@ -83,7 +83,11 @@ export class NavbarComponent implements OnInit {
   ];
 
   navItemsMobile: NavItem[] = [
-    { label: 'Settings', icon: 'Settings', route: '/dashboard/settings' },
+    {
+      label: 'Settings',
+      icon: 'Settings',
+      route: '/dashboard/settings',
+    },
     { label: 'Games', icon: 'Gamepad', route: '/dashboard/choose-game' },
     { label: 'Home', icon: 'logo_small', route: '/dashboard' },
     { label: 'Social', icon: 'NoMessage', route: '/dashboard/social' },
@@ -141,7 +145,11 @@ export class NavbarComponent implements OnInit {
 
   private buildNavItemsMobile(userId: string): void {
     this.navItemsMobile = [
-      { label: 'Settings', icon: 'Settings', route: '/dashboard/settings' },
+      {
+        label: 'Settings',
+        icon: 'Settings',
+        route: '/dashboard/settings/profile',
+      },
       { label: 'Games', icon: 'Gamepad', route: '/dashboard/choose-game' },
       { label: 'Home', icon: 'logo_small', route: '/dashboard' },
       { label: 'Social', icon: 'NoMessage', route: '/dashboard/social' },
