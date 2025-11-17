@@ -46,7 +46,6 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
     this.userService.getMe().subscribe({
       next: (res) => {
         this.userStore.setUser(res);
-        console.log('MAINLEIAUT RESPONSE', res);
         this.loggedInUser = res;
 
         this.notificationService.initConnection();
@@ -55,7 +54,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
         // user must have authToken that is given when logging in with email. (this is being checked with authStore in app.routes)
         if (this.loggedInUser && !this.loggedInUser.Username) {
           this.showLoadingPage = false;
-          console.log('EI OO PROFIILIA PENTELE');
+          console.log('No profile created');
           this.router.navigate(['/profile-creation']);
         }
       },
