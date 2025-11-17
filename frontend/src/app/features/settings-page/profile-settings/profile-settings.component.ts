@@ -1,17 +1,20 @@
 import { Component } from '@angular/core';
 import { ProfileService } from '../../../core/services/pfp.service';
 import { CommonModule } from '@angular/common';
-import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { UserService } from '../../../core/services/user.service';
 import { User } from '../../../core/interfaces/user.model';
 import { OnInit } from '@angular/core';
 import { UserStore } from '../../../core/stores/user.store';
 import { FormsModule } from '@angular/forms';
 import { Language } from '../../../core/interfaces/user.model';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
+
+type FeedbackSection = 'username' | 'bio' | 'languages' | 'playstyle';
 
 @Component({
   selector: 'app-profile-settings',
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ButtonComponent],
   templateUrl: './profile-settings.component.html',
   styleUrl: './profile-settings.component.css',
 })
@@ -19,21 +22,26 @@ export class ProfileSettingsComponent implements OnInit {
   selectedFile: File | null = null;
   uploadedUrl: string | null = null;
   uploadProgress: number | null = null;
-  selectedFileName: string = '';
+  selectedFileName = '';
   previewUrl: string | null = '';
-  user: User | null = {};
+  user: User | null = null;
   selectedLanguages: string[] = [];
-  playstyle: string = '';
-  notificationMessage: string = '';
-  showNotification: boolean = false;
-  usernameTaken: boolean = false;
-  validUsername: boolean = true;
-  username: string = '';
-  bio: string = '';
-  availablePlatforms: string[] = ['PC', 'PlayStation', 'Xbox', 'Mobile']; // platforms to choose from
+  playstyle = '';
+  usernameTaken = false;
+  validUsername = true;
+  username = '';
+  bio = '';
+  availablePlatforms: string[] = ['PC', 'PlayStation', 'Xbox', 'Mobile'];
   selectedPlatforms: string[] = [];
+  feedbackMessages: Record<FeedbackSection, string> = {
+    username: '',
+    bio: '',
+    languages: '',
+    playstyle: '',
+  };
 
-  // languages to select from
+  private feedbackTimeouts: Partial<Record<FeedbackSection, number>> = {};
+
   languages: Language[] = [
     { code: 'en', name: 'English' },
     { code: 'es', name: 'Spanish' },
@@ -48,6 +56,7 @@ export class ProfileSettingsComponent implements OnInit {
     { code: 'fi', name: 'Finnish' },
     { code: 'sv', name: 'Swedish' },
   ];
+
   constructor(
     private profileService: ProfileService,
     private userService: UserService,
@@ -55,24 +64,18 @@ export class ProfileSettingsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.user = this.userStore.getUser(); // get the logged in user for user info
-
-    // get current values to display initially
+    this.user = this.userStore.getUser();
     this.username = this.user?.Username ?? '';
     this.bio = this.user?.Bio ?? '';
     this.playstyle = this.user?.Playstyle ?? '';
-    console.log(this.playstyle);
-
     this.selectedPlatforms = Array.isArray(this.user?.Platform)
       ? [...this.user.Platform]
       : [];
-    // Convert array to comma-separated string
     this.selectedLanguages = Array.isArray(this.user?.Languages)
       ? [...this.user.Languages]
       : [];
   }
 
-  // when the image file is selected
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -81,7 +84,7 @@ export class ProfileSettingsComponent implements OnInit {
 
       const reader = new FileReader();
       reader.onload = () => {
-        this.previewUrl = reader.result as string; // preview url to preview the image
+        this.previewUrl = reader.result as string;
       };
       reader.readAsDataURL(this.selectedFile);
     } else {
@@ -91,13 +94,11 @@ export class ProfileSettingsComponent implements OnInit {
     }
   }
 
-  // this function uploads the image to backend (lambda => S3 => S3 url to DynamoDb)
   upload() {
     if (!this.selectedFile) return;
 
     this.profileService.uploadProfilePicture(this.selectedFile).subscribe({
       next: (res: any) => {
-        console.log('Upload response:', res);
         this.uploadedUrl = res.url;
         window.location.reload();
       },
@@ -112,37 +113,29 @@ export class ProfileSettingsComponent implements OnInit {
     const value = this.username.trim();
     this.validUsername = pattern.test(value);
     console.log('ONKO VALIDI', this.validUsername);
-    this.usernameTaken = false; // clear backend error message while typing
+    this.usernameTaken = false;
   }
-  // save username and send it to backend for update
+
   saveUsername() {
-    if (!this.user || !this.user.UserId) return;
+    if (!this.user?.UserId) return;
 
     this.userService
       .updateUser(this.user.UserId, { username: this.username })
       .subscribe({
-        next: () => this.showPopUp('Username updated successfully!'), // pop up message on success
-        error: (err) => {
-          console.error('Update failed', err);
-          this.showPopUp('Failed to update username.');
-        },
+        next: () => this.setFeedback('username', 'Username updated successfully.'),
+        error: () => this.setFeedback('username', 'Failed to update username.'),
       });
   }
 
-  //save bio text and send it to backend for update
   saveBio() {
-    if (!this.user || !this.user.UserId) return;
+    if (!this.user?.UserId) return;
 
     this.userService.updateUser(this.user.UserId, { bio: this.bio }).subscribe({
-      next: () => this.showPopUp('Bio updated successfully!'),
-      error: (err) => {
-        console.error('Update failed', err);
-        this.showPopUp('Failed to update bio.');
-      },
+      next: () => this.setFeedback('bio', 'Bio updated successfully.'),
+      error: () => this.setFeedback('bio', 'Failed to update bio.'),
     });
   }
 
-  // when language is selected, push it to selectedLanguages array
   toggleLanguage(code: string) {
     if (this.selectedLanguages.includes(code)) {
       this.selectedLanguages = this.selectedLanguages.filter((c) => c !== code);
@@ -151,85 +144,64 @@ export class ProfileSettingsComponent implements OnInit {
     }
   }
 
-  // saves the languages and sends it to backend for update
   saveLanguages() {
-    if (!this.user || !this.user.UserId) return;
+    if (!this.user?.UserId) return;
 
     this.userService
       .updateUser(this.user.UserId, { languages: this.selectedLanguages })
       .subscribe({
-        next: () => this.showPopUp('Languages updated successfully!'),
-        error: (err) => {
-          console.error('Update failed', err);
-          this.showPopUp('Failed to update languages.');
-        },
+        next: () => this.setFeedback('languages', 'Languages updated successfully.'),
+        error: () => this.setFeedback('languages', 'Failed to update languages.'),
       });
   }
-  // gets the language names for display rather than the language code
-  get selectedLanguageNames(): string[] {
-    return this.selectedLanguages
-      .map((code) => this.languages.find((l) => l.code === code)?.name)
-      .filter((name): name is string => !!name);
-  }
 
-  // when platform is selected push it to selectedPlatforms array
   togglePlatform(platform: string) {
     if (this.selectedPlatforms.includes(platform)) {
-      this.selectedPlatforms = this.selectedPlatforms.filter(
-        (p) => p !== platform
-      );
+      this.selectedPlatforms = this.selectedPlatforms.filter((p) => p !== platform);
     } else {
       this.selectedPlatforms.push(platform);
     }
   }
 
-  // saves the playstyle and platform and sends it to backend for update
   savePlaystyleAndPlatform() {
-    if (!this.user || !this.user.UserId) return;
+    if (!this.user?.UserId) return;
 
-    const data = {
+    const payload = {
       playstyle: this.playstyle,
       platform: this.selectedPlatforms,
     };
 
-    console.log('DATAA: ', data);
-
-    this.userService.updateUser(this.user.UserId, data).subscribe({
+    this.userService.updateUser(this.user.UserId, payload).subscribe({
       next: () =>
-        this.showPopUp('Playstyle and platforms updated successfully!'),
-      error: (err) => {
-        console.error('Update failed', err);
-        this.showPopUp('Failed to update playstyle/platform.');
-      },
+        this.setFeedback(
+          'playstyle',
+          'Playstyle and platforms updated successfully.'
+        ),
+      error: () =>
+        this.setFeedback('playstyle', 'Failed to update playstyle/platform.'),
     });
   }
 
-  // toggless the pop up for appearance
-  showPopUp(message: string, duration: number = 3000) {
-    this.notificationMessage = message;
-    this.showNotification = true;
-
-    setTimeout(() => {
-      this.showNotification = false;
-      this.notificationMessage = '';
-    }, duration);
+  saveIdentity(): void {
+    this.validateUsername();
+    this.saveBio();
   }
+
   validateUsername() {
     if (!this.validUsername) {
-      this.showPopUp(
-        'Username must be 3–20 characters (letters, numbers, underscores).'
+      this.setFeedback(
+        'username',
+        'Username must be 3-20 characters (letters, numbers, underscores).'
       );
       return;
     }
 
     this.userService.getUserByUsername(this.username).subscribe({
       next: (res) => {
-        const taken = res?.users?.some(
-          (u: any) => u.UserId !== this.user?.UserId
-        );
+        const taken = res?.users?.some((u: any) => u.UserId !== this.user?.UserId);
         if (taken) {
           this.usernameTaken = true;
-          this.showPopUp('Username is already taken.');
+          this.setFeedback('username', 'Username is already taken.');
         } else {
           this.usernameTaken = false;
           this.saveUsername();
@@ -237,14 +209,25 @@ export class ProfileSettingsComponent implements OnInit {
       },
       error: (err) => {
         if (err.status === 404) {
-          // 404 = no user found → username is available
           this.usernameTaken = false;
           this.saveUsername();
-        } else {
-          console.error('Username validation failed:', err);
-          this.showPopUp('Could not validate username.');
+          return;
         }
+        console.error('Username validation failed:', err);
+        this.setFeedback('username', 'Could not validate username.');
       },
     });
+  }
+
+  private setFeedback(section: FeedbackSection, message: string): void {
+    this.feedbackMessages[section] = message;
+    const timeout = this.feedbackTimeouts[section];
+    if (timeout) {
+      window.clearTimeout(timeout);
+    }
+    this.feedbackTimeouts[section] = window.setTimeout(() => {
+      this.feedbackMessages[section] = '';
+      delete this.feedbackTimeouts[section];
+    }, 3500);
   }
 }
