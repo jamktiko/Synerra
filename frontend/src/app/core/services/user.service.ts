@@ -148,6 +148,8 @@ export class UserService {
     languages?: string[];
     Status?: string;
     games?: string[];
+    platform?: string[];
+    playstyle?: string[];
   }) {
     const { username, ...otherFilters } = filters;
 

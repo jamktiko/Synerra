@@ -1,11 +1,11 @@
-<div class="card" *ngIf="user.UserId !== currentUser?.UserId"
+<div class="card" *ngIf="user.UserId !== currentUser?.UserId" loading="lazy"
   [ngClass]="{ online: user.Status === 'online', offline: user.Status !== 'online' }">
   <button type="button" class="avatar-button" (click)="onProfile()"
     [attr.aria-label]="'Open profile of ' + user.Username">
     <img [src]="
         user.ProfilePicture ||
         'https://images.unsplash.com/photo-1575419268007-a9a5e6b1ce0b?fm=jpg&q=80&w=300'
-      " alt="Profile picture" class="avatar" />
+      " alt="Profile picture" class="avatar" loading="lazy" />
   </button>
 
   <div class="bio">
@@ -29,9 +29,11 @@
       <span class="icon">💬</span>
       <span>Chat</span>
     </button>
-    <button *ngIf="!isFriend" type="button" class="add-btn" (click)="onAddFriend()">
-      <span class="icon">+</span>
-      <span>Add</span>
+    <button *ngIf="!isFriend" type="button" class="add-btn" (click)="handleFriendAction()" [disabled]="alreadySent">
+      <span>
+        {{ comingRequests.includes(user.UserId!) ? 'Accept' : (alreadySent ? 'Request Sent' : 'Add +') }}
+      </span>
     </button>
+
   </div>
 </div>

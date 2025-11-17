@@ -7,7 +7,6 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { ProfileCreationPageComponent } from './features/profile-creation-page/profile-creation-page.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { ProfileGuard } from './core/guards/profile.guard';
-import { SocialBarComponent } from './features/social-bar/social-bar.component';
 import { FindPlayersComponent } from './features/find-players/find-players.component';
 import { ChooseGamePageComponent } from './features/choose-game-page/choose-game-page.component';
 import { EmailLoginPageComponent } from './features/email-login-page/email-login-page.component';
@@ -16,9 +15,11 @@ import { ChatPageComponent } from './features/chat-page/chat-page.component';
 import { ProfilePageComponent } from './features/profile-page/profile-page.component';
 import { SettingsPageComponent } from './features/settings-page/settings-page.component';
 import { ProfileSettingsComponent } from './features/settings-page/profile-settings/profile-settings.component';
+import { AuthCallBacksComponent } from './auth-call-backs/auth-call-backs.component';import { AccountSettingsComponent } from './features/settings-page/account-settings/account-settings.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'auth/callback', component: AuthCallBacksComponent },
 
   {
     path: '',
@@ -64,6 +65,11 @@ export const routes: Routes = [
         path: 'dashboard/settings/profile',
         canActivate: [AuthGuard],
         component: ProfileSettingsComponent,
+      },
+      {
+        path: 'dashboard/settings/account',
+        canActivate: [AuthGuard],
+        component: AccountSettingsComponent,
       },
     ],
   },

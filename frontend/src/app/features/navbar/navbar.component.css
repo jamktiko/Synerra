@@ -435,7 +435,12 @@
 
 .nav-group__label {
   flex: 1;
+  display: inline-flex;
+  align-items: center;
   transition: color 0.3s ease, opacity 0.2s ease;
+  white-space: nowrap;
+  margin-left: 0.45rem;
+  line-height: 1;
 }
 
 .nav-group__chevron {

@@ -69,8 +69,7 @@ export class NavbarComponent implements OnInit {
         {
           label: 'Account',
           icon: 'Settings',
-          route: '/dashboard/settings',
-          queryParams: { section: 'account' },
+          route: '/dashboard/settings/account',
         },
         {
           label: 'Notifications',
@@ -216,6 +215,10 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  closeExpandedGroups(): void {
+    this.expandedGroups.clear();
+  }
+
   isGroupExpanded(item: NavItem): boolean {
     return item.children ? this.expandedGroups.has(item.label) : false;
   }
@@ -262,6 +265,8 @@ export class NavbarComponent implements OnInit {
       );
       if (hasMatch) {
         this.expandedGroups.add(item.label);
+      } else {
+        this.expandedGroups.delete(item.label);
       }
     });
   }

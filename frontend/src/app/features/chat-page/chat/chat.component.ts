@@ -17,11 +17,12 @@ import { ChatMessage } from '../../../core/interfaces/chatMessage';
 import { UserStore } from '../../../core/stores/user.store';
 import { UserService } from '../../../core/services/user.service';
 import { MessageService } from '../../../core/services/message.service';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, ButtonComponent],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
@@ -63,9 +64,30 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
       if (user) {
         this.loggedInUser = user;
         console.log('LOGGEDINUSER', this.loggedInUser);
+
         // Starts a chat with roomId
         this.chatService.startChat(undefined, this.roomId);
 
+        // Fetch the chat partner from the server
+        this.messageService.getUserRooms(this.loggedInUser.UserId).subscribe({
+          next: (res) => {
+            const room = res.rooms.find((r: any) => r.RoomId === this.roomId);
+            if (room) {
+              const otherMember = room.Members.find(
+                (m: any) =>
+                  m.PK.replace('USER#', '') !== this.loggedInUser.UserId
+              );
+              if (otherMember) {
+                this.chatPartnerName = otherMember.Username;
+                this.chatPartnerPicture =
+                  otherMember.ProfilePicture || 'assets/svg/Acount.svg';
+              }
+            }
+          },
+          error: (err) => console.error('Failed to fetch room members', err),
+        });
+
+        // Fallback: update chat partner from existing messages if not set
         if (!this.chatPartnerName) {
           this.messages$.subscribe((messages) => {
             if (!messages || messages.length === 0) return;
@@ -76,8 +98,6 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
                 msg.SenderId !== this.loggedInUser?.UserId &&
                 msg.SenderUsername
             );
-
-            console.log('TOINEN KÄYTTÄJÄ', otherUser);
 
             if (otherUser) {
               this.chatPartnerName = otherUser.SenderUsername;

@@ -8,7 +8,7 @@ module.exports.handler = async (event) => {
     const body = event.body ? JSON.parse(event.body) : {};
 
     //parameters in body
-    const { languages, Status, games } = body;
+    const { languages, Status, games, playstyle, platform } = body;
 
     // Base query: all users
     let KeyConditionExpression = 'GSI3PK = :pk';
@@ -44,6 +44,24 @@ module.exports.handler = async (event) => {
         return `contains(#Games, ${key})`; //checks if the games-array contains the value
       });
       FilterExpressionParts.push(`(${gameFilters.join(' OR ')})`); //combines multiple games
+    }
+
+    // Playstyle (single value, string)
+    if (playstyle) {
+      ExpressionAttributeNames['#Playstyle'] = 'Playstyle';
+      ExpressionAttributeValues[':Playstyle'] = playstyle;
+      FilterExpressionParts.push('#Playstyle = :Playstyle');
+    }
+
+    // Platform (array)
+    if (platform && Array.isArray(platform) && platform.length > 0) {
+      ExpressionAttributeNames['#Platform'] = 'Platform';
+      const platformFilters = platform.map((p, idx) => {
+        const key = `:platform${idx}`;
+        ExpressionAttributeValues[key] = p;
+        return `contains(#Platform, ${key})`;
+      });
+      FilterExpressionParts.push(`(${platformFilters.join(' OR ')})`);
     }
 
     const params = {

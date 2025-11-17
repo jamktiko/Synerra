@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserStore } from '../../core/stores/user.store';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { FriendService } from '../../core/services/friend.service';
+import { FriendRequest } from '../../core/interfaces/friendrequest.model';
 @Component({
   selector: 'app-find-players',
   standalone: true,
@@ -28,7 +29,8 @@ export class FindPlayersComponent implements OnInit {
   onlineUsers$: Observable<User[]>;
   filteredUsers$ = new BehaviorSubject<User[]>([]);
   friends: User[] = [];
-
+  sentRequests: string[] = [];
+  comingRequests: string[] = [];
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
@@ -102,11 +104,32 @@ export class FindPlayersComponent implements OnInit {
         console.error('Failed to fetch friends', err);
       },
     });
+
+    this.friendService.getOutgoingPendingRequests().subscribe({
+      next: (requests) => {
+        // Keep only receiver IDs with status PENDING
+        this.sentRequests = requests
+          .filter((r: any) => r.Status === 'PENDING')
+          .map((r: any) => r.SK.replace('FRIEND_REQUEST#', ''));
+      },
+      error: (err) => console.error('Failed to fetch sent requests', err),
+    });
+
+    this.friendService.pendingRequests$.subscribe({
+      next: (requests: FriendRequest[]) => {
+        // Keep only sender IDs with status PENDING
+        this.comingRequests = requests
+          .filter((r) => r.Status === 'PENDING')
+          .map((r) => r.SenderId); // SenderId is the user who sent the request
+        console.log('INCOMING IDs:', this.comingRequests);
+      },
+      error: (err) => console.error('Failed to load pending requests', err),
+    });
   }
 
   // called when the filters are changed, does the actual filtering
   onFiltersChanged(filters: UserFilters) {
-    const { username, Status, languages, games } = filters;
+    const { username, Status, languages, games, platform, playstyle } = filters;
 
     // Take latest users from users$ and filter
     this.users$
@@ -138,6 +161,18 @@ export class FindPlayersComponent implements OnInit {
           //online status filter
           if (Status) {
             candidates = candidates.filter((u) => u.Status === Status);
+          }
+
+          // Playstyle filter
+          if (playstyle) {
+            candidates = candidates.filter((u) => u.Playstyle === playstyle);
+          }
+
+          // Platform filter
+          if (platform && platform.length > 0) {
+            candidates = candidates.filter((u) =>
+              u.Platform?.some((p: string) => platform.includes(p))
+            );
           }
 
           // Exclude current user

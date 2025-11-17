@@ -8,10 +8,13 @@
   <!-- Pelaajalista -->
   <div class="users-container">
     <!-- Render priority: component.filteredUsers (if set) -> filteredUsers$ observable -> fallback to users array -->
-    <app-player-card
-      *ngFor="let user of (filteredUsers && filteredUsers.length ? filteredUsers : ((filteredUsers$ | async)?.length ? (filteredUsers$ | async) : users))"
-      [user]="user" [friends]="friends">
-    </app-player-card>
+    <ng-container *ngIf="filteredUsers$ | async as users">
+      <app-player-card *ngFor="let user of users" [user]="user" [friends]="friends" [sentRequests]="sentRequests"
+        [comingRequests]="comingRequests"></app-player-card>
+      <div class="not-found" *ngIf="!users.length">
+        <h3>No users found!</h3>
+      </div>
+    </ng-container>
   </div>
 
 </div>
