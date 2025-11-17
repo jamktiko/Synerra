@@ -17,11 +17,12 @@ import { ChatMessage } from '../../../core/interfaces/chatMessage';
 import { UserStore } from '../../../core/stores/user.store';
 import { UserService } from '../../../core/services/user.service';
 import { MessageService } from '../../../core/services/message.service';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, ButtonComponent],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
