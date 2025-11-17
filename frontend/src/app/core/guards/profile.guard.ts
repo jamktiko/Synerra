@@ -23,6 +23,12 @@ export class ProfileGuard implements CanActivate {
       await new Promise((r) => setTimeout(r, 100));
     }
 
+    if (!this.userStore.user()) {
+      console.warn('User not loaded within 2 seconds');
+      this.router.navigate(['/dashboard']);
+      return false;
+    }
+
     const user = this.userStore.user();
 
     // hide loading page
@@ -32,7 +38,7 @@ export class ProfileGuard implements CanActivate {
       this.router.navigate(['/dashboard']);
       return false;
     }
-
+    console.log('USEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEER', user);
     return true;
   }
 }
