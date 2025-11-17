@@ -30,6 +30,7 @@ export class FindPlayersComponent implements OnInit {
   filteredUsers$ = new BehaviorSubject<User[]>([]);
   friends: User[] = [];
   sentRequests: string[] = [];
+  comingRequests: string[] = [];
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
@@ -112,6 +113,17 @@ export class FindPlayersComponent implements OnInit {
           .map((r: any) => r.SK.replace('FRIEND_REQUEST#', ''));
       },
       error: (err) => console.error('Failed to fetch sent requests', err),
+    });
+
+    this.friendService.pendingRequests$.subscribe({
+      next: (requests: FriendRequest[]) => {
+        // Keep only sender IDs with status PENDING
+        this.comingRequests = requests
+          .filter((r) => r.Status === 'PENDING')
+          .map((r) => r.SenderId); // SenderId is the user who sent the request
+        console.log('INCOMING IDs:', this.comingRequests);
+      },
+      error: (err) => console.error('Failed to load pending requests', err),
     });
   }
 
