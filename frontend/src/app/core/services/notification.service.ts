@@ -23,7 +23,8 @@ export class NotificationService implements OnDestroy {
     private authStore: AuthStore,
     private userStore: UserStore,
   ) {
-    // Tries to create the ws connection every time token or user updates in stores
+    // Tries to create a ws connection every time token or user updates in stores
+    // The ws is must not be started from anywhere else in the app
     effect(() => {
       this.token = this.authStore.token();
       this.user = this.userStore.user();
