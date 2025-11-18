@@ -1,13 +1,18 @@
 <div class="chatElement">
   <div class="headframe">
-    <img class="avatarframe-icon" [src]="chatPartnerPicture || 'assets/svg/Acount.svg'" alt="avatar" />
-    <div class="headerframe">
-      <div class="chatheading">{{ chatPartnerName || "Chat" }}</div>
+
+    <div class="avatarGroup">
+      <div *ngFor="let member of otherMembers">
+        <img class="avatarframe-icon" [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'"
+          alt="avatar" />
+      </div>
     </div>
+
+    <div class="nameGroup">
+      <strong>{{ memberNames }}</strong>
+    </div>
+
     <div class="headerButton">
-      <!-- <button [routerLink]="['/dashboard/social']">
-        <img src="/assets/svg/Cross.svg" alt="" />
-      </button> -->
       <app-button class="closeChatBtn" variant="default" icon="Cross" routerLink="/dashboard/social"></app-button>
     </div>
   </div>
@@ -25,7 +30,8 @@
       </div>
 
       <div *ngIf="msg.SenderId !== loggedInUser?.UserId" class="receivedMessageWrapper">
-        <img src="{{ msg.ProfilePicture || 'assets/svg/Acount.svg' }}" alt="avatar" class="messageAvatar" />
+        <img src="{{ msg.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg' }}" alt="avatar"
+          class="messageAvatar" />
         <div>
           <div class="receivedMessage">
             <div class="senderName">

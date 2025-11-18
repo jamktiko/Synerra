@@ -9,7 +9,8 @@
     </div>
 
     <button type="button" class="user-profile" (click)="onUserClick()" aria-label="User menu">
-      <img class="avatar" [src]="user?.ProfilePicture ? user?.ProfilePicture : 'assets/svg/Acount.svg'"
+      <img class="avatar"
+        [src]="user?.ProfilePicture ? user?.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'"
         alt="User avatar" />
       <div class="user-info">
         <span class="user-name">{{ user?.Username }}</span>

@@ -28,7 +28,8 @@
     <div class="players">
       <div *ngFor="let user of users$ | async" (click)="userClicked(user.UserId)">
         <div class="player-card">
-          <img class="acount-icon" [src]="user?.ProfilePicture ? user.ProfilePicture : 'assets/svg/Acount.svg'"
+          <img class="acount-icon"
+            [src]="user?.ProfilePicture ? user.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'"
             alt="Player Avatar" />
           <div class="player-name">{{ user.Username }}</div>
           <div class="status" [class.online]="user.Status==='online'" [class.offline]="user.Status!=='online'">

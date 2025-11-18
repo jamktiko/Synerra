@@ -40,9 +40,49 @@ body {
 }
 
 .avatarframe-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50px;
+}
+
+.avatarGroup {
+  display: flex;
+  align-items: center;
+}
+
+.avatarGroup > div {
+  margin-left: -1.75rem; /* 40% overlap of 3.5rem */
+  position: relative;
+}
+
+.avatarGroup > div:first-child {
+  margin-left: 0; /* no overlap for the first one */
+}
+
+.avatarframe-icon {
   width: 3.5rem;
   height: 3.5rem;
-  border-radius: 50px;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+}
+
+.nameGroup {
+  display: flex;
+  gap: 0.5rem; /* spacing between names */
+  flex-wrap: wrap; /* allow wrapping if too many names */
+  margin-left: 30%;
+}
+
+.avatarName {
+  font-weight: 600;
+  color: var(--color-text-default);
+  white-space: nowrap;
+}
+
+/* ensure later avatars appear on top */
+.avatarGroup > div {
+  z-index: auto; /* each new one naturally stacks above */
 }
 
 .chatheading {
