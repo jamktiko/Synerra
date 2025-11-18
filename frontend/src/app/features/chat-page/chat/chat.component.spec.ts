@@ -116,7 +116,7 @@ describe('ChatComponent', () => {
   });
 
   it('should render chat heading', () => {
-    const heading = fixture.debugElement.query(By.css('.chatheading'));
+    const heading = fixture.debugElement.query(By.css('.headframe'));
     expect(heading).toBeTruthy();
   });
 
