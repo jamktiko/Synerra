@@ -59,6 +59,7 @@ export class NotificationService implements OnDestroy {
   private createWebSocket() {
     if (!this.user || !this.token) {
       console.log('Canceling connection...');
+      this.connecting = false;
       return;
     }
 
