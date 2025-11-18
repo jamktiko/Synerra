@@ -44,6 +44,7 @@ export class NotificationService implements OnDestroy {
   //Initialize the connection
   public initConnection() {
     console.log('INIT CONNECTION CALLED');
+    console.log('JOO', this.token, this.user);
 
     if (this.socket || this.connecting) {
       return;
