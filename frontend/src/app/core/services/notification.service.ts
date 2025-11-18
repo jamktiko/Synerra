@@ -47,6 +47,7 @@ export class NotificationService implements OnDestroy {
     console.log('JOO', this.token, this.user);
 
     if (this.socket || this.connecting) {
+      console.log('Canceling connection: ', this.socket, this.connecting);
       return;
     }
 
@@ -56,7 +57,10 @@ export class NotificationService implements OnDestroy {
 
   // creates the websocket
   private createWebSocket() {
-    if (!this.user || !this.token) return;
+    if (!this.user || !this.token) {
+      console.log('Canceling connection...');
+      return;
+    }
 
     //Websocket-url
     const url = `${environment.WSS_URL}?Auth=${encodeURIComponent(
