@@ -8,7 +8,6 @@ import { UserService } from '../../core/services/user.service';
 import { OnInit } from '@angular/core';
 import { User } from '../../core/interfaces/user.model';
 import { UserStore } from '../../core/stores/user.store';
-import { NotificationService } from '../../core/services/notification.service';
 @Component({
   standalone: true,
   selector: 'app-email-login-page',
@@ -27,7 +26,6 @@ export class EmailLoginPageComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private userStore: UserStore,
-    private notificationService: NotificationService,
   ) {
     effect(() => {
       const user = this.userStore.user();
@@ -74,7 +72,6 @@ export class EmailLoginPageComponent implements OnInit {
             this.userStore.setUser(user);
             this.user = user;
             console.log('Loaded user:', user);
-            this.notificationService.initConnection();
 
             // Navigate based on updated user
             if (user.Username) {
