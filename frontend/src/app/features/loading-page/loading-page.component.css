@@ -17,6 +17,22 @@ body {
   height: 100dvh;
 }
 
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem; /* space between spinner and text */
+  position: relative;
+}
+
+.button {
+  margin-top: -10%;
+}
+
+.spinner svg {
+  position: static; /* remove absolute positioning */
+}
+
 /* From Uiverse.io by SouravBandyopadhyay */
 #outline {
   stroke-dasharray: 2.42777px, 242.77666px;
@@ -60,12 +76,11 @@ body {
 }
 
 /* Loading text */
-
-/* From Uiverse.io by polidahiya */
 .loadingtext p {
   color: var(--color-primary);
   position: relative;
   font-size: 2rem; /*Tämä on lisätty */
+  margin-top: 200px;
 }
 
 .loadingtext p::after {
@@ -76,6 +91,7 @@ body {
   left: 100%;
 }
 
+/* From Uiverse.io by polidahiya */
 @keyframes b {
   0% {
     content: "";
