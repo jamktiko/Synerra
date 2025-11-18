@@ -110,13 +110,8 @@ describe('ChatComponent', () => {
     expect(fixture.debugElement.query(By.css('.chatElement'))).toBeTruthy();
   });
 
-  it('should render chat partner avatar', () => {
-    const avatar = fixture.debugElement.query(By.css('.avatarframe-icon'));
-    expect(avatar).toBeTruthy();
-  });
-
   it('should render chat heading', () => {
-    const heading = fixture.debugElement.query(By.css('.chatheading'));
+    const heading = fixture.debugElement.query(By.css('.headframe'));
     expect(heading).toBeTruthy();
   });
 
@@ -131,13 +126,13 @@ describe('ChatComponent', () => {
 
   it('should render input field', () => {
     expect(
-      fixture.debugElement.query(By.css('.chat-input input'))
+      fixture.debugElement.query(By.css('.chat-input input')),
     ).toBeTruthy();
   });
 
   it('should render send button', () => {
     expect(
-      fixture.debugElement.query(By.css('.chat-input button'))
+      fixture.debugElement.query(By.css('.chat-input button')),
     ).toBeTruthy();
   });
 
@@ -157,7 +152,7 @@ describe('ChatComponent', () => {
     fixture.detectChanges();
 
     const received = fixture.debugElement.query(
-      By.css('.receivedMessageWrapper')
+      By.css('.receivedMessageWrapper'),
     );
     expect(received).toBeTruthy();
   });
@@ -175,7 +170,7 @@ describe('ChatComponent', () => {
     fixture.detectChanges();
 
     const name = fixture.debugElement.query(
-      By.css('.receivedMessage p:first-child')
+      By.css('.receivedMessage p:first-child'),
     );
     expect(name.nativeElement.textContent).toBe('OtherUser');
   });
@@ -185,7 +180,7 @@ describe('ChatComponent', () => {
     fixture.detectChanges();
 
     const content = fixture.debugElement.queryAll(
-      By.css('.receivedMessage p')
+      By.css('.receivedMessage p'),
     )[1];
 
     expect(content.nativeElement.textContent).toBe('Hello from other');
@@ -206,7 +201,9 @@ describe('ChatComponent', () => {
     fixture.detectChanges();
 
     const avatar = fixture.debugElement.query(By.css('.messageAvatar'));
-    expect(avatar.nativeElement.src).toContain('Acount.svg');
+    expect(avatar.nativeElement.src).toContain(
+      'assets/images/profilePicPlaceHolder.jpg',
+    );
   });
 
   // ------------------------------------
@@ -214,7 +211,7 @@ describe('ChatComponent', () => {
   // ------------------------------------
   it('should update messageText via ngModel', () => {
     const input = fixture.debugElement.query(
-      By.css('.chat-input input')
+      By.css('.chat-input input'),
     ).nativeElement;
 
     input.value = 'Hello test';

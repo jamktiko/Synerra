@@ -43,7 +43,7 @@ export class SocialPageComponent implements OnInit {
     private userStore: UserStore,
     private chatService: ChatService,
     private notificationService: NotificationService,
-    private friendService: FriendService
+    private friendService: FriendService,
   ) {}
 
   ngOnInit(): void {
@@ -57,7 +57,7 @@ export class SocialPageComponent implements OnInit {
           for (let room of allChatRooms) {
             // remove logged-in user from members
             room.Members = room.Members.filter(
-              (m: any) => m.UserId !== loggedInUser.UserId
+              (m: any) => m.UserId !== loggedInUser.UserId,
             );
 
             if (room.Members.length === 1) {
@@ -82,7 +82,7 @@ export class SocialPageComponent implements OnInit {
         this.pendingRequests = requests;
         console.log(
           'Pending friend requests ON SOCIAL PAGE:',
-          this.pendingRequests
+          this.pendingRequests,
         );
       },
       error: (err) =>
@@ -94,7 +94,7 @@ export class SocialPageComponent implements OnInit {
       next: (messages) => {
         // Filter out friend requests
         this.unreads = messages.filter(
-          (msg) => msg.Relation !== 'FRIEND_REQUEST'
+          (msg) => msg.Relation !== 'FRIEND_REQUEST',
         );
         console.log('Unread messages IN SOCIAL PAGEEEEE:', this.unreads);
       },
@@ -114,7 +114,7 @@ export class SocialPageComponent implements OnInit {
         if (data.type === 'CLEAR_ALL_MESSAGES') {
           console.log('CLEARING MESSAGES');
           this.notifications = this.notifications.filter(
-            (n) => n.type !== 'newMessage'
+            (n) => n.type !== 'newMessage',
           );
           this.messageNotifications = [];
 
@@ -127,7 +127,7 @@ export class SocialPageComponent implements OnInit {
             (n) =>
               n.type !== 'friend_request' &&
               n.type !== 'friend_request_accepted' &&
-              n.type !== 'friend_request_declined'
+              n.type !== 'friend_request_declined',
           );
           this.friendRequestNotifications = [];
           return; // exit early
@@ -162,7 +162,7 @@ export class SocialPageComponent implements OnInit {
           this.messageNotifications = [...this.messageNotifications, notif];
           console.log(
             'messageNotifications updated:',
-            this.messageNotifications
+            this.messageNotifications,
           );
         }
 
@@ -182,7 +182,7 @@ export class SocialPageComponent implements OnInit {
               data.fromPicture ??
               data.senderPicture ??
               data.SenderPicture ??
-              'assets/svg/Acount.svg',
+              'assets/images/profilePicPlaceHolder.jpg',
             type: type,
             timestamp: data.timestamp ?? Date.now(),
           };
@@ -193,10 +193,10 @@ export class SocialPageComponent implements OnInit {
           ];
           console.log(
             'friendRequestNotifications updated:',
-            this.friendRequestNotifications
+            this.friendRequestNotifications,
           );
         }
-      }
+      },
     );
   }
 
