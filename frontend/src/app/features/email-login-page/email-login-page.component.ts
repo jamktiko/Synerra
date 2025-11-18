@@ -74,7 +74,7 @@ export class EmailLoginPageComponent implements OnInit {
             this.userStore.setUser(user);
             this.user = user;
             console.log('Loaded user:', user);
-            this.notificationService.initConnection();
+            // this.notificationService.initConnection();
 
             // Navigate based on updated user
             if (user.Username) {

@@ -10,8 +10,6 @@ import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/interfaces/user.model';
 import { CommonModule } from '@angular/common';
-import { timer } from 'rxjs';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-main-layout',
@@ -48,7 +46,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
         this.userStore.setUser(res);
         this.loggedInUser = res;
 
-        this.notificationService.initConnection();
+        // this.notificationService.initConnection();
         this.userService.initUsersOnlineStatus();
         // Checks for every possible login and load case where the user might be at the dashboard. To access the dashboard,
         // user must have authToken that is given when logging in with email. (this is being checked with authStore in app.routes)
