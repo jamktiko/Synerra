@@ -1,8 +1,10 @@
-<div class="layout">
+<div *ngIf="user" class="layout">
   <div class="mid-container">
     <app-profile-header [user]="user" [isOwnProfile]="isOwnProfile" [isFriend]="isFriend"
       [genrePopularity]="genrePopularity" [completeGames]="completeGames"></app-profile-header>
     <app-profile-content [user]="user" [isOwnProfile]="isOwnProfile" [isFriend]="isFriend"
       (gamesLoaded)="onGamesLoaded($event)"></app-profile-content>
   </div>
+
 </div>
+<app-loading-page *ngIf="!user"></app-loading-page>

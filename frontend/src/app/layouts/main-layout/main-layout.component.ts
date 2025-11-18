@@ -62,7 +62,6 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
       },
     });
 
-    // this.userService.initUsersOnlineStatus();
     console.log('WebSocket Reconnect in progress...');
   }
   ngAfterViewInit(): void {

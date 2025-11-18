@@ -98,9 +98,15 @@
 
         <!-- Normal icons -->
         <ng-template #normalMobileItem>
-          <a class="nav-icon" [routerLink]="item.route" routerLinkActive="active" (click)="isMobileSettingsOpen = false"
-            [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-icon badge-wrapper" [routerLink]="item.route" routerLinkActive="active"
+            (click)="isMobileSettingsOpen = false" [routerLinkActiveOptions]="{ exact: true }">
+
             <img [src]="'assets/svg/' + item.icon + '.svg'" alt="{{ item.label }} icon" />
+
+            <!-- Badge for notifications -->
+            <span class="badge" *ngIf="item.label === 'Social' && totalNotifications > 0">
+              {{ totalNotifications }}
+            </span>
           </a>
         </ng-template>
 
