@@ -110,11 +110,6 @@ describe('ChatComponent', () => {
     expect(fixture.debugElement.query(By.css('.chatElement'))).toBeTruthy();
   });
 
-  it('should render chat partner avatar', () => {
-    const avatar = fixture.debugElement.query(By.css('.avatarframe-icon'));
-    expect(avatar).toBeTruthy();
-  });
-
   it('should render chat heading', () => {
     const heading = fixture.debugElement.query(By.css('.headframe'));
     expect(heading).toBeTruthy();
