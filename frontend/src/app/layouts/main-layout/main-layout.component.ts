@@ -62,7 +62,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
       },
     });
 
-    console.log('WebSocket Reconnect in progress...');
+    // console.log('WebSocket Reconnect in progress...');
   }
   ngAfterViewInit(): void {
     this.navbar.collapsedChange.subscribe((collapsed: boolean) => {
