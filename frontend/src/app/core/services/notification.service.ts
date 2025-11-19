@@ -1,8 +1,9 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, effect } from '@angular/core';
 import { filter, Subject, Subscription } from 'rxjs';
 import { environment } from '../../../environment';
 import { AuthStore } from '../stores/auth.store';
 import { UserStore } from '../stores/user.store';
+import { User } from '../interfaces/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,10 +11,11 @@ import { UserStore } from '../stores/user.store';
 export class NotificationService implements OnDestroy {
   private socket: WebSocket | null = null;
   private token: string | null = null;
+  private user: User | null = null;
   private notificationsSubject = new Subject<any>();
   private reconnectInterval = 3000;
   private hasSentType = false;
-  private reconnecting = false;
+  private connecting = false;
   private pingInterval: any;
   private userSub: Subscription | null = null;
 
@@ -21,7 +23,15 @@ export class NotificationService implements OnDestroy {
     private authStore: AuthStore,
     private userStore: UserStore,
   ) {
-    this.token = this.authStore.getToken(); //get the users jwt token
+    // Tries to create a ws connection every time token or user updates in stores
+    // The ws is must not be started from anywhere else in the app
+    effect(() => {
+      this.token = this.authStore.token();
+      this.user = this.userStore.user();
+      if (this.token && this.user && !this.socket) {
+        this.initConnection();
+      }
+    });
   }
 
   public notifications$ = this.notificationsSubject.asObservable().pipe(
@@ -34,22 +44,24 @@ export class NotificationService implements OnDestroy {
   //Initialize the connection
   public initConnection() {
     console.log('INIT CONNECTION CALLED');
-    const tryConnect = () => {
-      const user = this.userStore.user(); // get the logged in user
-      if (!user || !this.token) {
-        setTimeout(tryConnect, 200); // retry in 200ms
-        return;
-      }
-      this.createWebSocket();
-    };
-    tryConnect();
+    console.log('JOO', this.token, this.user);
+
+    if (this.socket || this.connecting) {
+      console.log('Canceling connection: ', this.socket, this.connecting);
+      return;
+    }
+
+    this.connecting = true;
+    this.createWebSocket();
   }
 
   // creates the websocket
   private createWebSocket() {
-    const user = this.userStore.user();
-    this.token = this.authStore.getToken();
-    if (!user || !this.token) return;
+    if (!this.user || !this.token) {
+      console.log('Canceling connection...');
+      this.connecting = false;
+      return;
+    }
 
     //Websocket-url
     const url = `${environment.WSS_URL}?Auth=${encodeURIComponent(
@@ -60,7 +72,7 @@ export class NotificationService implements OnDestroy {
     // When the connection has been made
     this.socket.onopen = () => {
       console.log('Notification WebSocket connected');
-      this.reconnecting = false;
+      this.connecting = false;
       if (!this.hasSentType) {
         this.send({ type: 'notifications' });
         this.hasSentType = true;
@@ -81,9 +93,14 @@ export class NotificationService implements OnDestroy {
     this.socket.onclose = () => {
       console.log('Notification WebSocket disconnected, reconnecting...');
       this.socket = null;
-      this.reconnecting = true;
+      this.connecting = false;
       this.hasSentType = false;
       clearInterval(this.pingInterval);
+
+      if (!this.token || !this.user) {
+        return;
+      }
+
       setTimeout(() => this.initConnection(), this.reconnectInterval);
     };
 
@@ -110,7 +127,6 @@ export class NotificationService implements OnDestroy {
       this.socket = null;
       this.hasSentType = false;
       clearInterval(this.pingInterval); // stop pinging
-      this.reconnecting = false;
     }
   }
   //Send method used for the pinging so the connection stays open when AFK
