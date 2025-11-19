@@ -1,3 +1,8 @@
+@if (loadingSpinnerShowing) {
+<div class="loadingSpinner">
+  <app-loading-spinner />
+</div>
+} @else {
 <div class="main-content">
   <!-- Pelaajien filtteröintipalkki -->
   <div class="filter-component">
@@ -8,13 +13,18 @@
   <!-- Pelaajalista -->
   <div class="users-container">
     <!-- Render priority: component.filteredUsers (if set) -> filteredUsers$ observable -> fallback to users array -->
-    <ng-container *ngIf="filteredUsers$ | async as users">
-      <app-player-card *ngFor="let user of users" [user]="user" [friends]="friends" [sentRequests]="sentRequests"
-        [comingRequests]="comingRequests"></app-player-card>
-      <div class="not-found" *ngIf="!users.length">
-        <h3>No users found!</h3>
-      </div>
-    </ng-container>
-  </div>
+    @if (filteredUsers$ | async; as users) {
+    @for (user of users; track user.UserId) {
+    <app-player-card [user]="user" [friends]="friends" [sentRequests]="sentRequests" [comingRequests]="comingRequests">
+    </app-player-card>
+    }
 
+    @if (!users.length) {
+    <div class="not-found">
+      <h3>No users found!</h3>
+    </div>
+    }
+    }
+  </div>
 </div>
+}

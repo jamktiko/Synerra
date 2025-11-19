@@ -22,8 +22,11 @@
     </div>
   </div>
 
-  <div class="button" *ngIf="goToLoginPageButtonShowing">
+  @if (goToLoginPageButtonShowing) {
+  <div class="button">
     <app-button label="Go to login page" variant="default" size="small" [fullWidth]="true" (click)="goToLogin()">
     </app-button>
   </div>
+  }
+
 </div>

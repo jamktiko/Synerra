@@ -18,6 +18,8 @@
 
   </div>
 </div>
-<div *ngIf="favouriteMessage" class="favourite-message">
+@if (favouriteMessage) {
+<div class="favourite-message">
   {{ favouriteMessage }}
 </div>
+}

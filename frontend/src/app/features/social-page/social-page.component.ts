@@ -1,23 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { SocialMenuComponent } from './social-menu/social-menu.component';
-import { ButtonComponent } from '../../shared/components/button/button.component';
 import { UserService } from '../../core/services/user.service';
 import { UserStore } from '../../core/stores/user.store';
-import { ChatService } from '../../core/services/chat.service';
 import { NotificationsTabComponent } from './notifications-tab/notifications-tab.component';
 import { MessagesTabComponent } from './messages-tab/messages-tab.component';
 import { CommonModule } from '@angular/common';
-import { NotificationService } from '../../core/services/notification.service';
-import { FriendService } from '../../core/services/friend.service';
 import {
   NormalizedMessage,
   NormalizedRequest,
-  UnreadMessage,
 } from '../../core/interfaces/chatMessage';
 import { FriendRequest } from '../../core/interfaces/friendrequest.model';
 import { combineLatest, map, Observable, Subscription } from 'rxjs';
 import { NotificationStore } from '../../core/stores/notification.store';
 import { WebsocketFriendRequest } from '../../core/interfaces/friend.model';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+
 type AnyRequest = FriendRequest | WebsocketFriendRequest;
 @Component({
   selector: 'app-social-page',
@@ -26,6 +23,7 @@ type AnyRequest = FriendRequest | WebsocketFriendRequest;
     SocialMenuComponent,
     NotificationsTabComponent,
     MessagesTabComponent,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './social-page.component.html',
   styleUrl: './social-page.component.css',
@@ -39,13 +37,14 @@ export class SocialPageComponent implements OnInit {
   messages$: Observable<NormalizedMessage[]>; // observable of normalized message notifications
   friendRequests$: Observable<NormalizedRequest[]>; // observable of normalized friend requests
   totalCount$: Observable<number>; // total count of messages + requests
+  loadingSpinnerShowing = true;
 
   private sub: Subscription | null = null;
 
   constructor(
     private userService: UserService,
     private userStore: UserStore,
-    private notificationStore: NotificationStore
+    private notificationStore: NotificationStore,
   ) {
     // normalize messages from notification store
     this.messages$ = this.notificationStore.messageNotifications.pipe(
@@ -56,8 +55,8 @@ export class SocialPageComponent implements OnInit {
           timestamp: m.timestamp || Date.now(),
           roomId: m.roomId || '',
           profilePicture: m.profilePicture || '',
-        }))
-      )
+        })),
+      ),
     );
 
     // Normalize friend requests from NotificationStore
@@ -80,8 +79,8 @@ export class SocialPageComponent implements OnInit {
               status === 'PENDING'
                 ? 'friend_request'
                 : status === 'ACCEPTED'
-                ? 'friend_request_accepted'
-                : 'friend_request_declined';
+                  ? 'friend_request_accepted'
+                  : 'friend_request_declined';
           } else {
             // fallback if neither exists
             type = 'friend_request';
@@ -105,8 +104,8 @@ export class SocialPageComponent implements OnInit {
             status === 'PENDING'
               ? `${fromUsername} sent you a friend request`
               : status === 'ACCEPTED'
-              ? `${fromUsername} accepted your friend request`
-              : `${fromUsername} declined your friend request`;
+                ? `${fromUsername} accepted your friend request`
+                : `${fromUsername} declined your friend request`;
 
           return {
             fromUserId,
@@ -118,8 +117,8 @@ export class SocialPageComponent implements OnInit {
             type, // guaranteed string
             message,
           };
-        })
-      )
+        }),
+      ),
     );
     // Combine messages and requests to get total count for badge display
     this.totalCount$ = combineLatest([
@@ -140,7 +139,7 @@ export class SocialPageComponent implements OnInit {
           for (let room of allChatRooms) {
             // remove logged-in user from members
             room.Members = room.Members.filter(
-              (m: any) => m.UserId !== loggedInUser.UserId
+              (m: any) => m.UserId !== loggedInUser.UserId,
             );
 
             if (room.Members.length === 1) {
@@ -151,6 +150,7 @@ export class SocialPageComponent implements OnInit {
               this.noChats = true;
             }
           }
+          this.loadingSpinnerShowing = false;
         },
         error: (err) => {
           console.error('Failed to fetch rooms:', err);

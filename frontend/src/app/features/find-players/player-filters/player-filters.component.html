@@ -17,7 +17,8 @@
         {{ selectedStatusLabel }} ▾
       </button>
 
-      <div *ngIf="openDropdown === 'status'" class="checkbox-list animate-fade" role="menu">
+      @if (openDropdown === 'status') {
+      <div class="checkbox-list animate-fade" role="menu">
         <label class="checkbox-item" (click)="$event.stopPropagation()">
           <input type="radio" name="status" (change)="onStatusChange('')" [checked]="!filters.Status" />
           <span class="item-text">Any status</span>
@@ -35,6 +36,7 @@
           <span class="item-text">Offline</span>
         </label>
       </div>
+      }
     </div>
 
     <!-- KIELET -->
@@ -44,14 +46,19 @@
         Languages ▾
       </button>
 
-      <div *ngIf="openDropdown === 'languages'" class="checkbox-list animate-fade" role="menu"
-        (click)="$event.stopPropagation()">
-        <label *ngFor="let lang of availableLanguages" class="checkbox-item">
+      @if (openDropdown === 'languages') {
+      <div class="checkbox-list animate-fade" role="menu" (click)="$event.stopPropagation()">
+        @for (lang of availableLanguages; track lang.value) {
+        <label class="checkbox-item">
           <input type="checkbox" [value]="lang.value" (change)="onLanguageToggle($event, lang.value)"
             [checked]="filters.languages.includes(lang.value)" />
           <span class="item-text">{{ lang.label }}</span>
         </label>
+        } @empty {
+        <p>No languages available</p>
+        }
       </div>
+      }
     </div>
 
     <!-- PELIT -->
@@ -61,54 +68,71 @@
         Games ▾
       </button>
 
-      <div *ngIf="openDropdown === 'games'" class="checkbox-list animate-fade" role="menu"
-        (click)="$event.stopPropagation()">
-        <label *ngFor="let game of games" class="checkbox-item">
+      @if (openDropdown === 'games') {
+      <div class="checkbox-list animate-fade" role="menu" (click)="$event.stopPropagation()">
+        @for (game of games; track game.PK) {
+        <label class="checkbox-item">
           <input type="checkbox" [value]="game.PK.replace('GAME#','')"
             (change)="onGameToggle($event, game.PK.replace('GAME#','') || '')"
             [checked]="filters.games.includes(game.PK.replace('GAME#','') || '')" />
           <span class="item-text">{{ game.Name }}</span>
           <span class="item-count">({{ game.Popularity || 0 }})</span>
         </label>
+        } @empty {
+        <p>No games available</p>
+        }
       </div>
+      }
     </div>
 
+    <!-- PLAYSTYLE -->
     <div class="checkbox-collapsible">
       <button type="button" (click)="toggleDropdown('playstyle')" [attr.aria-expanded]="openDropdown === 'playstyle'"
         aria-haspopup="true">
         Playstyle ▾
       </button>
 
-      <div *ngIf="openDropdown === 'playstyle'" class="checkbox-list animate-fade" role="menu"
-        (click)="$event.stopPropagation()">
+      @if (openDropdown === 'playstyle') {
+      <div class="checkbox-list animate-fade" role="menu" (click)="$event.stopPropagation()">
         <label class="checkbox-item">
           <input type="radio" name="playstyle" value="" (change)="onPlaystyleChange($event)"
             [checked]="!filters.playstyle" />
           <span class="item-text">Any</span>
         </label>
 
-        <label *ngFor="let style of availablePlaystyles" class="checkbox-item">
+        @for (style of availablePlaystyles; track style) {
+        <label class="checkbox-item">
           <input type="radio" name="playstyle" [value]="style" (change)="onPlaystyleChange($event)"
             [checked]="filters.playstyle === style" />
           <span class="item-text">{{ style }}</span>
         </label>
+        } @empty {
+        <p>No playstyles available</p>
+        }
       </div>
+      }
     </div>
 
+    <!-- PLATFORMS -->
     <div class="checkbox-collapsible">
       <button type="button" (click)="toggleDropdown('platform')" [attr.aria-expanded]="openDropdown === 'platform'"
         aria-haspopup="true">
         Platforms ▾
       </button>
 
-      <div *ngIf="openDropdown === 'platform'" class="checkbox-list animate-fade" role="menu"
-        (click)="$event.stopPropagation()">
-        <label *ngFor="let platform of availablePlatforms" class="checkbox-item">
+      @if (openDropdown === 'platform') {
+      <div class="checkbox-list animate-fade" role="menu" (click)="$event.stopPropagation()">
+        @for (platform of availablePlatforms; track platform) {
+        <label class="checkbox-item">
           <input type="checkbox" [value]="platform" (change)="onPlatformToggle($event, platform)"
             [checked]="filters.platform.includes(platform)" />
           <span class="item-text">{{ platform }}</span>
         </label>
+        } @empty {
+        <p>No platforms available</p>
+        }
       </div>
+      }
     </div>
 
   </div>

@@ -35,23 +35,32 @@
       'show-groups': activeTab === 'groups'
     }">
         <div class="tab-pane" id="users">
-          <div *ngIf="directChats().length > 0; else noDirects">
-            <div *ngFor="let chat of directChats()" class="card mb-2 p-2 text-white">
-              <!-- Whole member block clickable -->
-              <div class="d-flex align-items-center user-card" (click)="userClicked(member.UserId)"
-                *ngFor="let member of chat.Members">
-                <img class="account-icon"
-                  [src]="member?.ProfilePicture ? member.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'" />
-                <div class="userTextBar">
-                  <!-- Username clickable for different action -->
-                  <strong (click)="openProfile(member.UserId, $event)" class="username-link">
-                    {{ member.Username }}
-                  </strong><br />
-                  <small class="lMessage">{{ member.Username }}</small>
-                </div>
+          @if (directChats().length > 0) {
+          @for (chat of directChats(); track chat.Id) {
+          <div class="card mb-2 p-2 text-white">
+            <!-- Whole member block clickable -->
+            @for (member of chat.Members; track member.UserId) {
+            <div class="d-flex align-items-center user-card" (click)="userClicked(member.UserId)">
+
+              <img class="account-icon"
+                [src]="member?.ProfilePicture ? member.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'" />
+
+              <div class="userTextBar">
+                <!-- Username clickable for different action -->
+                <strong (click)="openProfile(member.UserId, $event)" class="username-link">
+                  {{ member.Username }}
+                </strong><br />
+                <small class="lMessage">{{ member.Username }}</small>
               </div>
             </div>
+            }
           </div>
+          }
+          } @else {
+          <ng-template #noDirects>
+            <p>No direct chats available</p>
+          </ng-template>
+          }
 
           <ng-template #noDirects>
             <p>No chats yet.</p>
@@ -59,30 +68,36 @@
         </div>
 
         <div class="tab-pane" id="groups">
-          <div *ngIf="groupChats().length > 0; else noGroups">
-            <div *ngFor="let group of groupChats()" class="card mb-2 p-2 text-white"
-              (click)="groupChatClicked(group.RoomId)">
+          @if (groupChats().length > 0) {
+          @for (group of groupChats(); track group.RoomId) {
+          <div class="card mb-2 p-2 text-white" (click)="groupChatClicked(group.RoomId)">
 
-              <div class="d-flex align-items-center">
-                <!-- Avatars loop -->
-                <div class="group-avatars">
-                  <img *ngFor="let member of group.Members" class="account-icon"
-                    [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" />
-                </div>
-
-                <div class="group-usernames">
-                  <ng-container *ngFor="let member of group.Members; let last = last">
-                    <span class="username-link">
-                      <strong (click)="openProfile(member.UserId, $event)">{{ member.Username }}</strong>
-                    </span>
-
-                    <span *ngIf="!last">, </span>
-                  </ng-container>
-                </div>
-
+            <div class="d-flex align-items-center">
+              <!-- Avatars loop -->
+              <div class="group-avatars">
+                @for (member of group.Members; track member.UserId) {
+                <img class="account-icon" [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" />
+                }
+              </div>
+              <div class="group-usernames">
+                @for (member of group.Members; track member.UserId; let last = $last) {
+                <span class="username-link">
+                  <strong (click)="openProfile(member.UserId, $event)">
+                    {{ member.Username }}
+                  </strong>
+                </span>
+                @if (!last) {
+                <span>, </span>
+                }
+                }
               </div>
             </div>
           </div>
+          }
+          } @else {
+          <p>No group chats available</p>
+          }
+
           <ng-template #noGroups>
             <p>No group chats yet.</p>
           </ng-template>
@@ -105,8 +120,10 @@
 
     <div class="friendsList">
       <ng-container *ngIf="friendsList && friendsList.length > 0; else noFriends">
-        <div class="card mb-2 p-2 text-white" *ngFor="let friend of friendsList" [class.selected]="isSelected(friend)"
+        @for (friend of friendsList; track friend.UserId) {
+        <div class="card mb-2 p-2 text-white" [class.selected]="isSelected(friend)"
           (click)="toggleFriendSelection(friend)">
+
           <div class="d-flex align-items-center user-card">
             <img class="account-icon" [src]="friend.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'"
               alt="Friend" />
@@ -116,6 +133,7 @@
             </div>
           </div>
         </div>
+        }
       </ng-container>
 
       <ng-template #noFriends>

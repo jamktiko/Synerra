@@ -14,10 +14,16 @@ import { FormsModule } from '@angular/forms';
 import { User } from '../../../core/interfaces/user.model';
 import { UserStore } from '../../../core/stores/user.store';
 import { UserService } from '../../../core/services/user.service';
+import { LoadingSpinnerComponent } from '../../loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [DashboardCardComponent, CommonModule, FormsModule],
+  imports: [
+    DashboardCardComponent,
+    CommonModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -28,6 +34,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   userGames: any[] = [];
   me: User | null = null;
   greeting: string = '';
+  loadingSpinnerShowing = true;
 
   @ViewChild('favRow', { static: false }) favRow?: ElementRef<HTMLElement>;
   @ViewChild('popRow', { static: false }) popRow?: ElementRef<HTMLElement>;
@@ -35,7 +42,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   constructor(
     private gameService: GameService,
     private userStore: UserStore,
-    private userService: UserService
+    private userService: UserService,
   ) {
     effect(() => {
       const user = this.userStore.user();
@@ -116,6 +123,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           .sort((a, b) => Number(b.Popularity) - Number(a.Popularity));
 
         this.filterUserGames();
+        this.loadingSpinnerShowing = false;
       },
       error: (err) => console.error('Failed to load games', err),
     });
@@ -124,7 +132,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   filterUserGames() {
     const userGameIds = new Set(this.userGames.map((g) => g.gameId));
     this.filteredGames = this.sortedGames.filter((game) =>
-      userGameIds.has(game.PK.replace(/^GAME#/, ''))
+      userGameIds.has(game.PK.replace(/^GAME#/, '')),
     );
     this.filteredGames.sort((a, b) => b.Popularity - a.Popularity);
 
