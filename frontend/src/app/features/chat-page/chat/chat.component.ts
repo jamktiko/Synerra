@@ -151,4 +151,8 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
       element.scrollTop = element.scrollHeight;
     } catch {}
   }
+
+  closeChat() {
+    this.chatService.exitRoom(this.roomId);
+  }
 }

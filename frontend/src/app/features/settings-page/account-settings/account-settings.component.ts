@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AbstractControl,
@@ -12,6 +12,9 @@ import { ButtonComponent } from '../../../shared/components/button/button.compon
 import { Router } from '@angular/router';
 import { LoadingPageStore } from '../../../core/stores/loadingPage.store';
 import { AuthService } from '../../../core/services/auth.service';
+import { UserService } from '../../../core/services/user.service';
+import { User } from '../../../core/interfaces/user.model';
+import { UserStore } from '../../../core/stores/user.store';
 
 type LinkProviderId = 'steam' | 'epic' | 'discord';
 
@@ -30,9 +33,13 @@ interface LinkProvider {
   templateUrl: './account-settings.component.html',
   styleUrl: './account-settings.component.css',
 })
-export class AccountSettingsComponent {
+export class AccountSettingsComponent implements OnInit {
   readonly passwordForm: FormGroup;
+  user: User | null = {};
 
+  ngOnInit(): void {
+    this.user = this.userStore.getUser();
+  }
   readonly linkProviders: LinkProvider[] = [
     {
       id: 'steam',
@@ -71,7 +78,9 @@ export class AccountSettingsComponent {
     private readonly fb: FormBuilder,
     private readonly loadingPageStore: LoadingPageStore,
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
+    private userService: UserService,
+    private userStore: UserStore
   ) {
     this.passwordForm = this.fb.group(
       {
@@ -132,8 +141,9 @@ export class AccountSettingsComponent {
   confirmDeletion(): void {
     this.showDeleteConfirmation = false;
     this.feedbackType = 'warning';
-    this.feedbackMessage =
-      'Account deletion request sent (placeholder implementation).';
+    this.feedbackMessage = 'Account deletion request sent.';
+
+    this.deleteUser();
   }
 
   logOut(): void {
@@ -151,5 +161,19 @@ export class AccountSettingsComponent {
       return { mismatch: true };
     }
     return null;
+  }
+
+  deleteUser(): void {
+    if (!this.user?.UserId) return;
+
+    this.userService.deleteUser(this.user.UserId).subscribe({
+      next: () => {
+        alert('Your account has been deleted');
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Failed to delete account');
+      },
+    });
   }
 }
