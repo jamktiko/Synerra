@@ -7,7 +7,6 @@ import {
   ElementRef,
   AfterViewInit,
   signal,
-  computed,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChatService } from '../../../core/services/chat.service';
@@ -84,11 +83,11 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  memberNames = computed(() =>
-    this.otherMembers()
-      .map((m) => m.Username)
-      .join(', ')
-  );
+  // Looping usernames here as there was problems in html
+  get memberNames(): string {
+    const members = this.otherMembers(); // <-- read the signal here
+    return members.map((m) => m.Username).join(', ');
+  }
   loadRoomMembers() {
     if (!this.loggedInUser) return;
 
