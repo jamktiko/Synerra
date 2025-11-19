@@ -27,10 +27,12 @@
         </li>
       </ul>
 
-      <div class="feedback-banner" *ngIf="feedbackMessage" [class.success]="feedbackType === 'success'"
+      @if (feedbackMessage) {
+      <div class="feedback-banner" [class.success]="feedbackType === 'success'"
         [class.warning]="feedbackType === 'warning'">
         {{ feedbackMessage }}
       </div>
+      }
 
       <div class="section-divider"></div>
 
@@ -50,29 +52,34 @@
                 <span>Current password</span>
                 <input type="password" placeholder="Password" formControlName="currentPassword"
                   autocomplete="current-password" />
-                <span class="field-error"
-                  *ngIf="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid">
+                @if (passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid) {
+                <span class="field-error">
                   Enter your current password.
                 </span>
+                }
               </label>
 
               <label class="field">
                 <span>New password</span>
                 <input type="password" placeholder="Password" formControlName="newPassword"
                   autocomplete="new-password" />
-                <span class="field-error"
-                  *ngIf="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('minlength')">
+                @if (passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('minlength'))
+                {
+                <span class="field-error">
                   Minimum 8 characters required.
                 </span>
+                }
               </label>
 
               <label class="field">
                 <span>Confirm new password</span>
                 <input type="password" placeholder="Password" formControlName="confirmPassword"
                   autocomplete="new-password" />
-                <span class="field-error" *ngIf="passwordMismatch">
+                @if (passwordMismatch) {
+                <span class="field-error">
                   Passwords do not match.
                 </span>
+                }
               </label>
             </div>
 
@@ -112,18 +119,30 @@
         </div>
 
         <div class="link-grid">
-          <button class="link-button" type="button" *ngFor="let provider of linkProviders"
-            (click)="toggleLink(provider.id)" [class.connected]="isLinked(provider.id)">
+          @for (provider of linkProviders; track provider.id) {
+          <button class="link-button" type="button" (click)="toggleLink(provider.id)"
+            [class.connected]="isLinked(provider.id)">
+
             <div class="provider-icon" [ngClass]="'provider-' + provider.id" [class.has-initials]="!provider.icon">
-              <img *ngIf="provider.icon" [src]="provider.icon" alt="{{ provider.label }} icon" />
-              <span *ngIf="!provider.icon">{{ provider.initials }}</span>
+
+              @if (provider.icon) {
+              <img [src]="provider.icon" alt="{{ provider.label }} icon" />
+              } @else {
+              <span>{{ provider.initials }}</span>
+              }
             </div>
+
             <div class="provider-meta">
               <span class="provider-label">{{ provider.label }}</span>
               <span class="provider-description">{{ provider.description }}</span>
             </div>
-            <span class="link-status">{{ isLinked(provider.id) ? 'Connected' : 'Connect' }}</span>
+
+            <span class="link-status">
+              {{ isLinked(provider.id) ? 'Connected' : 'Connect' }}
+            </span>
           </button>
+          }
+
         </div>
 
         <div class="link-footer">
@@ -145,14 +164,19 @@
         </app-button>
       </section>
 
-      <div class="danger-confirmation" *ngIf="showDeleteConfirmation">
+      @if (showDeleteConfirmation) {
+      <div class="danger-confirmation">
         <p>This action cannot be undone. Are you sure you want to continue?</p>
         <div class="confirm-actions">
-          <app-button label="Cancel" size="xsmall" (click)="cancelDeletion()"></app-button>
+          <app-button label="Cancel" size="xsmall" (click)="cancelDeletion()">
+          </app-button>
+
           <app-button label="Confirm delete" size="xsmall" variant="highlight" (click)="confirmDeletion()">
           </app-button>
         </div>
       </div>
+      }
+
 
       <div class="account-footer">
         <div class="logout-card">

@@ -1,8 +1,9 @@
-<div class="loadingSpinner" *ngIf="loadingSpinnerShowing">
+@if (loadingSpinnerShowing) {
+<div class="loadingSpinner">
   <app-loading-spinner />
 </div>
-
-<div class="dashboard" *ngIf="!loadingSpinnerShowing">
+} @else {
+<div class="dashboard">
   <!-- Top Navigation -->
   <header class="top-navigation-bar">
     <div class="welcome-wrapper">
@@ -11,24 +12,27 @@
     </div>
   </header>
 
-
-
   <!-- Favorite Games -->
-  <section *ngIf="filteredGames.length" class="favorite-games">
+  @if (filteredGames.length) {
+  <section class="favorite-games">
     <div class="section-title"> Your favorite games</div>
     <div class="games-row-wrap">
       <button class="scroll-arrow left" aria-label="Scroll left" (click)="scrollRowLeft(favRow)">
         <span class="arrow-icon" aria-hidden="true"></span>
       </button>
       <div class="games-row" #favRow>
-        <app-dashboard-card *ngFor="let game of filteredGames" [game]="game">
-        </app-dashboard-card>
+        @for (game of filteredGames; track game.Name) {
+        <app-dashboard-card [game]="game"></app-dashboard-card>
+        } @empty {
+        <p>No favorite games found</p>
+        }
       </div>
       <button class="scroll-arrow right" aria-label="Scroll right" (click)="scrollRowRight(favRow)">
         <span class="arrow-icon" aria-hidden="true"></span>
       </button>
     </div>
   </section>
+  }
 
   <!-- Popular Games -->
   <section class="popular-games">
@@ -38,8 +42,11 @@
         <span class="arrow-icon" aria-hidden="true"></span>
       </button>
       <div class="games-row" #popRow>
-        <app-dashboard-card *ngFor="let game of sortedGames" [game]="game">
-        </app-dashboard-card>
+        @for (game of sortedGames; track game.Name) {
+        <app-dashboard-card [game]="game"></app-dashboard-card>
+        } @empty {
+        <p>No popular games available</p>
+        }
       </div>
       <button class="scroll-arrow right" aria-label="Scroll right" (click)="scrollRowRight(popRow)">
         <span class="arrow-icon" aria-hidden="true"></span>
@@ -47,3 +54,4 @@
     </div>
   </section>
 </div>
+}
