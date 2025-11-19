@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { UserStore } from '../../core/stores/user.store';
 import { FriendService } from '../../core/services/friend.service';
 import { Game } from '../../core/interfaces/game.model';
-import { LoadingPageComponent } from '../loading-page/loading-page.component';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-profile-page',
@@ -19,7 +19,7 @@ import { LoadingPageComponent } from '../loading-page/loading-page.component';
     ProfileHeaderComponent,
     ProfileContentComponent,
     CommonModule,
-    LoadingPageComponent,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.css',

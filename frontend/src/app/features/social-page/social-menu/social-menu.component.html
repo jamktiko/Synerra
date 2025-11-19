@@ -4,8 +4,10 @@
     <div class="topHeader">
       <app-button label="All chats" [variant]="messagesTabShowing() ? 'highlight' : 'default'" size="small"
         [fullWidth]="true" (click)="switchTab('messages')"></app-button>
-      <app-button label="Notifications" [variant]="!messagesTabShowing() ? 'highlight' : 'default'" size="small"
-        [fullWidth]="true" (click)="switchTab('notifications')"></app-button>
+      <app-button [label]="'Notifications (' + totalCount + ')'"
+        [variant]="!messagesTabShowing() ? 'highlight' : 'default'" size="small" [fullWidth]="true"
+        (click)="switchTab('notifications')">
+      </app-button>
     </div>
   </div>
 </div>

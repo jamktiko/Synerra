@@ -2,7 +2,7 @@
   <!--Progressbar-->
   <div class="progress">
     <div class="step">
-      <img src="assets/svg/Acount.svg" alt="step1" />
+      <img src="assets/images/profilePicPlaceHolder.jpg" alt="step1" />
     </div>
     <div class="nextStep">-</div>
     <div class="done">
@@ -75,7 +75,8 @@
           }}
         </button>
         <div ngbDropdownMenu aria-labelledby="dropdownManual" class="dropBox">
-          <li class="checkboxWithTextFrame" *ngFor="let lang of languages">
+          @for (lang of languages; track lang.code) {
+          <li class="checkboxWithTextFrame">
             <label class="ios-checkbox red">
               <input
                 type="checkbox"
@@ -100,6 +101,8 @@
               <h2 class="text-xs">{{ lang.name }}</h2>
             </div>
           </li>
+          }
+
         </div>
       </div>
       <!--Dropdown ends-->

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LoadingPageComponent } from './loading-page.component';
+import { LoadingSpinnerComponent } from './loading-spinner.component';
 
-describe('LoadingPageComponent', () => {
-  let component: LoadingPageComponent;
-  let fixture: ComponentFixture<LoadingPageComponent>;
+describe('LoadingSpinnerComponent', () => {
+  let component: LoadingSpinnerComponent;
+  let fixture: ComponentFixture<LoadingSpinnerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LoadingPageComponent]
+      imports: [LoadingSpinnerComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(LoadingPageComponent);
+    fixture = TestBed.createComponent(LoadingSpinnerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

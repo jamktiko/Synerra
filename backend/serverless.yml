@@ -377,6 +377,13 @@ functions:
           path: /user/{userId}/rooms
           method: get
           authorizer: PrivateAuthorizer
+  clearUserUnreads:
+    handler: src/user/clearUnreadsPerUser.handler
+    events:
+      - httpApi:
+          path: /user/unreads/clear
+          method: delete
+          authorizer: PrivateAuthorizer
 
   authHandler:
     handler: src/handlers.auth

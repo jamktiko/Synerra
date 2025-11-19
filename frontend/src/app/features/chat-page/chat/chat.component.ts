@@ -18,6 +18,7 @@ import { UserStore } from '../../../core/stores/user.store';
 import { UserService } from '../../../core/services/user.service';
 import { MessageService } from '../../../core/services/message.service';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { User } from '../../../core/interfaces/user.model';
 
 @Component({
   selector: 'app-chat',
@@ -32,8 +33,8 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   // Sets an observable for the showing chat messages
   messages$: Observable<ChatMessage[]>;
   messageHistory: [] = [];
-  chatPartnerName: string = '';
-  chatPartnerPicture: any = '';
+  otherMembers: User[] = [];
+  otherMemberNames: String | null = null;
 
   messageText: string = '';
 
@@ -45,7 +46,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
     private chatService: ChatService,
     private userStore: UserStore,
     private userService: UserService,
-    private messageService: MessageService
+    private messageService: MessageService,
   ) {
     // Links the message observable to the chatService messages for reactive updating
     this.messages$ = this.chatService.logMessages$;
@@ -73,41 +74,25 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
           next: (res) => {
             const room = res.rooms.find((r: any) => r.RoomId === this.roomId);
             if (room) {
-              const otherMember = room.Members.find(
+              this.otherMembers = room.Members.filter(
                 (m: any) =>
-                  m.PK.replace('USER#', '') !== this.loggedInUser.UserId
+                  m.PK.replace('USER#', '') !== this.loggedInUser.UserId,
               );
-              if (otherMember) {
-                this.chatPartnerName = otherMember.Username;
-                this.chatPartnerPicture =
-                  otherMember.ProfilePicture || 'assets/svg/Acount.svg';
-              }
+
+              console.log('ORHETMEEMEMEME', this.otherMembers);
             }
           },
           error: (err) => console.error('Failed to fetch room members', err),
         });
-
-        // Fallback: update chat partner from existing messages if not set
-        if (!this.chatPartnerName) {
-          this.messages$.subscribe((messages) => {
-            if (!messages || messages.length === 0) return;
-
-            const otherUser = messages.find(
-              (msg) =>
-                msg.SenderId &&
-                msg.SenderId !== this.loggedInUser?.UserId &&
-                msg.SenderUsername
-            );
-
-            if (otherUser) {
-              this.chatPartnerName = otherUser.SenderUsername;
-              this.chatPartnerPicture =
-                otherUser.ProfilePicture || 'assets/svg/Acount.svg';
-            }
-          });
-        }
       }
     });
+  }
+
+  // Looping usernames here as there was problems in html
+  get memberNames(): string {
+    return (this.otherMembers ?? [])
+      .map((m) => m?.Username || 'Chat')
+      .join(', ');
   }
 
   ngOnInit() {
@@ -141,7 +126,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
       this.loggedInUser.UserId,
       this.loggedInUser.Username,
       this.loggedInUser.ProfilePicture,
-      this.roomId
+      this.roomId,
     );
     // Clears the input slot
     this.messageText = '';
@@ -165,5 +150,9 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
       const element = this.chatLogRef.nativeElement;
       element.scrollTop = element.scrollHeight;
     } catch {}
+  }
+
+  closeChat() {
+    this.chatService.exitRoom(this.roomId);
   }
 }

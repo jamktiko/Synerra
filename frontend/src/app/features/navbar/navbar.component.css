@@ -89,6 +89,7 @@
 
 .logo--big {
   width: 7.5rem;
+  cursor: pointer;
 }
 
 .navigation.collapsed .logo--big {
@@ -101,6 +102,7 @@
   margin-bottom: 1rem;
   width: 2rem;
   opacity: 0.95;
+  cursor: pointer;
 }
 
 .navigation:not(.collapsed) .logo--small {
@@ -731,6 +733,45 @@
 }
 
 /* Automaattinen pienentäminen pienemmillä näytöillä */
+@media (min-width: 2500px) {
+  .navigation {
+    width: 20rem; /* larger sidebar */
+    padding: 2rem 1.5rem; /* more spacing */
+  }
+
+  .logo--big {
+    width: 10rem; /* bigger logo */
+  }
+
+  .nav-btn ::ng-deep .btn {
+    padding: 1.2rem 1.5rem; /* bigger buttons */
+    font-size: calc(var(--fs-xs) * 1.25);
+  }
+
+  .nav-btn ::ng-deep .btn-icon {
+    width: 2rem;
+    height: 2rem; /* larger icons */
+  }
+
+  .user-profile {
+    padding: 0.75rem 1rem;
+  }
+
+  .avatar {
+    width: 3rem;
+    height: 3rem; /* bigger avatar */
+  }
+
+  .nav-group__trigger {
+    padding: 1.2rem 1.5rem;
+    font-size: calc(var(--fs-xs) * 1.25);
+  }
+
+  .nav-subitem {
+    padding: 0.8rem 1.2rem;
+    font-size: calc(var(--fs-xs) * 1.2);
+  }
+}
 @media (max-width: 64rem) {
   .navigation {
     width: 5rem;

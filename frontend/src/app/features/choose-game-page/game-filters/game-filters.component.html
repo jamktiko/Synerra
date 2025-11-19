@@ -12,17 +12,27 @@
         <span class="category-trigger__arrow" aria-hidden="true">▾</span>
       </button>
 
-      <div class="category-dropdown__list" *ngIf="genreDropdownOpen" role="listbox">
-        <button type="button" class="category-option" *ngFor="let genre of genres"
-          [class.is-active]="selectedGenre === genre.value" (click)="selectGenre(genre.value)" role="option"
-          [attr.aria-selected]="selectedGenre === genre.value">
+      @if (genreDropdownOpen) {
+      <div class="category-dropdown__list" role="listbox">
+        @for (genre of genres; track genre.value) {
+        <button type="button" class="category-option" [class.is-active]="selectedGenre === genre.value"
+          (click)="selectGenre(genre.value)" role="option" [attr.aria-selected]="selectedGenre === genre.value">
           {{ genre.label }}
         </button>
+        } @empty {
+        <p class="no-genres">No genres available</p>
+        }
       </div>
+      }
+
 
       <select class="category-native" (change)="onGenreChange($event)" id="game-genre" name="game-genre"
         [value]="selectedGenre" aria-hidden="true" tabindex="-1">
-        <option *ngFor="let genre of genres" [value]="genre.value">{{ genre.label }}</option>
+        @for (genre of genres; track genre.value) {
+        <option [value]="genre.value">
+          {{ genre.label }}
+        </option>
+        }
       </select>
     </div>
     <app-button class="sort-button" [variant]="sortByPopularity ? 'highlight' : 'default'" size="medium"

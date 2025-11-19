@@ -9,4 +9,11 @@ export interface FriendRequest {
   SenderUsername: string; // Username of sender
   SenderPicture: string; // Profile picture URL of sender
   SenderId: string;
+
+  type?: string;
+  message?: string;
+  fromUserId?: string;
+  fromUsername?: string;
+  fromPicture?: string;
+  toUserId?: string;
 }

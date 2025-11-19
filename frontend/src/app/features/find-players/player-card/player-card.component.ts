@@ -38,7 +38,7 @@ export class PlayerCardComponent implements OnInit {
     private friendService: FriendService,
     private chatService: ChatService,
     private router: Router,
-    private userStore: UserStore
+    private userStore: UserStore,
   ) {}
 
   ngOnInit() {
@@ -76,7 +76,7 @@ export class PlayerCardComponent implements OnInit {
 
     // Filter only the common languages
     return userLanguages.filter((lang) =>
-      this.currentUser!.Languages?.includes(lang)
+      this.currentUser!.Languages?.includes(lang),
     );
   }
 
@@ -137,7 +137,7 @@ export class PlayerCardComponent implements OnInit {
           alert(`Friend request from ${this.user!.Username} accepted`);
           // Remove from comingRequests after accepting
           this.comingRequests = this.comingRequests.filter(
-            (id) => id !== userId
+            (id) => id !== userId,
           );
         },
         error: (err) => console.error('Failed to accept friend request', err),

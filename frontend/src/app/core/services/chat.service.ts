@@ -71,7 +71,7 @@ export class ChatService {
           );
         }
         console.log('Websocket connection successful');
-        resolve(); // Tests require this for tracking the method's process
+        resolve(); // Tests require this for tracking the methodx's process
       };
 
       // Activates when the websocket server sends a message

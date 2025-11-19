@@ -21,14 +21,15 @@
   } */
 }
 
+@media (max-width: 768px) {
+  .mid-container {
+    gap: 1rem;
+  }
+}
+
 @media (max-width: 600px) {
   .layout {
     padding-top: 16px;
     /* --page-horizontal-gap: clamp(1rem, 6vw, 2rem); */
-  }
-
-  .mid-container {
-    /* padding: 0 calc(1.25rem + var(--page-horizontal-gap)) 2rem; */
-    gap: 2rem;
   }
 }

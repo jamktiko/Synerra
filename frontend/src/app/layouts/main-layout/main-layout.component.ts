@@ -3,15 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { LoadingPageComponent } from '../../features/loading-page/loading-page.component';
 import { NavbarComponent } from '../../features/navbar/navbar.component';
 import { SocialBarComponent } from '../../features/social-bar/social-bar.component';
-import { NotificationService } from '../../core/services/notification.service';
 import { OnInit } from '@angular/core';
 import { UserStore } from '../../core/stores/user.store';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/interfaces/user.model';
 import { CommonModule } from '@angular/common';
-import { timer } from 'rxjs';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-main-layout',
@@ -32,10 +29,9 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
   loggedInUser: User | null = null;
 
   constructor(
-    private notificationService: NotificationService,
     private userStore: UserStore,
     private router: Router,
-    private userService: UserService,
+    private userService: UserService
   ) {}
   @ViewChild(NavbarComponent) navbar!: NavbarComponent;
 
@@ -48,7 +44,6 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
         this.userStore.setUser(res);
         this.loggedInUser = res;
 
-        this.notificationService.initConnection();
         this.userService.initUsersOnlineStatus();
         // Checks for every possible login and load case where the user might be at the dashboard. To access the dashboard,
         // user must have authToken that is given when logging in with email. (this is being checked with authStore in app.routes)
@@ -67,7 +62,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
       },
     });
 
-    console.log('WebSocket Reconnect in progress...');
+    // console.log('WebSocket Reconnect in progress...');
   }
   ngAfterViewInit(): void {
     this.navbar.collapsedChange.subscribe((collapsed: boolean) => {

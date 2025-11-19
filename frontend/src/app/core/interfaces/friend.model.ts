@@ -5,3 +5,13 @@ export interface Friend {
   CreatedAt: number; // 1758698340
   Relation: string; // FRIEND
 }
+
+export interface WebsocketFriendRequest {
+  fromUserId: string;
+  fromUsername: string;
+  senderPicture: string;
+  type: string;
+  timestamp: number;
+  toUserId?: string;
+  status: string;
+}
