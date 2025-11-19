@@ -45,6 +45,10 @@
   gap: 2rem;
 }
 
+.hint {
+  color: var(--color-text-grey);
+}
+
 .speechBubbleFrame {
   display: flex;
   flex-direction: column;
@@ -85,7 +89,7 @@
 .footerFrame {
   position: relative;
   bottom: 0;
-  color: var(--color-text-dark);
+  color: var(--color-text-grey);
   padding: 1.5rem 0 0 0;
   text-align: center;
 }
@@ -128,7 +132,7 @@
 }
 
 .login-link {
-  color: var(--color-text-dark);
+  color: var(--color-text-grey);
   cursor: pointer;
   margin: 0;
   padding-top: 1rem;
@@ -138,7 +142,7 @@
 }
 
 .login-link:hover {
-  color: var(--color-text-grey);
+  color: var(--color-text-default);
 }
 
 @media (max-width: 991px) {
@@ -161,9 +165,19 @@
 
   .right-column {
     justify-content: flex-start;
-    gap: 2rem;
+    gap: 1rem;
     align-items: center;
     padding-bottom: 1rem;
+  }
+
+  .hint {
+    padding-bottom: 1rem;
+  }
+
+  .hint2 {
+    color: var(--color-text-grey);
+    padding-top: 0.5rem;
+    font-size: 15px;
   }
 
   .v-divider {
@@ -187,6 +201,6 @@
 
 @media (max-height: 675px) {
   .container-opaque {
-    scale: 0.83;
+    scale: 0.97;
   }
 }

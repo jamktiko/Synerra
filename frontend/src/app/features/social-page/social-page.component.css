@@ -28,7 +28,9 @@ body {
 app-dashboard {
   flex: 1;
 }
-
+.group-avatars {
+  background: white;
+}
 @media (max-height: 500px) {
   .social-menu {
     padding: 0.8rem 0 0.8rem 0;
