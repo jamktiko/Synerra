@@ -38,6 +38,10 @@ body {
   background-repeat: no-repeat;
   color: var(--color-text-default);
 }
+.closeChatBtn {
+  width: 50px;
+  margin: 0 16px 0 auto;
+}
 
 .avatarframe-icon {
   width: 3rem;

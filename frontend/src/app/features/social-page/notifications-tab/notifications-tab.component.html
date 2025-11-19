@@ -22,25 +22,26 @@
 
         <div class="tab-pane">
 
-          <div *ngFor="let msg of messages" class="card mb-2 p-2 text-white">
+          @for (msg of messages; track msg.roomId) {
+          <div class="card mb-2 p-2 text-white">
             <div class="d-flex align-items-center w-100">
 
-              <img [src]="msg.profilePicture || msg.profilePicture" class="acount-icon" />
+              <img [src]="msg.profilePicture || 'assets/images/profilePicPlaceHolder.jpg'" class="acount-icon" />
 
               <div class="userTextBar flex-grow">
-                <strong>{{ msg.senderUsername || msg.senderUsername }}</strong><br />
-                <small>{{ msg.content || msg.content }}</small><br />
-                <small class="timestamp">{{ msg.timestamp || msg.timestamp | date:'short' }}</small>
+                <strong>{{ msg.senderUsername }}</strong><br />
+                <small>{{ msg.content }}</small><br />
+                <small class="timestamp">{{ msg.timestamp | date:'short' }}</small>
               </div>
 
               <div class="friend-actions">
-                <app-button label="Open" size="xsmall" variant="highlight"
-                  (click)="userClicked(msg.roomId || msg.roomId)">
+                <app-button label="Open" size="xsmall" variant="highlight" (click)="userClicked(msg.roomId)">
                 </app-button>
               </div>
 
             </div>
           </div>
+          }
 
         </div>
       </div>
@@ -58,19 +59,28 @@
 
           <div class="tab-pane">
 
-            <div *ngFor="let n of friendRequests" class="card mb-2 p-2 text-white">
+            @for (n of friendRequests; track n.fromUserId) {
+            <div class="card mb-2 p-2 text-white">
               <div class="d-flex align-items-center">
 
                 <img [src]="n.senderPicture" class="acount-icon" />
 
                 <div class="userTextBar flex-grow">
                   <strong>{{ n.fromUsername }}</strong><br />
-                  <small *ngIf="n.status === 'PENDING'">Sent you a friend request</small>
-                  <small *ngIf="n.status === 'ACCEPTED'">accepted your friend request</small>
-                  <small *ngIf="n.status === 'DECLINED'">declined your friend request</small>
+
+                  @if (n.status === 'PENDING') {
+                  <small>Sent you a friend request</small>
+                  }
+                  @if (n.status === 'ACCEPTED') {
+                  <small>accepted your friend request</small>
+                  }
+                  @if (n.status === 'DECLINED') {
+                  <small>declined your friend request</small>
+                  }
                 </div>
 
-                <div class="actions" *ngIf="n.status === 'PENDING'">
+                @if (n.status === 'PENDING') {
+                <div class="actions">
                   <app-button label="Accept" size="xsmall" variant="highlight"
                     (click)="acceptRequest(n.fromUserId); clearRequest(n.fromUserId)">
                   </app-button>
@@ -78,14 +88,18 @@
                     (click)="declineRequest(n.fromUserId); clearRequest(n.fromUserId)">
                   </app-button>
                 </div>
+                }
 
-                <div class="friend-actions" *ngIf="n.status === 'ACCEPTED' || n.status === 'DECLINED'">
+                @if (n.status === 'ACCEPTED' || n.status === 'DECLINED') {
+                <div class="friend-actions">
                   <app-button label="Clear" size="xsmall" variant="highlight" (click)="clearRequest(n.fromUserId)">
                   </app-button>
                 </div>
+                }
 
               </div>
             </div>
+            }
 
           </div>
         </div>

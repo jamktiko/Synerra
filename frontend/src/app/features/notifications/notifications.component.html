@@ -7,15 +7,18 @@
         d="M8 16a2 2 0 0 0 1.985-1.75H6.015A2 2 0 0 0 8 16zm.104-14a4.002 4.002 0 0 1 3.978 3.001c.12.388.23.833.327 1.342.14.688.21 1.293.21 1.92v2.5l.9 1.2a.5.5 0 0 1-.4.8H3.861a.5.5 0 0 1-.4-.8l.9-1.2v-2.5c0-.627.07-1.232.21-1.92.097-.509.207-.954.327-1.342A4.002 4.002 0 0 1 7.896 2z" />
     </svg>
 
-    <span class="badge" *ngIf="totalCount$ | async as totalCount">
+    @if (totalCount$ | async; as totalCount) {
+    <span class="badge">
       {{ totalCount }}
     </span>
+    }
   </button>
 </div>
 
-<ng-container *ngIf="showDropdown && !inlineHost">
-  <ng-container *ngTemplateOutlet="panelTemplate; context: dropdownContext"></ng-container>
-</ng-container>
+@if (showDropdown && !inlineHost) {
+<ng-container *ngTemplateOutlet="panelTemplate; context: dropdownContext"></ng-container>
+}
+
 
 <ng-template #panelTemplate let-inline="inline">
   <div class="notifications-panel" [class.notifications-dropdown]="!inline" [class.notifications-inline]="inline"
@@ -36,9 +39,11 @@
             </span>
             <span class="tab-label">Messages</span>
           </span>
-          <span class="tab-count" *ngIf="totalCount$ | async as totalCount">
+          @if (totalCount$ | async; as totalCount) {
+          <span class="tab-count">
             {{ (messages$ | async)?.length }}
           </span>
+          }
         </button>
         <button type="button" class="tab tab-requests" role="tab" [class.active]="activeTab === 'requests'"
           [attr.aria-selected]="activeTab === 'requests'" (click)="setActiveTab('requests', $event)"
@@ -60,8 +65,9 @@
       </div>
 
       <!-- Top Action Button (Messages) -->
-      <button class="mark-read icon-toggle" *ngIf="activeTab === 'messages' && (messages$ | async)?.length"
-        (click)="markAllAsRead()" [attr.aria-label]="'Mark all as read (' + (messages$ | async)?.length + ')'">
+      @if (activeTab === 'messages' && (messages$ | async)?.length) {
+      <button class="mark-read icon-toggle" (click)="markAllAsRead()"
+        [attr.aria-label]="'Mark all as read (' + (messages$ | async)?.length + ')'">
         <span class="icon-wrapper" aria-hidden="true">
           <svg viewBox="0 0 20 20" class="icon-trash">
             <path d="M6 6v8c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V6" class="trash-body" />
@@ -70,13 +76,13 @@
           </svg>
         </span>
       </button>
+      }
+
 
       <!-- Top Action Button (Requests) -->
-      <button class="mark-read icon-toggle" *ngIf="
-          activeTab === 'requests' && (friendRequests$ | async)?.length
-        " (click)="markRequestsAsRead()" [attr.aria-label]="
-          'Mark all as read (' + (friendRequests$ | async)?.length + ')'
-        ">
+      @if (activeTab === 'requests' && (friendRequests$ | async)?.length) {
+      <button class="mark-read icon-toggle" (click)="markRequestsAsRead()"
+        [attr.aria-label]="'Mark all as read (' + (friendRequests$ | async)?.length + ')'">
         <span class="icon-wrapper" aria-hidden="true">
           <svg viewBox="0 0 20 20" class="icon-trash">
             <path d="M6 6v8c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V6" class="trash-body" />
@@ -85,74 +91,85 @@
           </svg>
         </span>
       </button>
+      }
+
     </div>
 
     <div class="panel-body">
       <!-- Messages Section -->
-      <div class="section" *ngIf="activeTab === 'messages'">
-        <div *ngIf="(messages$ | async)?.length; else noMessages">
-          <div *ngFor="let msg of messages$ | async" class="notification-item" (click)="userClicked(msg.roomId)">
-            <img [src]="
-                msg.profilePicture ||
-                '/assets/svg/user-avatar-placeholder.svg'
-              " alt="avatar" class="avatar" />
-            <div class="message-info">
-              <div class="sender">{{ msg.senderUsername }}</div>
-              <div class="content">{{ msg.content }}</div>
-              <div class="content timestamp">
-                {{ msg.timestamp | date: 'short' }}
-              </div>
+      @if (activeTab === 'messages') {
+      <div class="section">
+        @if ((messages$ | async)?.length) {
+        @for (msg of messages$ | async; track msg.roomId) {
+        <div class="notification-item" (click)="userClicked(msg.roomId)">
+          <img [src]="msg.profilePicture || '/assets/svg/user-avatar-placeholder.svg'" alt="avatar" class="avatar" />
+
+          <div class="message-info">
+            <div class="sender">{{ msg.senderUsername }}</div>
+            <div class="content">{{ msg.content }}</div>
+            <div class="content timestamp">
+              {{ msg.timestamp | date: 'short' }}
             </div>
           </div>
         </div>
-        <ng-template #noMessages>
-          <div class="empty-msg">No messages</div>
-        </ng-template>
+        }
+        } @else {
+        <div class="empty-msg">No messages</div>
+        }
       </div>
+      }
+
 
       <!-- Requests Section -->
-      <div class="section" *ngIf="activeTab === 'requests'">
-        <div *ngIf="(friendRequests$ | async)?.length; else noRequests">
-          <div *ngFor="let req of friendRequests$ | async" class="notification-item friend-request">
-            <img [src]="
-                req.senderPicture ||
-                '/assets/svg/user-avatar-placeholder.svg'
-              " alt="avatar" class="avatar" />
-            <div class="message-info">
-              <div class="sender">{{ req.fromUsername }}</div>
+      @if (activeTab === 'requests') {
+      <div class="section">
+        @if ((friendRequests$ | async)?.length) {
+        @for (req of friendRequests$ | async; track req.fromUserId) {
+        <div class="notification-item friend-request">
+          <img [src]="req.senderPicture || '/assets/svg/user-avatar-placeholder.svg'" alt="avatar" class="avatar" />
 
-              <!-- Status Output -->
-              <div class="content" *ngIf="req.status === 'PENDING'">
-                sent you a friend request
-              </div>
-              <div class="content" *ngIf="req.status === 'ACCEPTED'">
-                accepted your friend request
-              </div>
-              <div class="content" *ngIf="req.status === 'DECLINED'">
-                declined your friend request
-              </div>
+          <div class="message-info">
+            <div class="sender">{{ req.fromUsername }}</div>
 
-              <!-- Actions -->
-              <div *ngIf="req.status === 'PENDING'" class="friend-actions">
-                <app-button label="Accept" size="xsmall" variant="highlight"
-                  (click)="acceptRequest(req.fromUserId)"></app-button>
-                <app-button label="Decline" size="xsmall" (click)="declineRequest(req.fromUserId)"></app-button>
-              </div>
+            <!-- Status Output -->
+            @if (req.status === 'PENDING') {
+            <div class="content">sent you a friend request</div>
+            }
+            @if (req.status === 'ACCEPTED') {
+            <div class="content">accepted your friend request</div>
+            }
+            @if (req.status === 'DECLINED') {
+            <div class="content">declined your friend request</div>
+            }
 
-              <div *ngIf="
-                  req.status === 'ACCEPTED' ||
-                  req.status === 'DECLINED'
-                " class="friend-actions">
-                <app-button label="Clear" size="xsmall" variant="highlight"
-                  (click)="clearRequest(req.fromUserId)"></app-button>
-              </div>
+            <!-- Actions -->
+            @if (req.status === 'PENDING') {
+            <div class="friend-actions">
+              <app-button label="Accept" size="xsmall" variant="highlight" (click)="acceptRequest(req.fromUserId)">
+              </app-button>
+              <app-button label="Decline" size="xsmall" (click)="declineRequest(req.fromUserId)">
+              </app-button>
             </div>
+            }
+
+            @if (req.status === 'ACCEPTED' || req.status === 'DECLINED') {
+            <div class="friend-actions">
+              <app-button label="Clear" size="xsmall" variant="highlight" (click)="clearRequest(req.fromUserId)">
+              </app-button>
+            </div>
+            }
           </div>
         </div>
-        <ng-template #noRequests>
-          <div class="empty-msg">No friend requests</div>
-        </ng-template>
+        }
+        } @else {
+        <p>No friend requests</p>
+        }
       </div>
+      }
+
+      <ng-template #noRequests>
+        <div class="empty-msg">No friend requests</div>
+      </ng-template>
     </div>
   </div>
 </ng-template>

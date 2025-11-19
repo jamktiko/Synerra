@@ -4,10 +4,16 @@ import { CommonModule } from '@angular/common';
 import { Game } from '../../core/interfaces/game.model'; // add if you have a model
 import { GameCardComponent } from './game-card/game-card.component';
 import { GameFiltersComponent } from './game-filters/game-filters.component';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-choose-game-page',
-  imports: [CommonModule, GameCardComponent, GameFiltersComponent],
+  imports: [
+    CommonModule,
+    GameCardComponent,
+    GameFiltersComponent,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './choose-game-page.component.html',
   styleUrl: './choose-game-page.component.css',
 })
@@ -15,6 +21,7 @@ export class ChooseGamePageComponent implements OnInit {
   games: Game[] = [];
   filteredGames: Game[] = [];
   descending = true;
+  loadingSpinnerShowing = true;
 
   // For search input from child component
   searchText: string = '';
@@ -43,6 +50,7 @@ export class ChooseGamePageComponent implements OnInit {
         this.games = res;
         this.applyFiltersAndSort(); // initial sort & filter
         console.log('games:', res);
+        this.loadingSpinnerShowing = false;
       },
       error: (err) => {
         console.error('Failed to load games', err);
@@ -71,7 +79,8 @@ export class ChooseGamePageComponent implements OnInit {
     // Genre filter
     if (this.selectedGenre) {
       result = result.filter(
-        (game) => game.Genre?.toLowerCase() === this.selectedGenre.toLowerCase()
+        (game) =>
+          game.Genre?.toLowerCase() === this.selectedGenre.toLowerCase(),
       );
     }
 
@@ -79,7 +88,7 @@ export class ChooseGamePageComponent implements OnInit {
     if (this.searchText) {
       const searchLower = this.searchText.toLowerCase();
       result = result.filter(
-        (game) => game.Name?.toLowerCase().startsWith(searchLower) ?? false
+        (game) => game.Name?.toLowerCase().startsWith(searchLower) ?? false,
       ); // safely handle undefined Name
     }
 
@@ -87,7 +96,7 @@ export class ChooseGamePageComponent implements OnInit {
     result.sort((a, b) =>
       this.descending
         ? (b.Popularity ?? 0) - (a.Popularity ?? 0)
-        : (a.Popularity ?? 0) - (b.Popularity ?? 0)
+        : (a.Popularity ?? 0) - (b.Popularity ?? 0),
     );
 
     this.filteredGames = result;

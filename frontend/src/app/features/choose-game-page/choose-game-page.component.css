@@ -94,7 +94,7 @@ app-game-card {
   }
   .mid-container {
     gap: 16px;
-    margin-top: 16px;
+    /* Margins and paddings removed intentionally */
   }
   /* Override per-card outer margin inside this container to avoid extra spacing
      coming from the .card margin set in the child component. */

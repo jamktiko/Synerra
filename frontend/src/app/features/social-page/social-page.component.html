@@ -1,4 +1,8 @@
-<div class="main-content">
+<div class="loadingSpinner" *ngIf="loadingSpinnerShowing">
+  <app-loading-spinner />
+</div>
+
+<div class="main-content" *ngIf="!loadingSpinnerShowing">
   <div class="social-menu">
     <app-social-menu [messagesTabShowing]="messagesTabShowing" [totalCount]="totalCount$ | async"
       (notificationsClicked)="tabSwitch($event)" />
