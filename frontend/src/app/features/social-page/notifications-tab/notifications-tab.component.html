@@ -1,31 +1,32 @@
 <div class="notificationsTab">
 
   <div class="noti-clear">
-    <h3 *ngIf="(!messages?.length && !friendRequests?.length)">
-      No notifications!
-    </h3>
+    @if (!messages?.length && !friendRequests?.length) {
+    <h3>No notifications!</h3>
+    }
   </div>
+
 
   <div class="tabsConts">
 
     <div class="conts">
-      <div *ngIf="messages?.length" class="d-flex align-items-center justify-content-between mb-2">
-
+      @if (messages?.length) {
+      <div class="d-flex align-items-center justify-content-between mb-2">
         <h3 class="noti-heading">Messages</h3>
         <div class="clear-button">
           <app-button label="Mark messages read" size="xsmall" variant="highlight" (click)="markAllAsRead()">
           </app-button>
         </div>
       </div>
+      }
 
-      <div class="tab-content" *ngIf="messages?.length">
 
+      @if (messages?.length) {
+      <div class="tab-content">
         <div class="tab-pane">
-
-          @for (msg of messages; track msg.roomId) {
+          @for (msg of messages; track $index) {
           <div class="card mb-2 p-2 text-white">
             <div class="d-flex align-items-center w-100">
-
               <img [src]="msg.profilePicture || 'assets/images/profilePicPlaceHolder.jpg'" class="acount-icon" />
 
               <div class="userTextBar flex-grow">
@@ -42,11 +43,13 @@
             </div>
           </div>
           }
-
         </div>
       </div>
+      }
 
-      <div *ngIf="friendRequests?.length">
+
+      @if (friendRequests?.length) {
+      <div>
         <div class="d-flex align-items-center justify-content-between mb-2">
           <h3 class="noti-heading">Friend Requests</h3>
           <div class="clear-button">
@@ -55,10 +58,9 @@
           </div>
         </div>
 
-        <div class="tab-content" *ngIf="safeFriendRequests.length > 0">
-
+        @if (safeFriendRequests.length > 0) {
+        <div class="tab-content">
           <div class="tab-pane">
-
             @for (n of friendRequests; track n.fromUserId) {
             <div class="card mb-2 p-2 text-white">
               <div class="d-flex align-items-center">
@@ -100,11 +102,11 @@
               </div>
             </div>
             }
-
           </div>
         </div>
-
+        }
       </div>
+      }
+
     </div>
   </div>
-</div>

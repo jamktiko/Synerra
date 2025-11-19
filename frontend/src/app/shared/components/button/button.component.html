@@ -42,18 +42,16 @@ Täysleveä nappi
   [attr.aria-disabled]="state === 'disabled' ? true : null" [disabled]="state === 'disabled'" (click)="navigate()">
 
   <!-- Ikoni vasemmalla -->
-  <ng-container *ngIf="icon && iconPosition === 'left'">
-    <img [src]="'assets/svg/' + icon + '.svg'" alt="{{ icon }} icon" class="btn-icon" />
-  </ng-container>
+  @if (icon && iconPosition === 'left') {
+  <img [src]="'assets/svg/' + icon + '.svg'" alt="{{ icon }} icon" class="btn-icon" />
+  }
 
   <!-- Nappiteksti -->
   <span class="btn-label">{{ label }}</span>
 
   <!-- Ikoni oikealla -->
-  <ng-container *ngIf="icon && iconPosition === 'right'">
-    <img [src]="'assets/svg/' + icon + '.svg'" alt="{{ icon }} icon" class="btn-icon" />
-  </ng-container>
-
-
+  @if (icon && iconPosition === 'right') {
+  <img [src]="'assets/svg/' + icon + '.svg'" alt="{{ icon }} icon" class="btn-icon" />
+  }
 
 </button>

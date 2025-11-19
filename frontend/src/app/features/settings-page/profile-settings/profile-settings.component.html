@@ -43,10 +43,15 @@
               </app-button>
             </div>
 
-            <p class="progress" *ngIf="uploadProgress">Uploading {{ uploadProgress }}%</p>
-            <p class="success" *ngIf="uploadedUrl">
+            @if (uploadProgress) {
+            <p class="progress">Uploading {{ uploadProgress }}%</p>
+            }
+
+            @if (uploadedUrl) {
+            <p class="success">
               Uploaded! <a [href]="uploadedUrl" target="_blank">View image</a>
             </p>
+            }
           </div>
         </section>
 
@@ -70,8 +75,13 @@
           <div class="field-actions">
             <app-button label="Save changes" size="small" (click)="saveIdentity()"></app-button>
           </div>
-          <p class="inline-feedback" *ngIf="feedbackMessages.username">{{ feedbackMessages.username }}</p>
-          <p class="inline-feedback" *ngIf="feedbackMessages.bio">{{ feedbackMessages.bio }}</p>
+          @if (feedbackMessages.username) {
+          <p class="inline-feedback">{{ feedbackMessages.username }}</p>
+          }
+          @if (feedbackMessages.bio) {
+          <p class="inline-feedback">{{ feedbackMessages.bio }}</p>
+          }
+
         </section>
       </div>
 
@@ -97,7 +107,9 @@
         <div class="section-actions">
           <app-button label="Save languages" size="small" (click)="saveLanguages()"></app-button>
         </div>
-        <p class="inline-feedback" *ngIf="feedbackMessages.languages">{{ feedbackMessages.languages }}</p>
+        @if (feedbackMessages.languages) {
+        <p class="inline-feedback">{{ feedbackMessages.languages }}</p>
+        }
       </section>
 
       <section class="preference-section">
@@ -138,7 +150,9 @@
         <div class="section-actions">
           <app-button label="Save preferences" size="small" (click)="savePlaystyleAndPlatform()"></app-button>
         </div>
-        <p class="inline-feedback" *ngIf="feedbackMessages.playstyle">{{ feedbackMessages.playstyle }}</p>
+        @if (feedbackMessages.playstyle) {
+        <p class="inline-feedback">{{ feedbackMessages.playstyle }}</p>
+        }
       </section>
     </article>
   </div>

@@ -36,10 +36,10 @@
     }">
         <div class="tab-pane" id="users">
           @if (directChats().length > 0) {
-          @for (chat of directChats(); track chat.Id) {
+          @for (chat of directChats(); track $index) {
           <div class="card mb-2 p-2 text-white">
             <!-- Whole member block clickable -->
-            @for (member of chat.Members; track member.UserId) {
+            @for (member of chat.Members; track $index) {
             <div class="d-flex align-items-center user-card" (click)="userClicked(member.UserId)">
 
               <img class="account-icon"
@@ -107,46 +107,47 @@
   </div>
 </div>
 
-<div class="friendsModal" *ngIf="newChatModalOpen">
+@if (newChatModalOpen) {
+<div class="friendsModal">
   <div class="modalOverlay"></div>
   <div class="modalContent">
     <h3 class="modalTitle">Add friends to chat</h3>
 
     <!-- Voi lisätä myöhemmin input filtterin jos jaksaa -->
-    <!-- <div class="input-container">
-      <img src="assets/svg/Search_icon.svg" alt="Search" class="search-icon" />
-      <input type="text" placeholder="Search friends..." />
-    </div> -->
+    <!--
+      <div class="input-container">
+        <img src="assets/svg/Search_icon.svg" alt="Search" class="search-icon" />
+        <input type="text" placeholder="Search friends..." />
+      </div>
+      -->
 
     <div class="friendsList">
-      <ng-container *ngIf="friendsList && friendsList.length > 0; else noFriends">
-        @for (friend of friendsList; track friend.UserId) {
-        <div class="card mb-2 p-2 text-white" [class.selected]="isSelected(friend)"
-          (click)="toggleFriendSelection(friend)">
-
-          <div class="d-flex align-items-center user-card">
-            <img class="account-icon" [src]="friend.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'"
-              alt="Friend" />
-            <div class="userTextBar">
-              <strong>{{ friend.Username }}</strong><br />
-              <small class="lMessage">{{ friend.Status || 'Offline' }}</small>
-            </div>
+      @if (friendsList && friendsList.length > 0) {
+      @for (friend of friendsList; track $index) {
+      <div class="card mb-2 p-2 text-white" [class.selected]="isSelected(friend)"
+        (click)="toggleFriendSelection(friend)">
+        <div class="d-flex align-items-center user-card">
+          <img class="account-icon" [src]="friend.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'"
+            alt="Friend" />
+          <div class="userTextBar">
+            <strong>{{ friend.Username }}</strong><br />
+            <small class="lMessage">{{ friend.Status || 'Offline' }}</small>
           </div>
         </div>
-        }
-      </ng-container>
-
-      <ng-template #noFriends>
-        <p>
-          You need friends first!
-        </p>
-      </ng-template>
+      </div>
+      }
+      } @else {
+      <p>You need friends first!</p>
+      }
     </div>
 
     <div class="modalButtons">
-      <app-button label="Close" [fullWidth]="true" size="small" (click)="closeNewChatModal()"></app-button>
+      <app-button label="Close" [fullWidth]="true" size="small" (click)="closeNewChatModal()">
+      </app-button>
       <app-button label="Start chat" [fullWidth]="true" size="small" variant="highlight"
-        [state]="selectedFriends.length !== 0 ? 'active' : 'disabled'" (click)="startChat()"></app-button>
+        [state]="selectedFriends.length !== 0 ? 'active' : 'disabled'" (click)="startChat()">
+      </app-button>
     </div>
   </div>
 </div>
+}
