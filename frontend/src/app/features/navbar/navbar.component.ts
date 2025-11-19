@@ -57,8 +57,6 @@ interface NavChild {
 })
 export class NavbarComponent implements OnInit {
   isCollapsed = false;
-  // private hasUserPreference = false; //REMOVED for UX, seemed like a bug more than a feature
-  // Lines 133 & 157 also removed
   @Output() collapsedChange = new EventEmitter<boolean>();
 
   user: User | null = null;

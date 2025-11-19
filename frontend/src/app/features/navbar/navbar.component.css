@@ -89,6 +89,7 @@
 
 .logo--big {
   width: 7.5rem;
+  cursor: pointer;
 }
 
 .navigation.collapsed .logo--big {
@@ -101,6 +102,7 @@
   margin-bottom: 1rem;
   width: 2rem;
   opacity: 0.95;
+  cursor: pointer;
 }
 
 .navigation:not(.collapsed) .logo--small {

@@ -46,9 +46,9 @@
   height: 100%;
   grid-column: 2;
   padding: 57px 1.75rem 75.35px 1.25rem;
-  margin-right: 0;
   overflow: visible;
   min-height: var(--viewport-height);
+  overflow-x: hidden;
 }
 
 /* Social bar asetukset */
@@ -108,7 +108,7 @@
     flex: 1 1 auto;
     min-height: 0; /* allow flex child to shrink and enable internal scrolling */
     width: 100%;
-    padding: 0 1rem 1rem 1rem;
+    padding: 1rem;
   }
 
   .navbar {

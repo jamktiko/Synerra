@@ -4,7 +4,6 @@
 }
 
 .account-settings-page {
-  padding: clamp(1rem, 2vw, 2.5rem);
   --settings-accent: var(--color-primary);
   --settings-accent-rgb: var(--color-primary-rgb);
 }
