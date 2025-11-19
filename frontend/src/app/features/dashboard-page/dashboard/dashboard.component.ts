@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../../core/interfaces/user.model';
 import { UserStore } from '../../../core/stores/user.store';
-import { ChatService } from '../../../core/services/chat.service';
 import { UserService } from '../../../core/services/user.service';
 
 @Component({
@@ -38,106 +37,120 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     private userStore: UserStore,
     private userService: UserService
   ) {
-    // Sets up a reactive watcher that updates user
     effect(() => {
       const user = this.userStore.user();
       if (user) {
         this.me = user;
         this.userGames = this.me.PlayedGames || [];
-        console.log('Usergames:', this.userGames);
         this.filterUserGames();
       }
     });
   }
 
-  // Scroll helpers for the horizontal games rows. Accepts the native element from template ref.
-  scrollRowLeft(row: HTMLElement | null) {
-    this.scrollRowBy(row, -1);
-  }
-
-  scrollRowRight(row: HTMLElement | null) {
-    this.scrollRowBy(row, 1);
-  }
-
-  //calls functions on init
   ngOnInit() {
     this.setGreeting();
     this.loadgames();
   }
 
+  // 🔥🔥 ADD DRAG-TO-SCROLL HERE 🔥🔥
   ngAfterViewInit(): void {
-    // Ensure rows start scrolled to the left. Delay slightly to allow content to render.
+    // Existing code
     setTimeout(() => this.resetRows(), 60);
+
+    // Enable desktop drag scrolling
+    if (this.favRow?.nativeElement) {
+      this.enableDragScroll(this.favRow.nativeElement);
+    }
+    if (this.popRow?.nativeElement) {
+      this.enableDragScroll(this.popRow.nativeElement);
+    }
   }
+
+  // 🔥🔥 DRAG-TO-SCROLL LOGIC 🔥🔥
+  private enableDragScroll(el: HTMLElement) {
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    el.addEventListener('mousedown', (e) => {
+      isDown = true;
+      el.classList.add('dragging');
+      startX = e.pageX - el.offsetLeft;
+      scrollLeft = el.scrollLeft;
+    });
+
+    el.addEventListener('mouseleave', () => {
+      isDown = false;
+      el.classList.remove('dragging');
+    });
+
+    el.addEventListener('mouseup', () => {
+      isDown = false;
+      el.classList.remove('dragging');
+    });
+
+    el.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - el.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      el.scrollLeft = scrollLeft - walk;
+    });
+  }
+  // 🔥 END OF ADDED CODE 🔥
 
   setGreeting() {
     const hour = new Date().getHours();
-
-    if (hour >= 5 && hour < 12) {
-      this.greeting = 'Good morning';
-    } else if (hour >= 12 && hour < 17) {
-      this.greeting = 'Good afternoon';
-    } else if (hour >= 17 && hour < 21) {
-      this.greeting = 'Good evening';
-    } else {
-      this.greeting = 'Good night';
-    }
+    if (hour >= 5 && hour < 12) this.greeting = 'Good morning';
+    else if (hour >= 12 && hour < 17) this.greeting = 'Good afternoon';
+    else if (hour >= 17 && hour < 21) this.greeting = 'Good evening';
+    else this.greeting = 'Good night';
   }
-  //gets games to the dashboard from endpoint
+
   loadgames() {
     this.gameService.listGames().subscribe({
       next: (res) => {
         this.games = res;
-        console.log('games:', res);
-        //sorts games by popularity
         this.sortedGames = [...this.games]
-          .filter((game) => Number(game.Popularity) >= 1) // exclude unpopular games
+          .filter((game) => Number(game.Popularity) >= 1)
           .sort((a, b) => Number(b.Popularity) - Number(a.Popularity));
+
         this.filterUserGames();
-        console.log('Users played games:', this.userGames);
       },
-      error: (err) => {
-        console.error('Failed to load games', err);
-      },
+      error: (err) => console.error('Failed to load games', err),
     });
   }
 
-  // Searches the games that the current user has added as favourites
   filterUserGames() {
     const userGameIds = new Set(this.userGames.map((g) => g.gameId));
-    console.log(userGameIds);
-    this.filteredGames = this.sortedGames.filter((game) => {
-      const gameId = game.PK.replace(/^GAME#/, ''); // remove prefix
-      return userGameIds.has(gameId);
-    });
-    console.log('Filtered games', this.filteredGames);
-    // Optional: sort by popularity
+    this.filteredGames = this.sortedGames.filter((game) =>
+      userGameIds.has(game.PK.replace(/^GAME#/, ''))
+    );
     this.filteredGames.sort((a, b) => b.Popularity - a.Popularity);
-    // If the view exists, ensure favorite row is scrolled to start when the filtered list updates
+
     setTimeout(() => this.resetRows(), 0);
   }
 
   private resetRows() {
     try {
-      if (this.favRow && this.favRow.nativeElement) {
-        this.favRow.nativeElement.scrollTo({ left: 0, behavior: 'auto' });
-      }
-      if (this.popRow && this.popRow.nativeElement) {
-        this.popRow.nativeElement.scrollTo({ left: 0, behavior: 'auto' });
-      }
-    } catch (e) {
-      // defensive: ignore if DOM not ready
-      console.debug('resetRows failed', e);
-    }
+      this.favRow?.nativeElement.scrollTo({ left: 0, behavior: 'auto' });
+      this.popRow?.nativeElement.scrollTo({ left: 0, behavior: 'auto' });
+    } catch {}
+  }
+
+  scrollRowLeft(row: HTMLElement | null) {
+    this.scrollRowBy(row, -1);
+  }
+  scrollRowRight(row: HTMLElement | null) {
+    this.scrollRowBy(row, 1);
   }
 
   private scrollRowBy(row: HTMLElement | null, direction: -1 | 1) {
     if (!row) return;
     try {
       const container = row;
-      const firstCard = container.querySelector<HTMLElement>(
-        'app-dashboard-card'
-      );
+      const firstCard =
+        container.querySelector<HTMLElement>('app-dashboard-card');
 
       let step = container.clientWidth * 0.85;
 
@@ -145,11 +158,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         const cardRect = firstCard.getBoundingClientRect();
         const cardWidth = cardRect.width;
         const cardStyles = window.getComputedStyle(firstCard);
-        const gapStyles = window.getComputedStyle(container);
         const marginLeft = parseFloat(cardStyles.marginLeft || '0') || 0;
         const marginRight = parseFloat(cardStyles.marginRight || '0') || 0;
+        const gapStyles = window.getComputedStyle(container);
         const gap =
           parseFloat(gapStyles.columnGap || gapStyles.gap || '0') || 0;
+
         step = cardWidth + marginLeft + marginRight + gap;
       }
 
@@ -160,8 +174,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           : Math.max(container.scrollLeft - step, 0);
 
       container.scrollTo({ left: next, behavior: 'smooth' });
-    } catch (e) {
-      console.debug('scrollRowBy failed', e);
-    }
+    } catch (e) {}
   }
 }

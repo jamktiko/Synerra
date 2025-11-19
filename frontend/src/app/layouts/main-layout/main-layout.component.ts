@@ -31,7 +31,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
   constructor(
     private userStore: UserStore,
     private router: Router,
-    private userService: UserService,
+    private userService: UserService
   ) {}
   @ViewChild(NavbarComponent) navbar!: NavbarComponent;
 
