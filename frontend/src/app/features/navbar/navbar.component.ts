@@ -119,7 +119,7 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private loadingPageStore: LoadingPageStore,
-    private notificationStore: NotificationStore
+    private notificationStore: NotificationStore,
   ) {
     // Watch for user changes reactively
     effect(() => {
@@ -136,8 +136,8 @@ export class NavbarComponent implements OnInit {
     this.router.events
       .pipe(
         filter(
-          (event): event is NavigationEnd => event instanceof NavigationEnd
-        )
+          (event): event is NavigationEnd => event instanceof NavigationEnd,
+        ),
       )
       .subscribe((event) => {
         this.currentUrl = event.urlAfterRedirects;
@@ -219,7 +219,6 @@ export class NavbarComponent implements OnInit {
   }
 
   onUserClick(): void {
-    console.log('User button clicked');
     this.router.navigate([`/dashboard/profile/${this.user?.UserId}`]);
   }
 
@@ -259,7 +258,7 @@ export class NavbarComponent implements OnInit {
       return false;
     }
     return item.children.some((child) =>
-      this.matchesChildRoute(child, this.currentUrl)
+      this.matchesChildRoute(child, this.currentUrl),
     );
   }
 
@@ -292,7 +291,7 @@ export class NavbarComponent implements OnInit {
         return;
       }
       const hasMatch = item.children.some((child) =>
-        this.matchesChildRoute(child, url)
+        this.matchesChildRoute(child, url),
       );
       if (hasMatch) {
         this.expandedGroups.add(item.label);
@@ -315,7 +314,7 @@ export class NavbarComponent implements OnInit {
     }
     const params = new URLSearchParams(search);
     return Object.entries(child.queryParams).every(
-      ([key, value]) => params.get(key) === String(value)
+      ([key, value]) => params.get(key) === String(value),
     );
   }
 }
