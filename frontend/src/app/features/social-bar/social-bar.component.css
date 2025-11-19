@@ -298,6 +298,71 @@
   scrollbar-width: thin;
   scrollbar-color: var(--color-background);
 }
+/* For high resolution monitors */
+@media (min-width: 2500px) {
+  .social-floating {
+    width: clamp(16rem, 18vw, 26rem); /* larger width */
+    max-width: 26rem;
+    padding: 1.5rem 1.25rem; /* stronger padding */
+    border-radius: 16px;
+    margin-right: 3rem;
+  }
+
+  .social-floating a {
+    font-size: 1.65rem; /* bigger social icons */
+  }
+
+  .social-text {
+    font-size: 1.1rem;
+  }
+
+  .player-card {
+    padding: 0.6rem 0.75rem;
+    gap: 1.1rem;
+  }
+
+  .player-name {
+    font-size: 1.1rem;
+  }
+
+  .acount-icon {
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+
+  .status {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .status-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .chatroom-card {
+    height: 4.2rem;
+    padding: 0.55rem 0.75rem;
+    gap: 1.25rem;
+    border-radius: 12px;
+  }
+
+  .chatroom-card-child {
+    width: 3.75rem;
+    height: 3.75rem;
+  }
+
+  .friends-container,
+  .chatroom-items {
+    gap: 1rem;
+  }
+
+  .linebreak-horizontal-child {
+    width: calc(100% - 1.5rem);
+    margin: 0.6rem 0.75rem 0.6rem;
+  }
+}
+
 /* Mobiili */
 @media (max-width: 900px) {
   .social-floating {

@@ -49,6 +49,9 @@
   overflow: visible;
   min-height: var(--viewport-height);
   overflow-x: hidden;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 /* Social bar asetukset */
