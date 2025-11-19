@@ -67,7 +67,7 @@
 }
 
 .hint {
-  color: var(--color-text-dark);
+  color: var(--color-text-grey);
   padding-top: 2rem;
 }
 
@@ -251,6 +251,13 @@
   transition: stroke-dashoffset 0.3s ease 0.1s;
 }
 
+.mobile-only {
+  display: none;
+  color: var(--color-text-grey);
+  padding-left: 0.2rem;
+  padding-top: 0.2rem;
+}
+
 /* Checked State */
 .ios-checkbox input:checked + .checkbox-wrapper .checkbox-bg {
   background: var(--checkbox-color);
@@ -316,6 +323,9 @@
   .modal-footer {
     width: 20rem;
   }
+  .modal-footer {
+    gap: 1.3rem;
+  }
 
   .progress {
     display: none;
@@ -328,5 +338,9 @@
   }
   .knowledgeText {
     width: 27rem;
+  }
+
+  .mobile-only {
+    display: block;
   }
 }
