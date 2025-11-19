@@ -6,6 +6,8 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  signal,
+  computed,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChatService } from '../../../core/services/chat.service';
@@ -33,8 +35,9 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   // Sets an observable for the showing chat messages
   messages$: Observable<ChatMessage[]>;
   messageHistory: [] = [];
-  otherMembers: User[] = [];
+  otherMembers = signal<User[]>([]);
   otherMemberNames: String | null = null;
+  private activeRoomId: string | null = null;
 
   messageText: string = '';
 
@@ -46,7 +49,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
     private chatService: ChatService,
     private userStore: UserStore,
     private userService: UserService,
-    private messageService: MessageService,
+    private messageService: MessageService
   ) {
     // Links the message observable to the chatService messages for reactive updating
     this.messages$ = this.chatService.logMessages$;
@@ -62,43 +65,63 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
     // Reactively tracks all reactive values used inside (userStore.user)
     effect(() => {
       const user = this.userStore.user();
-      if (user) {
-        this.loggedInUser = user;
-        console.log('LOGGEDINUSER', this.loggedInUser);
+      if (!user) return;
 
-        // Starts a chat with roomId
+      this.loggedInUser = user;
+
+      if (!this.roomId) return;
+
+      // Prevent duplicate websocket connections
+      if (this.activeRoomId !== this.roomId) {
+        if (this.activeRoomId) {
+          this.chatService.exitRoom(this.activeRoomId);
+        }
+        this.activeRoomId = this.roomId;
         this.chatService.startChat(undefined, this.roomId);
-
-        // Fetch the chat partner from the server
-        this.messageService.getUserRooms(this.loggedInUser.UserId).subscribe({
-          next: (res) => {
-            const room = res.rooms.find((r: any) => r.RoomId === this.roomId);
-            if (room) {
-              this.otherMembers = room.Members.filter(
-                (m: any) =>
-                  m.PK.replace('USER#', '') !== this.loggedInUser.UserId,
-              );
-
-              console.log('ORHETMEEMEMEME', this.otherMembers);
-            }
-          },
-          error: (err) => console.error('Failed to fetch room members', err),
-        });
       }
+
+      this.loadRoomMembers();
     });
   }
 
-  // Looping usernames here as there was problems in html
-  get memberNames(): string {
-    return (this.otherMembers ?? [])
-      .map((m) => m?.Username || 'Chat')
-      .join(', ');
+  memberNames = computed(() =>
+    this.otherMembers()
+      .map((m) => m.Username)
+      .join(', ')
+  );
+  loadRoomMembers() {
+    if (!this.loggedInUser) return;
+
+    this.messageService.getUserRooms(this.loggedInUser.UserId).subscribe({
+      next: (res) => {
+        const room = res.rooms.find((r: any) => r.RoomId === this.roomId);
+
+        if (!room) {
+          this.otherMembers.set([]);
+          return;
+        }
+
+        this.otherMembers.set(
+          room.Members.filter(
+            (m: any) => m.PK.replace('USER#', '') !== this.loggedInUser.UserId
+          )
+        );
+      },
+      error: (err) => console.error('Failed to fetch room members', err),
+    });
   }
 
   ngOnInit() {
-    this.clearNotifications();
-  }
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (!id) return;
 
+      this.roomId = id;
+
+      // effect() will handle startChat and member loading
+      this.clearNotifications();
+    });
+  }
   // Runs once after the full component has been initialized. Since the scrollToBottom requires the html element,
   // we must to be sure that it dosen't run before the element has been initialized.
   ngAfterViewInit() {
@@ -126,7 +149,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
       this.loggedInUser.UserId,
       this.loggedInUser.Username,
       this.loggedInUser.ProfilePicture,
-      this.roomId,
+      this.roomId
     );
     // Clears the input slot
     this.messageText = '';

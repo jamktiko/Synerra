@@ -75,7 +75,10 @@ body {
   display: flex;
   gap: 0.5rem; /* spacing between names */
   flex-wrap: wrap; /* allow wrapping if too many names */
-  margin-left: 30%;
+
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .avatarName {
@@ -345,11 +348,5 @@ body {
   }
   .sentMessage {
     max-width: 86%;
-  }
-}
-
-@media (max-width: 768px) {
-  .avatarGroup .avatarframe-icon {
-    display: none;
   }
 }
