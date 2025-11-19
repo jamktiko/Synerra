@@ -343,3 +343,9 @@ body {
     max-width: 86%;
   }
 }
+
+@media (max-width: 768px) {
+  .avatarGroup .avatarframe-icon {
+    display: none;
+  }
+}

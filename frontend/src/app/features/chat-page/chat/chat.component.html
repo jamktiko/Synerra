@@ -1,6 +1,7 @@
 <div class="chatElement">
   <div class="headframe">
 
+
     <div class="avatarGroup">
       <div *ngFor="let member of otherMembers">
         <img class="avatarframe-icon" [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'"
@@ -11,6 +12,7 @@
     <div class="nameGroup">
       <strong>{{ memberNames }}</strong>
     </div>
+
 
     <div class="headerButton">
       <app-button class="closeChatBtn" variant="default" icon="Cross" routerLink="/dashboard/social"></app-button>
