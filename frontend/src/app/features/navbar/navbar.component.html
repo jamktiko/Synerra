@@ -57,14 +57,7 @@
     </ng-container>
   </div>
 
-  <!-- Collapse/Expand toggle painike -->
-  <!-- <div class="controls">
-    <button type="button" class="collapse-toggle" (click)="toggleCollapse()"
-      [attr.aria-label]="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'" [attr.aria-pressed]="isCollapsed">
-      <img *ngIf="isCollapsed" src="assets/svg/expand.svg" alt="Expand sidebar" />
-      <img *ngIf="!isCollapsed" src="assets/svg/expand.svg" class="rotated" alt="Collapse sidebar" />
-    </button>
-  </div> -->
+
 
   <!-- Alaosa -->
   <div class="bottom-section">
@@ -104,9 +97,11 @@
             <img [src]="'assets/svg/' + item.icon + '.svg'" alt="{{ item.label }} icon" />
 
             <!-- Badge for notifications -->
-            <span class="badge" *ngIf="item.label === 'Social' && totalNotifications > 0">
-              {{ totalNotifications }}
+
+            <span class="badge" *ngIf="item.label === 'Social' && totalCount > 0">
+              {{ totalCount }}
             </span>
+
           </a>
         </ng-template>
 

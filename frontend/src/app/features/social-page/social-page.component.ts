@@ -9,10 +9,16 @@ import { MessagesTabComponent } from './messages-tab/messages-tab.component';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../core/services/notification.service';
 import { FriendService } from '../../core/services/friend.service';
-import { UnreadMessage } from '../../core/interfaces/chatMessage';
+import {
+  NormalizedMessage,
+  NormalizedRequest,
+  UnreadMessage,
+} from '../../core/interfaces/chatMessage';
 import { FriendRequest } from '../../core/interfaces/friendrequest.model';
-import { Subscription } from 'rxjs';
-
+import { combineLatest, map, Observable, Subscription } from 'rxjs';
+import { NotificationStore } from '../../core/stores/notification.store';
+import { WebsocketFriendRequest } from '../../core/interfaces/friend.model';
+type AnyRequest = FriendRequest | WebsocketFriendRequest;
 @Component({
   selector: 'app-social-page',
   imports: [
@@ -30,25 +36,102 @@ export class SocialPageComponent implements OnInit {
   directChats: any[] = [];
   groupChats: any[] = [];
   noChats: boolean = false;
-  unreads: UnreadMessage[] = [];
-  pendingRequests: FriendRequest[] = [];
-  notifications: any[] = [];
-  messageNotifications: any[] = [];
-  friendRequestNotifications: any[] = [];
+  messages$: Observable<NormalizedMessage[]>; // observable of normalized message notifications
+  friendRequests$: Observable<NormalizedRequest[]>; // observable of normalized friend requests
+  totalCount$: Observable<number>; // total count of messages + requests
 
   private sub: Subscription | null = null;
 
   constructor(
     private userService: UserService,
     private userStore: UserStore,
-    private chatService: ChatService,
-    private notificationService: NotificationService,
-    private friendService: FriendService
-  ) {}
+    private notificationStore: NotificationStore
+  ) {
+    // normalize messages from notification store
+    this.messages$ = this.notificationStore.messageNotifications.pipe(
+      map((msgs) =>
+        msgs.map((m) => ({
+          senderUsername: m.senderUsername || 'Unknown',
+          content: m.content || '',
+          timestamp: m.timestamp || Date.now(),
+          roomId: m.roomId || '',
+          profilePicture: m.profilePicture || '',
+        }))
+      )
+    );
+
+    // Normalize friend requests from NotificationStore
+    this.friendRequests$ = this.notificationStore.friendRequests.pipe(
+      map((reqs) =>
+        reqs.map((r: AnyRequest) => {
+          let status: 'PENDING' | 'ACCEPTED' | 'DECLINED' = 'PENDING';
+          let type: string;
+
+          // WebSocket request has 'type'
+          if ('type' in r && r.type) {
+            type = r.type;
+            if (type === 'friend_request') status = 'PENDING';
+            else if (type === 'friend_request_accepted') status = 'ACCEPTED';
+            else if (type === 'friend_request_declined') status = 'DECLINED';
+          } else if ('Status' in r && r.Status) {
+            status = r.Status as 'PENDING' | 'ACCEPTED' | 'DECLINED';
+            // derive type from status
+            type =
+              status === 'PENDING'
+                ? 'friend_request'
+                : status === 'ACCEPTED'
+                ? 'friend_request_accepted'
+                : 'friend_request_declined';
+          } else {
+            // fallback if neither exists
+            type = 'friend_request';
+          }
+
+          const fromUserId =
+            'fromUserId' in r ? r.fromUserId : (r as any).SenderId;
+          const fromUsername =
+            'fromUsername' in r
+              ? r.fromUsername
+              : (r as any).SenderUsername || 'Unknown';
+          const timestamp =
+            'timestamp' in r ? r.timestamp : (r as any).Timestamp || Date.now();
+          const senderPicture =
+            'senderPicture' in r
+              ? r.senderPicture
+              : (r as any).SenderPicture || (r as any).fromPicture || '';
+          const toUserId = (r as any).toUserId ?? '';
+
+          const message =
+            status === 'PENDING'
+              ? `${fromUsername} sent you a friend request`
+              : status === 'ACCEPTED'
+              ? `${fromUsername} accepted your friend request`
+              : `${fromUsername} declined your friend request`;
+
+          return {
+            fromUserId,
+            fromUsername,
+            timestamp,
+            senderPicture,
+            status,
+            toUserId,
+            type, // guaranteed string
+            message,
+          };
+        })
+      )
+    );
+    // Combine messages and requests to get total count for badge display
+    this.totalCount$ = combineLatest([
+      this.messages$,
+      this.friendRequests$,
+    ]).pipe(map(([msgs, reqs]) => msgs.length + reqs.length));
+  }
 
   ngOnInit(): void {
     const loggedInUser = this.userStore.getUser();
     if (loggedInUser?.UserId) {
+      // Fetch all chat rooms for logged-in user
       this.userService.getUserRooms(loggedInUser.UserId).subscribe({
         next: (res) => {
           const allChatRooms = res.rooms;
@@ -76,130 +159,9 @@ export class SocialPageComponent implements OnInit {
     } else {
       console.error('No userId found');
     }
-    // Listens to friend requests
-    this.friendService.pendingRequests$.subscribe({
-      next: (requests) => {
-        this.pendingRequests = requests;
-        console.log(
-          'Pending friend requests ON SOCIAL PAGE:',
-          this.pendingRequests
-        );
-      },
-      error: (err) =>
-        console.error('Failed to load pending requests ON SOCIAL PAGE', err),
-    });
-
-    // Listens to unread messages
-    this.userService.unreads$.subscribe({
-      next: (messages) => {
-        // Filter out friend requests
-        this.unreads = messages.filter(
-          (msg) => msg.Relation !== 'FRIEND_REQUEST'
-        );
-        console.log('Unread messages IN SOCIAL PAGEEEEE:', this.unreads);
-      },
-      error: (err) => console.error('Failed to load unread messages', err),
-    });
-
-    // Fetch initial data
-    this.friendService.getPendingRequests().subscribe();
-    this.userService.getUnreadMessages().subscribe();
-    this.userService.fetchUnreadMessages();
-
-    // Subscribe to incoming notifications
-    this.sub = this.notificationService.notifications$.subscribe(
-      (data: any) => {
-        console.log(data.type);
-        // Handle global clears first
-        if (data.type === 'CLEAR_ALL_MESSAGES') {
-          console.log('CLEARING MESSAGES');
-          this.notifications = this.notifications.filter(
-            (n) => n.type !== 'newMessage'
-          );
-          this.messageNotifications = [];
-
-          return; // exit early
-        }
-
-        if (data.type === 'CLEAR_ALL_REQUESTS') {
-          console.log('CLEARING REQUESTS');
-          this.notifications = this.notifications.filter(
-            (n) =>
-              n.type !== 'friend_request' &&
-              n.type !== 'friend_request_accepted' &&
-              n.type !== 'friend_request_declined'
-          );
-          this.friendRequestNotifications = [];
-          return; // exit early
-        }
-
-        console.log('Received notification in SOCIAL:', data);
-
-        // Add to generic notifications
-        this.notifications = [...this.notifications, data];
-
-        const type = (data.type ?? '').toString().toLowerCase();
-
-        // Real time messages
-        const isMessage =
-          type === 'newmessage' ||
-          type === 'message' ||
-          (data.Relation ?? '').toString().toUpperCase() === 'MESSAGE';
-
-        if (isMessage) {
-          const notif = {
-            senderUsername:
-              data.senderUsername ?? data.SenderUsername ?? 'Unknown',
-            profilePicture:
-              data.profilePicture ??
-              data.ProfilePicture ??
-              'assets/default-avatar.png',
-            content: data.content ?? data.Content ?? '',
-            timestamp: data.timestamp ?? data.Timestamp ?? Date.now(),
-            senderId: data.senderId ?? data.SenderId,
-          };
-
-          this.messageNotifications = [...this.messageNotifications, notif];
-          console.log(
-            'messageNotifications updated:',
-            this.messageNotifications
-          );
-        }
-
-        // Real time friend requests
-        const isFriendRequest =
-          type === 'friend_request' ||
-          type === 'friend_request_accepted' ||
-          type === 'friend_request_declined' ||
-          (data.Relation ?? '').toString().toUpperCase() === 'FRIEND_REQUEST';
-
-        if (isFriendRequest) {
-          const req = {
-            fromUserId: data.fromUserId ?? data.senderId ?? data.SenderId,
-            fromUsername:
-              data.fromUsername ?? data.senderUsername ?? data.SenderUsername,
-            senderPicture:
-              data.fromPicture ??
-              data.senderPicture ??
-              data.SenderPicture ??
-              'assets/svg/Acount.svg',
-            type: type,
-            timestamp: data.timestamp ?? Date.now(),
-          };
-
-          this.friendRequestNotifications = [
-            ...this.friendRequestNotifications,
-            req,
-          ];
-          console.log(
-            'friendRequestNotifications updated:',
-            this.friendRequestNotifications
-          );
-        }
-      }
-    );
   }
 
+  // Switch between messages and notifications tab
   tabSwitch(tab: string) {
     if (tab === 'notifications') {
       this.messagesTabShowing = false;

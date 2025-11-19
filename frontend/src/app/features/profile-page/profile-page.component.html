@@ -1,3 +1,5 @@
+<app-loading-spinner *ngIf="!user"></app-loading-spinner>
+
 <div *ngIf="user" class="layout">
   <div class="mid-container">
     <app-profile-header [user]="user" [isOwnProfile]="isOwnProfile" [isFriend]="isFriend"
@@ -7,4 +9,3 @@
   </div>
 
 </div>
-<app-loading-page *ngIf="!user"></app-loading-page>
