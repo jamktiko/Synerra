@@ -51,16 +51,13 @@
     }
     }
 
-
-
   </div>
-</div>
-
-<div class="chat-input">
-  <input [(ngModel)]="messageText" (keyup.enter)="sendMessage(messageText)" placeholder="Type your message" />
-  <!-- <button (click)="sendMessage(messageText)">
+  <div class="chat-input">
+    <input [(ngModel)]="messageText" (keyup.enter)="sendMessage(messageText)" placeholder="Type your message" />
+    <!-- <button (click)="sendMessage(messageText)">
       <img src="assets/svg/Send.svg" alt="" />
     </button> -->
-  <app-button class="chatSendBtn" variant="highlight" icon="Send" (click)="sendMessage(messageText)" size="small">
-  </app-button>
+    <app-button class="chatSendBtn" variant="highlight" icon="Send" (click)="sendMessage(messageText)" size="small">
+    </app-button>
+  </div>
 </div>
