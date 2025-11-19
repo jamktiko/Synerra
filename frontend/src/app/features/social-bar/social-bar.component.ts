@@ -34,7 +34,7 @@ export class SocialBarComponent implements AfterViewInit {
   constructor(
     private friendService: FriendService,
     private chatService: ChatService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
     this.users$ = this.friendService.friends$.pipe(
       map((friends) =>
@@ -43,11 +43,11 @@ export class SocialBarComponent implements AfterViewInit {
           if (a.Status === 'online' && b.Status !== 'online') return -1;
           if (a.Status !== 'online' && b.Status === 'online') return 1;
           return 0; // keep the original order if both same
-        })
-      )
+        }),
+      ),
     );
     this.onlineUsers$ = this.users$.pipe(
-      map((friends) => friends.filter((f) => f.Status === 'online'))
+      map((friends) => friends.filter((f) => f.Status === 'online')),
     );
   }
 

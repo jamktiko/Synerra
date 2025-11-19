@@ -1,21 +1,27 @@
-import { Component, effect, OnInit } from '@angular/core';
+import { Component, effect, OnInit, signal } from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { User, UserFilters } from '../../core/interfaces/user.model';
 import { PlayerCardComponent } from './player-card/player-card.component';
 import { PlayerFiltersComponent } from './player-filters/player-filters.component';
-import { forkJoin, Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { UserStore } from '../../core/stores/user.store';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { FriendService } from '../../core/services/friend.service';
 import { FriendRequest } from '../../core/interfaces/friendrequest.model';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+
 @Component({
   selector: 'app-find-players',
   standalone: true,
-  imports: [CommonModule, PlayerCardComponent, PlayerFiltersComponent],
+  imports: [
+    CommonModule,
+    PlayerCardComponent,
+    PlayerFiltersComponent,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './find-players.component.html',
   styleUrls: ['./find-players.component.css'],
 })
@@ -31,11 +37,13 @@ export class FindPlayersComponent implements OnInit {
   friends: User[] = [];
   sentRequests: string[] = [];
   comingRequests: string[] = [];
+  loadingSpinnerShowing = true;
+
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
     private userStore: UserStore,
-    private friendService: FriendService
+    private friendService: FriendService,
   ) {
     // Sets up a reactive watcher that updates user
     effect(() => {
@@ -50,10 +58,10 @@ export class FindPlayersComponent implements OnInit {
       map((users) => {
         if (!this.user) return users;
         return users.filter((u) => u.PK !== this.user?.PK);
-      })
+      }),
     );
     this.onlineUsers$ = this.users$.pipe(
-      map((users) => users.filter((user) => user.Status === 'online'))
+      map((users) => users.filter((user) => user.Status === 'online')),
     );
     this.users$.subscribe((users) => {
       this.filteredUsers$.next(users);
@@ -99,6 +107,7 @@ export class FindPlayersComponent implements OnInit {
     this.friendService.getFriends().subscribe({
       next: (users) => {
         this.friends = users;
+        this.loadingSpinnerShowing = false;
       },
       error: (err) => {
         console.error('Failed to fetch friends', err);
@@ -140,21 +149,21 @@ export class FindPlayersComponent implements OnInit {
           // username filter
           if (username) {
             candidates = candidates.filter((u) =>
-              u.Username_Lower?.includes(username.toLowerCase())
+              u.Username_Lower?.includes(username.toLowerCase()),
             );
           }
 
           //language filter
           if (languages && languages.length > 0) {
             candidates = candidates.filter((u) =>
-              u.Languages?.some((lang) => languages.includes(lang))
+              u.Languages?.some((lang) => languages.includes(lang)),
             );
           }
 
           //game filter
           if (games && games.length > 0) {
             candidates = candidates.filter((u) =>
-              u.PlayedGames?.some((pg) => games.includes(pg.gameId))
+              u.PlayedGames?.some((pg) => games.includes(pg.gameId)),
             );
           }
 
@@ -171,7 +180,7 @@ export class FindPlayersComponent implements OnInit {
           // Platform filter
           if (platform && platform.length > 0) {
             candidates = candidates.filter((u) =>
-              u.Platform?.some((p: string) => platform.includes(p))
+              u.Platform?.some((p: string) => platform.includes(p)),
             );
           }
 
@@ -181,7 +190,7 @@ export class FindPlayersComponent implements OnInit {
           }
 
           return candidates;
-        })
+        }),
       )
       .subscribe((filtered) => {
         // Emit filtered users to the BehaviorSubject

@@ -1,4 +1,8 @@
-<div class="mid-container">
+<div class="loadingSpinner" *ngIf="loadingSpinnerShowing">
+  <app-loading-spinner />
+</div>
+
+<div class="mid-container" *ngIf="!loadingSpinnerShowing">
   <app-game-filters (filterChanged)="onFilterChanged($event)" (sortToggled)="toggleSortOrder()">
   </app-game-filters>
 

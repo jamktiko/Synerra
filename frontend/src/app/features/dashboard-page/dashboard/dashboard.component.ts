@@ -15,10 +15,16 @@ import { User } from '../../../core/interfaces/user.model';
 import { UserStore } from '../../../core/stores/user.store';
 import { ChatService } from '../../../core/services/chat.service';
 import { UserService } from '../../../core/services/user.service';
+import { LoadingSpinnerComponent } from '../../loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [DashboardCardComponent, CommonModule, FormsModule],
+  imports: [
+    DashboardCardComponent,
+    CommonModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -29,6 +35,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   userGames: any[] = [];
   me: User | null = null;
   greeting: string = '';
+  loadingSpinnerShowing = true;
 
   @ViewChild('favRow', { static: false }) favRow?: ElementRef<HTMLElement>;
   @ViewChild('popRow', { static: false }) popRow?: ElementRef<HTMLElement>;
@@ -36,7 +43,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   constructor(
     private gameService: GameService,
     private userStore: UserStore,
-    private userService: UserService
+    private userService: UserService,
   ) {
     // Sets up a reactive watcher that updates user
     effect(() => {
@@ -95,6 +102,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           .sort((a, b) => Number(b.Popularity) - Number(a.Popularity));
         this.filterUserGames();
         console.log('Users played games:', this.userGames);
+        this.loadingSpinnerShowing = false;
       },
       error: (err) => {
         console.error('Failed to load games', err);
@@ -135,9 +143,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     if (!row) return;
     try {
       const container = row;
-      const firstCard = container.querySelector<HTMLElement>(
-        'app-dashboard-card'
-      );
+      const firstCard =
+        container.querySelector<HTMLElement>('app-dashboard-card');
 
       let step = container.clientWidth * 0.85;
 

@@ -1,4 +1,8 @@
-<div class="dashboard">
+<div class="loadingSpinner" *ngIf="loadingSpinnerShowing">
+  <app-loading-spinner />
+</div>
+
+<div class="dashboard" *ngIf="!loadingSpinnerShowing">
   <!-- Top Navigation -->
   <header class="top-navigation-bar">
     <div class="welcome-wrapper">

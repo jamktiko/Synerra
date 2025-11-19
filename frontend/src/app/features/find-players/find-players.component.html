@@ -1,4 +1,8 @@
-<div class="main-content">
+<div class="loadingSpinner" *ngIf="loadingSpinnerShowing">
+  <app-loading-spinner />
+</div>
+
+<div class="main-content" *ngIf="!loadingSpinnerShowing">
   <!-- Pelaajien filtteröintipalkki -->
   <div class="filter-component">
     <app-player-filters (filtersChanged)="onFiltersChanged($event)" [preSelectedGame]="preSelectedGame">
@@ -16,5 +20,4 @@
       </div>
     </ng-container>
   </div>
-
 </div>
