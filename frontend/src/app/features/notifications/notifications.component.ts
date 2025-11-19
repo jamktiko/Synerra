@@ -14,16 +14,28 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../shared/components/button/button.component';
-import { Subscription } from 'rxjs';
+import {
+  combineLatest,
+  firstValueFrom,
+  map,
+  Observable,
+  Subscription,
+} from 'rxjs';
 
-import { UnreadMessage } from '../../core/interfaces/chatMessage';
+import {
+  NormalizedMessage,
+  NormalizedRequest,
+  UnreadMessage,
+} from '../../core/interfaces/chatMessage';
 import { FriendRequest } from '../../core/interfaces/friendrequest.model';
 
 import { UserService } from '../../core/services/user.service';
 import { ChatService } from '../../core/services/chat.service';
 import { FriendService } from '../../core/services/friend.service';
 import { NotificationService } from '../../core/services/notification.service';
-
+import { NotificationStore } from '../../core/stores/notification.store';
+import { WebsocketFriendRequest } from '../../core/interfaces/friend.model';
+type AnyRequest = FriendRequest | WebsocketFriendRequest;
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
@@ -31,10 +43,9 @@ import { NotificationService } from '../../core/services/notification.service';
   imports: [CommonModule, ButtonComponent],
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
-  unreads: UnreadMessage[] = [];
-  pendingRequests: FriendRequest[] = [];
-  notifications: any[] = [];
-
+  messages$: Observable<NormalizedMessage[]>;
+  friendRequests$: Observable<NormalizedRequest[]>;
+  totalCount$: Observable<number>;
   showDropdown = false;
   activeTab: 'messages' | 'requests' = 'messages';
   readonly dropdownContext = { inline: false };
@@ -68,61 +79,95 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     private chatService: ChatService,
     private friendService: FriendService,
     private notificationService: NotificationService,
-    private host: ElementRef
-  ) {}
-
-  ngOnInit(): void {
-    // Listens to friend requests
-    this.friendService.pendingRequests$.subscribe({
-      next: (requests) => {
-        this.pendingRequests = requests;
-        console.log('Pending friend requests:', this.pendingRequests);
-      },
-      error: (err) => console.error('Failed to load pending requests', err),
-    });
-
-    // Listens to unread messages
-    this.userService.unreads$.subscribe({
-      next: (messages) => {
-        // Filter out friend requests
-        this.unreads = messages.filter(
-          (msg) => msg.Relation !== 'FRIEND_REQUEST'
-        );
-        console.log('Unread messages:', this.unreads);
-      },
-      error: (err) => console.error('Failed to load unread messages', err),
-    });
-
-    // Fetch initial data
-    this.userService.getUnreadMessages().subscribe();
-    this.friendService.getPendingRequests().subscribe();
-    this.userService.fetchUnreadMessages();
-
-    // Subscribe to incoming notifications
-    this.sub = this.notificationService.notifications$.subscribe(
-      (data: any) => {
-        switch (data.type) {
-          case 'CLEAR_ALL_MESSAGES':
-            this.notifications = this.notifications.filter(
-              (n) => n.type !== 'newMessage'
-            );
-            break;
-          case 'CLEAR_ALL_REQUESTS':
-            this.notifications = this.notifications.filter(
-              (n) =>
-                n.type !== 'friend_request' &&
-                n.type !== 'friend_request_accepted' &&
-                n.type !== 'friend_request_declined'
-            );
-            break;
-          default:
-            // push normal notifications (messages, friend requests, etc.)
-            this.notifications.push(data);
-        }
-      }
+    private host: ElementRef,
+    private notificationStore: NotificationStore
+  ) {
+    // Use normalized store output
+    this.messages$ = this.notificationStore.messageNotifications.pipe(
+      map((msgs) =>
+        msgs.map((m) => ({
+          senderUsername: m.senderUsername || 'Unknown',
+          content: m.content || '',
+          timestamp: m.timestamp || Date.now(),
+          roomId: m.roomId || '', // add this
+          profilePicture: m.profilePicture || '', // add this
+        }))
+      )
     );
+
+    this.friendRequests$ = this.notificationStore.friendRequests.pipe(
+      map((reqs) =>
+        reqs.map((r: AnyRequest) => {
+          let status: 'PENDING' | 'ACCEPTED' | 'DECLINED' = 'PENDING';
+          let type: string;
+
+          // WebSocket request has 'type'
+          if ('type' in r && r.type) {
+            type = r.type;
+            if (type === 'friend_request') status = 'PENDING';
+            else if (type === 'friend_request_accepted') status = 'ACCEPTED';
+            else if (type === 'friend_request_declined') status = 'DECLINED';
+          } else if ('Status' in r && r.Status) {
+            status = r.Status as 'PENDING' | 'ACCEPTED' | 'DECLINED';
+            // derive type from status
+            type =
+              status === 'PENDING'
+                ? 'friend_request'
+                : status === 'ACCEPTED'
+                ? 'friend_request_accepted'
+                : 'friend_request_declined';
+          } else {
+            // fallback if neither exists
+            type = 'friend_request';
+          }
+
+          const fromUserId =
+            'fromUserId' in r ? r.fromUserId : (r as any).SenderId;
+          const fromUsername =
+            'fromUsername' in r
+              ? r.fromUsername
+              : (r as any).SenderUsername || 'Unknown';
+          const timestamp =
+            'timestamp' in r ? r.timestamp : (r as any).Timestamp || Date.now();
+          const senderPicture =
+            'senderPicture' in r
+              ? r.senderPicture
+              : (r as any).SenderPicture || (r as any).fromPicture || '';
+          const toUserId = (r as any).toUserId ?? '';
+
+          const message =
+            status === 'PENDING'
+              ? `${fromUsername} sent you a friend request`
+              : status === 'ACCEPTED'
+              ? `${fromUsername} accepted your friend request`
+              : `${fromUsername} declined your friend request`;
+
+          return {
+            fromUserId,
+            fromUsername,
+            timestamp,
+            senderPicture,
+            status,
+            toUserId,
+            type,
+            message,
+          };
+        })
+      )
+    );
+
+    // Combined total count
+    this.totalCount$ = combineLatest([
+      this.messages$,
+      this.friendRequests$,
+    ]).pipe(map(([msgs, reqs]) => msgs.length + reqs.length));
   }
 
+  ngOnInit(): void {
+    this.sub = this.friendRequests$.subscribe((requests) => {
+      console.log('Current friend requests:', requests);
+    });
+  }
   ngOnDestroy(): void {
     // Clean up inline views
     if (this.inlineView) {
@@ -137,36 +182,33 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Accept friend request
-  acceptRequest(targetUserId: string) {
-    const request = this.pendingRequests.find(
-      (req) => req.PK === `USER#${targetUserId}`
-    );
-    const username = request?.SenderUsername || 'User';
+  // accept friend request
+  async acceptRequest(targetUserId: string) {
+    const requests = await firstValueFrom(this.friendRequests$);
+    const request = requests.find((req) => req.fromUserId === targetUserId);
+    const username = request?.fromUsername || 'User';
 
     this.friendService.acceptFriendRequest(targetUserId).subscribe({
       next: () => {
-        this.pendingRequests = this.pendingRequests.filter(
-          (req) => req.PK !== `USER#${targetUserId}`
-        );
+        // No local friendRequests array anymore, update the store if needed
+        this.notificationStore.removeFriendRequest(targetUserId);
         alert(`Friend request from ${username} accepted`);
       },
       error: (err) => console.error('Failed to accept request', err),
     });
   }
 
-  // Decline friend request
-  declineRequest(targetUserId: string) {
-    const request = this.pendingRequests.find(
-      (req) => req.PK === `USER#${targetUserId}`
-    );
-    const username = request?.SenderUsername || 'User';
+  // decline friend request
+  async declineRequest(targetUserId: string) {
+    // Get the current friend requests from the store
+    const requests = await firstValueFrom(this.friendRequests$);
+    const request = requests.find((req) => req.fromUserId === targetUserId);
+    const username = request?.fromUsername || 'User';
 
     this.friendService.declineFriendRequest(targetUserId).subscribe({
       next: () => {
-        this.pendingRequests = this.pendingRequests.filter(
-          (req) => req.PK !== `USER#${targetUserId}`
-        );
+        // Remove the request from the store
+        this.notificationStore.removeFriendRequest(targetUserId);
         alert(`Friend request from ${username} declined`);
       },
       error: (err) => console.error('Failed to decline request', err),
@@ -180,23 +222,14 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         console.log(
           `Cleared ${res.deletedCount} accepted/declined requests from this user.`
         );
+        // Update the store locally
+        this.notificationStore.removeFriendRequest(userId);
       },
       error: (err) => {
         console.error('Failed to clear requests', err);
         alert('Failed to clear requests. Check console for details.');
       },
     });
-
-    // Remove notifications from this sender
-    this.notifications = this.notifications.filter((n) => {
-      const senderId = n.senderId || n.senderID || n.fromUserId || n.SenderId;
-      return senderId !== userId;
-    });
-
-    // Remove requests from local list
-    this.pendingRequests = this.pendingRequests.filter(
-      (req) => req.SenderId !== userId && req.PK !== `USER#${userId}`
-    );
 
     console.log(`Cleared requests from user ${userId}`);
   }
@@ -206,43 +239,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.setDropdownState(!this.showDropdown);
   }
 
-  // Badge count for total unread notifications, messages and requests
-  get unreadCount(): number {
-    return (
-      (this.unreads?.length || 0) +
-      (this.pendingRequests?.length || 0) +
-      (this.notifications?.length || 0)
-    );
-  }
-
-  get messageNotifications() {
-    return this.notifications.filter((n) => n.type === 'newMessage');
-  }
-
-  get friendRequestNotifications() {
-    return this.notifications.filter(
-      (n) =>
-        n.type === 'friend_request' ||
-        n.type === 'friend_request_accepted' ||
-        n.type === 'friend_request_declined'
-    );
-  }
-
-  get messageTabCount(): number {
-    return (this.unreads?.length || 0) + this.messageNotifications.length;
-  }
-
-  get requestTabCount(): number {
-    return (
-      (this.pendingRequests?.length || 0) +
-      this.friendRequestNotifications.length
-    );
-  }
-
   // Starts chat when clicking notification and removes notifications from that sender
   userClicked(roomId: string) {
-    // Also remove from the generic notifications list
-    this.notifications = this.notifications.filter((n) => n.roomId !== roomId);
+    // Remove notifications from the store
+    this.notificationStore.removeNotificationsByRoom(roomId);
 
     // Start the chat
     this.chatService.startChat(undefined, roomId);
@@ -257,83 +257,34 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   // Mark all messages as read
   markAllAsRead() {
-    // Normalize reactive notifications
-    const reactiveMessages = this.notifications
-      .filter((n) => n.type === 'newMessage')
-      .map((n) => ({
-        roomId: n.roomId,
-      }));
-
-    // Normalize database messages
-    const dbMessages = this.unreads.map((n) => ({
-      roomId: n.RoomId,
-    }));
-
-    // Merge and deduplicate by roomId
-    const uniqueRoomIds = Array.from(
-      new Set([...reactiveMessages, ...dbMessages].map((m) => m.roomId))
-    );
-
-    // Mark each room as read on the backend
-    uniqueRoomIds.forEach((roomId) => {
-      this.userService.markRoomMessagesAsRead(roomId).subscribe({
-        error: (err) => console.error('Failed to mark room read', roomId, err),
-      });
-    });
-
-    // Clear notifications and unreads locally
-    this.notifications = this.notifications.filter(
-      (n) => n.type !== 'newMessage'
-    );
-    this.unreads = [];
     this.notificationService.clearNotifications();
-    this.userService.clearAllUnreads();
+    this.userService.clearAllUnreads().subscribe({
+      next: (res) => {
+        console.log('Unreads cleared:', res);
+      },
+      error: (err) => {
+        console.error('Failed to clear unreads', err);
+      },
+    });
+    this.notificationStore.clearAllMessages();
 
     // Close the dropdown
     this.setDropdownState(false);
   }
 
-  markRequestsAsRead() {
+  async markRequestsAsRead() {
     console.log('MARK REQUESTS AS READ CALLED');
 
-    // Normalize reactive notifications
-    const reactiveRequests = this.notifications
-      .filter((n) => n.type === 'friend_request')
-      .map((n) => ({
-        userId: n.fromUserId,
-        status: 'PENDING',
-        username: n.fromUsername,
-        picture: n.fromPicture,
-      }));
+    // Get current friend requests from store
+    const requests = await firstValueFrom(this.friendRequests$);
 
-    // Normalize DB pending requests
-    const dbRequests = this.pendingRequests.map((req) => ({
-      userId: req.SenderId,
-      status: req.Status, // PENDING / ACCEPTED / DECLINED
-      username: req.SenderUsername,
-      picture: req.SenderPicture,
-    }));
-
-    // Merge and deduplicate by userId
-    const allRequestsMap = new Map<
-      string,
-      { userId: string; status: string }
-    >();
-    [...reactiveRequests, ...dbRequests].forEach((r) => {
-      if (!allRequestsMap.has(r.userId)) {
-        allRequestsMap.set(r.userId, { userId: r.userId, status: r.status });
-      }
-    });
-    const uniqueRequests = Array.from(allRequestsMap.values());
-
-    console.log('Unique requests to process:', uniqueRequests);
-
-    // Process requests
-    uniqueRequests.forEach(({ userId, status }) => {
+    // Process each request
+    requests.forEach((r) => {
+      const userId = r.fromUserId;
       if (!userId) return;
 
-      if (status === 'PENDING') {
-        // Pending requests are declined
+      // Pending requests are declined
+      if (r.status === 'PENDING') {
         this.friendService.declineFriendRequest(userId).subscribe({
           error: (err) =>
             console.error('Failed to decline pending request for', userId, err),
@@ -351,15 +302,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Clear UI arrays
-    this.notifications = this.notifications.filter(
-      (n) => n.type !== 'friend_request'
-    );
     this.notificationService.clearRequests();
-    this.pendingRequests = [];
-    this.friendService.clearAllRequests();
 
-    //  Close dropdown
+    // Close dropdown
     this.setDropdownState(false);
   }
   // Close when clicking outside of the component

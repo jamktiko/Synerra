@@ -48,15 +48,17 @@
           <div class="field">
             <label for="username">Display name</label>
             <div class="input-wrapper" [class.invalid]="!validUsername || usernameTaken">
-              <input id="username" type="text" [(ngModel)]="username" (input)="onUsernameInput()" placeholder="Synerra Legend" />
+              <input id="username" type="text" [(ngModel)]="username" (input)="onUsernameInput()"
+                placeholder="Synerra Legend" />
             </div>
             <small class="hint">Letters, numbers or underscores · 3-20 characters</small>
           </div>
 
           <div class="field">
             <label for="bio">Bio</label>
-            <textarea id="bio" rows="5" [(ngModel)]="bio" placeholder="Share tactics, mains or a friendly hello."></textarea>
-            <small class="hint">Visible across game invites, squads and chat.</small>
+            <textarea id="bio" rows="5" [(ngModel)]="bio"
+              placeholder="Share tactics, mains or a friendly hello."></textarea>
+            <small class="hint">Let others know more about you.</small>
           </div>
 
           <div class="field-actions">
@@ -78,8 +80,8 @@
 
         <div class="language-grid">
           <label class="language-chip" *ngFor="let lang of languages">
-            <input type="checkbox" class="visually-hidden" [id]="lang.code" [checked]="selectedLanguages.includes(lang.code)"
-              (change)="toggleLanguage(lang.code)" />
+            <input type="checkbox" class="visually-hidden" [id]="lang.code"
+              [checked]="selectedLanguages.includes(lang.code)" (change)="toggleLanguage(lang.code)" />
             <span>{{ lang.name }}</span>
           </label>
         </div>
@@ -106,8 +108,6 @@
                 <option value="">Select playstyle</option>
                 <option value="Competitive">Competitive</option>
                 <option value="Casual">Casual</option>
-                <option value="Creator">Creator / Streamer</option>
-                <option value="Support">Support / Shotcaller</option>
               </select>
             </div>
           </div>

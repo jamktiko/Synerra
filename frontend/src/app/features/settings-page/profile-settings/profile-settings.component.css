@@ -350,3 +350,7 @@
   );
   border-color: rgba(var(--settings-accent-rgb), 0.4);
 }
+
+option {
+  background-color: var(--color-background);
+}
