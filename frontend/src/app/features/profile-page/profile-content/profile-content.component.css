@@ -321,6 +321,9 @@
 }
 
 @media (max-width: 768px) {
+  .profile-content-container {
+    gap: 1rem;
+  }
   .games-grid {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 16px;

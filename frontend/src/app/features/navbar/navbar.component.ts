@@ -51,8 +51,6 @@ interface NavChild {
 })
 export class NavbarComponent implements OnInit {
   isCollapsed = false;
-  // private hasUserPreference = false; //REMOVED for UX, seemed like a bug more than a feature
-  // Lines 133 & 157 also removed
   @Output() collapsedChange = new EventEmitter<boolean>();
   notifications: any[] = [];
   user: User | null = null;
@@ -123,7 +121,7 @@ export class NavbarComponent implements OnInit {
     private loadingPageStore: LoadingPageStore,
     private notificationService: NotificationService,
     private userService: UserService,
-    private friendService: FriendService,
+    private friendService: FriendService
   ) {
     // Watch for user changes reactively
     effect(() => {
@@ -140,8 +138,8 @@ export class NavbarComponent implements OnInit {
     this.router.events
       .pipe(
         filter(
-          (event): event is NavigationEnd => event instanceof NavigationEnd,
-        ),
+          (event): event is NavigationEnd => event instanceof NavigationEnd
+        )
       )
       .subscribe((event) => {
         this.currentUrl = event.urlAfterRedirects;
@@ -183,7 +181,7 @@ export class NavbarComponent implements OnInit {
       next: (messages) => {
         // Filter out friend requests
         this.unreads = messages.filter(
-          (msg) => msg.Relation !== 'FRIEND_REQUEST',
+          (msg) => msg.Relation !== 'FRIEND_REQUEST'
         );
         console.log('Unread messages in NAVBAR:', this.unreads);
       },
@@ -194,7 +192,7 @@ export class NavbarComponent implements OnInit {
         switch (data.type) {
           case 'CLEAR_ALL_MESSAGES':
             this.notifications = this.notifications.filter(
-              (n) => n.type !== 'newMessage',
+              (n) => n.type !== 'newMessage'
             );
             break;
           case 'CLEAR_ALL_REQUESTS':
@@ -202,7 +200,7 @@ export class NavbarComponent implements OnInit {
               (n) =>
                 n.type !== 'friend_request' &&
                 n.type !== 'friend_request_accepted' &&
-                n.type !== 'friend_request_declined',
+                n.type !== 'friend_request_declined'
             );
             break;
           default:
@@ -210,7 +208,7 @@ export class NavbarComponent implements OnInit {
             this.notifications.push(data);
             console.log('NOTIFICATIONS IN NAVBAR', this.notifications);
         }
-      },
+      }
     );
   }
 
@@ -300,7 +298,7 @@ export class NavbarComponent implements OnInit {
       return false;
     }
     return item.children.some((child) =>
-      this.matchesChildRoute(child, this.currentUrl),
+      this.matchesChildRoute(child, this.currentUrl)
     );
   }
 
@@ -333,7 +331,7 @@ export class NavbarComponent implements OnInit {
         return;
       }
       const hasMatch = item.children.some((child) =>
-        this.matchesChildRoute(child, url),
+        this.matchesChildRoute(child, url)
       );
       if (hasMatch) {
         this.expandedGroups.add(item.label);
@@ -356,7 +354,7 @@ export class NavbarComponent implements OnInit {
     }
     const params = new URLSearchParams(search);
     return Object.entries(child.queryParams).every(
-      ([key, value]) => params.get(key) === String(value),
+      ([key, value]) => params.get(key) === String(value)
     );
   }
 }

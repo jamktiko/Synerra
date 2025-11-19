@@ -4,7 +4,6 @@
 }
 
 .notification-settings-page {
-  padding: clamp(1.25rem, 3vw, 2.5rem);
   color: var(--color-text-default);
   --settings-accent: var(--color-primary);
   --settings-accent-rgb: var(--color-primary-rgb);
@@ -187,8 +186,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(15, 15, 15, 0.8);
   cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease,
-    background 0.2s ease;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
 }
 
 .option-card:hover {

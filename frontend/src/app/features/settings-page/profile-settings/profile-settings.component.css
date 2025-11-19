@@ -4,7 +4,6 @@
 }
 
 .profile-settings-page {
-  padding: clamp(1.25rem, 3vw, 2.5rem);
   color: var(--color-text-default);
   --settings-accent: var(--color-primary);
   --settings-accent-rgb: var(--color-primary-rgb);
