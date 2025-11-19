@@ -22,7 +22,7 @@
 
   <div class="chat-log" #chatLog>
     <!-- Loops the messages gotten from the chatService -->
-    @for (msg of messages$ | async; track msg.SenderId) {
+    @for (msg of messages$ | async; track $index) {
     @if (msg.SenderId === loggedInUser?.UserId) {
     <div class="sentMessageWrapper">
       <div class="sentMessage">
