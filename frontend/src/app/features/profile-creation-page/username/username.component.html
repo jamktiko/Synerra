@@ -22,20 +22,16 @@
     <!--Body-->
     <div class="modal-body">
       <h2 class="text-sm-bold">Choose your username</h2>
-      <input
-        (keydown.enter)="handleEnter($event)"
-        type="text"
-        name="username"
-        [(ngModel)]="username"
-        class="form-control"
-        placeholder="Username"
-        (input)="onUsernameInput()"
-      />
+      <input (keydown.enter)="handleEnter($event)" type="text" name="username" [(ngModel)]="username"
+        class="form-control" placeholder="Username" (input)="onUsernameInput()" />
       <!-- Tämä siis tulee näkyviin, jos käyttäjätunnus on varattu -->
-      <div class="warning-container" *ngIf="errorText">
+      @if (errorText) {
+      <div class="warning-container">
         <img src="assets/svg/StateKey/NotAllowed.svg" class="stateImage" />
         <h2 class="text-xs error-text">Username taken</h2>
       </div>
+      }
+
     </div>
 
     <!--The Hint-->
@@ -45,22 +41,10 @@
     <!--Footer-->
     <div class="modal-footer">
       <!--<button class="btn btn-primary" (click)="next()">Next</button>-->
-      <app-button
-        label="Back"
-        icon="ArrowKey/LeftArrow"
-        (click)="closeModal()"
-        iconPosition="left"
-      ></app-button>
+      <app-button label="Back" icon="ArrowKey/LeftArrow" (click)="closeModal()" iconPosition="left"></app-button>
 
-      <app-button
-        #nextBtn
-        label="Next"
-        variant="highlight"
-        iconPosition="right"
-        icon="ArrowKey/RightArrow"
-        (click)="next()"
-        [state]="validUsername && !errorText ? 'active' : 'disabled'"
-      ></app-button>
+      <app-button #nextBtn label="Next" variant="highlight" iconPosition="right" icon="ArrowKey/RightArrow"
+        (click)="next()" [state]="validUsername && !errorText ? 'active' : 'disabled'"></app-button>
     </div>
   </form>
 </div>

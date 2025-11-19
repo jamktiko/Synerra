@@ -53,7 +53,8 @@
           }}
         </button>
         <div ngbDropdownMenu aria-labelledby="dropdownManual" class="dropBox">
-          <li class="checkboxWithTextFrame" *ngFor="let lang of languages">
+          @for (lang of languages; track lang.code) {
+          <li class="checkboxWithTextFrame">
             <label class="ios-checkbox red">
               <input type="checkbox" (change)="toggleLanguage($event, lang.code)"
                 [checked]="selectedLanguages.includes(lang.code)" />
@@ -69,6 +70,8 @@
               <h2 class="text-xs">{{ lang.name }}</h2>
             </div>
           </li>
+          }
+
         </div>
       </div>
       <!--Dropdown ends-->

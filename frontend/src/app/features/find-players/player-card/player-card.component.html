@@ -1,39 +1,46 @@
-<div class="card" *ngIf="user.UserId !== currentUser?.UserId" loading="lazy"
-  [ngClass]="{ online: user.Status === 'online', offline: user.Status !== 'online' }">
+@if (user.UserId !== currentUser?.UserId) {
+<div class="card" loading="lazy" [ngClass]="{ online: user.Status === 'online', offline: user.Status !== 'online' }">
+
   <button type="button" class="avatar-button" (click)="onProfile()"
     [attr.aria-label]="'Open profile of ' + user.Username">
-    <img [src]="
-        user.ProfilePicture ||
-        'https://images.unsplash.com/photo-1575419268007-a9a5e6b1ce0b?fm=jpg&q=80&w=300'
-      " alt="Profile picture" class="avatar" loading="lazy" />
+    <img [src]="user.ProfilePicture || 'https://images.unsplash.com/photo-1575419268007-a9a5e6b1ce0b?fm=jpg&q=80&w=300'"
+      alt="Profile picture" class="avatar" loading="lazy" />
   </button>
 
   <div class="bio">
     {{ user.Bio || 'No bio text available' }}
-
   </div>
 
   <div class="heading">
     {{ user.Username }}
-    <img *ngIf="isFriend" src="/assets/svg/friend.svg" alt="friend" class="friendsvg">
+    @if (isFriend) {
+    <img src="/assets/svg/friend.svg" alt="friend" class="friendsvg">
+    }
   </div>
 
-  <div class="languages" *ngIf="getCommonLanguages(user.Languages).length > 0">
-    <ng-container *ngFor="let langCode of getCommonLanguages(user.Languages)">
+  @if (getCommonLanguages(user.Languages).length > 0) {
+  <div class="languages">
+    @for (langCode of getCommonLanguages(user.Languages); track langCode) {
+    <ng-container>
       <img [src]="getFlag(langCode)" alt="" class="flag-img" />
     </ng-container>
+    }
   </div>
+  }
 
   <div class="actions">
     <button type="button" class="message-btn" (click)="SendMsg(user.UserId)">
       <span class="icon">💬</span>
       <span>Chat</span>
     </button>
-    <button *ngIf="!isFriend" type="button" class="add-btn" (click)="handleFriendAction()" [disabled]="alreadySent">
+
+    @if (!isFriend) {
+    <button type="button" class="add-btn" (click)="handleFriendAction()" [disabled]="alreadySent">
       <span>
         {{ comingRequests.includes(user.UserId!) ? 'Accept' : (alreadySent ? 'Request Sent' : 'Add +') }}
       </span>
     </button>
-
+    }
   </div>
 </div>
+}

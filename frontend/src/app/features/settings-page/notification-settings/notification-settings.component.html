@@ -30,16 +30,21 @@
               <p>Choose the stories that deserve space in your inbox.</p>
             </div>
             <div class="option-grid">
-              <label class="option-card" *ngFor="let option of emailTopics; trackBy: trackByKey">
+              @for (option of emailTopics; track option.key) {
+              <label class="option-card">
                 <input class="visually-hidden" type="checkbox" [formControlName]="option.key" />
                 <span class="checkbox">
                   <span class="checkbox-indicator"></span>
                 </span>
                 <div class="option-copy">
                   <span class="option-label">{{ option.label }}</span>
-                  <small *ngIf="option.description">{{ option.description }}</small>
+                  @if (option.description) {
+                  <small>{{ option.description }}</small>
+                  }
                 </div>
               </label>
+              }
+
             </div>
           </section>
 
@@ -48,7 +53,9 @@
               <p class="save-note">
                 Saved information becomes visible to your squads right after syncing.
               </p>
-              <p class="save-feedback" *ngIf="saveFeedback">{{ saveFeedback }}</p>
+              @if (saveFeedback) {
+              <p class="save-feedback">{{ saveFeedback }}</p>
+              }
             </div>
             <app-button label="Save changes" variant="highlight" size="small" (click)="saveChanges()">
             </app-button>
