@@ -236,21 +236,22 @@ app-dashboard-card img {
 }
 
 @media (max-width: 600px) {
-  .dashboard {
-    --page-horizontal-gap: clamp(1rem, 6vw, 2rem);
-    padding: 2rem calc(1.25rem + var(--page-horizontal-gap));
-    margin: 0 auto;
-    gap: 1.75rem;
-  }
-
   .games-grid {
     padding: 1rem;
     gap: 1.25rem;
   }
-
+  .favorite-games {
+    padding: 0 2rem;
+  }
+  .popular-games {
+    padding: 0 2rem;
+  }
   .top-navigation-bar {
     text-align: center;
     gap: 0.5rem;
+  }
+  .section-title {
+    margin-left: 0px;
   }
 }
 
