@@ -47,10 +47,27 @@ jobs:
               - 'backend/**'
               - '.github/workflows/**'
 
+  e2e-tests:
+    needs: [deploy-check, changes]
+    if: needs.changes.outputs.e2e == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install E2E deps & run tests
+        run: |
+          cd frontend
+          npm ci
+          npm run cypress:open
+
   # Job for building the frontend project and deploying it to the AWS s3
   frontend:
     # Only activates if changes detected in /frontend or in /workflows. (Gets the data from the job "changes") and tests pass
-    needs: [deploy-check, changes]
+    needs: [deploy-check, changes, e2e-tests]
     if:
       needs.changes.outputs.frontend == 'true'
       # Runs Ubuntu on the vm
@@ -97,7 +114,7 @@ jobs:
   # Job for building the backend project and deploying it to s3
   backend:
     # Only activates if changes in /backend or in /workflows and tests pass
-    needs: [deploy-check, changes]
+    needs: [deploy-check, changes, e2e-tests]
     if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
     # Gets the Serverless key
