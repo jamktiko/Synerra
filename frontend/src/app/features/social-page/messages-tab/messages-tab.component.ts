@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, OnInit } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ChatService } from '../../../core/services/chat.service';
 import { Router } from '@angular/router';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
@@ -12,30 +12,20 @@ import { User } from '../../../core/interfaces/user.model';
   templateUrl: './messages-tab.component.html',
   styleUrl: './messages-tab.component.css',
 })
-export class MessagesTabComponent implements OnInit {
+export class MessagesTabComponent {
+  friendsList = input<any[]>([]);
   directChats = input<any[]>([]);
   groupChats = input<any[]>([]);
   newChatModalOpen: boolean = false;
-  friendsList: User[] | null = null;
   selectedFriends: User[] = [];
 
-  activeTab: 'users' | 'groups' = 'users';
+  activeTab: 'friends' | 'chats' | 'groupChats' = 'friends';
 
   constructor(
     private chatService: ChatService,
     private friendService: FriendService,
     private router: Router,
   ) {}
-
-  ngOnInit(): void {
-    // Getting friends for the modal
-    this.friendService.getFriends().subscribe({
-      next: (friends) => {
-        this.friendsList = friends;
-      },
-      error: (err) => console.error('Error loading friends:', err),
-    });
-  }
 
   userClicked(userId: string) {
     this.chatService.startChat([userId]);

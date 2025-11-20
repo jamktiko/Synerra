@@ -240,7 +240,6 @@ export class UserService {
     console.log('CLEAR ALL UNREADS CALLED');
     const url =
       'https://aswrur56pa.execute-api.eu-north-1.amazonaws.com/user/unreads/clear';
-    console.log(url);
     return this.http
       .delete(url, {
         headers: { Authorization: `${token}` },

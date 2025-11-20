@@ -31,7 +31,6 @@ describe('MainLayoutComponent', () => {
     } as any;
     // Manually invoke the lifecycle method rather than running full change
     // detection so the test doesn't require the real NavbarComponent.
-    component.ngAfterViewInit();
   });
 
   it('should create', () => {

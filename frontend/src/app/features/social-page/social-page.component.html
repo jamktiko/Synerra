@@ -1,21 +1,26 @@
-<div class="loadingSpinner" *ngIf="loadingSpinnerShowing">
+@if (loadingSpinnerShowing) {
+<div class="loadingSpinner">
   <app-loading-spinner />
 </div>
-
-<div class="main-content" *ngIf="!loadingSpinnerShowing">
+} @else {
+<div class="main-content">
   <div class="social-menu">
     <app-social-menu [messagesTabShowing]="messagesTabShowing" [totalCount]="totalCount$ | async"
       (notificationsClicked)="tabSwitch($event)" />
   </div>
 
   <div class="tabs">
-    <div *ngIf="messagesTabShowing" class="messagesTab">
-      <app-messages-tab [directChats]="directChats" [groupChats]="groupChats" />
+    @if (messagesTabShowing) {
+    <div class="messagesTab">
+      <app-messages-tab [friendsList]="friendList" [directChats]="directChats" [groupChats]="groupChats" />
     </div>
-
-    <div *ngIf="!messagesTabShowing" class="notificationsTab">
+    } @else {
+    <div class="notificationsTab">
       <app-notifications-tab [messages]="messages$ | async" [friendRequests]="friendRequests$ | async"
-        [totalCount]="totalCount$ | async"> /> </app-notifications-tab>
+        [totalCount]="totalCount$ | async">
+      </app-notifications-tab>
     </div>
+    }
   </div>
 </div>
+}

@@ -67,7 +67,7 @@
 }
 
 .hint {
-  color: var(--color-text-dark);
+  color: var(--color-text-grey);
   padding-top: 2rem;
 }
 
@@ -87,8 +87,8 @@
 
   /* border */
   background:
-    /* sisäpinta */
-    linear-gradient(var(--color-background)) padding-box,
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 }
 
@@ -97,8 +97,8 @@
   box-shadow: none;
   color: var(--color-text-default);
   background:
-    /* sisäpinta */
-    linear-gradient(var(--color-background)) padding-box,
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
     /* varsinainen reuna*/ var(--color-orange-gradient) border-box;
 }
 .form-control::placeholder {
@@ -151,24 +151,24 @@
   color: var(--color-text-dark);
   border: 1px solid transparent;
   background:
-    /* sisäpinta */
-    linear-gradient(var(--color-background)) padding-box,
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 }
 .btn-outline-primary:active {
   border: 1px solid transparent;
   transition: all 0.2s ease;
   background:
-    /* sisäpinta */
-    linear-gradient(var(--color-background)) padding-box,
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 }
 .btn-outline-primary:focus {
   color: var(--color-text-default);
   border: 1px solid transparent;
   background:
-    /* sisäpinta */
-    linear-gradient(var(--color-background)) padding-box,
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
     /* varsinainen reuna*/ var(--color-orange-gradient) border-box;
 }
 
@@ -181,8 +181,8 @@
   column-gap: 2rem;
 
   background:
-    /* sisäpinta */
-    linear-gradient(var(--color-background)) padding-box,
+    /* sisäpinta */ linear-gradient(var(--color-background))
+      padding-box,
     /* varsinainen reuna*/ var(--color-gray-v1) border-box;
 }
 
@@ -251,6 +251,13 @@
   transition: stroke-dashoffset 0.3s ease 0.1s;
 }
 
+.mobile-only {
+  display: none;
+  color: var(--color-text-grey);
+  padding-left: 0.2rem;
+  padding-top: 0.2rem;
+}
+
 /* Checked State */
 .ios-checkbox input:checked + .checkbox-wrapper .checkbox-bg {
   background: var(--checkbox-color);
@@ -308,9 +315,16 @@
 }
 
 @media (max-width: 575px) {
+  .modal-frame {
+    gap: 0.9rem;
+  }
+
   .modal-body,
   .modal-footer {
     width: 20rem;
+  }
+  .modal-footer {
+    gap: 1.3rem;
   }
 
   .progress {
@@ -324,5 +338,9 @@
   }
   .knowledgeText {
     width: 27rem;
+  }
+
+  .mobile-only {
+    display: block;
   }
 }

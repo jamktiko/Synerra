@@ -185,7 +185,7 @@
 } @else {
 <div class="games-grid">
   <!-- game cards -->
-  @for (game of completeGames; track game.PK) {
+  @for (game of completeGames; track game.Name) {
   <div class="game-card" [attr.aria-label]="game.Name" [attr.title]="game.Name">
     <div class="game-image-container">
       <img class="game-image" [src]="game.Img_url" [alt]="game.Name" loading="lazy" />

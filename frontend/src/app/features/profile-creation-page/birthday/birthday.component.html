@@ -2,7 +2,7 @@
   <!--Progressbar-->
   <div class="progress">
     <div class="step">
-      <img src="assets/images/profilePicPlaceHolder.jpg" alt="step1" />
+      <img src="assets/svg/Acount.svg" alt="step1" />
     </div>
     <div class="nextStep">-</div>
     <div class="done">
@@ -31,12 +31,28 @@
         <h2 class="text-sm-18">Enter your date of birth</h2>
       </div>
       <div class="bDay-container">
-        <input type="date" name="birthday" (keydown.enter)="handleEnter($event)" [(ngModel)]="selectedBirthday"
-          class="form-control text-sm-18" placeholder="DD.MM.YYYY" #dateInput />
+        <input
+          type="date"
+          name="birthday"
+          (keydown.enter)="handleEnter($event)"
+          [(ngModel)]="selectedBirthday"
+          class="form-control text-sm-18"
+          placeholder="DD.MM.YYYY"
+          #dateInput
+        />
 
         <!-- calendar svg, ei ehkä tarpeellinen -->
-        <img src="assets/svg/Calendar.svg" alt="Open calendar" class="calendar-icon" (click)="dateInput.showPicker()" />
+        <img
+          src="assets/svg/Calendar.svg"
+          alt="Open calendar"
+          class="calendar-icon"
+          (click)="dateInput.showPicker()"
+        />
       </div>
+
+      <h2 class="text-2xs mobile-only">
+        Tip: In the calendar, tap the year to switch years faster.
+      </h2>
 
       <div class="hint">
         <h2 class="text-sm-18">Choose your language</h2>
@@ -44,25 +60,40 @@
 
       <!--Dropdown-->
       <div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
-        <button type="button" class="btn btn-outline-primary me-2" id="dropdownManual" ngbDropdownAnchor
-          (focus)="myDrop.open()" (click)="myDrop.open()">
+        <button
+          type="button"
+          class="btn btn-outline-primary me-2"
+          id="dropdownManual"
+          ngbDropdownAnchor
+          (focus)="myDrop.open()"
+          (click)="myDrop.open()"
+        >
           {{
-          selectedLanguages.length > 0
-          ? selectedLanguages.join(", ")
-          : "Select languages"
+            selectedLanguages.length > 0
+              ? selectedLanguages.join(", ")
+              : "Select languages"
           }}
         </button>
         <div ngbDropdownMenu aria-labelledby="dropdownManual" class="dropBox">
           @for (lang of languages; track lang.code) {
           <li class="checkboxWithTextFrame">
             <label class="ios-checkbox red">
-              <input type="checkbox" (change)="toggleLanguage($event, lang.code)"
-                [checked]="selectedLanguages.includes(lang.code)" />
+              <input
+                type="checkbox"
+                (change)="toggleLanguage($event, lang.code)"
+                [checked]="selectedLanguages.includes(lang.code)"
+              />
               <div class="checkbox-wrapper">
                 <div class="checkbox-bg"></div>
                 <svg class="checkbox-icon" viewBox="0 0 24 24" fill="none">
-                  <path class="check-path" d="M4 12L10 18L20 6" stroke="currentColor" stroke-width="3"
-                    stroke-linecap="round" stroke-linejoin="round" />
+                  <path
+                    class="check-path"
+                    d="M4 12L10 18L20 6"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
                 </svg>
               </div>
             </label>
@@ -80,9 +111,20 @@
       <div class="modal-footer">
         <!-- <button class="btn btn-secondary" (click)="back()">Back</button>
       <button class="btn btn-primary" (click)="next()">Next</button> -->
-        <app-button label="Back" icon="ArrowKey/LeftArrow" (click)="back()"></app-button>
-        <app-button #nextBtn label="Next" variant="highlight" iconPosition="right" icon="ArrowKey/RightArrow"
-          [state]="canProceed ? 'active' : 'disabled'" (click)="canProceed && next()"></app-button>
+        <app-button
+          label="Back"
+          icon="ArrowKey/LeftArrow"
+          (click)="back()"
+        ></app-button>
+        <app-button
+          #nextBtn
+          label="Next"
+          variant="highlight"
+          iconPosition="right"
+          icon="ArrowKey/RightArrow"
+          [state]="canProceed ? 'active' : 'disabled'"
+          (click)="canProceed && next()"
+        ></app-button>
       </div>
     </div>
   </form>

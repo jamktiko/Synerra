@@ -2,13 +2,11 @@
   <div class="headframe">
 
     <div class="avatarGroup">
-      @for (member of otherMembers; track member.UserId) {
-      <div>
-        <img class="avatarframe-icon" [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'"
-          alt="avatar" />
-      </div>
+      @if (otherMembers.length
+      < 2) { @for (member of otherMembers; track member.UserId) { <img class="avatarframe-icon"
+        [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" alt="avatar" />
       }
-
+      }
     </div>
 
     <div class="nameGroup">
@@ -22,7 +20,7 @@
 
   <div class="chat-log" #chatLog>
     <!-- Loops the messages gotten from the chatService -->
-    @for (msg of messages$ | async; track msg.SenderId) {
+    @for (msg of messages$ | async; track $index) {
     @if (msg.SenderId === loggedInUser?.UserId) {
     <div class="sentMessageWrapper">
       <div class="sentMessage">
