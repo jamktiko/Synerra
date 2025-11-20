@@ -81,7 +81,7 @@ describe('LoginPageComponent - UI & functional tests', () => {
         By.css('.welcome-block p')
       );
       expect(description.nativeElement.textContent).toContain(
-        'Find teammates, reduce toxicity, enjoy the game.'
+        'Match by playstyle and vibe.'
       );
     });
   });
@@ -103,7 +103,7 @@ describe('LoginPageComponent - UI & functional tests', () => {
       expect(buttons[1].componentInstance.label).toBe('Login with Google');
       expect(buttons[2].componentInstance.label).toBe('Login with Epic Games');
       expect(buttons[3].componentInstance.label).toBe('Login with Email');
-      expect(buttons[4].componentInstance.label).toBe('Signup');
+      expect(buttons[4].componentInstance.label).toBe('Create Profile');
     });
   });
 
@@ -251,8 +251,8 @@ describe('LoginPageComponent - UI & functional tests', () => {
     it('should show CTA text', () => {
       const ctaText = fixture.debugElement.query(By.css('.cta-text'));
       expect(ctaText).toBeTruthy();
-      expect(ctaText.nativeElement.textContent).toBe(
-        "Don't have friends yet??"
+      expect(ctaText.nativeElement.textContent).toContain(
+        'Begin your journey'
       );
     });
   });
@@ -268,7 +268,7 @@ describe('LoginPageComponent - UI & functional tests', () => {
     });
 
     it('should have correct label', () => {
-      expect(signupButton.label).toBe('Signup');
+      expect(signupButton.label).toBe('Create Profile');
     });
 
     it('should have highlight variant', () => {
