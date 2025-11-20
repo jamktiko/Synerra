@@ -10,60 +10,44 @@
     </div>
     <div class="nextStep">-</div>
     <div class="done">
-      <img src="assets/svg/Gamepad_orange.svg" alt="step2" />
+      <img src="assets/svg/Gamepad_orange.svg" alt="step3" />
     </div>
   </div>
 
   <!--Header-->
   <div class="modal-header">
-    <h1 class="text-sm">Top games on Synerra</h1>
+    <h1 class="text-sm">Top games on Synerra!</h1>
   </div>
 
   <div class="hint">
-    <h2 class="text-xs">Select the ones you play or enjoy</h2>
+    <h2 class="text-xs">Pick the games you play or enjoy.</h2>
   </div>
 
   <div class="modal-body">
     <div class="gameCards">
-      <div
-        class="card"
-        *ngFor="let game of sortedGames"
-        (click)="toggleGameSelection(game)"
-        [class.selected]="isSelected(game)"
-      >
-        <img
-          style="width: 100%; height: 100%"
-          [src]="
-            game.Img_url ||
-            'https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/CS2_Cover_Art.jpg/250px-CS2_Cover_Art.jpg'
-          "
-          [alt]="game.Name"
-        />
+      @for (game of sortedGames; track game.Name) {
+      <div class="card" (click)="toggleGameSelection(game)" [class.selected]="isSelected(game)">
+
+        <img style="width: 100%; height: 100%"
+          [src]="game.Img_url || 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/CS2_Cover_Art.jpg/250px-CS2_Cover_Art.jpg'"
+          [alt]="game.Name" />
       </div>
+      }
+
     </div>
 
     <div class="hint">
       <h2 class="text-sm-18">
-        You may skip this step, and add them later from a wider selection
+        Tip: You can skip this step and add games later from a wider selection.
       </h2>
     </div>
 
     <div class="modal-footer">
       <!--<button class="btn btn-secondary" (click)="back()">Back</button>
     <button class="btn btn-success" (click)="finish()">Finish</button> -->
-      <app-button
-        label="Back"
-        icon="ArrowKey/LeftArrow"
-        (click)="back()"
-      ></app-button>
-      <app-button
-        #nextBtn
-        label="Next"
-        variant="highlight"
-        iconPosition="right"
-        icon="ArrowKey/RightArrow"
-        (click)="finish()"
-      ></app-button>
+      <app-button label="Back" icon="ArrowKey/LeftArrow" (click)="back()"></app-button>
+      <app-button #nextBtn label="Next" variant="highlight" iconPosition="right" icon="ArrowKey/RightArrow"
+        (click)="finish()"></app-button>
     </div>
   </div>
 </div>

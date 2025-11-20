@@ -42,15 +42,19 @@ export class AuthCallBacksComponent implements OnInit {
     // Sends the code to backend for JWT data
     this.http
       .post<{
-        id_token: string;
-        access_token: string;
+        tokens: any;
       }>(`${this.baseUrl}/auth/cognito/exchange`, { code })
       .subscribe({
         next: (res) => {
-          // Gets JWT and refreshtoken
+          // Gets JWT and refreshtoken (refreshtoken not used tho)
           console.log('Received tokens from backend:', res);
+
+          const payload = JSON.parse(atob(res.tokens.id_token.split('.')[1]));
+          console.log(payload.email);
+          console.log(payload);
+
           // JWT to the authStore
-          this.authStore.setToken(res.id_token);
+          this.authStore.setToken(res.tokens.id_token);
 
           // Fetch the user after successful login
           this.userService.getMe().subscribe({

@@ -5,22 +5,28 @@ import { OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/interfaces/user.model';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { UserStore } from '../../core/stores/user.store';
 import { FriendService } from '../../core/services/friend.service';
 import { Game } from '../../core/interfaces/game.model';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-profile-page',
   standalone: true,
-  imports: [ProfileHeaderComponent, ProfileContentComponent, CommonModule],
+  imports: [
+    ProfileHeaderComponent,
+    ProfileContentComponent,
+    CommonModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.css',
 })
 export class ProfilePageComponent implements OnInit {
   userId: string = '';
-  user: User = {};
+  user: User | null = null;
   isOwnProfile: boolean = false;
   isFriend: boolean = false;
   private sub!: Subscription;
@@ -51,20 +57,19 @@ export class ProfilePageComponent implements OnInit {
     console.log('Received games from child:', games);
   }
 
+  // loads the user data
   private loadUser() {
-    // Unsubscribe previous user subscription if any
-    this.sub?.unsubscribe();
+    const user$ = this.userService.getUserById(this.userId);
+    const friends$ = this.friendService.getFriends();
 
-    // compare the logged in user to the user got from the routes to check if they are the same
-    this.sub = this.userService.getUserById(this.userId).subscribe({
-      next: (res) => {
-        this.user = res;
+    forkJoin([user$, friends$]).subscribe({
+      next: ([user, friends]) => {
+        this.user = user;
         const currentUser = this.userStore.user();
         this.isOwnProfile = currentUser?.UserId === this.user?.UserId;
-
-        this.checkFriendship();
+        this.isFriend = friends.some((f) => f.UserId === this.user?.UserId);
       },
-      error: (err) => console.error('Failed to load user:', err),
+      error: (err) => console.error('Failed to load profile data', err),
     });
   }
 

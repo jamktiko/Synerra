@@ -4,7 +4,6 @@
 }
 
 .account-settings-page {
-  padding: clamp(1rem, 2vw, 2.5rem);
   --settings-accent: var(--color-primary);
   --settings-accent-rgb: var(--color-primary-rgb);
 }
@@ -92,12 +91,12 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-text-dark);
-  margin: 0 0 1rem;
+  margin-bottom: 0;
 }
 
 .card-header h1 {
-  margin: 0;
-  font-size: 1.75rem;
+  margin: 0.35rem 0 0.25rem;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
 }
 
 .lede {

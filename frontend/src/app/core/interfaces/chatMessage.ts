@@ -21,3 +21,22 @@ export interface UnreadMessage {
   PK: string;
   GSI1SK: string;
 }
+
+export interface NormalizedMessage {
+  senderUsername: string;
+  content: string;
+  timestamp: number;
+  roomId: string;
+  profilePicture: string;
+}
+
+export interface NormalizedRequest {
+  fromUsername: string;
+  timestamp: number;
+  fromUserId: string;
+  senderPicture: string;
+  status: string;
+  message: string;
+  type: string;
+  toUserId: string;
+}

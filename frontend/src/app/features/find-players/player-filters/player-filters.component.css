@@ -2,7 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
+  gap: 16px;
   margin-top: 20px;
 }
 
@@ -156,7 +156,7 @@ select {
   position: absolute;
   top: -50%;
   left: -60%;
-  width: 40%;
+  width: 60%;
   height: 200%;
   background: linear-gradient(
     70deg,

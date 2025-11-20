@@ -16,15 +16,21 @@
               <h2>Avatar</h2>
               <p>Upload a fresh portrait so teammates can spot you at a glance.</p>
             </div>
-            <span class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</span>
+            @if (selectedFileName) {
+            <span class="file-name">{{ selectedFileName }}</span>
+            }
           </div>
 
           <div class="avatar-stack">
             <div class="avatar-preview" [class.placeholder]="!previewUrl">
-              <img *ngIf="previewUrl; else avatarPlaceholder" [src]="previewUrl" alt="Profile preview" />
+              @if (previewUrl) {
+              <img [src]="previewUrl" alt="Profile preview" />
+              } @else {
               <ng-template #avatarPlaceholder>
-                <span class="placeholder-text">No image selected</span>
+                <img src="/assets/svg/user-avatar-placeholder.svg" alt="Default avatar" />
               </ng-template>
+              }
+
             </div>
 
             <div class="upload-controls">
@@ -37,10 +43,15 @@
               </app-button>
             </div>
 
-            <p class="progress" *ngIf="uploadProgress">Uploading {{ uploadProgress }}%</p>
-            <p class="success" *ngIf="uploadedUrl">
+            @if (uploadProgress) {
+            <p class="progress">Uploading {{ uploadProgress }}%</p>
+            }
+
+            @if (uploadedUrl) {
+            <p class="success">
               Uploaded! <a [href]="uploadedUrl" target="_blank">View image</a>
             </p>
+            }
           </div>
         </section>
 
@@ -48,22 +59,29 @@
           <div class="field">
             <label for="username">Display name</label>
             <div class="input-wrapper" [class.invalid]="!validUsername || usernameTaken">
-              <input id="username" type="text" [(ngModel)]="username" (input)="onUsernameInput()" placeholder="Synerra Legend" />
+              <input id="username" type="text" [(ngModel)]="username" (input)="onUsernameInput()"
+                placeholder="Synerra Legend" />
             </div>
             <small class="hint">Letters, numbers or underscores · 3-20 characters</small>
           </div>
 
           <div class="field">
             <label for="bio">Bio</label>
-            <textarea id="bio" rows="5" [(ngModel)]="bio" placeholder="Share tactics, mains or a friendly hello."></textarea>
-            <small class="hint">Visible across game invites, squads and chat.</small>
+            <textarea id="bio" rows="5" [(ngModel)]="bio"
+              placeholder="Share tactics, mains or a friendly hello."></textarea>
+            <small class="hint">Let others know more about you.</small>
           </div>
 
           <div class="field-actions">
             <app-button label="Save changes" size="small" (click)="saveIdentity()"></app-button>
           </div>
-          <p class="inline-feedback" *ngIf="feedbackMessages.username">{{ feedbackMessages.username }}</p>
-          <p class="inline-feedback" *ngIf="feedbackMessages.bio">{{ feedbackMessages.bio }}</p>
+          @if (feedbackMessages.username) {
+          <p class="inline-feedback">{{ feedbackMessages.username }}</p>
+          }
+          @if (feedbackMessages.bio) {
+          <p class="inline-feedback">{{ feedbackMessages.bio }}</p>
+          }
+
         </section>
       </div>
 
@@ -75,19 +93,23 @@
           </div>
           <span class="selected-count">{{ selectedLanguages.length }} selected</span>
         </div>
-
         <div class="language-grid">
-          <label class="language-chip" *ngFor="let lang of languages">
-            <input type="checkbox" class="visually-hidden" [id]="lang.code" [checked]="selectedLanguages.includes(lang.code)"
-              (change)="toggleLanguage(lang.code)" />
+          @for (lang of languages; track lang.code) {
+          <label class="language-chip">
+            <input type="checkbox" class="visually-hidden" [id]="lang.code"
+              [checked]="selectedLanguages.includes(lang.code)" (change)="toggleLanguage(lang.code)" />
             <span>{{ lang.name }}</span>
           </label>
+          }
+
         </div>
 
         <div class="section-actions">
           <app-button label="Save languages" size="small" (click)="saveLanguages()"></app-button>
         </div>
-        <p class="inline-feedback" *ngIf="feedbackMessages.languages">{{ feedbackMessages.languages }}</p>
+        @if (feedbackMessages.languages) {
+        <p class="inline-feedback">{{ feedbackMessages.languages }}</p>
+        }
       </section>
 
       <section class="preference-section">
@@ -106,8 +128,6 @@
                 <option value="">Select playstyle</option>
                 <option value="Competitive">Competitive</option>
                 <option value="Casual">Casual</option>
-                <option value="Creator">Creator / Streamer</option>
-                <option value="Support">Support / Shotcaller</option>
               </select>
             </div>
           </div>
@@ -115,11 +135,14 @@
           <div class="field">
             <label>Platforms</label>
             <div class="platform-grid">
-              <label class="platform-pill" *ngFor="let platform of availablePlatforms">
+              @for (platform of availablePlatforms; track platform) {
+              <label class="platform-pill">
                 <input type="checkbox" class="visually-hidden" [value]="platform"
                   [checked]="selectedPlatforms.includes(platform)" (change)="togglePlatform(platform)" />
                 <span>{{ platform }}</span>
               </label>
+              }
+
             </div>
           </div>
         </div>
@@ -127,7 +150,9 @@
         <div class="section-actions">
           <app-button label="Save preferences" size="small" (click)="savePlaystyleAndPlatform()"></app-button>
         </div>
-        <p class="inline-feedback" *ngIf="feedbackMessages.playstyle">{{ feedbackMessages.playstyle }}</p>
+        @if (feedbackMessages.playstyle) {
+        <p class="inline-feedback">{{ feedbackMessages.playstyle }}</p>
+        }
       </section>
     </article>
   </div>

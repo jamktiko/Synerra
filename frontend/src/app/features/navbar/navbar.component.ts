@@ -19,7 +19,20 @@ import { UserStore } from '../../core/stores/user.store';
 import { LoadingPageStore } from '../../core/stores/loadingPage.store';
 import { AuthService } from '../../core/services/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
+import { NotificationService } from '../../core/services/notification.service';
+import { UserService } from '../../core/services/user.service';
+import { FriendService } from '../../core/services/friend.service';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { FriendRequest } from '../../core/interfaces/friendrequest.model';
+import {
+  NormalizedMessage,
+  NormalizedRequest,
+  UnreadMessage,
+} from '../../core/interfaces/chatMessage';
+import { WebsocketFriendRequest } from '../../core/interfaces/friend.model';
+import { NotificationStore } from '../../core/stores/notification.store';
+type AnyRequest = FriendRequest | WebsocketFriendRequest;
 interface NavItem {
   label: string;
   icon: string;
@@ -44,13 +57,15 @@ interface NavChild {
 })
 export class NavbarComponent implements OnInit {
   isCollapsed = false;
-  // private hasUserPreference = false; //REMOVED for UX, seemed like a bug more than a feature
-  // Lines 133 & 157 also removed
   @Output() collapsedChange = new EventEmitter<boolean>();
 
   user: User | null = null;
+
   currentUrl = '';
   expandedGroups = new Set<string>();
+  private sub: Subscription | null = null;
+
+  totalCount: number = 0;
 
   navItems: NavItem[] = [
     { label: 'Home', icon: 'Home', route: '/dashboard' },
@@ -82,7 +97,11 @@ export class NavbarComponent implements OnInit {
   ];
 
   navItemsMobile: NavItem[] = [
-    { label: 'Settings', icon: 'Settings', route: '/dashboard/settings' },
+    {
+      label: 'Settings',
+      icon: 'Settings',
+      route: '/dashboard/settings',
+    },
     { label: 'Games', icon: 'Gamepad', route: '/dashboard/choose-game' },
     { label: 'Home', icon: 'logo_small', route: '/dashboard' },
     { label: 'Social', icon: 'NoMessage', route: '/dashboard/social' },
@@ -99,7 +118,8 @@ export class NavbarComponent implements OnInit {
     private userStore: UserStore,
     private router: Router,
     private authService: AuthService,
-    private loadingPageStore: LoadingPageStore
+    private loadingPageStore: LoadingPageStore,
+    private notificationStore: NotificationStore,
   ) {
     // Watch for user changes reactively
     effect(() => {
@@ -116,14 +136,23 @@ export class NavbarComponent implements OnInit {
     this.router.events
       .pipe(
         filter(
-          (event): event is NavigationEnd => event instanceof NavigationEnd
-        )
+          (event): event is NavigationEnd => event instanceof NavigationEnd,
+        ),
       )
       .subscribe((event) => {
         this.currentUrl = event.urlAfterRedirects;
         this.syncExpandedState(this.currentUrl);
       });
   }
+  // Controls the visibility of the Settings submenu in mobilenav
+  isMobileSettingsOpen = false;
+
+  toggleMobileSettings() {
+    // Toggles mobile settings menu between collapsed and expanded
+    this.isMobileSettingsOpen = !this.isMobileSettingsOpen;
+  }
+  settingsChildren =
+    this.navItems.find((i) => i.label === 'Settings')?.children ?? [];
 
   ngOnInit(): void {
     const saved = localStorage.getItem('navbarCollapsed');
@@ -136,11 +165,21 @@ export class NavbarComponent implements OnInit {
     this.checkAutoCollapse();
     this.collapsedChange.emit(this.isCollapsed);
     this.syncExpandedState(this.currentUrl);
+
+    // GET THE AMOUNT OF NOTIFICATIONS
+    this.notificationStore.totalNotifications.subscribe((count) => {
+      console.log('Total:', count);
+      this.totalCount = count;
+    });
   }
 
   private buildNavItemsMobile(userId: string): void {
     this.navItemsMobile = [
-      { label: 'Settings', icon: 'Settings', route: '/dashboard/settings' },
+      {
+        label: 'Settings',
+        icon: 'Settings',
+        route: '/dashboard/settings/profile',
+      },
       { label: 'Games', icon: 'Gamepad', route: '/dashboard/choose-game' },
       { label: 'Home', icon: 'logo_small', route: '/dashboard' },
       { label: 'Social', icon: 'NoMessage', route: '/dashboard/social' },
@@ -180,7 +219,6 @@ export class NavbarComponent implements OnInit {
   }
 
   onUserClick(): void {
-    console.log('User button clicked');
     this.router.navigate([`/dashboard/profile/${this.user?.UserId}`]);
   }
 
@@ -220,7 +258,7 @@ export class NavbarComponent implements OnInit {
       return false;
     }
     return item.children.some((child) =>
-      this.matchesChildRoute(child, this.currentUrl)
+      this.matchesChildRoute(child, this.currentUrl),
     );
   }
 
@@ -253,7 +291,7 @@ export class NavbarComponent implements OnInit {
         return;
       }
       const hasMatch = item.children.some((child) =>
-        this.matchesChildRoute(child, url)
+        this.matchesChildRoute(child, url),
       );
       if (hasMatch) {
         this.expandedGroups.add(item.label);
@@ -276,7 +314,7 @@ export class NavbarComponent implements OnInit {
     }
     const params = new URLSearchParams(search);
     return Object.entries(child.queryParams).every(
-      ([key, value]) => params.get(key) === String(value)
+      ([key, value]) => params.get(key) === String(value),
     );
   }
 }

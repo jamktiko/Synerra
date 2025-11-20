@@ -1,9 +1,11 @@
 <div class="profile-header-container">
-  <div class="header-content" *ngIf="user">
+  @if (user) {
+  <div class="header-content">
     <!-- Avatar Section -->
     <div class="avatar-section">
       <div class="avatar-wrapper">
-        <img [src]="user.ProfilePicture || 'assets/svg/Acount.svg'" alt="Profile picture" class="avatar" />
+        <img [src]="user.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" alt="Profile picture"
+          class="avatar" />
       </div>
     </div>
 
@@ -11,10 +13,14 @@
     <div class="user-info-section">
       <div class="user-main-info">
         <h1 class="username">{{ user.Username }}</h1>
-        <span *ngIf="isFriend" class="friend-badge">
+
+        @if (isFriend) {
+        <span class="friend-badge">
           Friend
           <img src="assets/svg/friend.svg" alt="friends" class="profilesvg" />
         </span>
+        }
+
         <div class="joined-date">
           <span>Joined:</span>
           <span class="date">{{ ((user.CreatedAt ?? 0) * 1000) | date:'dd/MM/yyyy' }}</span>
@@ -26,26 +32,31 @@
         <p class="description" [class.expanded]="showFullDescription">
           {{ user.Bio || 'No description yet.' }}
         </p>
-        <button class="show-more-btn" (click)="toggleDescription()" *ngIf="user.Bio && user.Bio.length > 150">
+
+        @if (user.Bio && user.Bio.length > 150) {
+        <button class="show-more-btn" (click)="toggleDescription()">
           {{ showFullDescription ? 'show less' : 'show more' }}
         </button>
+        }
       </div>
     </div>
 
     <!-- Action Buttons Section -->
     <div class="actions-section">
-      <div *ngIf="isOwnProfile" class="action-buttons">
+      @if (isOwnProfile) {
+      <div class="action-buttons">
         <button class="social-badge" (click)="onEditProfile()" aria-label="Edit profile" title="Edit profile">
           <img src="assets/svg/edit-icon.svg" alt="Edit" class="profilesvg" />
         </button>
-
-
       </div>
-      <div *ngIf="!isOwnProfile" class="action-buttons">
-        <button class="social-badge" *ngIf="!isFriend" (click)="addFriend(user)" [disabled]="alreadySent"
-          aria-label="Add friend">
+      } @else {
+      <div class="action-buttons">
+        @if (!isFriend) {
+        <button class="social-badge" (click)="addFriend(user)" [disabled]="alreadySent" aria-label="Add friend">
           {{ alreadySent ? 'Request Sent' : 'Add Friend' }}
         </button>
+        }
+
         <button class="social-badge" (click)="userClicked(user.UserId)" aria-label="Start chat" title="Start chat">
           <img src="/assets/svg/NoMessage.svg" alt="addfriend" class="profilesvg">
         </button>
@@ -55,16 +66,17 @@
           REP
         </button>
       </div>
+      }
     </div>
 
     <!-- Right Section: Social Badge -->
-
-
-
   </div>
+  }
+
 </div>
 
-<div class="modal-backdrop" *ngIf="showReputationModal">
+@if (showReputationModal) {
+<div class="modal-backdrop">
   <div class="modal-window">
     <div class="rep-slider-group">
 
@@ -84,12 +96,13 @@
 
     <div class="modal-actions">
       <app-button (click)="closeReputationModal()" label="Close" variant="highlight" size="xsmall" [fullWidth]="false"
-        align="center"></app-button>
+        align="center">
+      </app-button>
+
       <app-button (click)="submitReputation()" label="Submit" variant="highlight" size="xsmall" [fullWidth]="false"
-        align="center"></app-button>
-
-
+        align="center">
+      </app-button>
     </div>
-
   </div>
 </div>
+}

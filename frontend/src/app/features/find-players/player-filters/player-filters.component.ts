@@ -152,7 +152,7 @@ export class PlayerFiltersComponent implements OnInit {
     }
   }
 
-  @HostListener('document:keydown.escape', ['$event'])
+  @HostListener('document:keydown.escape', [])
   handleEscape(): void {
     this.openDropdown = null;
   }

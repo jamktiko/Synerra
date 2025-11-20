@@ -127,11 +127,18 @@ export class UserService {
 
   deleteUser(userId: string): Observable<any> {
     const token = this.authStore.getToken();
-    return this.http.delete(`${this.apiUrl}/delete/${userId}`, {
-      headers: {
-        Authorization: `${token}`,
-      },
-    });
+
+    return this.http
+      .delete(`${this.apiUrl}/delete/${userId}`, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
+      .pipe(
+        tap(() => {
+          console.log(`User ${userId} deleted successfully`);
+        })
+      );
   }
 
   filterUsers(filters: {
@@ -228,8 +235,20 @@ export class UserService {
     this.getUsers().subscribe(); // triggers next() via the tap
   }
 
-  clearAllUnreads(): void {
+  clearAllUnreads(): Observable<any> {
+    const token = this.authStore.getToken();
     console.log('CLEAR ALL UNREADS CALLED');
-    this.unreadsSubject.next([]); // Clear the array
+    const url =
+      'https://aswrur56pa.execute-api.eu-north-1.amazonaws.com/user/unreads/clear';
+    return this.http
+      .delete(url, {
+        headers: { Authorization: `${token}` },
+      })
+      .pipe(
+        tap(() => {
+          this.refreshUnreads(); // refresh local unreads
+          console.log('All unreads cleared');
+        })
+      );
   }
 }

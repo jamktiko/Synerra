@@ -1,8 +1,15 @@
+@if (!user) {
+<app-loading-spinner></app-loading-spinner>
+} @else {
 <div class="layout">
   <div class="mid-container">
     <app-profile-header [user]="user" [isOwnProfile]="isOwnProfile" [isFriend]="isFriend"
-      [genrePopularity]="genrePopularity" [completeGames]="completeGames"></app-profile-header>
+      [genrePopularity]="genrePopularity" [completeGames]="completeGames">
+    </app-profile-header>
+
     <app-profile-content [user]="user" [isOwnProfile]="isOwnProfile" [isFriend]="isFriend"
-      (gamesLoaded)="onGamesLoaded($event)"></app-profile-content>
+      (gamesLoaded)="onGamesLoaded($event)">
+    </app-profile-content>
   </div>
 </div>
+}
