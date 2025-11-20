@@ -38,7 +38,7 @@ export class MainLayoutComponent implements OnInit {
   ngOnInit(): void {
     this.showLoadingPage = true;
 
-    // Updates the userStore to have the most recent user data (basically for confirming that recently created account will load).
+    // Updates the userStore to have the most recent user data (basically for confirming that recently created account will load)
     this.userService.getMe().subscribe({
       next: (res) => {
         this.userStore.setUser(res);

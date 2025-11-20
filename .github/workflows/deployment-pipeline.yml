@@ -37,6 +37,7 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: filter
         with:
+          default: last-commit
           # Checks for changes in the listed folders with paths-filter@v4.
           # The results are set to the above variables that then are passed for other jobs to use.
           filters: |
