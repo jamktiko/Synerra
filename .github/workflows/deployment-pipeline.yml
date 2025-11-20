@@ -45,30 +45,31 @@ jobs:
               - 'backend/**'
               - '.github/workflows/**'
 
-e2e-tests:
-  needs: [deploy-check, changes]
-  if: needs.changes.outputs.frontend == 'true'
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
+  e2e-tests:
+    needs: [deploy-check, changes]
+    if: needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-    - name: Install dependencies
-      run: |
-        cd frontend
-        npm ci
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+          npm install --save-dev wait-on
 
-    - name: Start frontend & run E2E tests
-      run: |
-        cd frontend
-        npm run start &
-        npx wait-on http://localhost:4200
-        npx cypress run --config baseUrl=http://localhost:4200
+      - name: Start frontend & run E2E tests
+        run: |
+          cd frontend
+          npm run start &
+          npx wait-on http://localhost:4200
+          npx cypress run --config baseUrl=http://localhost:4200
 
   # Job for building the frontend project and deploying it to the AWS s3
   frontend:
