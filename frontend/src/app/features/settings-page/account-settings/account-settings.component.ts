@@ -144,6 +144,8 @@ export class AccountSettingsComponent implements OnInit {
     this.feedbackMessage = 'Account deletion request sent.';
 
     this.deleteUser();
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   logOut(): void {

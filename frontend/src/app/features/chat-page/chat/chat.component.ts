@@ -46,7 +46,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
     private chatService: ChatService,
     private userStore: UserStore,
     private userService: UserService,
-    private messageService: MessageService,
+    private messageService: MessageService
   ) {
     // Links the message observable to the chatService messages for reactive updating
     this.messages$ = this.chatService.logMessages$;
@@ -68,22 +68,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // Starts a chat with roomId
         this.chatService.startChat(undefined, this.roomId);
-
-        // Fetch the chat partner from the server
-        this.messageService.getUserRooms(this.loggedInUser.UserId).subscribe({
-          next: (res) => {
-            const room = res.rooms.find((r: any) => r.RoomId === this.roomId);
-            if (room) {
-              this.otherMembers = room.Members.filter(
-                (m: any) =>
-                  m.PK.replace('USER#', '') !== this.loggedInUser.UserId,
-              );
-
-              console.log('ORHETMEEMEMEME', this.otherMembers);
-            }
-          },
-          error: (err) => console.error('Failed to fetch room members', err),
-        });
+        this.loadRoomMembers();
       }
     });
   }
@@ -97,6 +82,32 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.clearNotifications();
+    //subscribe to route params to detect change of chat room
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (!id) return;
+      this.roomId = id;
+
+      this.loadRoomMembers();
+    });
+  }
+
+  // loads roommembers
+  loadRoomMembers() {
+    if (!this.loggedInUser) return;
+
+    this.messageService.getUserRooms(this.loggedInUser.UserId).subscribe({
+      next: (res) => {
+        const room = res.rooms.find((r: any) => r.RoomId === this.roomId);
+        if (room) {
+          this.otherMembers = room.Members.filter(
+            (m: any) => m.PK.replace('USER#', '') !== this.loggedInUser.UserId // filter out logged in user
+          );
+          console.log('ORHETMEEMEMEME', this.otherMembers);
+        }
+      },
+      error: (err) => console.error('Failed to fetch room members', err),
+    });
   }
 
   // Runs once after the full component has been initialized. Since the scrollToBottom requires the html element,
@@ -126,7 +137,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
       this.loggedInUser.UserId,
       this.loggedInUser.Username,
       this.loggedInUser.ProfilePicture,
-      this.roomId,
+      this.roomId
     );
     // Clears the input slot
     this.messageText = '';
