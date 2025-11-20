@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { ChatPageComponent } from './chat-page.component';
 import { By } from '@angular/platform-browser';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { of } from 'rxjs';
 
 describe('ChatPageComponent', () => {
   // Component instance - the actual ChatPageComponent we're testing
@@ -20,11 +21,10 @@ describe('ChatPageComponent', () => {
     // This is needed because ChatPageComponent expects route params (like room ID)
     const mockActivatedRoute = {
       snapshot: {
-        paramMap: {
-          // Returns 'test-room-123' when component asks for 'id' parameter
-          get: (key: string) => (key === 'id' ? 'test-room-123' : null),
-        },
+        paramMap: convertToParamMap({ id: 'test-room-123' }),
       },
+      // IMPORTANT: paramMap must be an observable so that .subscribe() works
+      paramMap: of(convertToParamMap({ id: 'test-room-123' })),
     };
 
     // Configure the testing module - like setting up a mini Angular app for testing
