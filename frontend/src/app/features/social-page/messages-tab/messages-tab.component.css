@@ -314,14 +314,31 @@ input[type="text"]::placeholder {
 }
 
 .modalButtons {
+  position: absolute; /* position relative to modalContent */
+  bottom: 20px; /* stick to bottom */
+  left: 50%; /* center horizontally */
+  transform: translateX(-50%); /* shift back by half width to center */
+
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 10px;
-  margin-top: 1rem;
+  width: calc(100% - 40px); /* optional: keep some padding from sides */
+}
+.modalContent {
+  position: relative; /* anchor for absolute children */
+  display: flex;
+  flex-direction: column;
+  height: 80dvh; /* fixed modal height */
 }
 
 .modalButtons app-button {
   flex: 1;
+}
+
+.friendsList {
+  flex: 1; /* take up remaining space */
+  overflow-y: auto; /* scroll only the list */
+  margin-bottom: 45px;
 }
 
 .username-link:hover {
@@ -329,4 +346,13 @@ input[type="text"]::placeholder {
   text-decoration-color: var(--color-primary);
   text-decoration-thickness: 2px;
   text-underline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .floatingButton {
+    position: fixed; /* stays in place even when scrolling */
+    bottom: 12dvh; /* distance from the bottom edge */
+    right: 2.1dvh; /* distance from the right edge */
+    z-index: 1000;
+  }
 }
