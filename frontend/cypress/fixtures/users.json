@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "Username": "OtherPlayer",
+      "UserId": "user-2",
+      "Languages": ["en"],
+      "Bio": "I play games",
+      "Status": "online"
+    }
+  ]
+}
