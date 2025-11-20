@@ -57,13 +57,13 @@
 .tab-content {
   display: flex;
   transition: transform 0.3s ease-in-out;
-  width: 200%;
+  width: 300%;
   min-height: 0;
 }
 
 .tab-pane {
-  flex: 0 0 50%;
-  max-width: 50%;
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%;
   display: block !important;
   min-height: 0;
   overflow-y: auto;
@@ -90,12 +90,16 @@
 }
 
 /* Animates slide between Users and Groups */
-#chatTabsContent.show-users {
+#chatTabsContent.show-friends {
   transform: translateX(0%);
 }
 
+#chatTabsContent.show-users {
+  transform: translateX(-33.3333%);
+}
+
 #chatTabsContent.show-groups {
-  transform: translateX(-50%);
+  transform: translateX(-66.6666%);
 }
 
 .userTextBar {
@@ -156,7 +160,9 @@ input[type="text"] {
   background: rgba(30, 30, 30, 0.95);
   color: var(--color-text-default);
   font-size: 0.95rem;
-  transition: border 0.2s ease, background 0.2s ease;
+  transition:
+    border 0.2s ease,
+    background 0.2s ease;
 }
 
 input[type="text"]:focus {
@@ -276,7 +282,9 @@ input[type="text"]::placeholder {
 .card {
   background: var(--color-transparent-gradient);
   border-radius: 8px;
-  transition: background 0.2s ease, border 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border 0.2s ease;
   margin-bottom: 0.5rem;
 }
 
