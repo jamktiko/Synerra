@@ -6,7 +6,6 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
-  signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChatService } from '../../../core/services/chat.service';
@@ -34,9 +33,8 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   // Sets an observable for the showing chat messages
   messages$: Observable<ChatMessage[]>;
   messageHistory: [] = [];
-  otherMembers = signal<User[]>([]);
+  otherMembers: User[] = [];
   otherMemberNames: String | null = null;
-  private activeRoomId: string | null = null;
 
   messageText: string = '';
 
@@ -64,63 +62,54 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
     // Reactively tracks all reactive values used inside (userStore.user)
     effect(() => {
       const user = this.userStore.user();
-      if (!user) return;
+      if (user) {
+        this.loggedInUser = user;
+        console.log('LOGGEDINUSER', this.loggedInUser);
 
-      this.loggedInUser = user;
-
-      if (!this.roomId) return;
-
-      // Prevent duplicate websocket connections
-      if (this.activeRoomId !== this.roomId) {
-        if (this.activeRoomId) {
-          this.chatService.exitRoom(this.activeRoomId);
-        }
-        this.activeRoomId = this.roomId;
+        // Starts a chat with roomId
         this.chatService.startChat(undefined, this.roomId);
+        this.loadRoomMembers();
       }
-
-      this.loadRoomMembers();
     });
   }
 
   // Looping usernames here as there was problems in html
   get memberNames(): string {
-    const members = this.otherMembers(); // <-- read the signal here
-    return members.map((m) => m.Username).join(', ');
+    return (this.otherMembers ?? [])
+      .map((m) => m?.Username || 'Chat')
+      .join(', ');
   }
+
+  ngOnInit() {
+    this.clearNotifications();
+    //subscribe to route params to detect change of chat room
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (!id) return;
+      this.roomId = id;
+
+      this.loadRoomMembers();
+    });
+  }
+
+  // loads roommembers
   loadRoomMembers() {
     if (!this.loggedInUser) return;
 
     this.messageService.getUserRooms(this.loggedInUser.UserId).subscribe({
       next: (res) => {
         const room = res.rooms.find((r: any) => r.RoomId === this.roomId);
-
-        if (!room) {
-          this.otherMembers.set([]);
-          return;
+        if (room) {
+          this.otherMembers = room.Members.filter(
+            (m: any) => m.PK.replace('USER#', '') !== this.loggedInUser.UserId // filter out logged in user
+          );
+          console.log('ORHETMEEMEMEME', this.otherMembers);
         }
-
-        this.otherMembers.set(
-          room.Members.filter(
-            (m: any) => m.PK.replace('USER#', '') !== this.loggedInUser.UserId
-          )
-        );
       },
       error: (err) => console.error('Failed to fetch room members', err),
     });
   }
 
-  ngOnInit() {
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
-      if (!id) return;
-
-      this.roomId = id;
-
-      // effect() will handle startChat and member loading
-      this.clearNotifications();
-    });
-  }
   // Runs once after the full component has been initialized. Since the scrollToBottom requires the html element,
   // we must to be sure that it dosen't run before the element has been initialized.
   ngAfterViewInit() {

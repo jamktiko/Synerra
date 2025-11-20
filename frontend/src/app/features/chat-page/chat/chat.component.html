@@ -1,64 +1,61 @@
 <div class="chatElement">
   <div class="headframe">
 
-
     <div class="avatarGroup">
-      @if (otherMembers.length < 2) { @for (member of otherMembers(); track member.UserId) { <div>
-        <img class="avatarframe-icon" [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'"
-          alt="avatar" />
+      @if (otherMembers.length
+      < 2) { @for (member of otherMembers; track member.UserId) { <img class="avatarframe-icon"
+        [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" alt="avatar" />
+      }
+      }
     </div>
-    }
-    }
-  </div>
 
-  <div class="nameGroup">
-    <strong>{{ memberNames }}</strong>
-  </div>
-
-
-  <div class="headerButton">
-    <app-button class="closeChatBtn" variant="default" icon="Cross" routerLink="/dashboard/social"></app-button>
-  </div>
-</div>
-
-<div class="chat-log" #chatLog>
-  <!-- Loops the messages gotten from the chatService -->
-  @for (msg of messages$ | async; track msg.SenderId) {
-  @if (msg.SenderId === loggedInUser?.UserId) {
-  <div class="sentMessageWrapper">
-    <div class="sentMessage">
-      <p>{{ msg.Content }}</p>
+    <div class="nameGroup">
+      <strong>{{ memberNames }}</strong>
     </div>
-    <p class="sentTimestamp">
-      {{ msg.Timestamp | date : "d.MM.yyyy, HH.mm" }}
-    </p>
+
+    <div class="headerButton">
+      <app-button class="closeChatBtn" variant="default" icon="Cross" routerLink="/dashboard/social"></app-button>
+    </div>
   </div>
-  }
-  @if (msg.SenderId !== loggedInUser?.UserId) {
-  <div class="receivedMessageWrapper">
-    <img [src]="msg.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" alt="avatar" class="messageAvatar" />
-    <div>
-      <div class="receivedMessage">
-        <div class="senderName">
-          <p>{{ msg.SenderUsername }}</p>
-        </div>
+
+  <div class="chat-log" #chatLog>
+    <!-- Loops the messages gotten from the chatService -->
+    @for (msg of messages$ | async; track $index) {
+    @if (msg.SenderId === loggedInUser?.UserId) {
+    <div class="sentMessageWrapper">
+      <div class="sentMessage">
         <p>{{ msg.Content }}</p>
       </div>
-      <p class="receivedTimestamp">
-        {{ msg.Timestamp | date : "dd/MM/yyyy, HH:mm" }}
+      <p class="sentTimestamp">
+        {{ msg.Timestamp | date : "d.MM.yyyy, HH.mm" }}
       </p>
     </div>
-  </div>
-  }
-  }
+    }
+    @if (msg.SenderId !== loggedInUser?.UserId) {
+    <div class="receivedMessageWrapper">
+      <img [src]="msg.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" alt="avatar" class="messageAvatar" />
+      <div>
+        <div class="receivedMessage">
+          <div class="senderName">
+            <p>{{ msg.SenderUsername }}</p>
+          </div>
+          <p>{{ msg.Content }}</p>
+        </div>
+        <p class="receivedTimestamp">
+          {{ msg.Timestamp | date : "dd/MM/yyyy, HH:mm" }}
+        </p>
+      </div>
+    </div>
+    }
+    }
 
-</div>
-<div class="chat-input">
-  <input [(ngModel)]="messageText" (keyup.enter)="sendMessage(messageText)" placeholder="Type your message" />
-  <!-- <button (click)="sendMessage(messageText)">
+  </div>
+  <div class="chat-input">
+    <input [(ngModel)]="messageText" (keyup.enter)="sendMessage(messageText)" placeholder="Type your message" />
+    <!-- <button (click)="sendMessage(messageText)">
       <img src="assets/svg/Send.svg" alt="" />
     </button> -->
-  <app-button class="chatSendBtn" variant="highlight" icon="Send" (click)="sendMessage(messageText)" size="small">
-  </app-button>
-</div>
+    <app-button class="chatSendBtn" variant="highlight" icon="Send" (click)="sendMessage(messageText)" size="small">
+    </app-button>
+  </div>
 </div>
