@@ -1,8 +1,18 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: var(--viewport-height);
+  box-sizing: border-box;
+  padding: 18px 16px;
+}
+
 .main-frame {
   color: var(--color-text-default);
   width: 100%;
-  max-width: 60rem;
-  height: 32rem;
+  max-width: 640px;
+  height: auto;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -10,9 +20,8 @@
   border: 1px solid;
   background: var(--color-gray);
   border-radius: 18px;
-  /* padding: 0 100px; */
-  padding: 30px 100px 0 100px;
-  gap: 20px;
+  padding: 22px 24px 26px;
+  gap: 16px;
   border: 1px solid rgba(58, 58, 58, 1);
   flex-direction: column;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
@@ -22,15 +31,21 @@
 
 .inputHeadings {
   padding-top: 1.2rem;
+  width: 100%;
+  text-align: left;
 }
 
 input {
-  width: 400px;
-  padding: 0.6rem 0 0.6rem 1rem;
+  width: 100%;
+  max-width: 100%;
+  padding: 0.75rem 0 0.75rem 1.05rem;
   border: 1px solid transparent;
   border-radius: 6px;
   color: var(--color-text-default);
   outline: none;
+  font-size: 1rem;
+  line-height: 1.4;
+  min-height: 44px;
 
   /* border */
   background:
@@ -66,6 +81,16 @@ input:-webkit-autofill {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 10px;
+}
+
+.formFrame {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
 }
 
 .buttonFrame {
@@ -73,7 +98,7 @@ input:-webkit-autofill {
   width: 100%;
   display: flex;
   justify-content: center;
-  gap: 3rem;
+  gap: 2rem;
 }
 
 .errorText {
@@ -83,7 +108,7 @@ input:-webkit-autofill {
   text-align: center;
   gap: 0.4rem;
 }
-.errorText p {
+.errorText h2 {
   margin: 0;
 }
 
@@ -94,17 +119,17 @@ input:-webkit-autofill {
 /*Breakpointit*/
 
 @media (max-width: 600px) {
-  .main-frame {
-    padding: 32px;
-    gap: 24px;
-    max-width: 680px;
+  :host {
+    padding: 12px;
   }
-  .inputHeadings,
-  .buttonFrame {
-    max-width: 520px;
+
+  .main-frame {
+    padding: 20px 22px 24px;
+    gap: 16px;
+    max-width: 560px;
   }
   input {
-    max-width: 520px;
+    margin: 0 auto;
   }
 }
 @media (max-width: 500px) {
@@ -121,19 +146,28 @@ input:-webkit-autofill {
 
 /*Mobiili*/
 @media (max-width: 430px) {
+  :host {
+    min-height: var(--viewport-height);
+    padding: 16px 12px 22px;
+  }
+
   input {
-    width: 360px;
+    width: 100%;
   }
   .buttonFrame {
-    padding: 2rem 0 0 0;
-    gap: 4rem;
+    padding: 1.5rem 0 0 0;
+    gap: 1.5rem;
   }
   .buttonFrame app-button {
-    scale: 1.1;
+    scale: 1.05;
   }
   .main-frame {
-    padding: 0 15px;
-    height: 28rem;
+    padding: 20px 16px 24px;
+    height: auto;
+    max-width: 420px;
+    width: 100%;
+    gap: 20px;
+    justify-content: flex-start;
   }
   input,
   textarea,
