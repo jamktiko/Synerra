@@ -29,6 +29,7 @@ export class ProfileHeaderComponent implements OnInit {
   @Input() genrePopularity: any[] = [];
   showReputationModal = false;
   sentRequests: string[] = [];
+  confirmingRemoval: string | null = null;
 
   repComms = 50;
   repMentality = 50;
@@ -97,6 +98,36 @@ export class ProfileHeaderComponent implements OnInit {
       error: (err) => {
         console.error('Error sending friend request', err);
         alert('Failed to send friend request');
+      },
+    });
+  }
+
+  //method to remove friend
+  removeFriend(user: any) {
+    if (!user) return;
+
+    // first click → ask confirmation
+    if (this.confirmingRemoval !== user.UserId) {
+      this.confirmingRemoval = user.UserId;
+      return;
+    }
+
+    // second click → actually delete
+    this.friendService.deleteFriend(user.UserId).subscribe({
+      next: (res) => {
+        console.log('Friend removed', res);
+        alert(`${user.Username} removed from friends`);
+
+        this.sentRequests = this.sentRequests.filter(
+          (id) => id !== user.UserId
+        );
+        this.isFriend = false;
+        this.confirmingRemoval = null;
+      },
+      error: (err) => {
+        console.error('Error removing friend', err);
+        alert('Failed to remove friend');
+        this.confirmingRemoval = null;
       },
     });
   }

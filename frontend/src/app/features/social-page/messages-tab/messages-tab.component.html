@@ -70,7 +70,7 @@
         <div class="tab-pane" id="groups">
           @if (groupChats().length > 0) {
           @for (group of groupChats(); track group.RoomId) {
-          <div class="card mb-2 p-2 text-white" (click)="groupChatClicked(group.RoomId)">
+          <div class="card mb-2 p-2 text-white">
 
             <div class="d-flex align-items-center">
               <!-- Avatars loop -->
@@ -90,6 +90,10 @@
                 <span>, </span>
                 }
                 }
+              </div>
+              <div class="ms-auto ml-2 mr-2">
+                <app-button variant="highlight" label="Chat" size="small"
+                  (click)="groupChatClicked(group.RoomId)"></app-button>
               </div>
             </div>
           </div>

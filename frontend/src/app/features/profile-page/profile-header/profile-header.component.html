@@ -57,6 +57,12 @@
         </button>
         }
 
+        @if (isFriend) {
+        <button class="social-badge" (click)="removeFriend(user)" aria-label="Remove friend">
+          {{ confirmingRemoval === user.UserId ? 'Confirm' : 'Unfriend' }}
+        </button>
+        }
+
         <button class="social-badge" (click)="userClicked(user.UserId)" aria-label="Start chat" title="Start chat">
           <img src="/assets/svg/NoMessage.svg" alt="addfriend" class="profilesvg">
         </button>

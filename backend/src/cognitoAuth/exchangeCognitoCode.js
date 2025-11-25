@@ -65,10 +65,10 @@ exports.handler = async (event) => {
         SK: 'PROFILE',
       },
       UpdateExpression:
-        'SET Email = :email, UpdatedAt = :updatedAt, UserId = :userId, GSI3PK = :gsi3pk',
+        'SET Email = :email, CreatedAt = if_not_exists(CreatedAt, :createdAt), UserId = :userId, GSI3PK = :gsi3pk',
       ExpressionAttributeValues: {
         ':email': payload.email,
-        ':updatedAt': now,
+        ':createdAt': now,
         ':userId': payload.sub,
         ':gsi3pk': 'USER',
       },
