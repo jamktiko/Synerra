@@ -3,7 +3,8 @@
     <img src="assets/svg/logo_big.svg" alt="Synerra logo" class="logo-big" />
     <div class="welcome-block">
       <h1>Welcome to Synerra</h1>
-      <p class="text-sm-18">Find teammates, reduce toxicity, enjoy the game.</p>
+      <p class="text-sm-18">Match by playstyle and vibe.</p>
+      <p class="welcome-value">No toxicity. No chaos. Just good games.</p>
     </div>
   </div>
 
@@ -30,10 +31,17 @@
         <div class="linebreak-child"></div>
       </div>
 
-      <div class="cta-text">Don't have friends yet??</div>
-
-      <app-button label="Signup" variant="highlight" size="large" [fullWidth]="true" align="center"
-        [routerLink]="'/signup'"></app-button>
+      <div class="cta-panel">
+        <div class="cta-text">
+          <span class="cta-text__label">Begin your journey</span>
+        </div>
+        <app-button class="signup-cta" label="Create Profile" variant="highlight" size="large" [fullWidth]="true" align="center"
+          [routerLink]="'/signup'"></app-button>
+      </div>
     </div>
   </div>
 </div>
+
+<footer class="login-footer">
+  © 2025 Synerra
+</footer>

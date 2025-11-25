@@ -1,20 +1,17 @@
 # This file tells GitHub Actions what to do when pushing to repo.
 name: Deployment pipeline
 
+# Triggers on pushes to main branch
 on:
-  workflow_run:
-    workflows: ['Test pipeline']
-    types:
-      - completed
+  push:
+    branches:
+      - main
 
 # Jobs are the tasks that the pipeline runs.
-# Each job starts it's own virtual machine that runs in GitHub's cloud.
+# Each job starts its own virtual machine that runs in GitHub's cloud.
 jobs:
   # Only continuing if tests pass in test-pipeline and pushing to main branch
   deploy-check:
-    if: >
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
     steps:
       - name: Proceeding to deployment
@@ -28,16 +25,17 @@ jobs:
     runs-on: ubuntu-latest
     # Defines outputs that the main jobs can use
     outputs:
-      # These variables are set true/false based on wether the frontend/backend folders have changes or not
+      # These variables are set true/false based on whether the frontend/backend folders have changes or not
       frontend: ${{ steps.filter.outputs.frontend }}
       backend: ${{ steps.filter.outputs.backend }}
     steps:
       # Clones the repo into the workflow runner so that all the jobs can access the code. VERY ESSENTIAL
       - uses: actions/checkout@v4
+
       - uses: dorny/paths-filter@v3
         id: filter
         with:
-          # Checks for changes in the listed folders with paths-filter@v4.
+          # Checks for changes in the listed folders with paths-filter@v3.
           # The results are set to the above variables that then are passed for other jobs to use.
           filters: |
             frontend:
@@ -47,13 +45,37 @@ jobs:
               - 'backend/**'
               - '.github/workflows/**'
 
+  e2e-tests:
+    needs: [deploy-check, changes]
+    if: needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+          npm install --save-dev wait-on
+
+      - name: Start frontend & run E2E tests
+        run: |
+          cd frontend
+          npm run start &
+          npx wait-on http://localhost:4200
+          npx cypress run --config baseUrl=http://localhost:4200
+
   # Job for building the frontend project and deploying it to the AWS s3
   frontend:
     # Only activates if changes detected in /frontend or in /workflows. (Gets the data from the job "changes") and tests pass
-    needs: [deploy-check, changes]
-    if:
-      needs.changes.outputs.frontend == 'true'
-      # Runs Ubuntu on the vm
+    needs: [deploy-check, changes, e2e-tests]
+    if: needs.changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     steps:
       # Clones the repo into the workflow runner so that all the jobs can access the code. VERY ESSENTIAL
@@ -68,9 +90,6 @@ jobs:
 
       # Installs packages and dependencies for the project in the vm and builds the project
       - name: Install frontend dependencies & build
-        # Runs normal cmd commands to first install packages and then build a production version from the Angular project
-        # (npm ci, basically nmp i but with "clear install", that by installing the exact versions from package-lock.json
-        # and ignoring version ranges form package.json, guarantees that all the versions are the same on every install.)
         run: |
           cd frontend
           npm ci
@@ -97,7 +116,7 @@ jobs:
   # Job for building the backend project and deploying it to s3
   backend:
     # Only activates if changes in /backend or in /workflows and tests pass
-    needs: [deploy-check, changes]
+    needs: [deploy-check, changes, e2e-tests]
     if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
     # Gets the Serverless key

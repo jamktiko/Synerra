@@ -1,4 +1,4 @@
-# SYNERRAN TESTAUSSUUNNITELMA v.0.02a
+# Synerra Jest-yksikkötestaussuunnitelma v0.02a
 
 ## Testauksen tavoitteet
 

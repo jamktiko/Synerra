@@ -12,7 +12,7 @@
   <div class="tabs">
     @if (messagesTabShowing) {
     <div class="messagesTab">
-      <app-messages-tab [directChats]="directChats" [groupChats]="groupChats" />
+      <app-messages-tab [friendsList]="friendList" [directChats]="directChats" [groupChats]="groupChats" />
     </div>
     } @else {
     <div class="notificationsTab">

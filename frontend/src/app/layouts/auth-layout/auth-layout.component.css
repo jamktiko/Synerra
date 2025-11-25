@@ -15,7 +15,7 @@
 /* Taustakuva */
 .layout {
   position: relative;
-  background-image: url("/assets/images/SynerraBackground.webp");
+  background-image: url("/assets/images/synerra_background2.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -28,23 +28,29 @@
   /* GPU-kiihdytys ja kevyempi renderöinti */
   transform: translateZ(0);
   backface-visibility: hidden;
-  z-index: 1;
+  z-index: 0;
 }
 
 .layout::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(
-    0,
-    0,
-    0,
-    0.5
-  ); /* tummennus, säädä arvoa tarpeen mukaan */
-  pointer-events: none; /* ei estä interaktiota lapsissa */
+  inset: 0;
+  background-image: url("/assets/images/synerra_background2.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: scale(1.1);
+  filter: blur(0px) brightness(0.9);
+  z-index: -2;
+  animation: backgroundBlur 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.7s forwards;
+}
+
+.layout::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.35);
   z-index: -1;
 }
 
@@ -63,6 +69,36 @@
   max-width: 960px;
   width: 100%;
   z-index: 1;
+}
+
+@keyframes backgroundBlur {
+  from {
+    filter: blur(0px);
+  }
+
+  to {
+    filter: blur(8px) brightness(0.55);
+  }
+}
+
+@media (max-width: 480px) {
+  :host {
+    align-items: flex-start;
+    overflow: hidden;
+    height: var(--viewport-height);
+  }
+
+  .layout {
+    align-items: flex-start;
+    padding: 12px 0 20px;
+    min-height: var(--viewport-height);
+    height: var(--viewport-height);
+    overflow: hidden;
+  }
+
+  .layout::after {
+    background: rgba(0, 0, 0, 0.24);
+  }
 }
 
 /* iOS-tuki: varmistetaan, että osoitepalkin korkeus ei luo ylimääräistä marginaalia */

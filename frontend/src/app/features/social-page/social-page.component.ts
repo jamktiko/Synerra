@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SocialMenuComponent } from './social-menu/social-menu.component';
 import { UserService } from '../../core/services/user.service';
 import { UserStore } from '../../core/stores/user.store';
+import { FriendService } from '../../core/services/friend.service';
 import { NotificationsTabComponent } from './notifications-tab/notifications-tab.component';
 import { MessagesTabComponent } from './messages-tab/messages-tab.component';
 import { CommonModule } from '@angular/common';
@@ -12,7 +13,10 @@ import {
 import { FriendRequest } from '../../core/interfaces/friendrequest.model';
 import { combineLatest, map, Observable, Subscription } from 'rxjs';
 import { NotificationStore } from '../../core/stores/notification.store';
-import { WebsocketFriendRequest } from '../../core/interfaces/friend.model';
+import {
+  Friend,
+  WebsocketFriendRequest,
+} from '../../core/interfaces/friend.model';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 type AnyRequest = FriendRequest | WebsocketFriendRequest;
@@ -31,6 +35,7 @@ type AnyRequest = FriendRequest | WebsocketFriendRequest;
 export class SocialPageComponent implements OnInit {
   messagesTabShowing: boolean = true;
 
+  friendList: any[] = [];
   directChats: any[] = [];
   groupChats: any[] = [];
   noChats: boolean = false;
@@ -44,6 +49,7 @@ export class SocialPageComponent implements OnInit {
   constructor(
     private userService: UserService,
     private userStore: UserStore,
+    private friendService: FriendService,
     private notificationStore: NotificationStore,
   ) {
     // normalize messages from notification store
@@ -114,7 +120,7 @@ export class SocialPageComponent implements OnInit {
             senderPicture,
             status,
             toUserId,
-            type, // guaranteed string
+            type,
             message,
           };
         }),
@@ -155,6 +161,12 @@ export class SocialPageComponent implements OnInit {
         error: (err) => {
           console.error('Failed to fetch rooms:', err);
         },
+      });
+      this.friendService.getFriends().subscribe({
+        next: (friends) => {
+          this.friendList = friends;
+        },
+        error: (err) => console.error('Error loading friends:', err),
       });
     } else {
       console.error('No userId found');

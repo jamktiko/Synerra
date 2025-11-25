@@ -78,7 +78,6 @@
       </button>
       }
 
-
       <!-- Top Action Button (Requests) -->
       @if (activeTab === 'requests' && (friendRequests$ | async)?.length) {
       <button class="mark-read icon-toggle" (click)="markRequestsAsRead()"
@@ -92,84 +91,70 @@
         </span>
       </button>
       }
-
     </div>
 
     <div class="panel-body">
       <!-- Messages Section -->
       @if (activeTab === 'messages') {
-      <div class="section">
-        @if ((messages$ | async)?.length) {
-        @for (msg of messages$ | async; track msg.roomId) {
-        <div class="notification-item" (click)="userClicked(msg.roomId)">
-          <img [src]="msg.profilePicture || '/assets/svg/user-avatar-placeholder.svg'" alt="avatar" class="avatar" />
-
-          <div class="message-info">
-            <div class="sender">{{ msg.senderUsername }}</div>
-            <div class="content">{{ msg.content }}</div>
-            <div class="content timestamp">
-              {{ msg.timestamp | date: 'short' }}
-            </div>
+      @if ((messages$ | async)?.length) {
+      @for (msg of messages$ | async; track msg.roomId) {
+      <div class="notification-item" (click)="userClicked(msg.roomId)">
+        <img [src]="msg.profilePicture || '/assets/svg/user-avatar-placeholder.svg'" alt="avatar" class="avatar" />
+        <div class="message-info">
+          <div class="sender">{{ msg.senderUsername }}</div>
+          <div class="content">{{ msg.content }}</div>
+          <div class="content timestamp">
+            {{ msg.timestamp | date: 'short' }}
           </div>
         </div>
-        }
-        } @else {
-        <div class="empty-msg">No messages</div>
-        }
       </div>
       }
-
+      } @else {
+      <div class="empty-msg">No messages</div>
+      }
+      }
 
       <!-- Requests Section -->
       @if (activeTab === 'requests') {
-      <div class="section">
-        @if ((friendRequests$ | async)?.length) {
-        @for (req of friendRequests$ | async; track req.fromUserId) {
-        <div class="notification-item friend-request">
-          <img [src]="req.senderPicture || '/assets/svg/user-avatar-placeholder.svg'" alt="avatar" class="avatar" />
+      @if ((friendRequests$ | async)?.length) {
+      @for (req of friendRequests$ | async; track req.fromUserId) {
+      <div class="notification-item friend-request">
+        <img [src]="req.senderPicture || '/assets/svg/user-avatar-placeholder.svg'" alt="avatar" class="avatar" />
+        <div class="message-info">
+          <div class="sender">{{ req.fromUsername }}</div>
 
-          <div class="message-info">
-            <div class="sender">{{ req.fromUsername }}</div>
+          <!-- Status Output -->
+          @if (req.status === 'PENDING') {
+          <div class="content">sent you a friend request</div>
+          }
+          @if (req.status === 'ACCEPTED') {
+          <div class="content">accepted your friend request</div>
+          }
+          @if (req.status === 'DECLINED') {
+          <div class="content">declined your friend request</div>
+          }
 
-            <!-- Status Output -->
-            @if (req.status === 'PENDING') {
-            <div class="content">sent you a friend request</div>
-            }
-            @if (req.status === 'ACCEPTED') {
-            <div class="content">accepted your friend request</div>
-            }
-            @if (req.status === 'DECLINED') {
-            <div class="content">declined your friend request</div>
-            }
-
-            <!-- Actions -->
-            @if (req.status === 'PENDING') {
-            <div class="friend-actions">
-              <app-button label="Accept" size="xsmall" variant="highlight" (click)="acceptRequest(req.fromUserId)">
-              </app-button>
-              <app-button label="Decline" size="xsmall" (click)="declineRequest(req.fromUserId)">
-              </app-button>
-            </div>
-            }
-
-            @if (req.status === 'ACCEPTED' || req.status === 'DECLINED') {
-            <div class="friend-actions">
-              <app-button label="Clear" size="xsmall" variant="highlight" (click)="clearRequest(req.fromUserId)">
-              </app-button>
-            </div>
-            }
+          <!-- Actions -->
+          @if (req.status === 'PENDING') {
+          <div class="friend-actions">
+            <app-button label="Accept" size="xsmall" variant="highlight"
+              (click)="acceptRequest(req.fromUserId)"></app-button>
+            <app-button label="Decline" size="xsmall" (click)="declineRequest(req.fromUserId)"></app-button>
           </div>
+          }
+          @if (req.status === 'ACCEPTED' || req.status === 'DECLINED') {
+          <div class="friend-actions">
+            <app-button label="Clear" size="xsmall" variant="highlight"
+              (click)="clearRequest(req.fromUserId)"></app-button>
+          </div>
+          }
         </div>
-        }
-        } @else {
-        <p>No friend requests</p>
-        }
       </div>
       }
-
-      <ng-template #noRequests>
-        <div class="empty-msg">No friend requests</div>
-      </ng-template>
+      } @else {
+      <div class="empty-msg">No friend requests</div>
+      }
+      }
     </div>
   </div>
 </ng-template>

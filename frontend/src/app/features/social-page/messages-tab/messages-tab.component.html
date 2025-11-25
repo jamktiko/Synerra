@@ -1,3 +1,4 @@
+<!-- CHANGED: merged into a single tab-content container -->
 <div class="messagesTab">
   <!-- ALEMPI TAKASIN JOS HALUAA SEARCHIN -->
   <!-- <div class="messagesHeader">
@@ -12,41 +13,72 @@
       <input type="text" placeholder="Search users..." />
     </div>
   </div> -->
-  <!-- Tabs -->
+
   <div class="tabsConts">
     <ul class="nav nav-tabs" id="chatTabs" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'" type="button">
+        <button class="nav-link" [class.active]="activeTab === 'friends'" (click)="activeTab = 'friends'" type="button">
+          Friends
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" [class.active]="activeTab === 'chats'" (click)="activeTab = 'chats'" type="button">
           Chats
         </button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" [class.active]="activeTab === 'groups'" (click)="activeTab = 'groups'" type="button">
+        <button class="nav-link" [class.active]="activeTab === 'groupChats'" (click)="activeTab = 'groupChats'"
+          type="button">
           Group chats
         </button>
       </li>
 
-      <app-button label="New chat +" [fullWidth]="true" size="small" (click)="openNewChatModal()"></app-button>
+      <app-button class="floatingButton" label="New chat +" [fullWidth]="true" size="small"
+        (click)="openNewChatModal()"></app-button>
     </ul>
 
     <div class="conts">
+
+      <!-- CHANGED: Only ONE tab-content container -->
       <div class="tab-content" id="chatTabsContent" [ngClass]="{
-      'show-users': activeTab === 'users',
-      'show-groups': activeTab === 'groups'
-    }">
-        <div class="tab-pane" id="users">
+          'show-friends': activeTab === 'friends',
+          'show-users': activeTab === 'chats',
+          'show-groups': activeTab === 'groupChats'
+        }">
+
+        <!-- FRIENDS TAB -->
+        <div class="tab-pane" id="friends">
+          <!-- CHANGED: friendsList() instead of friendsList -->
+          @if (friendsList().length > 0) {
+          @for (friend of friendsList(); track friend.UserId) {
+          <div class="card mb-2 p-2 text-white" (click)="userClicked(friend.UserId)">
+            <div class="d-flex align-items-center user-card">
+              <img class="account-icon" [src]="friend.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" />
+              <div class="userTextBar">
+                <strong (click)="openProfile(friend.UserId, $event)" class="username-link">
+                  {{ friend.Username }}
+                </strong><br />
+                <small class="lMessage">{{ friend.Status || 'Offline' }}</small>
+              </div>
+            </div>
+          </div>
+          }
+          } @else {
+          <p>No friends available</p>
+          }
+        </div>
+
+        <!-- CHATS TAB -->
+        <div class="tab-pane" id="chats">
           @if (directChats().length > 0) {
           @for (chat of directChats(); track $index) {
           <div class="card mb-2 p-2 text-white">
-            <!-- Whole member block clickable -->
             @for (member of chat.Members; track $index) {
             <div class="d-flex align-items-center user-card" (click)="userClicked(member.UserId)">
-
               <img class="account-icon"
                 [src]="member?.ProfilePicture ? member.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'" />
 
               <div class="userTextBar">
-                <!-- Username clickable for different action -->
                 <strong (click)="openProfile(member.UserId, $event)" class="username-link">
                   {{ member.Username }}
                 </strong><br />
@@ -67,13 +99,13 @@
           </ng-template>
         </div>
 
+        <!-- GROUP CHATS TAB -->
         <div class="tab-pane" id="groups">
           @if (groupChats().length > 0) {
           @for (group of groupChats(); track group.RoomId) {
           <div class="card mb-2 p-2 text-white">
 
             <div class="d-flex align-items-center">
-              <!-- Avatars loop -->
               <div class="group-avatars">
                 @for (member of group.Members; track member.UserId) {
                 <img class="account-icon" [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" />
@@ -117,17 +149,10 @@
   <div class="modalContent">
     <h3 class="modalTitle">Add friends to chat</h3>
 
-    <!-- Voi lisätä myöhemmin input filtterin jos jaksaa -->
-    <!--
-      <div class="input-container">
-        <img src="assets/svg/Search_icon.svg" alt="Search" class="search-icon" />
-        <input type="text" placeholder="Search friends..." />
-      </div>
-      -->
-
     <div class="friendsList">
-      @if (friendsList && friendsList.length > 0) {
-      @for (friend of friendsList; track $index) {
+      <!-- CHANGED: friendsList() -->
+      @if ( friendsList().length > 0) {
+      @for (friend of friendsList(); track $index) {
       <div class="card mb-2 p-2 text-white" [class.selected]="isSelected(friend)"
         (click)="toggleFriendSelection(friend)">
         <div class="d-flex align-items-center user-card">
@@ -146,11 +171,9 @@
     </div>
 
     <div class="modalButtons">
-      <app-button label="Close" [fullWidth]="true" size="small" (click)="closeNewChatModal()">
-      </app-button>
+      <app-button label="Close" [fullWidth]="true" size="small" (click)="closeNewChatModal()"></app-button>
       <app-button label="Start chat" [fullWidth]="true" size="small" variant="highlight"
-        [state]="selectedFriends.length !== 0 ? 'active' : 'disabled'" (click)="startChat()">
-      </app-button>
+        [state]="selectedFriends.length !== 0 ? 'active' : 'disabled'" (click)="startChat()"></app-button>
     </div>
   </div>
 </div>

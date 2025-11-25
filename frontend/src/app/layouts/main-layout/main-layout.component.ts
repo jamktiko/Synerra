@@ -23,7 +23,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.css'],
 })
-export class MainLayoutComponent implements OnInit, AfterViewInit {
+export class MainLayoutComponent implements OnInit {
   isNavbarCollapsed = false;
   showLoadingPage = false;
   loggedInUser: User | null = null;
@@ -31,14 +31,14 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
   constructor(
     private userStore: UserStore,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
   ) {}
   @ViewChild(NavbarComponent) navbar!: NavbarComponent;
 
   ngOnInit(): void {
     this.showLoadingPage = true;
 
-    // Updates the userStore to have the most recent user data (basically for confirming that recently created account will load)
+    // Updates the userStore to have the most recent user data (basically for confirming that recently created account will load).
     this.userService.getMe().subscribe({
       next: (res) => {
         this.userStore.setUser(res);
@@ -61,14 +61,5 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
         this.showLoadingPage = false;
       },
     });
-
-    // console.log('WebSocket Reconnect in progress...');
-  }
-  ngAfterViewInit(): void {
-    this.navbar.collapsedChange.subscribe((collapsed: boolean) => {
-      this.isNavbarCollapsed = collapsed;
-    });
-
-    this.isNavbarCollapsed = this.navbar.isCollapsed;
   }
 }
