@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthStore } from '../core/stores/auth.store';
+import { AuthStore } from '../../core/stores/auth.store';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { UserService } from '../core/services/user.service';
-import { UserStore } from '../core/stores/user.store';
-import { NotificationService } from '../core/services/notification.service';
-import { AuthService } from '../core/services/auth.service';
-import { LoadingPageComponent } from '../features/loading-page/loading-page.component';
+import { UserService } from '../../core/services/user.service';
+import { UserStore } from '../../core/stores/user.store';
+import { NotificationService } from '../../core/services/notification.service';
+import { AuthService } from '../../core/services/auth.service';
+import { LoadingPageComponent } from '../loading-page/loading-page.component';
 
 @Component({
   selector: 'app-auth-callback',
