@@ -55,7 +55,7 @@
             <div class="d-flex align-items-center user-card">
               <img class="account-icon" [src]="friend.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" />
               <div class="userTextBar">
-                <strong (click)="openProfile(friend.UserId, $event)" class="username-link">
+                <strong (click)="openProfile(friend.UserId, $event)" class="hover-highlight">
                   {{ friend.Username }}
                 </strong><br />
                 <small class="lMessage">{{ friend.Status || 'Offline' }}</small>
@@ -79,7 +79,7 @@
                 [src]="member?.ProfilePicture ? member.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'" />
 
               <div class="userTextBar">
-                <strong (click)="openProfile(member.UserId, $event)" class="username-link">
+                <strong (click)="openProfile(member.UserId, $event)" class="hover-highlight">
                   {{ member.Username }}
                 </strong><br />
                 <small class="lMessage">{{ member.Username }}</small>
@@ -103,7 +103,8 @@
         <div class="tab-pane" id="groups">
           @if (groupChats().length > 0) {
           @for (group of groupChats(); track group.RoomId) {
-          <div class="card mb-2 p-2 text-white" (click)="groupChatClicked(group.RoomId)">
+          <div class="card mb-2 p-2 text-white">
+
             <div class="d-flex align-items-center">
               <div class="group-avatars">
                 @for (member of group.Members; track member.UserId) {
@@ -112,7 +113,7 @@
               </div>
               <div class="group-usernames">
                 @for (member of group.Members; track member.UserId; let last = $last) {
-                <span class="username-link">
+                <span class="hover-highlight ">
                   <strong (click)="openProfile(member.UserId, $event)">
                     {{ member.Username }}
                   </strong>
@@ -121,6 +122,10 @@
                 <span>, </span>
                 }
                 }
+              </div>
+              <div class="ms-auto ml-2 mr-2">
+                <app-button variant="highlight" label="Chat" size="small"
+                  (click)="groupChatClicked(group.RoomId)"></app-button>
               </div>
             </div>
           </div>

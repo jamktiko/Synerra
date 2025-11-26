@@ -37,6 +37,9 @@ provider:
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminSetUserPassword
         - 'cognito-idp:AdminDeleteUser'
+        - 'cognito-idp:AdminGetUser'
+        - 'cognito-idp:AdminListGroupsForUser'
+        - 'cognito-idp:AdminRemoveUserFromGroup'
         - s3:PutObject
         - s3:GetObject
         - 'sns:Publish'
@@ -116,7 +119,8 @@ provider:
   httpApi:
     cors:
       allowedOrigins:
-        - '*'
+        - 'http://localhost:4200'
+        - 'https://d2lqv34okdzcq4.cloudfront.net'
       allowedHeaders:
         - Content-Type
         - Authorization

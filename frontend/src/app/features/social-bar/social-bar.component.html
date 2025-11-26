@@ -32,7 +32,7 @@
           <img class="acount-icon"
             [src]="user?.ProfilePicture ? user.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'"
             alt="Player Avatar" />
-          <div class="player-name">{{ user.Username }}</div>
+          <div class="player-name hover-highlight" (click)="nameClicked(user, $event)">{{ user.Username }}</div>
           <div class="status" [class.online]="user.Status === 'online'" [class.offline]="user.Status !== 'online'">
             <span class="status-pulse"></span>
             <span class="status-dot"></span>
