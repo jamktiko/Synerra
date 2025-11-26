@@ -160,9 +160,7 @@ input[type="text"] {
   background: rgba(30, 30, 30, 0.95);
   color: var(--color-text-default);
   font-size: 0.95rem;
-  transition:
-    border 0.2s ease,
-    background 0.2s ease;
+  transition: border 0.2s ease, background 0.2s ease;
 }
 
 input[type="text"]:focus {
@@ -187,6 +185,16 @@ input[type="text"]::placeholder {
   text-decoration-color: var(--color-primary);
   text-decoration-thickness: 2px;
   text-underline-offset: 2px;
+}
+
+.hover-highlight {
+  transition: color 0.2s, background-color 0.2s;
+  cursor: pointer;
+}
+
+.hover-highlight:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
 }
 
 .account-icon {
@@ -282,9 +290,7 @@ input[type="text"]::placeholder {
 .card {
   background: var(--color-transparent-gradient);
   border-radius: 8px;
-  transition:
-    background 0.2s ease,
-    border 0.2s ease;
+  transition: background 0.2s ease, border 0.2s ease;
   margin-bottom: 0.5rem;
 }
 

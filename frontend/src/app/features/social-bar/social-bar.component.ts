@@ -12,6 +12,7 @@ import { User } from '../../core/interfaces/user.model';
 import { ChatService } from '../../core/services/chat.service';
 import { map, Observable } from 'rxjs';
 import { NotificationsComponent } from '../notifications/notifications.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-social-bar',
@@ -35,6 +36,7 @@ export class SocialBarComponent implements AfterViewInit {
     private friendService: FriendService,
     private chatService: ChatService,
     private cdr: ChangeDetectorRef,
+    private router: Router
   ) {
     this.users$ = this.friendService.friends$.pipe(
       map((friends) =>
@@ -43,11 +45,11 @@ export class SocialBarComponent implements AfterViewInit {
           if (a.Status === 'online' && b.Status !== 'online') return -1;
           if (a.Status !== 'online' && b.Status === 'online') return 1;
           return 0; // keep the original order if both same
-        }),
-      ),
+        })
+      )
     );
     this.onlineUsers$ = this.users$.pipe(
-      map((friends) => friends.filter((f) => f.Status === 'online')),
+      map((friends) => friends.filter((f) => f.Status === 'online'))
     );
   }
 
@@ -80,5 +82,11 @@ export class SocialBarComponent implements AfterViewInit {
 
   userClicked(userId: any) {
     this.chatService.startChat([userId]);
+  }
+
+  nameClicked(user: User, event: Event) {
+    event.stopPropagation();
+    console.log(`Opening profile of ${user.Username}`);
+    this.router.navigate([`dashboard/profile/${user.UserId}`]);
   }
 }

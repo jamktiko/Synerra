@@ -54,6 +54,8 @@ exports.handler = async (event) => {
       Buffer.from(base64Payload, 'base64').toString('utf8')
     );
 
+    console.log('payload: ', payload);
+
     // Getting current date
     const now = Math.floor(Date.now() / 1000);
 
@@ -65,12 +67,13 @@ exports.handler = async (event) => {
         SK: 'PROFILE',
       },
       UpdateExpression:
-        'SET Email = :email, CreatedAt = if_not_exists(CreatedAt, :createdAt), UserId = :userId, GSI3PK = :gsi3pk',
+        'SET Email = :email, CreatedAt = if_not_exists(CreatedAt, :createdAt), UserId = :userId, GSI3PK = :gsi3pk, CognitoName = :cognitoName',
       ExpressionAttributeValues: {
         ':email': payload.email,
         ':createdAt': now,
         ':userId': payload.sub,
         ':gsi3pk': 'USER',
+        ':cognitoName': payload['cognito:username'], // add this so we know from the dynamodb item if the user is google-user
       },
       ReturnValues: 'ALL_NEW', // returns the updated item
     };
