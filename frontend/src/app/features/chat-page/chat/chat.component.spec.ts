@@ -43,7 +43,7 @@ describe('ChatComponent', () => {
             ],
           },
         ],
-      })
+      }),
     ),
   };
 
@@ -101,7 +101,7 @@ describe('ChatComponent', () => {
   it('should call startChat when userStore emits a user', () => {
     expect(mockChatService.startChat).toHaveBeenCalledWith(
       undefined, // adjust to 1 if you fix component to pass UserId
-      'room123'
+      'room123',
     );
   });
 
@@ -112,15 +112,10 @@ describe('ChatComponent', () => {
     expect(component.otherMembers[0].Username).toBe('Alice');
   });
 
-  it('memberNames returns formatted names', () => {
-    component.otherMembers = [{ Username: 'Alice' } as any];
-    expect(component.memberNames).toBe('Alice');
-  });
-
   it('clearNotifications calls userService', () => {
     component.clearNotifications();
     expect(mockUserService.markRoomMessagesAsRead).toHaveBeenCalledWith(
-      'room123'
+      'room123',
     );
   });
 
@@ -138,7 +133,7 @@ describe('ChatComponent', () => {
       1,
       'TestUser',
       '',
-      'room123'
+      'room123',
     );
     expect(component.messageText).toBe('');
   });

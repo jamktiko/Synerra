@@ -21,6 +21,7 @@ describe('AuthCallBacksComponent', () => {
   const navigateSpy = { navigate: jest.fn() };
 
   beforeEach(() => {
+    // Mocking required stores and services
     authStore = { setToken: jest.fn() } as any;
     authService = { logout: jest.fn() } as any;
     userStore = { setUser: jest.fn() } as any;
