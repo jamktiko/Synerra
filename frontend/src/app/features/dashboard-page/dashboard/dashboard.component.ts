@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { User } from '../../../core/interfaces/user.model';
 import { UserStore } from '../../../core/stores/user.store';
 import { UserService } from '../../../core/services/user.service';
-import { LoadingSpinnerComponent } from '../../loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-dashboard',
