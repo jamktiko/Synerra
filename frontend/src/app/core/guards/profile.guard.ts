@@ -1,4 +1,4 @@
-// This guard keeps track of if the user has logged in and not made a profile
+// This guard keeps track of if the user has logged in and not yet made a profile.
 
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
@@ -14,7 +14,7 @@ export class ProfileGuard implements CanActivate {
   ) {}
 
   async canActivate(): Promise<boolean> {
-    // show loading page
+    // Shows loading page
     this.loadingPageStore.setAuthLayoutLoadingPageVisible(true);
 
     // Tries to get the user data, up to 2 seconds
@@ -23,6 +23,7 @@ export class ProfileGuard implements CanActivate {
       await new Promise((r) => setTimeout(r, 100));
     }
 
+    // Backup for not letting anyone in if something goes wrong
     if (!this.userStore.user()) {
       console.warn('User not loaded within 2 seconds');
       this.router.navigate(['/dashboard']);
@@ -31,14 +32,14 @@ export class ProfileGuard implements CanActivate {
 
     const user = this.userStore.user();
 
-    // hide loading page
+    // Hides loading page
     this.loadingPageStore.setAuthLayoutLoadingPageVisible(false);
 
+    // If the user already has a username (so has made a profile) -> must not have access here
     if (user && user.Username) {
       this.router.navigate(['/dashboard']);
       return false;
     }
-    console.log('USEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEER', user);
     return true;
   }
 }
