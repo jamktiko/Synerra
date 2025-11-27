@@ -263,9 +263,6 @@
   background: rgba(255, 255, 255, 0.04);
   transition: background 0.2s ease;
 }
-.group-avatar {
-  margin-right: 20px;
-}
 
 .chatroom-card:hover {
   background: rgba(255, 255, 255, 0.08);
