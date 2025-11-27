@@ -10,7 +10,18 @@
     </div>
 
     <div class="nameGroup">
-      <strong>{{ memberNames }}</strong>
+      @for (m of members; track m.userId; let i = $index) {
+      @if (m.userId) {
+      <strong class="hover-highlight" [routerLink]="['/dashboard/profile', m.userId]">
+        {{ m.username }}
+      </strong>
+      } @else {
+      <span>{{ m.username }}</span>
+      }
+
+      @if (i < members.length - 1) { <span>, </span>
+        }
+        }
     </div>
 
     <div class="headerButton">

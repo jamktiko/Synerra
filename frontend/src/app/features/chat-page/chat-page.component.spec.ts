@@ -103,13 +103,13 @@ describe('ChatPageComponent', () => {
       // Object.getPrototypeOf() gets the component class
       // Object.getOwnPropertyNames() lists all methods on the class
       const methods = Object.getOwnPropertyNames(
-        Object.getPrototypeOf(component)
+        Object.getPrototypeOf(component),
       ).filter(
         (name) =>
           // Filter out Angular lifecycle hooks and constructor
           name !== 'constructor' &&
           name !== 'ngOnInit' &&
-          typeof (component as any)[name] === 'function'
+          typeof (component as any)[name] === 'function',
       );
       // Expect no custom methods beyond what Angular provides
       expect(methods.length).toBe(0);
