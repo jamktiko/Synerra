@@ -21,7 +21,7 @@ export class LoadingPageComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => {
       this.goToLoginPageButtonShowing = true;
-    }, 3000);
+    }, 10000);
   }
 
   goToLogin() {

@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { UserStore } from '../../core/stores/user.store';
 import { FriendService } from '../../core/services/friend.service';
 import { Game } from '../../core/interfaces/game.model';
-import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-profile-page',
@@ -38,7 +38,7 @@ export class ProfilePageComponent implements OnInit {
     private route: ActivatedRoute,
     private userService: UserService,
     private userStore: UserStore,
-    private friendService: FriendService
+    private friendService: FriendService,
   ) {}
 
   ngOnInit(): void {

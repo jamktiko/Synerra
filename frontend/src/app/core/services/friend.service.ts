@@ -17,8 +17,8 @@ import { NotificationService } from './notification.service';
   providedIn: 'root',
 })
 export class FriendService {
-  private baseUrl = environment.AWS_FRIENDS_URL;
-  private mostBasicUrl = environment.AWS_BASE_URL;
+  private baseUrl = environment.AWS_BASE_URL;
+  private friendsUrl = `${environment.AWS_BASE_URL}/friends`;
   private pendingRequestsSubject = new BehaviorSubject<any[]>([]);
   pendingRequests$ = this.pendingRequestsSubject.asObservable();
 
@@ -28,7 +28,7 @@ export class FriendService {
   constructor(
     private http: HttpClient,
     private authStore: AuthStore,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
   ) {
     this.initFriendsOnlineStatus();
   }
@@ -66,20 +66,20 @@ export class FriendService {
 
     return this.http
       .post(
-        `${this.baseUrl}/friendrequest`,
+        `${this.friendsUrl}/friendrequest`,
         {
           targetUserId,
           action: 'SEND',
         },
         {
           headers: { Authorization: `${jwt}` },
-        }
+        },
       )
       .pipe(
         tap(() => {
           //  Refresh pending requests after sending a new one
           this.refreshPendingRequests();
-        })
+        }),
       );
   }
 
@@ -88,21 +88,21 @@ export class FriendService {
 
     return this.http
       .post(
-        `${this.baseUrl}/friendrequest`,
+        `${this.friendsUrl}/friendrequest`,
         { targetUserId, action: 'ACCEPT' },
-        { headers: { Authorization: `${jwt}` } }
+        { headers: { Authorization: `${jwt}` } },
       )
       .pipe(
         tap(() => {
           // Remove from pending requests reactively
           const current = this.pendingRequestsSubject.value.filter(
-            (r) => r.PK !== `USER#${targetUserId}`
+            (r) => r.PK !== `USER#${targetUserId}`,
           );
           this.pendingRequestsSubject.next(current);
 
           // Refresh friends list reactively
           this.getFriends().subscribe();
-        })
+        }),
       );
   }
 
@@ -111,45 +111,41 @@ export class FriendService {
     console.log('DECLINE REQUEST CALLED: ', targetUserId);
     return this.http
       .post(
-        `${this.baseUrl}/friendrequest`,
+        `${this.friendsUrl}/friendrequest`,
         {
           targetUserId,
           action: 'DECLINE',
         },
         {
           headers: { Authorization: `${jwt}` },
-        }
+        },
       )
       .pipe(
         tap(() => {
           //  Remove from pending requests reactively
           const current = this.pendingRequestsSubject.value.filter(
-            (r: any) => r.PK !== `USER#${targetUserId}`
+            (r: any) => r.PK !== `USER#${targetUserId}`,
           );
           this.pendingRequestsSubject.next(current);
-        })
+        }),
       );
   }
 
   deleteFriend(targetUserId: string): Observable<any> {
-    const jwt = this.authStore.getToken();
+    const jwt = this.authStore.getToken() ?? '';
 
     return this.http
-      .delete(`${this.baseUrl}/deletefriend?targetUserId=${targetUserId}`, {
-        headers: { Authorization: `${jwt}` },
+      .delete(`${this.friendsUrl}/deletefriend`, {
+        headers: { Authorization: jwt },
+        body: { targetUserId },
       })
-      .pipe(
-        tap(() => {
-          //  Refresh friends list reactively
-          this.getFriends().subscribe();
-        })
-      );
+      .pipe(tap(() => this.getFriends().subscribe()));
   }
 
   getFriends(): Observable<User[]> {
     const jwt = this.authStore.getToken();
     return this.http
-      .get<{ message: string; users: User[] }>(`${this.baseUrl}/get`, {
+      .get<{ message: string; users: User[] }>(`${this.friendsUrl}/get`, {
         headers: { Authorization: `${jwt}` },
       })
       .pipe(
@@ -157,7 +153,7 @@ export class FriendService {
           // Only push the users array into the BehaviorSubject
           this.friendsSubject.next(res.users || []);
         }),
-        map((res) => res.users || [])
+        map((res) => res.users || []),
       );
   }
 
@@ -165,13 +161,13 @@ export class FriendService {
   getPendingRequests(): Observable<any> {
     const jwt = this.authStore.getToken();
     return this.http
-      .get(`${this.baseUrl}/requests`, {
+      .get(`${this.friendsUrl}/requests`, {
         headers: { Authorization: `${jwt}` },
       })
       .pipe(
         tap((res: any) => {
           this.pendingRequestsSubject.next(res.pendingRequests || []);
-        })
+        }),
       );
   }
 
@@ -185,7 +181,7 @@ export class FriendService {
     const jwt = this.authStore.getToken();
     console.log('CLEAR REQUESTS CALLED');
     return this.http
-      .delete(`${this.mostBasicUrl}/friendRequests/delete`, {
+      .delete(`${this.baseUrl}/friendRequests/delete`, {
         headers: { Authorization: `${jwt}` },
         body: { targetUserId }, // DELETE with a body
       })
@@ -193,16 +189,16 @@ export class FriendService {
         tap((res: any) => {
           // Remove cleared requests from pendingRequestsSubject
           const updated = this.pendingRequestsSubject.value.filter(
-            (r: any) => r.PK !== `USER#${targetUserId}`
+            (r: any) => r.PK !== `USER#${targetUserId}`,
           );
           this.pendingRequestsSubject.next(updated);
 
           console.log(
             `Cleared ${
               res.deletedCount || 0
-            } accepted/declined requests from ${targetUserId}`
+            } accepted/declined requests from ${targetUserId}`,
           );
-        })
+        }),
       );
   }
   clearAllRequests(): void {
@@ -212,15 +208,16 @@ export class FriendService {
   getOutgoingPendingRequests(): Observable<any[]> {
     const jwt = this.authStore.getToken();
     return this.http
-      .get<{ pendingRequests: any[] }>(
-        `${this.mostBasicUrl}/relations/hassent`,
-        { headers: { Authorization: `${jwt}` } }
-      )
+      .get<{
+        pendingRequests: any[];
+      }>(`${this.baseUrl}/relations/hassent`, {
+        headers: { Authorization: `${jwt}` },
+      })
       .pipe(
         tap((res) => {
           console.log('Outgoing pending requests:', res.pendingRequests);
         }),
-        map((res) => res.pendingRequests || [])
+        map((res) => res.pendingRequests || []),
       );
   }
 }
