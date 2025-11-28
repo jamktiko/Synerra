@@ -197,6 +197,8 @@
 }
 
 .heading {
+  display: flex;
+  justify-content: center;
   font-family: var(--font-title);
   font-size: 0.95rem;
   font-weight: 700;
@@ -206,6 +208,12 @@
   width: 100%;
   text-align: center;
   z-index: 2;
+}
+.username {
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .languages {
