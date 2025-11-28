@@ -17,114 +17,166 @@
   <div class="tabsConts">
     <ul class="nav nav-tabs" id="chatTabs" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link" [class.active]="activeTab === 'friends'" (click)="activeTab = 'friends'" type="button">
+        <button
+          class="nav-link"
+          [class.active]="activeTab === 'friends'"
+          (click)="activeTab = 'friends'"
+          type="button"
+        >
           Friends
         </button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" [class.active]="activeTab === 'chats'" (click)="activeTab = 'chats'" type="button">
+        <button
+          class="nav-link"
+          [class.active]="activeTab === 'chats'"
+          (click)="activeTab = 'chats'"
+          type="button"
+        >
           Chats
         </button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" [class.active]="activeTab === 'groupChats'" (click)="activeTab = 'groupChats'"
-          type="button">
+        <button
+          class="nav-link"
+          [class.active]="activeTab === 'groupChats'"
+          (click)="activeTab = 'groupChats'"
+          type="button"
+        >
           Group chats
         </button>
       </li>
 
-      <app-button class="floatingButton" label="New chat +" [fullWidth]="true" size="small"
-        (click)="openNewChatModal()"></app-button>
+      <app-button
+        class="floatingButton"
+        label="New chat +"
+        [fullWidth]="true"
+        size="small"
+        (click)="openNewChatModal()"
+      ></app-button>
     </ul>
 
     <div class="conts">
-
       <!-- CHANGED: Only ONE tab-content container -->
-      <div class="tab-content" id="chatTabsContent" [ngClass]="{
+      <div
+        class="tab-content"
+        id="chatTabsContent"
+        [ngClass]="{
           'show-friends': activeTab === 'friends',
           'show-users': activeTab === 'chats',
           'show-groups': activeTab === 'groupChats'
-        }">
-
+        }"
+      >
         <!-- FRIENDS TAB -->
         <div class="tab-pane" id="friends">
           <!-- CHANGED: friendsList() instead of friendsList -->
-          @if (friendsList().length > 0) {
-          @for (friend of friendsList(); track friend.UserId) {
-          <div class="card mb-2 p-2 text-white" (click)="userClicked(friend.UserId)">
+          @if (friendsList().length > 0) { @for (friend of friendsList(); track
+          friend.UserId) {
+          <div
+            class="card mb-2 p-2 text-white"
+            (click)="userClicked(friend.UserId)"
+          >
             <div class="d-flex align-items-center user-card">
-              <img class="account-icon" [src]="friend.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" />
+              <img
+                class="account-icon"
+                [src]="
+                  friend.ProfilePicture ||
+                  'assets/images/profilePicPlaceHolder.jpg'
+                "
+              />
               <div class="userTextBar">
-                <strong (click)="openProfile(friend.UserId, $event)" class="hover-highlight">
-                  {{ friend.Username }}
-                </strong><br />
-                <small class="lMessage">{{ friend.Status || 'Offline' }}</small>
+                <strong
+                  (click)="openProfile(friend.UserId, $event)"
+                  class="hover-highlight"
+                >
+                  {{ friend.Username }} </strong
+                ><br />
+                <small class="lMessage">{{ friend.Status || "Offline" }}</small>
               </div>
             </div>
           </div>
-          }
-          } @else {
+          } } @else {
           <p>No friends available</p>
           }
         </div>
 
         <!-- CHATS TAB -->
         <div class="tab-pane" id="chats">
-          @if (directChats().length > 0) {
-          @for (chat of directChats(); track $index) {
+          @if (directChats().length > 0) { @for (chat of directChats(); track
+          $index) {
           <div class="card mb-2 p-2 text-white">
             @for (member of chat.Members; track $index) {
-            <div class="d-flex align-items-center user-card" (click)="userClicked(member.UserId)">
-              <img class="account-icon"
-                [src]="member?.ProfilePicture ? member.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'" />
+            <div
+              class="d-flex align-items-center user-card"
+              (click)="userClicked(member.UserId)"
+            >
+              <img
+                class="account-icon"
+                [src]="
+                  member?.ProfilePicture
+                    ? member.ProfilePicture
+                    : 'assets/images/profilePicPlaceHolder.jpg'
+                "
+              />
 
               <div class="userTextBar">
-                <strong (click)="openProfile(member.UserId, $event)" class="hover-highlight">
-                  {{ member.Username }}
-                </strong><br />
+                <strong
+                  (click)="openProfile(member.UserId, $event)"
+                  class="hover-highlight"
+                >
+                  {{ member.Username }} </strong
+                ><br />
                 <small class="lMessage">{{ member.Username }}</small>
               </div>
             </div>
             }
           </div>
-          }
-          } @else {
+          } } @else {
           <p>No chats available</p>
           }
         </div>
 
         <!-- GROUP CHATS TAB -->
         <div class="tab-pane" id="groups">
-          @if (groupChats().length > 0) {
-          @for (group of groupChats(); track group.RoomId) {
+          @if (groupChats().length > 0) { @for (group of groupChats(); track
+          group.RoomId) {
           <div class="card mb-2 p-2 text-white">
-
             <div class="d-flex align-items-center">
               <div class="group-avatars">
                 @for (member of group.Members; track member.UserId) {
-                <img class="account-icon" [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" />
+                <img
+                  class="account-icon"
+                  [src]="
+                    member.ProfilePicture ||
+                    'assets/images/profilePicPlaceHolder.jpg'
+                  "
+                />
                 }
               </div>
               <div class="group-usernames">
-                @for (member of group.Members; track member.UserId; let last = $last) {
-                <span class="hover-highlight ">
+                @for (member of group.Members; track member.UserId; let last =
+                $last) {
+                <span class="hover-highlight">
                   <strong (click)="openProfile(member.UserId, $event)">
                     {{ member.Username }}
                   </strong>
                 </span>
                 @if (!last) {
-                <span>, </span>
-                }
-                }
+                <span class="comma">,</span>
+                } }
               </div>
               <div class="ms-auto ml-2 mr-2">
-                <app-button variant="highlight" label="Chat" size="small"
-                  (click)="groupChatClicked(group.RoomId)"></app-button>
+                <app-button
+                  class="mini-button"
+                  variant="highlight"
+                  label="Chat"
+                  size="small"
+                  (click)="groupChatClicked(group.RoomId)"
+                ></app-button>
               </div>
             </div>
           </div>
-          }
-          } @else {
+          } } @else {
           <p>No group chats available</p>
           }
         </div>
@@ -141,29 +193,48 @@
 
     <div class="friendsList">
       <!-- CHANGED: friendsList() -->
-      @if ( friendsList().length > 0) {
-      @for (friend of friendsList(); track $index) {
-      <div class="card mb-2 p-2 text-white" [class.selected]="isSelected(friend)"
-        (click)="toggleFriendSelection(friend)">
+      @if ( friendsList().length > 0) { @for (friend of friendsList(); track
+      $index) {
+      <div
+        class="card mb-2 p-2 text-white"
+        [class.selected]="isSelected(friend)"
+        (click)="toggleFriendSelection(friend)"
+      >
         <div class="d-flex align-items-center user-card">
-          <img class="account-icon" [src]="friend.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'"
-            alt="Friend" />
+          <img
+            class="account-icon"
+            [src]="
+              friend.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'
+            "
+            alt="Friend"
+          />
           <div class="userTextBar">
-            <strong>{{ friend.Username }}</strong><br />
-            <small class="lMessage">{{ friend.Status || 'Offline' }}</small>
+            <strong>{{ friend.Username }}</strong
+            ><br />
+            <small class="lMessage">{{ friend.Status || "Offline" }}</small>
           </div>
         </div>
       </div>
-      }
-      } @else {
+      } } @else {
       <p>You need friends first!</p>
       }
     </div>
 
     <div class="modalButtons">
-      <app-button label="Close" [fullWidth]="true" size="small" (click)="closeNewChatModal()"></app-button>
-      <app-button label="Start chat" [fullWidth]="true" size="small" variant="highlight"
-        [state]="selectedFriends.length !== 0 ? 'active' : 'disabled'" (click)="startChat()"></app-button>
+      <app-button
+        label="Close"
+        [fullWidth]="true"
+        size="small"
+        (click)="closeNewChatModal()"
+      ></app-button>
+      <app-button
+        label="Start chat"
+        [fullWidth]="true"
+        size="small"
+        variant="highlight"
+        [state]="selectedFriends.length !== 0 ? 'active' : 'disabled'"
+        (click)="startChat()"
+      ></app-button>
     </div>
   </div>
 </div>
