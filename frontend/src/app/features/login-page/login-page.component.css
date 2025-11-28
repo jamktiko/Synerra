@@ -259,6 +259,11 @@ app-button.signup-cta ::ng-deep .btn:hover {
   flex-direction: column;
   gap: 14px;
   transform: translateY(-6px);
+  outline: none !important;
+}
+
+.cta-panel:focus {
+  outline: none !important;
 }
 
 .cta-text {
@@ -270,6 +275,11 @@ app-button.signup-cta ::ng-deep .btn:hover {
   gap: 4px;
   padding: 0;
   margin: 0;
+  outline: none !important;
+}
+
+.cta-text:focus {
+  outline: none !important;
 }
 
 .cta-text__label {

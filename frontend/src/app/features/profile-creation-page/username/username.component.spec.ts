@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { UsernameComponent } from './username.component';
@@ -15,6 +16,7 @@ describe('UsernameComponent', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
+        provideRouter([]),
         // NgbActiveModal is needed because this component is used in a modal dialog
         // Bootstrap modals require this service to control modal lifecycle (open/close/dismiss)
         NgbActiveModal,

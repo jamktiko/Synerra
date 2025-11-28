@@ -5,6 +5,7 @@ import {
   tick,
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
 import { GameFiltersComponent } from './game-filters.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 
@@ -20,6 +21,7 @@ describe('GameFiltersComponent - UI & State Management', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [GameFiltersComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GameFiltersComponent);

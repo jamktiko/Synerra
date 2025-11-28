@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { GamesComponent } from './games.component';
@@ -15,6 +16,7 @@ describe('GamesComponent', () => {
       providers: [
         provideHttpClient(), // For fetching available games from API
         provideHttpClientTesting(), // Mock HTTP responses in tests
+        provideRouter([]),
         // Modal service - component is rendered inside a Bootstrap modal
         NgbActiveModal,
       ],

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { AccountSettingsComponent } from './account-settings.component';
 import { UserService } from '../../../core/services/user.service';
 import { of } from 'rxjs';
@@ -23,17 +24,14 @@ describe('AccountSettingsComponent', () => {
     const authServiceStub = {
       logout: jest.fn(),
     };
-    const routerStub = {
-      navigate: jest.fn(),
-    };
 
     await TestBed.configureTestingModule({
       imports: [AccountSettingsComponent],
       providers: [
+        provideRouter([]),
         { provide: UserService, useValue: userServiceStub },
         { provide: LoadingPageStore, useValue: loadingPageStoreStub },
         { provide: AuthService, useValue: authServiceStub },
-        { provide: Router, useValue: routerStub },
       ],
     }).compileComponents();
 
@@ -67,9 +65,10 @@ describe('AccountSettingsComponent', () => {
   });
 
   it('should logout through services', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
     component.logOut();
     expect(loadingPageStore.setAuthLayoutLoadingPageVisible).toHaveBeenCalledWith(false);
     expect(authService.logout).toHaveBeenCalled();
-    expect(router.navigate).toHaveBeenCalledWith(['/login']);
+    expect(navigateSpy).toHaveBeenCalledWith(['/login']);
   });
 });

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 
 import { ProfileCreationPageComponent } from './profile-creation-page.component';
 
@@ -16,6 +17,7 @@ describe('ProfileCreationPageComponent', () => {
       providers: [
         provideHttpClient(), // Provide real HTTP client structure
         provideHttpClientTesting(), // Replace actual HTTP calls with test doubles
+        provideRouter([]),
       ],
     }).compileComponents();
 

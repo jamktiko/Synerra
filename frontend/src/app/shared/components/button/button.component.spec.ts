@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { ButtonComponent } from './button.component';
 
 describe('ButtonComponent', () => {
@@ -11,6 +11,7 @@ describe('ButtonComponent', () => {
     // Configure test for reusable button component
     await TestBed.configureTestingModule({
       imports: [ButtonComponent], // Standalone component
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ButtonComponent);
