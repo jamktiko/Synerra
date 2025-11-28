@@ -189,7 +189,7 @@ select {
 }
 
 .checkbox-collapsible > button:focus-visible {
-  outline: 3px solid var(--accent-color, var(--color-highlight));
+  outline: 3px solid var(--color-primary);
   outline-offset: 2px;
   box-shadow: none;
 }

@@ -136,7 +136,7 @@
 }
 
 .avatar-button:focus-visible {
-  outline: 2px solid var(--color-success);
+  outline: 2px solid var(--color-primary);
   outline-offset: 4px;
 }
 
@@ -271,7 +271,7 @@
 }
 
 .actions button:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.25);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 

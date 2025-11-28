@@ -132,7 +132,7 @@
 }
 
 .user-profile:focus-visible {
-  outline: 2px solid var(--color-highlight);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -211,6 +211,11 @@
 .nav-btn {
   display: block;
   width: 100%;
+  outline: none !important;
+}
+
+.nav-btn:focus {
+  outline: none !important;
 }
 
 .nav-btn ::ng-deep .btn {
@@ -345,6 +350,11 @@
   flex-direction: column;
   gap: 0.35rem;
   width: 100%;
+  outline: none !important;
+}
+
+.nav-group:focus {
+  outline: none !important;
 }
 
 .nav-group__trigger {
@@ -364,8 +374,22 @@
   cursor: pointer;
   text-align: left;
   transition: color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease,
-    background 0.3s ease;
-  overflow: hidden;
+    background 0.3s ease, outline 0.2s ease, outline-offset 0.2s ease;
+  overflow: visible;
+  outline: none;
+  z-index: 1;
+}
+
+.nav-group__trigger:focus {
+  outline: 3px solid var(--color-highlight) !important;
+  outline-offset: 3px !important;
+  z-index: 10;
+}
+
+.nav-group__trigger:focus-visible {
+  outline: 3px solid var(--color-highlight) !important;
+  outline-offset: 3px !important;
+  z-index: 10;
 }
 
 .nav-group__trigger::before {
@@ -488,8 +512,16 @@
   color: var(--color-text-dark);
   font-size: var(--fs-xs);
   text-decoration: none;
-  transition: background 0.25s ease, color 0.25s ease;
+  transition: background 0.25s ease, color 0.25s ease, outline 0.2s ease;
   background: transparent;
+  outline: none;
+}
+
+.nav-subitem:focus,
+.nav-subitem:focus-visible {
+  outline: 3px solid var(--color-highlight) !important;
+  outline-offset: 3px !important;
+  z-index: 10;
 }
 
 .nav-subitem:hover {
@@ -719,7 +751,7 @@
 /* Focus */
 .nav-btn ::ng-deep .btn:focus-visible,
 .logout-btn ::ng-deep .btn:focus-visible {
-  outline: 2px solid var(--color-highlight);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -918,6 +950,14 @@
     border-style: solid;
     border-width: 0 1px;
     border-color: rgba(0, 0, 0, 0.2);
+    background: transparent;
+    cursor: pointer;
+    transition: outline 0.2s ease, outline-offset 0.2s ease;
+  }
+
+  .navigation .mobile-nav .nav-icon:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
   }
 
   .navigation .mobile-nav .nav-icon img {
