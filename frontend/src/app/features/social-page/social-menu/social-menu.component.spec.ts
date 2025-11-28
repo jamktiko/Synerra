@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { SocialMenuComponent } from './social-menu.component';
 
@@ -8,7 +9,8 @@ describe('SocialMenuComponent', () => {
 
  beforeEach(async () => {
  await TestBed.configureTestingModule({
- imports: [SocialMenuComponent]
+ imports: [SocialMenuComponent],
+ providers: [provideRouter([])],
  })
  .compileComponents();
 

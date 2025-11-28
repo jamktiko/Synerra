@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { BirthdayComponent } from './birthday.component';
@@ -15,6 +16,7 @@ describe('BirthdayComponent', () => {
  providers: [
  provideHttpClient(),
  provideHttpClientTesting(),
+ provideRouter([]),
  NgbActiveModal,
  ],
  }).compileComponents();

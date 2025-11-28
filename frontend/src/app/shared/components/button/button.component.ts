@@ -13,6 +13,9 @@ type IconPosition = 'left' | 'right';
   standalone: true,
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.css'],
+  host: {
+    tabindex: '-1',
+  },
   imports: [CommonModule, RouterModule],
 })
 export class ButtonComponent {
@@ -62,6 +65,12 @@ export class ButtonComponent {
   navigate() {
     if (this.state === 'disabled') {
       return;
+    }
+    if (this.routerLink) {
+      const link = Array.isArray(this.routerLink)
+        ? this.routerLink
+        : [this.routerLink];
+      this.router.navigate(link);
     }
   }
 

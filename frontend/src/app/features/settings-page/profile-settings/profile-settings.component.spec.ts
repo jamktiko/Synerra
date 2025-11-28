@@ -4,6 +4,7 @@ import {
   fakeAsync,
   tick,
 } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { ProfileSettingsComponent } from './profile-settings.component';
 import { ProfileService } from '../../../core/services/pfp.service';
 import { UserService } from '../../../core/services/user.service';
@@ -45,6 +46,7 @@ describe('ProfileSettingsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ProfileSettingsComponent],
       providers: [
+        provideRouter([]),
         { provide: ProfileService, useValue: mockProfileService },
         { provide: UserService, useValue: mockUserService },
         { provide: UserStore, useValue: mockUserStore },
