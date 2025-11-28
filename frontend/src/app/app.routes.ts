@@ -15,7 +15,7 @@ import { ChatPageComponent } from './features/chat-page/chat-page.component';
 import { ProfilePageComponent } from './features/profile-page/profile-page.component';
 import { SettingsPageComponent } from './features/settings-page/settings-page.component';
 import { ProfileSettingsComponent } from './features/settings-page/profile-settings/profile-settings.component';
-import { AuthCallBacksComponent } from './auth-call-backs/auth-call-backs.component';
+import { AuthCallBacksComponent } from './features/auth-call-backs/auth-call-backs.component';
 import { AccountSettingsComponent } from './features/settings-page/account-settings/account-settings.component';
 
 export const routes: Routes = [
@@ -53,7 +53,7 @@ export const routes: Routes = [
         component: ChooseGamePageComponent,
       },
       {
-        path: 'dashboard/profile/:userId', // pass the userId in the route
+        path: 'dashboard/profile/:userId',
         canActivate: [AuthGuard],
         component: ProfilePageComponent,
       },

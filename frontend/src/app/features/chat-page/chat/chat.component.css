@@ -380,3 +380,12 @@ body {
     max-width: 86%;
   }
 }
+
+.hover-highlight {
+  transition: color 0.2s, background-color 0.2s;
+  cursor: pointer;
+}
+
+.hover-highlight:hover {
+  text-decoration: underline;
+}

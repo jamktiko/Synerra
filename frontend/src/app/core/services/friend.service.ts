@@ -132,18 +132,14 @@ export class FriendService {
   }
 
   deleteFriend(targetUserId: string): Observable<any> {
-    const jwt = this.authStore.getToken();
+    const jwt = this.authStore.getToken() ?? '';
 
     return this.http
-      .delete(`${this.baseUrl}/deletefriend?targetUserId=${targetUserId}`, {
-        headers: { Authorization: `${jwt}` },
+      .delete(`${this.baseUrl}/deletefriend`, {
+        headers: { Authorization: jwt },
+        body: { targetUserId },
       })
-      .pipe(
-        tap(() => {
-          //  Refresh friends list reactively
-          this.getFriends().subscribe();
-        })
-      );
+      .pipe(tap(() => this.getFriends().subscribe()));
   }
 
   getFriends(): Observable<User[]> {

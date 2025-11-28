@@ -189,6 +189,16 @@ input[type="text"]::placeholder {
   text-underline-offset: 2px;
 }
 
+.hover-highlight {
+  transition: color 0.2s, background-color 0.2s;
+  cursor: pointer;
+}
+
+.hover-highlight:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
 .account-icon {
   width: 2.5rem;
   height: 2.5rem;
