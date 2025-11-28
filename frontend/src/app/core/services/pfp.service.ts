@@ -7,9 +7,12 @@ import { switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-  private baseUrl = environment.AWS_USER_URL;
+  private baseUrl = `${environment.AWS_BASE_URL}/user`;
 
-  constructor(private http: HttpClient, private authStore: AuthStore) {}
+  constructor(
+    private http: HttpClient,
+    private authStore: AuthStore,
+  ) {}
 
   uploadProfilePicture(file: File): Observable<any> {
     const token = this.authStore.getToken();
@@ -26,7 +29,7 @@ export class ProfileService {
             Authorization: `${token}`,
           },
         });
-      })
+      }),
     );
   }
 
