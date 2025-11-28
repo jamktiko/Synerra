@@ -136,8 +136,15 @@ export class ChatService {
     roomId: string,
   ) {
     // If no websocket connection or message, it breaks.
-    if (!this.ws || !content) {
-      console.log('returning ', this.ws, content);
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN || !content) {
+      console.warn('Connection error');
+      this.addLog({
+        SenderId: 'system',
+        SenderUsername: 'system',
+        Content: 'Connection error. Try to refresh the chat',
+        ProfilePicture: 'assets/svg/Acount.svg',
+        Timestamp: Date.now(),
+      });
       return;
     }
 

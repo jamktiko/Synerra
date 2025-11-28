@@ -13,7 +13,7 @@ import { NotificationService } from './notification.service';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = environment.AWS_USER_URL;
+  private apiUrl = `${environment.AWS_BASE_URL}/user`;
   user: User | null = null;
 
   constructor(
@@ -21,7 +21,7 @@ export class AuthService {
     private router: Router,
     private authStore: AuthStore,
     private userStore: UserStore,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
   ) {}
 
   signup(credentials: { email: string; password: string }): Observable<any> {
@@ -30,7 +30,7 @@ export class AuthService {
       .pipe(
         tap((res) => {
           console.log(res);
-        })
+        }),
       );
   }
 
@@ -41,7 +41,7 @@ export class AuthService {
         tap((res) => {
           this.authStore.setToken(res.token);
           this.userStore.setUser(res.user);
-        })
+        }),
       );
   }
 

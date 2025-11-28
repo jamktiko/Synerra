@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Game } from '../../core/interfaces/game.model'; // add if you have a model
 import { GameCardComponent } from './game-card/game-card.component';
 import { GameFiltersComponent } from './game-filters/game-filters.component';
-import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-choose-game-page',

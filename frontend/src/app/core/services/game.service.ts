@@ -7,8 +7,8 @@ import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
-  private baseUrl = environment.AWS_GAMES_URL;
-  private basicUrl = environment.AWS_BASE_URL;
+  private baseUrl = environment.AWS_BASE_URL;
+  private gameUrl = `${this.baseUrl}/games`;
 
   constructor(
     private http: HttpClient,
@@ -20,7 +20,7 @@ export class GameService {
     const token = this.authStore.getToken();
     return this.http
       .post(
-        `${this.basicUrl}/relations/usergame`,
+        `${this.baseUrl}/relations/usergame`,
         { gameId, gameName },
         {
           headers: { Authorization: `${token}` },
@@ -33,21 +33,21 @@ export class GameService {
 
   listGames(): Observable<any> {
     const token = this.authStore.getToken();
-    return this.http.get(`${this.baseUrl}`, {
+    return this.http.get(`${this.gameUrl}`, {
       headers: { Authorization: `${token}` },
     });
   }
 
   deleteGame(gameId: string): Observable<any> {
     const token = this.authStore.getToken();
-    return this.http.delete(`${this.baseUrl}/delete/${gameId}`, {
+    return this.http.delete(`${this.gameUrl}/delete/${gameId}`, {
       headers: { Authorization: `${token}` },
     });
   }
 
   filterGames(params: any): Observable<any> {
     const token = this.authStore.getToken();
-    return this.http.get(`${this.baseUrl}/filter`, {
+    return this.http.get(`${this.gameUrl}/filter`, {
       params,
       headers: { Authorization: `${token}` },
     });
@@ -58,7 +58,7 @@ export class GameService {
     const token = this.authStore.getToken();
     const normalizedGameName = gameName.toLowerCase();
     console.log(normalizedGameName);
-    return this.http.get(`${this.baseUrl}/${normalizedGameName}`, {
+    return this.http.get(`${this.gameUrl}/${normalizedGameName}`, {
       headers: {
         Authorization: `${token}`,
       },
@@ -67,7 +67,7 @@ export class GameService {
 
   removeGame(gameId: string): Observable<any> {
     const jwt = this.authStore.getToken();
-    return this.http.delete(`${this.basicUrl}/relations/deletegame/${gameId}`, {
+    return this.http.delete(`${this.baseUrl}/relations/deletegame/${gameId}`, {
       headers: { Authorization: `${jwt}` },
     });
   }
