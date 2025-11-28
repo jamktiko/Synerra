@@ -1,6 +1,6 @@
 # Synerra
 
-A social web-application that connects gamers together
+A social web-application that connects gamers together.
 
 ## Overview
 
@@ -13,7 +13,7 @@ Make an account and find other players categorized by games, language, compepiti
 - Realtime notifications
   - Friend requests, messages, online status
 - Wide range of player filters
-- Login with email and google
+- Login with email and Google
 - Modern and accessible UI
 - Fast and easy profile setup
 - Profile customization
@@ -22,7 +22,9 @@ Make an account and find other players categorized by games, language, compepiti
 
 ```
 git clone https://github.com/jamktiko/Synerra
-cd Synerra
+cd Synerra/frontend
+npm install
+cd ../backend
 npm install
 ```
 
