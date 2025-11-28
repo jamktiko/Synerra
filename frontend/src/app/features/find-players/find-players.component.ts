@@ -11,7 +11,7 @@ import { UserStore } from '../../core/stores/user.store';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { FriendService } from '../../core/services/friend.service';
 import { FriendRequest } from '../../core/interfaces/friendrequest.model';
-import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-find-players',

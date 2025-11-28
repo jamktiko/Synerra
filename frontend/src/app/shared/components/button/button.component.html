@@ -39,7 +39,9 @@ Täysleveä nappi
   [class.btn-xsmall]="size === 'xsmall'" [class.btn-small]="size === 'small'" [class.btn-medium]="size === 'medium'"
   [class.btn-large]="size === 'large'" [class.btn-full]="fullWidth" [class.btn-left]="iconPosition === 'left'"
   [class.btn-icon-right]="iconPosition === 'right'" [class.btn-active]="state === 'active'"
-  [attr.aria-disabled]="state === 'disabled' ? true : null" [disabled]="state === 'disabled'" (click)="navigate()">
+  [attr.aria-disabled]="state === 'disabled' ? true : null" [disabled]="state === 'disabled'"
+  [attr.aria-label]="ariaLabel || label"
+  [routerLink]="routerLink" (click)="navigate()">
 
   <!-- Ikoni vasemmalla -->
   @if (icon && iconPosition === 'left') {

@@ -1,6 +1,11 @@
 /* ===== Button base ===== */
 :host {
   display: block;
+  outline: none !important;
+}
+
+:host:focus {
+  outline: none !important;
 }
 
 .btn {
@@ -95,9 +100,9 @@
   transition: none;
 }
 
-/* BRÄNDI-ORANSSI FOCUS-RING */
+/* FOCUS-RING */
 .btn:focus-visible {
-  outline: 3px solid var(--accent-color, var(--color-highlight));
+  outline: 3px solid var(--color-primary);
   outline-offset: 2px;
   box-shadow: none;
 }
@@ -143,6 +148,11 @@
   justify-content: flex-start;
   box-shadow: none;
   transition: all 0.2s ease;
+}
+
+.btn-sidebar:focus-visible {
+  outline: 2px solid var(--color-highlight);
+  outline-offset: 2px;
 }
 
 .btn-sidebar:hover {

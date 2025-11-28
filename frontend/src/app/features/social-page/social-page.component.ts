@@ -17,7 +17,7 @@ import {
   Friend,
   WebsocketFriendRequest,
 } from '../../core/interfaces/friend.model';
-import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 
 type AnyRequest = FriendRequest | WebsocketFriendRequest;
 @Component({

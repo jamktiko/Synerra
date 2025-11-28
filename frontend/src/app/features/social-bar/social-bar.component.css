@@ -137,7 +137,7 @@
   justify-content: space-between;
   gap: 0.812rem;
   padding: 0.4rem 0.5rem;
-  border-radius: 8px;
+  border-radius: 0;
   transition: background 0.2s ease;
 }
 
@@ -250,6 +250,31 @@
   max-height: calc(var(--viewport-height) * 0.4);
   padding: 0.5rem 0;
   gap: 0.5rem;
+}
+
+.player-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 3.625rem;
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.04);
+  transition: background 0.2s ease, outline 0.2s ease, outline-offset 0.2s ease;
+  border: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.player-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.player-card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .chatroom-card {
