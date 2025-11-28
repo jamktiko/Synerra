@@ -17,18 +17,23 @@
   <div class="tabsConts">
     <ul class="nav nav-tabs" id="chatTabs" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link" [class.active]="activeTab === 'friends'" (click)="activeTab = 'friends'" type="button">
+        <button class="nav-link" [class.active]="activeTab === 'friends'" (click)="activeTab = 'friends'" type="button"
+          role="tab" [attr.aria-selected]="activeTab === 'friends'" [attr.aria-controls]="'friends-panel'"
+          id="friends-tab" [attr.tabindex]="activeTab === 'friends' ? 0 : -1">
           Friends
         </button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" [class.active]="activeTab === 'chats'" (click)="activeTab = 'chats'" type="button">
+        <button class="nav-link" [class.active]="activeTab === 'chats'" (click)="activeTab = 'chats'" type="button"
+          role="tab" [attr.aria-selected]="activeTab === 'chats'" [attr.aria-controls]="'chats-panel'" id="chats-tab"
+          [attr.tabindex]="activeTab === 'chats' ? 0 : -1">
           Chats
         </button>
       </li>
       <li class="nav-item" role="presentation">
         <button class="nav-link" [class.active]="activeTab === 'groupChats'" (click)="activeTab = 'groupChats'"
-          type="button">
+          type="button" role="tab" [attr.aria-selected]="activeTab === 'groupChats'"
+          [attr.aria-controls]="'groups-panel'" id="groups-tab" [attr.tabindex]="activeTab === 'groupChats' ? 0 : -1">
           Group chats
         </button>
       </li>
@@ -53,7 +58,8 @@
           @for (friend of friendsList(); track friend.UserId) {
           <div class="card mb-2 p-2 text-white" (click)="userClicked(friend.UserId)">
             <div class="d-flex align-items-center user-card">
-              <img class="account-icon" [src]="friend.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" />
+              <img class="account-icon" [src]="friend.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'"
+                [alt]="friend.Username + ' profile picture'" />
               <div class="userTextBar">
                 <strong (click)="openProfile(friend.UserId, $event)" class="hover-highlight">
                   {{ friend.Username }}
@@ -61,8 +67,8 @@
                 <small class="lMessage">{{ friend.Status || 'Offline' }}</small>
               </div>
               <div class="ms-auto ml-2 mr-2">
-                <app-button variant="highlight" label="Chat" size="small"
-                  (click)="groupChatClicked(friend.UserId)"></app-button>
+                <app-button variant="highlight" label="Chat" size="small" (click)="groupChatClicked(friend.UserId)"
+                  [attr.aria-label]="'Start chat with ' + friend.Username"></app-button>
               </div>
             </div>
 
@@ -81,7 +87,8 @@
             @for (member of chat.Members; track $index) {
             <div class="d-flex align-items-center user-card">
               <img class="account-icon"
-                [src]="member?.ProfilePicture ? member.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'" />
+                [src]="member?.ProfilePicture ? member.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'"
+                [alt]="member.Username + ' profile picture'" />
 
               <div class="userTextBar">
                 <strong (click)="openProfile(member.UserId, $event)" class="hover-highlight">
@@ -90,8 +97,8 @@
                 <small class="lMessage">{{ member.Username }}</small>
               </div>
               <div class="ms-auto ml-2 mr-2">
-                <app-button variant="highlight" label="Chat" size="small"
-                  (click)="userClicked(member.UserId)"></app-button>
+                <app-button variant="highlight" label="Chat" size="small" (click)="userClicked(member.UserId)"
+                  [attr.aria-label]="'Start chat with ' + member.Username"></app-button>
               </div>
             </div>
             }
@@ -111,7 +118,8 @@
             <div class="d-flex align-items-center">
               <div class="group-avatars">
                 @for (member of group.Members; track member.UserId) {
-                <img class="account-icon" [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" />
+                <img class="account-icon" [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'"
+                  [alt]="member.Username + ' profile picture'" />
                 }
               </div>
               <div class="group-usernames">
@@ -127,8 +135,8 @@
                 }
               </div>
               <div class="ms-auto ml-2 mr-2">
-                <app-button variant="highlight" label="Chat" size="small"
-                  (click)="groupChatClicked(group.RoomId)"></app-button>
+                <app-button variant="highlight" label="Chat" size="small" (click)="groupChatClicked(group.RoomId)"
+                  aria-label="Start chat with group"></app-button>
               </div>
             </div>
           </div>
@@ -170,9 +178,11 @@
     </div>
 
     <div class="modalButtons">
-      <app-button label="Close" [fullWidth]="true" size="small" (click)="closeNewChatModal()"></app-button>
+      <app-button label="Close" [fullWidth]="true" size="small" (click)="closeNewChatModal()"
+        aria-label="Close new chat modal"></app-button>
       <app-button label="Start chat" [fullWidth]="true" size="small" variant="highlight"
-        [state]="selectedFriends.length !== 0 ? 'active' : 'disabled'" (click)="startChat()"></app-button>
+        [state]="selectedFriends.length !== 0 ? 'active' : 'disabled'" (click)="startChat()"
+        aria-label="Open new chat modal"></app-button>
     </div>
   </div>
 </div>

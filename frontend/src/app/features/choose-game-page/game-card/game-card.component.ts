@@ -118,4 +118,11 @@ export class GameCardComponent implements OnInit {
       error: (err) => console.error('Failed to remove game:', err),
     });
   }
+
+  onDivKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.selectGame(this.game);
+    }
+  }
 }

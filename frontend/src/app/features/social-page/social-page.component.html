@@ -1,6 +1,6 @@
 @if (loadingSpinnerShowing) {
-<div class="loadingSpinner">
-  <app-loading-spinner />
+<div class="loadingSpinner" role="status" aria-live="polite">
+  <app-loading-spinner aria-label="Loading..." />
 </div>
 } @else {
 <div class="main-content">
@@ -9,7 +9,7 @@
       (notificationsClicked)="tabSwitch($event)" />
   </div>
 
-  <div class="tabs">
+  <div class="tabs" role="tablist">
     @if (messagesTabShowing) {
     <div class="messagesTab">
       <app-messages-tab [friendsList]="friendList" [directChats]="directChats" [groupChats]="groupChats" />
