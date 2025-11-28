@@ -60,7 +60,12 @@
                 </strong><br />
                 <small class="lMessage">{{ friend.Status || 'Offline' }}</small>
               </div>
+              <div class="ms-auto ml-2 mr-2">
+                <app-button variant="highlight" label="Chat" size="small"
+                  (click)="groupChatClicked(friend.UserId)"></app-button>
+              </div>
             </div>
+
           </div>
           }
           } @else {
@@ -74,7 +79,7 @@
           @for (chat of directChats(); track $index) {
           <div class="card mb-2 p-2 text-white">
             @for (member of chat.Members; track $index) {
-            <div class="d-flex align-items-center user-card" (click)="userClicked(member.UserId)">
+            <div class="d-flex align-items-center user-card">
               <img class="account-icon"
                 [src]="member?.ProfilePicture ? member.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'" />
 
@@ -83,6 +88,10 @@
                   {{ member.Username }}
                 </strong><br />
                 <small class="lMessage">{{ member.Username }}</small>
+              </div>
+              <div class="ms-auto ml-2 mr-2">
+                <app-button variant="highlight" label="Chat" size="small"
+                  (click)="userClicked(member.UserId)"></app-button>
               </div>
             </div>
             }

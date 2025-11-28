@@ -121,6 +121,7 @@ provider:
       allowedOrigins:
         - 'http://localhost:4200'
         - 'https://d2lqv34okdzcq4.cloudfront.net'
+        - 'http://172.20.10.5:4200'
       allowedHeaders:
         - Content-Type
         - Authorization
