@@ -20,13 +20,15 @@ Make an account and find other players categorized by games, language, compepiti
 
 ## Installation
 
+```
 git clone https://github.com/jamktiko/Synerra
 cd Synerra
 npm install
+```
 
 ## Configuration
 
-You need to to a shit ton of ur own configs for this to work lmfao
+You need to do a shit ton of ur own configs for this to work lmfao
 
 ### Amazon Web Services
 
@@ -35,8 +37,7 @@ lot of crap here
 ### Google login
 
 If you want the Google login to work on your own AWS host, you need to set up your own Google API client ID.
-This can be easily achieved by following the part 1 of this tutorial:
+This can easily be achieved by following the part 1 of [this tutorial](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid).
 
-- https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
-  - Authorized JavaScript origins should look something like: https://abcd1234.cloudfront.net
-  - Authorized redirect URIs should look something like: https://YourApp.auth.region.amazoncognito.com/oauth2/idpresponse
+- Authorized JavaScript origins should look something like: `https://abcd1234.cloudfront.net`
+- Authorized redirect URIs should look something like: `https://YourApp.auth.region.amazoncognito.com/oauth2/idpresponse`
