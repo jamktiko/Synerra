@@ -271,6 +271,7 @@
 .nav-btn ::ng-deep .btn:hover::before {
   transform: translateX(115%) skewX(-18deg);
   opacity: 1;
+  pointer-events: none;
 }
 
 .nav-btn ::ng-deep .btn-icon {
