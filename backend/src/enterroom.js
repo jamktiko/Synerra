@@ -86,7 +86,7 @@ module.exports.handler = async (event) => {
       await doccli.send(new PutCommand(connectionParams));
       console.log('Mapped connection to room:', targetRoomId);
 
-      //  Sends confirmation back to client
+      // Sends confirmation back to client
       const domainName = event.requestContext.domainName;
       const stage = event.requestContext.stage;
       const apigw = new ApiGatewayManagementApiClient({
