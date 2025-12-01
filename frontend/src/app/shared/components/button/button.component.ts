@@ -10,6 +10,7 @@ type IconPosition = 'left' | 'right';
 
 @Component({
   selector: 'app-button',
+  standalone: true,
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.css'],
   imports: [CommonModule, RouterModule],
@@ -20,7 +21,9 @@ export class ButtonComponent {
   @Input() variant: ButtonVariant = 'default';
   @Input() size: ButtonSize = 'medium';
   @Input() iconPosition: IconPosition = 'left';
-  @Input() routerLink?: string;
+  @Input() routerLink?: string | any[];
+  @Input() routerLinkExact: boolean = true;
+  @Input() ariaLabel?: string;
 
   private _fullWidth = false;
 
@@ -57,8 +60,8 @@ export class ButtonComponent {
   constructor(private router: Router) {}
 
   navigate() {
-    if (this.routerLink && this.state !== 'disabled') {
-      this.router.navigate([this.routerLink]);
+    if (this.state === 'disabled') {
+      return;
     }
   }
 

@@ -1,5 +1,4 @@
-<div class="card" (click)="selectGame(game)" [attr.aria-label]="game?.Name || 'Game card'" tabindex="0"
-  (keydown)="onDivKeydown($event)">
+<button type="button" class="card" (click)="selectGame(game)" [attr.aria-label]="'Select ' + (game?.Name || 'game')">
   <div class="card-img-wrapper">
     <img [src]="game?.Img_url" class="card-img-top" [alt]="game?.Name || 'Game artwork'" loading="lazy" />
   </div>
@@ -8,4 +7,4 @@
     <div class="card-title">{{ game?.Name }}</div>
     <div class="card-text">{{ game?.Genre }}</div>
   </div>
-</div>
+</button>

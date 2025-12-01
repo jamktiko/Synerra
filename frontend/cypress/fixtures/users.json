@@ -1,11 +1,20 @@
 {
   "users": [
     {
+      "PK": "USER#user-2",
       "Username": "OtherPlayer",
       "UserId": "user-2",
       "Languages": ["en"],
-      "Bio": "I play games",
+      "Bio": "I play games. ",
       "Status": "online"
+    },
+    {
+      "PK": "USER#user-3",
+      "Username": "SecondPlayer",
+      "UserId": "user-3",
+      "Languages": ["fi", "en"],
+      "Bio": "Another player",
+      "Status": "offline"
     }
   ]
 }
