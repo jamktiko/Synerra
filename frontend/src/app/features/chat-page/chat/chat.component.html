@@ -1,6 +1,5 @@
 <div class="chatElement">
   <div class="headframe">
-
     <div class="avatarGroup">
       @if (otherMembers.length
       < 2) { @for (member of otherMembers; track member.UserId) { <img class="avatarframe-icon"
@@ -33,8 +32,8 @@
 
   <div class="chat-log" #chatLog>
     <!-- Loops the messages gotten from the chatService -->
-    @for (msg of messages$ | async; track $index) {
-    @if (msg.SenderId === loggedInUser?.UserId) {
+    @for (msg of messages$ | async; track $index) { @if (msg.SenderId ===
+    loggedInUser?.UserId) {
     <div class="sentMessageWrapper">
       <div class="sentMessage">
         <p>{{ msg.Content }}</p>
@@ -43,8 +42,7 @@
         {{ msg.Timestamp | date : "d.MM.yyyy, HH.mm" }}
       </p>
     </div>
-    }
-    @if (msg.SenderId !== loggedInUser?.UserId) {
+    } @if (msg.SenderId !== loggedInUser?.UserId) {
     <div class="receivedMessageWrapper">
       <img [src]="msg.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" alt="avatar" class="messageAvatar"
         [attr.alt]="msg.SenderUsername + ' profile picture'" />
@@ -60,12 +58,11 @@
         </p>
       </div>
     </div>
-    }
-    }
-
+    } }
   </div>
   <div class="chat-input">
-    <input [(ngModel)]="messageText" (keyup.enter)="sendMessage(messageText)" placeholder="Type your message" />
+    <input [(ngModel)]="messageText" (keyup.enter)="sendMessage(messageText)" placeholder="Type your message"
+      aria-label="Message" />
     <!-- <button (click)="sendMessage(messageText)">
       <img src="assets/svg/Send.svg" alt="" />
     </button> -->

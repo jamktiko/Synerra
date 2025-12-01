@@ -42,21 +42,27 @@ describe('AuthCallBacksComponent', () => {
   });
 
   afterEach(() => {
+    // Resets all mocks and replaces properties back to their original values
     jest.restoreAllMocks();
   });
 
   it('should logout and navigate to login if no code in URL', () => {
+    // Overriding the params.get('code') with null
     jest.spyOn(window, 'URLSearchParams').mockReturnValue({
       get: () => null,
     } as any);
 
+    // Starts the component initialization
     component.ngOnInit();
 
+    // Expects the backup methods to get called
     expect(authService.logout).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 
   it('should handle successful token exchange and user fetch with username', () => {
+    // http.post.subscribe needs a Base64-type string in order to be parsed correctly
+    // btoa encodes the string into Base64
     const mockToken = {
       id_token:
         btoa(JSON.stringify({ header: {} })) +
@@ -70,18 +76,24 @@ describe('AuthCallBacksComponent', () => {
       get: () => 'valid-code',
     } as any);
 
+    // Mocks the code to JWT -backend call
     (http.post as jest.Mock).mockReturnValue(of({ tokens: mockToken }));
+    // Mocks the returned logged-in -person data to fake the login status
     (userService.getMe as jest.Mock).mockReturnValue(of(mockUser));
 
+    // Starts the component initialization
     component.ngOnInit();
 
+    // Expects the authToken to be set the same as the gotten JWT
     expect(authStore.setToken).toHaveBeenCalledWith(mockToken.id_token);
+    // Expects the userStore userdata to be set the same as the logged in -user
     expect(userStore.setUser).toHaveBeenCalledWith(mockUser);
     expect(notificationService.initConnection).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
   });
 
   it('should handle successful token exchange and user fetch without username', () => {
+    // This test works the same way as the previous one
     const mockToken = {
       id_token:
         btoa(JSON.stringify({ header: {} })) +
@@ -89,7 +101,7 @@ describe('AuthCallBacksComponent', () => {
         btoa(JSON.stringify({ email: 'test@example.com' })) +
         '.signature',
     };
-    const mockUser = {}; // no Username
+    const mockUser = {}; // no username
 
     jest.spyOn(window, 'URLSearchParams').mockReturnValue({
       get: () => 'valid-code',
@@ -104,10 +116,12 @@ describe('AuthCallBacksComponent', () => {
   });
 
   it('should logout and navigate to login if token exchange fails', () => {
+    // Again completely same logic and methods as the previous ones
     jest.spyOn(window, 'URLSearchParams').mockReturnValue({
       get: () => 'valid-code',
     } as any);
 
+    // Creating an error in the code to token -exchange
     (http.post as jest.Mock).mockReturnValue(
       throwError(() => new Error('HTTP error')),
     );
@@ -119,6 +133,7 @@ describe('AuthCallBacksComponent', () => {
   });
 
   it('should navigate to profile creation if user fetch fails', () => {
+    // Still the same logic and methods..
     const mockToken = {
       id_token:
         btoa(JSON.stringify({ header: {} })) +
@@ -131,6 +146,7 @@ describe('AuthCallBacksComponent', () => {
       get: () => 'valid-code',
     } as any);
 
+    // Creating an error when getting the logged in -user's data
     (http.post as jest.Mock).mockReturnValue(of({ tokens: mockToken }));
     (userService.getMe as jest.Mock).mockReturnValue(
       throwError(() => new Error('User fetch error')),

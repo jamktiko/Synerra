@@ -41,6 +41,7 @@
   overflow: visible;
   max-width: 1080px;
   margin: 0 auto;
+  min-width: 0;
 }
 
 .welcome-wrapper {
@@ -225,6 +226,34 @@ app-dashboard-card img {
   .scroll-arrow:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
+  }
+  .top-navigation-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .welcome-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .welcome-text {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .user-name {
+    display: block;
+    max-width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
