@@ -1,5 +1,5 @@
 <div class="card" (click)="selectGame(game)" aria-label="Select game" [attr.aria-label]="game.Name"
-  [attr.title]="game.Name">
+  [attr.title]="game.Name" tabindex="0" (keydown)="onDivKeydown($event)">
   <div class="card-img-wrapper">
 
     <img [src]="game.Img_url" alt="{{ game.Name }}" loading="lazy" class="card-img-top">

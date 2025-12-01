@@ -17,4 +17,10 @@ export class DashboardCardComponent {
       queryParams: { game: game.PK.replace('GAME#', '') },
     });
   }
+  onDivKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.selectGame(this.game);
+    }
+  }
 }

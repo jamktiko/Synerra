@@ -14,6 +14,7 @@ module.exports.handler = async (event) => {
     // Gets all the game items for filtering
     const scanResult = await doccli.send(
       new ScanCommand({
+        // SCAN IS ACCEPTABLE HERE BECAUSE THE SCAN IS SO SMALL (FILTER EXPRESSION, only scans games)
         TableName: MAIN_TABLE,
         FilterExpression: 'begins_with(PK, :prefix) AND SK = :details',
         ExpressionAttributeValues: {

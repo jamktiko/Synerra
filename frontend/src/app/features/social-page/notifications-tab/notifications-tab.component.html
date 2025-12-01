@@ -14,7 +14,8 @@
       <div class="d-flex align-items-center justify-content-between mb-2">
         <h3 class="noti-heading">Messages</h3>
         <div class="clear-button">
-          <app-button label="Mark messages read" size="xsmall" variant="highlight" (click)="markAllAsRead()">
+          <app-button label="Mark messages read" size="xsmall" variant="highlight" (click)="markAllAsRead()"
+            aria-label="Mark all messages as read">
           </app-button>
         </div>
       </div>
@@ -27,7 +28,8 @@
           @for (msg of messages; track $index) {
           <div class="card mb-2 p-2 text-white">
             <div class="d-flex align-items-center w-100">
-              <img [src]="msg.profilePicture || 'assets/images/profilePicPlaceHolder.jpg'" class="acount-icon" />
+              <img [src]="msg.profilePicture || 'assets/images/profilePicPlaceHolder.jpg'" class="acount-icon"
+                [alt]="msg.senderUsername + ' profile picture'" />
 
               <div class="userTextBar flex-grow">
                 <strong>{{ msg.senderUsername }}</strong><br />
@@ -36,7 +38,8 @@
               </div>
 
               <div class="friend-actions">
-                <app-button label="Open" size="xsmall" variant="highlight" (click)="userClicked(msg.roomId)">
+                <app-button label="Open" size="xsmall" variant="highlight" (click)="userClicked(msg.roomId)"
+                  [attr.aria-label]="'Open chat with ' + msg.senderUsername">
                 </app-button>
               </div>
 
@@ -53,7 +56,8 @@
         <div class="d-flex align-items-center justify-content-between mb-2">
           <h3 class="noti-heading">Friend Requests</h3>
           <div class="clear-button">
-            <app-button label="Clear all requests" size="xsmall" variant="highlight" (click)="markRequestsAsRead()">
+            <app-button label="Clear all requests" size="xsmall" variant="highlight" (click)="markRequestsAsRead()"
+              aria-label="Clear all requests">
             </app-button>
           </div>
         </div>
@@ -65,7 +69,7 @@
             <div class="card mb-2 p-2 text-white">
               <div class="d-flex align-items-center">
 
-                <img [src]="n.senderPicture" class="acount-icon" />
+                <img [src]="n.senderPicture" class="acount-icon" [alt]="n.fromUsername + ' profile picture'" />
 
                 <div class="userTextBar flex-grow">
                   <strong>{{ n.fromUsername }}</strong><br />
@@ -84,17 +88,20 @@
                 @if (n.status === 'PENDING') {
                 <div class="actions">
                   <app-button label="Accept" size="xsmall" variant="highlight"
-                    (click)="acceptRequest(n.fromUserId); clearRequest(n.fromUserId)">
+                    (click)="acceptRequest(n.fromUserId); clearRequest(n.fromUserId)"
+                    [attr.aria-label]="'Accept friend request from ' + n.fromUsername">
                   </app-button>
                   <app-button label="Decline" size="xsmall"
-                    (click)="declineRequest(n.fromUserId); clearRequest(n.fromUserId)">
+                    (click)="declineRequest(n.fromUserId); clearRequest(n.fromUserId)"
+                    [attr.aria-label]="'Decline friend request from ' + n.fromUsername">
                   </app-button>
                 </div>
                 }
 
                 @if (n.status === 'ACCEPTED' || n.status === 'DECLINED') {
                 <div class="friend-actions">
-                  <app-button label="Clear" size="xsmall" variant="highlight" (click)="clearRequest(n.fromUserId)">
+                  <app-button label="Clear" size="xsmall" variant="highlight" (click)="clearRequest(n.fromUserId)"
+                    [attr.aria-label]="'Clear friend request notification for ' + n.fromUsername">
                   </app-button>
                 </div>
                 }
