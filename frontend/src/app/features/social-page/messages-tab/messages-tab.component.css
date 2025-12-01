@@ -293,13 +293,34 @@ input[type="text"]::placeholder {
 .card {
   background: var(--color-transparent-gradient);
   border-radius: 8px;
-  transition: background 0.2s ease, border 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border 0.2s ease,
+    outline 0.2s ease,
+    outline-offset 0.2s ease;
   margin-bottom: 0.5rem;
 }
 
 .card:hover {
   background: rgba(255, 255, 255, 0.08);
   cursor: pointer;
+}
+
+.friend-card,
+.chat-card,
+.group-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+}
+
+.friend-card:focus-visible,
+.chat-card:focus-visible,
+.group-card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .card.selected {
@@ -431,10 +452,6 @@ input[type="text"]::placeholder {
     margin-right: 0.6rem;
   }
 
-  /*<span> "dot" after name */
-  .comma {
-    /* display: none; */
-  }
 }
 
 /* For small screen phones*/
