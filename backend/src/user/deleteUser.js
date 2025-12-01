@@ -9,8 +9,10 @@ const { QueryCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 const {
   CognitoIdentityProviderClient,
   AdminDeleteUserCommand,
+  AdminListGroupsForUserCommand,
+  AdminRemoveUserFromGroupCommand,
+  AdminGetUserCommand,
 } = require('@aws-sdk/client-cognito-identity-provider');
-
 const MAIN_TABLE = process.env.MAIN_TABLE; //Correct table from environmental variables
 const USER_POOL_ID = process.env.USER_POOL_ID; // Userpool ID
 const cognitoClient = new CognitoIdentityProviderClient({
@@ -58,15 +60,45 @@ module.exports.handler = async (event) => {
       );
     }
 
-    // Delete the user from Cognito using the email as the username
-    await cognitoClient.send(
-      new AdminDeleteUserCommand({
-        UserPoolId: process.env.USER_POOL_ID,
-        Username: email,
+    // Use CognitoName if present, otherwise fall back to email
+    const cognitoUsername = userItem.CognitoName || email; // CHANGED
+    console.log('Resolved Cognito username:', cognitoUsername); // CHANGED
+
+    // specify the target group (group for Google users)
+    const TARGET_GROUP = 'eu-north-1_oijiAdKs2_Google';
+
+    // get the users from the group
+    const groupsResult = await cognitoClient.send(
+      new AdminListGroupsForUserCommand({
+        UserPoolId: USER_POOL_ID,
+        Username: cognitoUsername,
       })
     );
 
-    // Delete the user from Cognito using the email as the username
+    // check if is in group
+    const isInGroup = groupsResult.Groups?.some(
+      (g) => g.GroupName === TARGET_GROUP
+    );
+
+    if (isInGroup) {
+      await cognitoClient.send(
+        new AdminRemoveUserFromGroupCommand({
+          UserPoolId: USER_POOL_ID,
+          Username: cognitoUsername,
+          GroupName: TARGET_GROUP,
+        })
+      );
+      console.log(`Removed ${cognitoUsername} from group ${TARGET_GROUP}`);
+    }
+
+    // Delete the user from Cognito the username
+    await cognitoClient.send(
+      new AdminDeleteUserCommand({
+        UserPoolId: process.env.USER_POOL_ID,
+        Username: cognitoUsername,
+      })
+    );
+
     return sendResponse(200, {
       message: 'User deleted from DynamoDB and Cognito successfully',
       deletedItems: queryResult.Items?.length || 0,

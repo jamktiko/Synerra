@@ -1,14 +1,14 @@
 // Custom Cypress commands for common E2E operations
 
 Cypress.Commands.add('loginViaEmail', (email: string, password: string) => {
-  cy.visit('/login/email')
-  cy.get('input[name="email"]').clear().type(email)
-  cy.get('input[name="password"]').clear().type(password)
-  cy.get('form').submit()
-  cy.wait('@login')
-  cy.wait('@getMe')
-  cy.url().should('include', '/dashboard')
-})
+  cy.visit('/login/email');
+  cy.get('input[name="email"]').clear().type(email);
+  cy.get('input[name="password"]').clear().type(password);
+  cy.get('form').submit();
+  cy.wait('@login');
+  cy.wait('@getMe');
+  cy.url().should('include', '/dashboard');
+});
 
 Cypress.Commands.add('setupDefaultIntercepts', () => {
   cy.intercept('POST', '**/user/login', {
@@ -76,7 +76,7 @@ Cypress.Commands.add('setupDefaultIntercepts', () => {
   cy.intercept('GET', '**/friends/get', {
     statusCode: 200,
     body: { users: [] },
-  }).as('getFriends')
+  }).as('getFriends');
 
   cy.intercept('GET', '**/relations/hassent', {
     statusCode: 200,
@@ -134,4 +134,4 @@ declare global {
   }
 }
 
-export {}
+export {};

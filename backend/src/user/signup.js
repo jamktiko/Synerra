@@ -1,11 +1,3 @@
-/*
-Registration to cognito with email and password:
-{
-"email": "omanimi@jamk.fi",
-"password": "moi123"
-}
-Registration does not provide the JWT-token, you have to login first
-*/
 const AWS = require('@aws-sdk/client-cognito-identity-provider');
 const { sendResponse, validateInput } = require('../helpers');
 const { DynamoDBClient, PutItemCommand } = require('@aws-sdk/client-dynamodb');

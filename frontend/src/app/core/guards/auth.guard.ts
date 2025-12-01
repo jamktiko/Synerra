@@ -1,4 +1,4 @@
-// This file runs a guard that then blocks the user from accessing certain routes. Used in app.routes
+// This file runs a guard that then blocks the user from accessing any routes that require login. Used in app.routes
 
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
@@ -6,8 +6,6 @@ import { AuthStore } from '../stores/auth.store';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
-  private tokenKey = 'auth_token';
-
   constructor(
     private router: Router,
     private authStore: AuthStore,

@@ -41,6 +41,7 @@
   overflow: visible;
   max-width: 1080px;
   margin: 0 auto;
+  min-width: 0;
 }
 
 .welcome-wrapper {
@@ -226,6 +227,34 @@ app-dashboard-card img {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
+  .top-navigation-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .welcome-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .welcome-text {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .user-name {
+    display: block;
+    max-width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 @media (max-width: 700px) {
@@ -236,21 +265,22 @@ app-dashboard-card img {
 }
 
 @media (max-width: 600px) {
-  .dashboard {
-    --page-horizontal-gap: clamp(1rem, 6vw, 2rem);
-    padding: 2rem calc(1.25rem + var(--page-horizontal-gap));
-    margin: 0 auto;
-    gap: 1.75rem;
-  }
-
   .games-grid {
     padding: 1rem;
     gap: 1.25rem;
   }
-
+  .favorite-games {
+    padding: 0 2rem;
+  }
+  .popular-games {
+    padding: 0 2rem;
+  }
   .top-navigation-bar {
     text-align: center;
     gap: 0.5rem;
+  }
+  .section-title {
+    margin-left: 0px;
   }
 }
 

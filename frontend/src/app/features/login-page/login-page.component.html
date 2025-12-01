@@ -12,15 +12,11 @@
 
   <div class="right-column">
     <div class="login-frame">
-      <app-button label="Login with Steam" icon="Steam" variant="default" size="large" [fullWidth]="true"
-        iconPosition="left"></app-button>
+
 
       <app-button label="Login with Google" icon="Google" variant="default" size="large" [fullWidth]="true"
         iconPosition="left" (click)="redirectToHostedUI()">
       </app-button>
-
-      <app-button label="Login with Epic Games" icon="EpicGames" variant="default" size="large" [fullWidth]="true"
-        iconPosition="left"></app-button>
 
       <app-button label="Login with Email" icon="Mail" variant="default" size="large" [fullWidth]="true"
         iconPosition="left" (click)="emailLogin()"></app-button>
@@ -35,8 +31,8 @@
         <div class="cta-text" tabindex="-1">
           <span class="cta-text__label">Begin your journey</span>
         </div>
-        <app-button class="signup-cta" label="Create Profile" variant="highlight" size="large" [fullWidth]="true" align="center"
-          [routerLink]="'/signup'"></app-button>
+        <app-button class="signup-cta" label="Create Profile" variant="highlight" size="large" [fullWidth]="true"
+          align="center" [routerLink]="'/signup'"></app-button>
       </div>
     </div>
   </div>

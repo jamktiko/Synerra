@@ -407,3 +407,13 @@
     display: none;
   }
 }
+
+.hover-highlight {
+  transition: color 0.2s, background-color 0.2s;
+  cursor: pointer;
+}
+
+.hover-highlight:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}

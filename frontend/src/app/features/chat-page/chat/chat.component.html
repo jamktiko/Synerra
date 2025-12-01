@@ -1,27 +1,39 @@
 <div class="chatElement">
   <div class="headframe">
-
     <div class="avatarGroup">
       @if (otherMembers.length
       < 2) { @for (member of otherMembers; track member.UserId) { <img class="avatarframe-icon"
-        [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" alt="avatar" />
+        [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" alt="avatar"
+        [attr.alt]="member.Username + ' profile picture'" />
       }
       }
     </div>
 
     <div class="nameGroup">
-      <strong>{{ memberNames }}</strong>
+      @for (m of members; track m.userId; let i = $index) {
+      @if (m.userId) {
+      <strong class="hover-highlight" [routerLink]="['/dashboard/profile', m.userId]">
+        {{ m.username }}
+      </strong>
+      } @else {
+      <span>{{ m.username }}</span>
+      }
+
+      @if (i < members.length - 1) { <span>, </span>
+        }
+        }
     </div>
 
     <div class="headerButton">
-      <app-button class="closeChatBtn" variant="default" icon="Cross" routerLink="/dashboard/social"></app-button>
+      <app-button class="closeChatBtn" variant="default" icon="Cross" routerLink="/dashboard/social"
+        aria-label="Close chat"></app-button>
     </div>
   </div>
 
   <div class="chat-log" #chatLog>
     <!-- Loops the messages gotten from the chatService -->
-    @for (msg of messages$ | async; track $index) {
-    @if (msg.SenderId === loggedInUser?.UserId) {
+    @for (msg of messages$ | async; track $index) { @if (msg.SenderId ===
+    loggedInUser?.UserId) {
     <div class="sentMessageWrapper">
       <div class="sentMessage">
         <p>{{ msg.Content }}</p>
@@ -30,10 +42,10 @@
         {{ msg.Timestamp | date : "d.MM.yyyy, HH.mm" }}
       </p>
     </div>
-    }
-    @if (msg.SenderId !== loggedInUser?.UserId) {
+    } @if (msg.SenderId !== loggedInUser?.UserId) {
     <div class="receivedMessageWrapper">
-      <img [src]="msg.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" alt="avatar" class="messageAvatar" />
+      <img [src]="msg.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" alt="avatar" class="messageAvatar"
+        [attr.alt]="msg.SenderUsername + ' profile picture'" />
       <div>
         <div class="receivedMessage">
           <div class="senderName">
@@ -46,16 +58,16 @@
         </p>
       </div>
     </div>
-    }
-    }
-
+    } }
   </div>
   <div class="chat-input">
-    <input [(ngModel)]="messageText" (keyup.enter)="sendMessage(messageText)" placeholder="Type your message" />
+    <input [(ngModel)]="messageText" (keyup.enter)="sendMessage(messageText)" placeholder="Type your message"
+      aria-label="Message" />
     <!-- <button (click)="sendMessage(messageText)">
       <img src="assets/svg/Send.svg" alt="" />
     </button> -->
-    <app-button class="chatSendBtn" variant="highlight" icon="Send" (click)="sendMessage(messageText)" size="small">
+    <app-button class="chatSendBtn" variant="highlight" icon="Send" (click)="sendMessage(messageText)" size="small"
+      aria-label="Send message">
     </app-button>
   </div>
 </div>

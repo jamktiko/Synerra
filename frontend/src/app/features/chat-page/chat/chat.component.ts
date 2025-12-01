@@ -35,7 +35,6 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   messageHistory: [] = [];
   otherMembers: User[] = [];
   otherMemberNames: String | null = null;
-
   messageText: string = '';
 
   // Points to the <div #chatLog> for ts usage
@@ -74,10 +73,11 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // Looping usernames here as there was problems in html
-  get memberNames(): string {
-    return (this.otherMembers ?? [])
-      .map((m) => m?.Username || 'Chat')
-      .join(', ');
+  get members(): { username: string; userId: string }[] {
+    return (this.otherMembers ?? []).map((m) => ({
+      username: m?.Username || 'Chat',
+      userId: m?.UserId || '', // leave empty if missing
+    }));
   }
 
   ngOnInit() {

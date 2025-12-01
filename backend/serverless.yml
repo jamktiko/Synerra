@@ -37,6 +37,9 @@ provider:
         - cognito-idp:AdminCreateUser
         - cognito-idp:AdminSetUserPassword
         - 'cognito-idp:AdminDeleteUser'
+        - 'cognito-idp:AdminGetUser'
+        - 'cognito-idp:AdminListGroupsForUser'
+        - 'cognito-idp:AdminRemoveUserFromGroup'
         - s3:PutObject
         - s3:GetObject
         - 'sns:Publish'
@@ -116,7 +119,9 @@ provider:
   httpApi:
     cors:
       allowedOrigins:
-        - '*'
+        - 'http://localhost:4200'
+        - 'https://d2lqv34okdzcq4.cloudfront.net'
+        - 'http://172.20.10.5:4200'
       allowedHeaders:
         - Content-Type
         - Authorization
@@ -203,6 +208,13 @@ functions:
     events:
       - httpApi:
           path: /user/delete/{userId}
+          method: delete
+          authorizer: PrivateAuthorizer
+  leaveRoom:
+    handler: src/relations/leaveRoom.handler
+    events:
+      - httpApi:
+          path: /relations/room/leave
           method: delete
           authorizer: PrivateAuthorizer
   addGame:

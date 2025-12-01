@@ -125,6 +125,7 @@ body {
   gap: 0.5rem;
   overflow-x: hidden;
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  padding-right: 0.7rem;
 }
 
 .chats {
@@ -209,6 +210,7 @@ body {
 .chat-input {
   display: flex;
   gap: 0.5rem;
+  padding-top: 0.4rem; /*Little cleaner*/
 }
 
 .chat-input input {
@@ -321,7 +323,7 @@ body {
   .chatElement {
     border: none;
     width: 100vw;
-    height: calc(100dvh - 96px); /* leave room for fixed bottom nav */
+    height: calc(100dvh - 80px); /* leave room for fixed bottom nav */
     position: relative;
     top: -30px;
     left: 0;
@@ -332,21 +334,58 @@ body {
     margin-bottom: 0;
   }
   .headframe {
-    grid-template-columns: auto 1fr 8%;
+    /* oli sille buttonille tämä ylempi varaus */
+    /* grid-template-columns: auto 1fr 8%; */
+    grid-template-columns: auto 1fr auto;
   }
   .headerframe {
     min-width: 0;
     overflow: hidden;
   }
-  .senderName {
+  .nameGroup {
+    display: flex;
+    align-items: center;
+    min-width: 0; /* sallii kutistumisen gridissä */
+    overflow: hidden; /* "leikkaa" yli menevän sisällön */
+  }
+
+  /* tee LYHYELLE elementille ellipsis — vain itse tekstielementille */
+  .nameGroup > strong {
+    display: block;
     min-width: 0;
     max-width: 100%;
+    /* white-space: nowrap; */
+    overflow: hidden;
+    text-overflow: ellipsis; /* ... */
+  }
+
+  .senderName {
     display: block;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .senderName p {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .headerButton {
+    display: none;
+  }
+
   .sentMessage {
     max-width: 86%;
   }
+}
+
+.hover-highlight {
+  transition: color 0.2s, background-color 0.2s;
+  cursor: pointer;
+}
+
+.hover-highlight:hover {
+  text-decoration: underline;
 }
