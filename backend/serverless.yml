@@ -210,6 +210,13 @@ functions:
           path: /user/delete/{userId}
           method: delete
           authorizer: PrivateAuthorizer
+  leaveRoom:
+    handler: src/relations/leaveRoom.handler
+    events:
+      - httpApi:
+          path: /relations/room/leave
+          method: delete
+          authorizer: PrivateAuthorizer
   addGame:
     handler: src/games/addGame.handler
     events:
