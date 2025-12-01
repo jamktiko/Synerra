@@ -114,7 +114,10 @@ app-main-layout {
   --border-width-2: 2px;
   --border-color: #3a3a3a;
   --color-border-glow: linear-gradient(180deg, #4f6aff, #2b2b2b);
-  --focus-ring: 0 0 0 2px rgba(255, 255, 255, 0.14), 0 0 0 4px #ff6a2b;
+  --color-highlight: var(--color-primary);
+  --color-highlight-rgb: var(--color-primary-rgb);
+  --focus-ring-color: var(--color-highlight);
+  --focus-ring: 0 0 0 2px rgba(0, 0, 0, 0.55), 0 0 0 3px var(--focus-ring-color);
 
   /* Z-index scale */
   --z-base: 0;

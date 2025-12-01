@@ -1,20 +1,37 @@
 @if (user.UserId !== currentUser?.UserId) {
-<div class="card" loading="lazy" [ngClass]="{ online: user.Status === 'online', offline: user.Status !== 'online' }">
-
-  <button type="button" class="avatar-button" (click)="onProfile()"
-    [attr.aria-label]="'Open profile of ' + user.Username">
-    <img [src]="user.ProfilePicture || 'https://images.unsplash.com/photo-1575419268007-a9a5e6b1ce0b?fm=jpg&q=80&w=300'"
-      alt="Profile picture" class="avatar" loading="lazy" />
+<div
+  class="card"
+  loading="lazy"
+  [ngClass]="{
+    online: user.Status === 'online',
+    offline: user.Status !== 'online'
+  }"
+>
+  <button
+    type="button"
+    class="avatar-button"
+    (click)="onProfile()"
+    [attr.aria-label]="'Open profile of ' + user.Username"
+  >
+    <img
+      [src]="
+        user.ProfilePicture ||
+        'https://images.unsplash.com/photo-1575419268007-a9a5e6b1ce0b?fm=jpg&q=80&w=300'
+      "
+      alt="Profile picture"
+      class="avatar"
+      loading="lazy"
+    />
   </button>
 
   <div class="bio">
-    {{ user.Bio || 'No bio text available' }}
+    {{ user.Bio || "No bio text available" }}
   </div>
 
   <div class="heading">
-    {{ user.Username }}
+    <span class="username">{{ user.Username }} </span>
     @if (isFriend) {
-    <img src="/assets/svg/friend.svg" alt="friend" class="friendsvg">
+    <img src="/assets/svg/friend.svg" alt="friend" class="friendsvg" />
     }
   </div>
 
@@ -35,9 +52,20 @@
     </button>
 
     @if (!isFriend) {
-    <button type="button" class="add-btn" (click)="handleFriendAction()" [disabled]="alreadySent">
+    <button
+      type="button"
+      class="add-btn"
+      (click)="handleFriendAction()"
+      [disabled]="alreadySent"
+    >
       <span>
-        {{ comingRequests.includes(user.UserId!) ? 'Accept' : (alreadySent ? 'Request Sent' : 'Add +') }}
+        {{
+          comingRequests.includes(user.UserId!)
+            ? "Accept"
+            : alreadySent
+            ? "Request Sent"
+            : "Add +"
+        }}
       </span>
     </button>
     }

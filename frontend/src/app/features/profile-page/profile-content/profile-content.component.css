@@ -344,6 +344,12 @@
   .game-genre {
     font-size: 11px;
   }
+  .section-title {
+    /* white-space: nowrap; */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+  }
 }
 
 @media (max-width: 600px) {

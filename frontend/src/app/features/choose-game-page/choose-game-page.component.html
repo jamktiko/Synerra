@@ -1,17 +1,17 @@
 @if (loadingSpinnerShowing) {
-<div class="loadingSpinner">
-  <app-loading-spinner />
+<div class="loadingSpinner" role="status" aria-live="polite">
+  <app-loading-spinner aria-label="Loading" />
 </div>
 } @else {
-<div class="mid-container">
+<div class="mid-container" role="main">
   <app-game-filters (filterChanged)="onFilterChanged($event)" (sortToggled)="toggleSortOrder()">
   </app-game-filters>
 
-  <div class="games-container">
+  <div class="games-container" role="list">
     @for (game of filteredGames; track game.Name) {
-    <app-game-card [game]="game"></app-game-card>
+    <app-game-card [game]="game" role="listitem"></app-game-card>
     } @empty {
-    <p>No games found</p>
+    <p role="alert">No games found</p>
     }
   </div>
 </div>

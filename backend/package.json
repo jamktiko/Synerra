@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-apigatewaymanagementapi": "^3.787.0",
+    "@aws-sdk/client-apigatewayv2": "^3.940.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.940.0",
     "@aws-sdk/client-dynamodb": "^3.788.0",
     "@aws-sdk/client-s3": "^3.400.0",
     "@aws-sdk/client-secrets-manager": "^3.882.0",
