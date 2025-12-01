@@ -67,6 +67,7 @@
               <div class="ms-auto ml-2 mr-2">
                 <app-button variant="highlight" label="Chat" size="small" (click)="groupChatClicked(friend.UserId)"
                   [attr.aria-label]="'Start chat with ' + friend.Username"></app-button>
+
               </div>
             </div>
 
@@ -106,7 +107,7 @@
 
         <!-- GROUP CHATS TAB -->
         <div class="tab-pane" id="groups">
-          @if (groupChats().length > 0) { @for (group of groupChats(); track
+          @if (groupChatsLocal().length > 0) { @for (group of groupChatsLocal(); track
           group.RoomId) {
           <div class="card mb-2 p-2 text-white">
             <div class="d-flex align-items-center">
@@ -128,9 +129,11 @@
                 <span class="comma">,</span>
                 } }
               </div>
-              <div class="ms-auto ml-2 mr-2">
+              <div class="ms-auto ml-2 mr-2 chat-actions">
                 <app-button variant="highlight" label="Chat" size="small" (click)="groupChatClicked(group.RoomId)"
                   aria-label="Start chat with group"></app-button>
+                <app-button variant="highlight" label="Leave" size="small" (click)="leaveRoom(group.RoomId)"
+                  [attr.aria-label]="'Leave room ' + group.RoomId"></app-button>
               </div>
             </div>
           </div>

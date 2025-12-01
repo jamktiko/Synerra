@@ -435,6 +435,10 @@ input[type="text"]::placeholder {
   .comma {
     /* display: none; */
   }
+
+  .chat-actions {
+    flex-direction: column;
+  }
 }
 
 /* For small screen phones*/
@@ -449,4 +453,9 @@ input[type="text"]::placeholder {
   .card {
     margin-right: 0.5rem;
   }
+}
+
+.chat-actions {
+  display: flex;
+  gap: 10px;
 }

@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, input, signal, WritableSignal } from '@angular/core';
 import { ChatService } from '../../../core/services/chat.service';
 import { Router } from '@angular/router';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { FriendService } from '../../../core/services/friend.service';
 import { User } from '../../../core/interfaces/user.model';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-messages-tab',
@@ -16,6 +17,7 @@ export class MessagesTabComponent {
   friendsList = input<any[]>([]);
   directChats = input<any[]>([]);
   groupChats = input<any[]>([]);
+  groupChatsLocal!: WritableSignal<any[]>;
   newChatModalOpen: boolean = false;
   selectedFriends: User[] = [];
 
@@ -25,8 +27,12 @@ export class MessagesTabComponent {
     private chatService: ChatService,
     private friendService: FriendService,
     private router: Router,
+    private userService: UserService
   ) {}
 
+  ngOnInit() {
+    this.groupChatsLocal = signal(this.groupChats());
+  }
   userClicked(userId: string) {
     this.chatService.startChat([userId]);
   }
@@ -53,7 +59,7 @@ export class MessagesTabComponent {
     if (this.isSelected(friend)) {
       // Remove if already selected
       this.selectedFriends = this.selectedFriends.filter(
-        (f) => f.UserId !== friend.UserId,
+        (f) => f.UserId !== friend.UserId
       );
     } else {
       // Add to selected
@@ -75,5 +81,22 @@ export class MessagesTabComponent {
     // Starts the chat with chosen userIds
     this.chatService.startChat(selectedUserIds);
     this.closeNewChatModal();
+  }
+
+  leaveRoom(roomId: string) {
+    const confirmed = window.confirm(
+      'Are you sure you want to leave this chat room?'
+    );
+    if (!confirmed) return;
+
+    this.userService.leaveRoom(roomId).subscribe({
+      next: () => {
+        // mutate local writable signal
+        this.groupChatsLocal.update((list) =>
+          list.filter((r) => r.RoomId !== roomId)
+        );
+      },
+      error: (err) => console.error(err),
+    });
   }
 }
