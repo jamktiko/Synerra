@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-
 import { ProfileCreationPageComponent } from './profile-creation-page.component';
+import { expect } from '@jest/globals';
+import { provideRouter } from '@angular/router';
 
 describe('ProfileCreationPageComponent', () => {
   let component: ProfileCreationPageComponent;
@@ -14,8 +15,9 @@ describe('ProfileCreationPageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ProfileCreationPageComponent], // Import standalone component
       providers: [
-        provideHttpClient(), // Provide real HTTP client structure
-        provideHttpClientTesting(), // Replace actual HTTP calls with test doubles
+        provideRouter([]),
+        provideHttpClient(), // registers HttpClient
+        provideHttpClientTesting(), // testing utilities (mock backend)
       ],
     }).compileComponents();
 

@@ -5,6 +5,9 @@ import { of } from 'rxjs';
 import { LoadingPageStore } from '../../../core/stores/loadingPage.store';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
+import { expect } from '@jest/globals';
+import { provideRouter } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AccountSettingsComponent', () => {
   let component: AccountSettingsComponent;
@@ -23,17 +26,14 @@ describe('AccountSettingsComponent', () => {
     const authServiceStub = {
       logout: jest.fn(),
     };
-    const routerStub = {
-      navigate: jest.fn(),
-    };
 
     await TestBed.configureTestingModule({
-      imports: [AccountSettingsComponent],
+      imports: [AccountSettingsComponent, RouterTestingModule],
       providers: [
+        provideRouter([]),
         { provide: UserService, useValue: userServiceStub },
         { provide: LoadingPageStore, useValue: loadingPageStoreStub },
         { provide: AuthService, useValue: authServiceStub },
-        { provide: Router, useValue: routerStub },
       ],
     }).compileComponents();
 
@@ -66,9 +66,14 @@ describe('AccountSettingsComponent', () => {
     expect(component.isLinked('steam')).toBeFalsy();
   });
 
-  it('should logout through services', () => {
+  it('should logout through services', async () => {
+    jest.spyOn(router, 'navigate').mockResolvedValue(true);
+
     component.logOut();
-    expect(loadingPageStore.setAuthLayoutLoadingPageVisible).toHaveBeenCalledWith(false);
+
+    expect(
+      loadingPageStore.setAuthLayoutLoadingPageVisible,
+    ).toHaveBeenCalledWith(false);
     expect(authService.logout).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });

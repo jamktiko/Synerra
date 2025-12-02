@@ -1,5 +1,5 @@
-import { TestBed } from '@angular/core/testing';
 import { NotificationsTabComponent } from './notifications-tab.component';
+import { expect } from '@jest/globals';
 
 describe('NotificationsTabComponent', () => {
   let component: NotificationsTabComponent;
@@ -44,7 +44,7 @@ describe('NotificationsTabComponent', () => {
       fakeChatService,
       fakeUserService,
       fakeNotificationService,
-      fakeNotificationStore
+      fakeNotificationStore,
     );
 
     // Set input properties to valid defaults so the component doesn't operate on null values.

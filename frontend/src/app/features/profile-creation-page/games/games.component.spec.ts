@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { GamesComponent } from './games.component';
+import { expect } from '@jest/globals';
+import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-
-import { GamesComponent } from './games.component';
 
 describe('GamesComponent', () => {
   let component: GamesComponent;
@@ -13,9 +14,9 @@ describe('GamesComponent', () => {
     await TestBed.configureTestingModule({
       imports: [GamesComponent],
       providers: [
-        provideHttpClient(), // For fetching available games from API
-        provideHttpClientTesting(), // Mock HTTP responses in tests
-        // Modal service - component is rendered inside a Bootstrap modal
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
         NgbActiveModal,
       ],
     }).compileComponents();
@@ -25,7 +26,6 @@ describe('GamesComponent', () => {
     fixture.detectChanges();
   });
 
-  // Smoke test - verifies game selection modal component initializes correctly
   it('should create', () => {
     expect(component).toBeTruthy();
   });
