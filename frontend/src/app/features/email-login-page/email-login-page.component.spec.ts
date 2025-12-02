@@ -17,6 +17,7 @@ import { UserStore } from '../../core/stores/user.store';
 import { of, throwError } from 'rxjs';
 import { User } from '../../core/interfaces/user.model';
 import { By } from '@angular/platform-browser';
+import { expect } from '@jest/globals';
 
 describe('EmailLoginPageComponent - Login & Authentication Tests', () => {
   let component: EmailLoginPageComponent;
@@ -122,7 +123,7 @@ describe('EmailLoginPageComponent - Login & Authentication Tests', () => {
       setTimeout(() => {
         expect(consoleErrorSpy).toHaveBeenCalledWith(
           'Failed to load games',
-          expect.any(Error)
+          expect.any(Error),
         );
         consoleErrorSpy.mockRestore();
         done();
@@ -290,7 +291,7 @@ describe('EmailLoginPageComponent - Login & Authentication Tests', () => {
       setTimeout(() => {
         expect(consoleErrorSpy).toHaveBeenCalledWith(
           'Error loading user after login:',
-          expect.any(Error)
+          expect.any(Error),
         );
         consoleErrorSpy.mockRestore();
         done();
@@ -306,7 +307,7 @@ describe('EmailLoginPageComponent - Login & Authentication Tests', () => {
       fixture.detectChanges();
 
       const emailInput = fixture.debugElement.query(
-        By.css('input[type="email"]')
+        By.css('input[type="email"]'),
       );
       expect(emailInput).toBeTruthy();
       expect(emailInput.nativeElement.name).toBe('email');
@@ -316,7 +317,7 @@ describe('EmailLoginPageComponent - Login & Authentication Tests', () => {
       fixture.detectChanges();
 
       const passwordInput = fixture.debugElement.query(
-        By.css('input[type="password"]')
+        By.css('input[type="password"]'),
       );
       expect(passwordInput).toBeTruthy();
       expect(passwordInput.nativeElement.name).toBe('password');
@@ -326,10 +327,10 @@ describe('EmailLoginPageComponent - Login & Authentication Tests', () => {
       fixture.detectChanges();
 
       const emailInput = fixture.debugElement.query(
-        By.css('input[type="email"]')
+        By.css('input[type="email"]'),
       ).nativeElement;
       const passwordInput = fixture.debugElement.query(
-        By.css('input[type="password"]')
+        By.css('input[type="password"]'),
       ).nativeElement;
 
       expect(emailInput.placeholder).toBe('example@email.com');
@@ -340,10 +341,10 @@ describe('EmailLoginPageComponent - Login & Authentication Tests', () => {
       fixture.detectChanges();
 
       const emailInput = fixture.debugElement.query(
-        By.css('input[type="email"]')
+        By.css('input[type="email"]'),
       ).nativeElement;
       const passwordInput = fixture.debugElement.query(
-        By.css('input[type="password"]')
+        By.css('input[type="password"]'),
       ).nativeElement;
 
       expect(emailInput.type).toBe('email');
@@ -354,7 +355,7 @@ describe('EmailLoginPageComponent - Login & Authentication Tests', () => {
       fixture.detectChanges();
 
       const emailInput = fixture.debugElement.query(
-        By.css('input[name="email"]')
+        By.css('input[name="email"]'),
       );
       expect(emailInput).toBeTruthy();
       // ngModel creates two-way binding automatically
@@ -364,7 +365,7 @@ describe('EmailLoginPageComponent - Login & Authentication Tests', () => {
       fixture.detectChanges();
 
       const passwordInput = fixture.debugElement.query(
-        By.css('input[name="password"]')
+        By.css('input[name="password"]'),
       );
       expect(passwordInput).toBeTruthy();
       // ngModel creates two-way binding automatically
@@ -381,7 +382,7 @@ describe('EmailLoginPageComponent - Login & Authentication Tests', () => {
     it('should render email input field', () => {
       fixture.detectChanges();
       const emailInput = fixture.debugElement.query(
-        By.css('input[type="email"]')
+        By.css('input[type="email"]'),
       );
       expect(emailInput).toBeTruthy();
       expect(emailInput.nativeElement.placeholder).toBe('example@email.com');
@@ -390,7 +391,7 @@ describe('EmailLoginPageComponent - Login & Authentication Tests', () => {
     it('should render password input field', () => {
       fixture.detectChanges();
       const passwordInput = fixture.debugElement.query(
-        By.css('input[type="password"]')
+        By.css('input[type="password"]'),
       );
       expect(passwordInput).toBeTruthy();
       expect(passwordInput.nativeElement.placeholder).toBe('**********');

@@ -1,4 +1,5 @@
 import { AppComponent } from './app.component';
+import { expect } from '@jest/globals';
 
 describe('AppComponent', () => {
   let component: AppComponent;

@@ -49,7 +49,7 @@ module.exports.handler = async (event) => {
         };
       }
 
-      // Step 1: Query all rooms for this user from GSI
+      // Queries all rooms for this user from GSI
       const userRooms = await doccli.send(
         new QueryCommand({
           TableName: process.env.MAIN_TABLE,
@@ -61,7 +61,7 @@ module.exports.handler = async (event) => {
 
       console.log('User rooms:', userRooms.Items);
 
-      // Step 2: Check if targetRoomId is in user’s rooms
+      // Checks if targetRoomId is in user’s rooms
       let hasAccess = false;
       for (const item of userRooms.Items) {
         const roomId = item.RoomId;
@@ -78,7 +78,7 @@ module.exports.handler = async (event) => {
         };
       }
 
-      // Step 3: Map connection to the room
+      // Maps connection to the room
       const connectionParams = {
         TableName: process.env.CONNECTION_DB_TABLE,
         Item: { roomId: targetRoomId, connectionId, userId, type: 'chatroom' },
@@ -86,7 +86,7 @@ module.exports.handler = async (event) => {
       await doccli.send(new PutCommand(connectionParams));
       console.log('Mapped connection to room:', targetRoomId);
 
-      // Step 4: Send confirmation back to client
+      // Sends confirmation back to client
       const domainName = event.requestContext.domainName;
       const stage = event.requestContext.stage;
       const apigw = new ApiGatewayManagementApiClient({
@@ -124,7 +124,7 @@ module.exports.handler = async (event) => {
       const members = Array.from(new Set([userId, ...targetUserIds])).sort();
       console.log(members);
 
-      // Step 1: Get all candidate rooms for each user using GSI
+      // Gets all rooms each user is apart of
       const candidateRoomSets = await Promise.all(
         members.map(async (id) => {
           const result = await doccli.send(
@@ -138,16 +138,15 @@ module.exports.handler = async (event) => {
           return result.Items.map((item) => item.PK.split('#')[1]); // extract roomId
         })
       );
-      console.log(candidateRoomSets);
-      console.log('duplicate tsekkaus');
+      console.log('CandidateRoomSets: ', candidateRoomSets);
 
-      // Step 2: Intersect candidate sets
+      // Checks for all the rooms that every user has in common
       let candidateRoomIds = candidateRoomSets.reduce(
         (a, b) => a.filter((x) => b.includes(x)),
         candidateRoomSets[0] || []
       );
       console.log('Candidate roomsIds', candidateRoomIds);
-      // Step 3: Check exact match
+      // Checks for exact match
       let roomId = null;
       for (const rId of candidateRoomIds) {
         const roomMeta = await doccli.send(
@@ -166,13 +165,11 @@ module.exports.handler = async (event) => {
         }
       }
 
-      console.log('mätsi tsekattu');
-
-      // Step 4: If no match, create new room
+      // If no match, creates a new room
       if (!roomId) {
         roomId = uuidv4();
 
-        // Create room metadata
+        // Creates room metadata
         const roomMetaParams = {
           TableName: process.env.MAIN_TABLE,
           Item: {
@@ -186,7 +183,7 @@ module.exports.handler = async (event) => {
             'attribute_not_exists(PK) AND attribute_not_exists(SK)',
         };
 
-        // Create member items
+        // Creates member items
         console.log('TEKEE UUDEN MEMBER-TABLE YHTEYS ITEMI JUTUN');
         const memberCommands = members.map(
           (id) =>
@@ -213,7 +210,7 @@ module.exports.handler = async (event) => {
 
       console.log('Meta paramsit databaseen');
 
-      // Step 5: Map WebSocket connection
+      // Maps WebSocket connection
       const connectionParams = {
         TableName: process.env.CONNECTION_DB_TABLE,
         Item: { roomId, connectionId, userId, type: 'chatroom' },
@@ -221,7 +218,7 @@ module.exports.handler = async (event) => {
       await doccli.send(new PutCommand(connectionParams));
       console.log('Tiedot connection tableen...');
 
-      // Step 6: Send room info back to client
+      // Sends room info back to client
       const domainName = event.requestContext.domainName;
       const stage = event.requestContext.stage;
       const apigw = new ApiGatewayManagementApiClient({
