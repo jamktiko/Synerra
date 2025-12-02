@@ -2,12 +2,10 @@
 
   <!-- Yläosa -->
   <div class="top-section">
-    <div class="logo-container">
-
-      <img class="logo logo--big" src="assets/svg/logo_big.svg" alt="Synerra Logo" [routerLink]="['/']" />
-      <img class="logo logo--small" src="assets/svg/logo_small.svg" alt="Synerra Logo Small" [routerLink]="['/']" />
-
-    </div>
+    <a class="logo-container" routerLink="/">
+      <img class="logo logo--big" src="assets/svg/logo_big.svg" alt="Synerra Logo" />
+      <img class="logo logo--small" src="assets/svg/logo_small.svg" alt="Synerra Logo Small" />
+    </a>
 
     <button type="button" class="user-profile" (click)="onUserClick()" aria-label="User menu">
       <img class="avatar"
@@ -28,7 +26,8 @@
     @if (item.children?.length) {
     <div class="nav-group" [class.expanded]="isGroupExpanded(item)">
       <button type="button" class="nav-group__trigger" [class.active]="isGroupExpanded(item) || isGroupActive(item)"
-        (click)="toggleGroup(item)" [attr.aria-expanded]="isGroupExpanded(item)">
+        (click)="toggleGroup(item)" [attr.aria-expanded]="isGroupExpanded(item)" [attr.aria-label]="item.label + ' menu'"
+        tabindex="0">
         <span class="nav-group__icon">
           <img [src]="getIconPath(item.icon)" [alt]="item.label + ' icon'" />
         </span>
@@ -36,11 +35,14 @@
         <span class="nav-group__chevron" aria-hidden="true"></span>
       </button>
 
-      <div class="nav-submenu" [class.open]="isGroupExpanded(item)" [style.maxHeight]="getSubmenuHeight(item)">
+      <div class="nav-submenu" [class.open]="isGroupExpanded(item)" [style.maxHeight]="getSubmenuHeight(item)"
+        [attr.aria-hidden]="!isGroupExpanded(item)">
 
         @for (child of item.children; track child.label) {
         <a class="nav-subitem" [routerLink]="child.route" [queryParams]="child.queryParams || null"
-          routerLinkActive="active" [routerLinkActiveOptions]="{ exact: child.exact ?? true }">
+          routerLinkActive="active" [routerLinkActiveOptions]="{ exact: child.exact ?? true }"
+          [attr.aria-label]="child.label"
+          [attr.tabindex]="!isGroupExpanded(item) ? '-1' : null">
 
           @if (child.icon) {
           <span class="nav-subitem__icon">
@@ -55,9 +57,9 @@
     </div>
     } @else {
     <app-button class="nav-btn" variant="sidebar" size="small" [fullWidth]="true" [label]="item.label"
-      [icon]="item.icon" [routerLink]="item.route" routerLinkActive="active" (click)="closeExpandedGroups()"
-      [routerLinkActiveOptions]="{ exact: true }" #rla="routerLinkActive"
-      [buttonState]="rla.isActive ? 'active' : undefined">
+      [icon]="item.icon" [routerLink]="item.route" (click)="closeExpandedGroups()"
+      routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+      #rla="routerLinkActive" [buttonState]="rla.isActive ? 'active' : undefined">
     </app-button>
     }
     }
@@ -80,16 +82,17 @@
       <!-- SETTINGS item with submenu toggle -->
       @for (item of navItemsMobile; track item.label) {
       @if (item.label === 'Settings') {
-      <div class="nav-icon" [class.active]="isMobileSettingsOpen" (click)="toggleMobileSettings()">
+      <button type="button" class="nav-icon" [class.active]="isMobileSettingsOpen" (click)="toggleMobileSettings()" 
+        aria-label="Open settings menu" [attr.aria-expanded]="isMobileSettingsOpen">
         <img [src]="'assets/svg/' + item.icon + '.svg'" alt="Settings icon" />
-      </div>
+      </button>
 
       <!-- The submenu -->
       @if (isMobileSettingsOpen) {
       <div class="mobile-submenu-inside">
         @for (child of settingsChildren; track child.label) {
         <a class="mobile-subitem" [routerLink]="child.route" [queryParams]="child.queryParams || null"
-          (click)="isMobileSettingsOpen = false">
+          (click)="isMobileSettingsOpen = false" [attr.aria-label]="'Go to ' + child.label">
 
           @if (child.icon) {
           <img [src]="getIconPath(child.icon)" />

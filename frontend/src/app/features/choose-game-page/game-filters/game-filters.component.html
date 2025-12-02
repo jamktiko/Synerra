@@ -1,19 +1,23 @@
 <div class="filters-container">
   <h2 class="games-heading">Browse Games</h2>
   <div class="input-container">
+    <label for="search-games" class="visually-hidden">Search games</label>
     <img src="assets/svg/Search_icon.svg" alt="Search" class="search-icon" />
-    <input type="text" [formControl]="searchControl" placeholder="Search by game..." />
+    <input id="search-games" type="text" [formControl]="searchControl" placeholder="Search by game..." />
   </div>
   <div class="filters">
+    <label for="genre-filter" class="visually-hidden">Filter by genre</label>
     <div class="category-dropdown" [class.open]="genreDropdownOpen">
       <button type="button" class="category-trigger" (click)="toggleGenreDropdown()"
         [attr.aria-expanded]="genreDropdownOpen">
         <span>{{ selectedGenreLabel }}</span>
-        <span class="category-trigger__arrow" aria-hidden="true">▾</span>
+        <span class="category-trigger__arrow" aria-hidden="true" aria-haspopup="listbox"
+          [attr.aria-expanded]="genreDropdownOpen" id="genre-filter">▾</span>
       </button>
 
       @if (genreDropdownOpen) {
       <div class="category-dropdown__list" role="listbox">
+
         @for (genre of genres; track genre.value) {
         <button type="button" class="category-option" [class.is-active]="selectedGenre === genre.value"
           (click)="selectGenre(genre.value)" role="option" [attr.aria-selected]="selectedGenre === genre.value">
@@ -36,7 +40,7 @@
       </select>
     </div>
     <app-button class="sort-button" [variant]="sortByPopularity ? 'highlight' : 'default'" size="medium"
-      [label]="sortByPopularity ? 'Ascending popularity' : 'Decending popularity'" (click)="onToggleSort()"
+      [label]="sortByPopularity ? 'Ascending popularity' : 'Descending popularity'" (click)="onToggleSort()"
       [state]="sortByPopularity ? 'active' : undefined" [attr.aria-pressed]="sortByPopularity"
       aria-label="Toggle sort by popularity">
     </app-button>
