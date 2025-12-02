@@ -379,6 +379,7 @@ input[type="text"]::placeholder {
     display: grid;
     grid-template-columns: 1fr auto;
     margin-right: 0.3rem;
+    transform: scale(0.92);
   }
 
   .userTextBar {
@@ -418,29 +419,21 @@ input[type="text"]::placeholder {
     content: "";
   }
 
-  .group-avatars {
-    transform: scale(0.95);
-  }
-
   .mini-button {
     transform: scale(0.9);
     transform-origin: center;
+    margin-left: 0.2rem;
   }
 
   .card {
     margin-right: 0.6rem;
-  }
-
-  /*<span> "dot" after name */
-  .comma {
-    /* display: none; */
   }
 }
 
 /* For small screen phones*/
 @media (max-width: 362px) {
   .group-avatars {
-    transform: scale(0.92);
+    transform: scale(0.9);
   }
 
   #chatTabs {
