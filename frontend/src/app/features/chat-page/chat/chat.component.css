@@ -73,12 +73,13 @@ body {
 
 .nameGroup {
   display: flex;
-  gap: 0.5rem; /* spacing between names */
   flex-wrap: wrap; /* allow wrapping if too many names */
-
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+.nameGroup strong {
+  margin-left: 0.3rem;
 }
 
 .avatarName {

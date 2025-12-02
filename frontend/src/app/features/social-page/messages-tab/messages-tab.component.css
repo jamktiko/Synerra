@@ -293,10 +293,7 @@ input[type="text"]::placeholder {
 .card {
   background: var(--color-transparent-gradient);
   border-radius: 8px;
-  transition:
-    background 0.2s ease,
-    border 0.2s ease,
-    outline 0.2s ease,
+  transition: background 0.2s ease, border 0.2s ease, outline 0.2s ease,
     outline-offset 0.2s ease;
   margin-bottom: 0.5rem;
 }
@@ -400,6 +397,7 @@ input[type="text"]::placeholder {
     display: grid;
     grid-template-columns: 1fr auto;
     margin-right: 0.3rem;
+    transform: scale(0.92);
   }
 
   .userTextBar {
@@ -439,25 +437,21 @@ input[type="text"]::placeholder {
     content: "";
   }
 
-  .group-avatars {
-    transform: scale(0.95);
-  }
-
   .mini-button {
     transform: scale(0.9);
     transform-origin: center;
+    margin-left: 0.2rem;
   }
 
   .card {
     margin-right: 0.6rem;
   }
-
 }
 
 /* For small screen phones*/
 @media (max-width: 362px) {
   .group-avatars {
-    transform: scale(0.92);
+    transform: scale(0.9);
   }
 
   #chatTabs {
