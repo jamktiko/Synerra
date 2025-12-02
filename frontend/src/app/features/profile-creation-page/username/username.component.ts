@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-username',
+  standalone: true,
   imports: [FormsModule, ButtonComponent, CommonModule],
   templateUrl: './username.component.html',
   styleUrl: './username.component.css',
