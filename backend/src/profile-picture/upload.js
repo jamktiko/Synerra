@@ -40,6 +40,7 @@ module.exports.handler = async (event) => {
         Key: key,
         Body: fileBuffer,
         ContentType: fileType,
+        CacheControl: 'public, max-age=31536000, immutable',
       })
     );
 
