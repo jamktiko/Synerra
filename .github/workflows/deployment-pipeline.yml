@@ -58,10 +58,12 @@ jobs:
         with:
           node-version: 20
 
+      # Npm ci installs the dependencies exactly as they are in the package-lock.json and fails if the versions differ from package.json versions.
+      # It also deletes node moules before installing. Overall safer and cleaner way to install the dependencies for building than npm i.
       - name: Install dependencies
         run: |
           cd frontend
-          npm ci
+          npm ci 
           npm install --save-dev wait-on
 
       - name: Start frontend & run E2E tests
