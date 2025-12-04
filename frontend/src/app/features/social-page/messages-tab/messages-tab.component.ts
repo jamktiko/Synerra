@@ -17,7 +17,7 @@ export class MessagesTabComponent {
   friendsList = input<any[]>([]);
   directChats = input<any[]>([]);
   groupChats = input<any[]>([]);
-  groupChatsLocal!: WritableSignal<any[]>;
+  groupChatsLocal!: WritableSignal<any[]>; // local signal for instant ui updates when leaving rooms
   newChatModalOpen: boolean = false;
   selectedFriends: User[] = [];
 
@@ -83,12 +83,14 @@ export class MessagesTabComponent {
     this.closeNewChatModal();
   }
 
+  //leave groupchat room
   leaveRoom(roomId: string) {
     const confirmed = window.confirm(
       'Are you sure you want to leave this chat room?'
-    );
+    ); // user needs to confirm the action
     if (!confirmed) return;
 
+    //calls the user service function for backend delete call
     this.userService.leaveRoom(roomId).subscribe({
       next: () => {
         // mutate local writable signal
