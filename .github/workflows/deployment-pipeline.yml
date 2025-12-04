@@ -61,7 +61,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd frontend
-          npm ci --legacy-peer-deps
+          npm ci
           npm install --save-dev wait-on
 
       - name: Start frontend & run E2E tests
@@ -92,7 +92,7 @@ jobs:
       - name: Install frontend dependencies & build
         run: |
           cd frontend
-          npm ci --legacy-peer-deps
+          npm ci
           npm run build -- --configuration production
 
       # Authenticates with AWS using the stored secrets from GitHub
