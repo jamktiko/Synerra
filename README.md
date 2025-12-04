@@ -32,9 +32,16 @@ npm install
 
 You need to do a shit ton of ur own configs for this to work lmfao
 
-### Amazon Web Services
+### Serverless YML
 
-lot of crap here
+Change COGNITO_DOMAIN to match your Cognito domain and change the REDICRECT_URI to localhost:4200 if running the project locally
+
+```
+    COGNITO_DOMAIN: 'https://synerra.auth.eu-north-1.amazoncognito.com'
+    REDIRECT_URI: 'https://d2lqv34okdzcq4.cloudfront.net/auth/callback'
+```
+
+Also if you want to play around with the profile-pictures for users you need to create your own S3-bucket and replace all of the previous synerra-pfp bucket references from the serverless.yml file AND upload.js
 
 ### Google login
 
