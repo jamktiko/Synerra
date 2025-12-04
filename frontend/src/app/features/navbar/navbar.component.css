@@ -381,9 +381,7 @@
 }
 
 .nav-group__trigger:focus {
-  outline: 3px solid var(--color-highlight) !important;
-  outline-offset: 3px !important;
-  z-index: 10;
+  outline: none;
 }
 
 .nav-group__trigger:focus-visible {
@@ -392,34 +390,7 @@
   z-index: 10;
 }
 
-.nav-group__trigger::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-      80% 120% at 0% 50%,
-      rgba(255, 255, 255, 0.18) 0%,
-      rgba(255, 255, 255, 0.05) 46%,
-      rgba(255, 255, 255, 0) 100%
-    ),
-    linear-gradient(
-      120deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.45) 32%,
-      rgba(255, 255, 255, 0) 70%
-    );
-  transform: translateX(-120%) skewX(-18deg);
-  opacity: 0;
-  mix-blend-mode: screen;
-  transition: transform 0.5s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.35s ease;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.nav-group__trigger:hover::before {
-  transform: translateX(115%) skewX(-18deg);
-  opacity: 1;
-}
+/* Shine effect removed from Settings button */
 
 .nav-group__trigger:hover {
   background: rgba(140, 140, 140, 0.15);
@@ -600,19 +571,33 @@
   pointer-events: none;
   padding-left: 0;
 }
+.navigation.collapsed .nav-submenu.open {
+  max-height: 500px;
+  opacity: 1;
+  pointer-events: auto;
+  padding-left: 0;
+}
 
 .navigation.collapsed.expanded-from-collapse .nav-submenu {
   padding: 0.4rem 0.5rem;
   background: rgba(0, 0, 0, 0.35);
   border-radius: 8px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
-  margin-left: -0.75rem;
-  width: calc(100% + 0.75rem);
+  margin-left: 0;
+  width: 100%;
 }
 
 .navigation.collapsed.expanded-from-collapse .nav-subitem {
-  justify-content: flex-start;
-  padding-left: 0.4rem;
+  justify-content: center;
+  padding: 0.55rem 0;
+}
+
+.navigation.collapsed.expanded-from-collapse .nav-subitem__icon {
+  margin: 0 auto;
+}
+
+.navigation.collapsed.expanded-from-collapse .nav-subitem__label {
+  display: none;
 }
 
 /* .navigation.collapsed .nav-btn:hover,
