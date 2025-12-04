@@ -27,7 +27,7 @@ jobs:
       - name: Install and test frontend
         run: |
           cd frontend
-          npm ci --legacy-peer-deps
+          npm ci
           npm test -- --watch=false --browsers=ChromeHeadless || npm run test
 
       # Backend tests
