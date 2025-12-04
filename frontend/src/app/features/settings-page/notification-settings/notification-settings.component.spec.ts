@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NotificationSettingsComponent } from './notification-settings.component';
+import { expect } from '@jest/globals';
+import { provideRouter } from '@angular/router';
 
 describe('NotificationSettingsComponent', () => {
   let component: NotificationSettingsComponent;
@@ -8,6 +10,7 @@ describe('NotificationSettingsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NotificationSettingsComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NotificationSettingsComponent);

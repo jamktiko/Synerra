@@ -3,10 +3,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { LoginPageComponent } from './login-page.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { By } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
+import { expect } from '@jest/globals';
 
 describe('LoginPageComponent - UI & functional tests', () => {
   let component: LoginPageComponent;

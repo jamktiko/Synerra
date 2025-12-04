@@ -9,6 +9,8 @@ import { ProfileService } from '../../../core/services/pfp.service';
 import { UserService } from '../../../core/services/user.service';
 import { UserStore } from '../../../core/stores/user.store';
 import { of, throwError } from 'rxjs';
+import { expect } from '@jest/globals';
+import { provideRouter } from '@angular/router';
 
 describe('ProfileSettingsComponent', () => {
   let component: ProfileSettingsComponent;
@@ -48,6 +50,7 @@ describe('ProfileSettingsComponent', () => {
         { provide: ProfileService, useValue: mockProfileService },
         { provide: UserService, useValue: mockUserService },
         { provide: UserStore, useValue: mockUserStore },
+        provideRouter([]),
       ],
     }).compileComponents();
   });
@@ -179,7 +182,7 @@ describe('ProfileSettingsComponent', () => {
     tick();
     expect(component.usernameTaken).toBe(true);
     expect(component.feedbackMessages.username).toBe(
-      'Username is already taken.'
+      'Username is already taken.',
     );
   }));
 

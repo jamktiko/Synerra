@@ -1,6 +1,7 @@
 import { FindPlayersComponent } from './find-players.component';
 import { of, BehaviorSubject } from 'rxjs';
 import { User } from '../../core/interfaces/user.model';
+import { expect } from '@jest/globals';
 
 /**
  * Pure unit tests for FindPlayersComponent logic that avoid Angular TestBed
@@ -15,7 +16,7 @@ describe('FindPlayersComponent (pure logic)', () => {
     // `effect()` which requires an injection context. Instead create a
     // component-like object from the prototype and set only the fields we need.
     const comp = Object.create(
-      FindPlayersComponent.prototype
+      FindPlayersComponent.prototype,
     ) as FindPlayersComponent & {
       filteredUsers$: any;
       users$: any;
