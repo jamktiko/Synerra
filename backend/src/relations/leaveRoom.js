@@ -1,6 +1,10 @@
 const { doccli } = require('../ddbconn');
 const { sendResponse } = require('../helpers');
-const { DeleteCommand, GetCommand } = require('@aws-sdk/lib-dynamodb');
+const {
+  DeleteCommand,
+  GetCommand,
+  UpdateCommand,
+} = require('@aws-sdk/lib-dynamodb');
 
 const MAIN_TABLE = process.env.MAIN_TABLE;
 
@@ -44,6 +48,38 @@ module.exports.handler = async (event) => {
         Key: { PK: membershipPK, SK: membershipSK },
       })
     );
+
+    const metadataPK = `CHAT#${roomId}`; // <<< ADDED
+    const metadataSK = `META#CHAT#${roomId}`; // <<< ADDED
+
+    const meta = await doccli.send(
+      // <<< ADDED
+      new GetCommand({
+        TableName: MAIN_TABLE,
+        Key: { PK: metadataPK, SK: metadataSK },
+      })
+    );
+
+    if (meta.Item) {
+      // <<< ADDED
+      const updatedUsers = (meta.Item.Users || []).filter(
+        (u) => u !== targetUserId
+      );
+
+      await doccli.send(
+        new UpdateCommand({
+          TableName: MAIN_TABLE,
+          Key: { PK: metadataPK, SK: metadataSK },
+          UpdateExpression: 'SET #U = :u',
+          ExpressionAttributeNames: {
+            '#U': 'Users',
+          },
+          ExpressionAttributeValues: {
+            ':u': updatedUsers,
+          },
+        })
+      );
+    }
 
     return sendResponse(200, {
       message: `User ${targetUserId} left room ${roomId}`,

@@ -6,6 +6,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
+import { expect } from '@jest/globals';
 
 describe('ChatPageComponent', () => {
   // Component instance - the actual ChatPageComponent we're testing

@@ -26,7 +26,7 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private authStore: AuthStore,
-    private notificationService: NotificationService,
+    private notificationService: NotificationService
   ) {
     this.initUsersOnlineStatus();
     // Make users$ always sorted with online users first
@@ -36,8 +36,8 @@ export class UserService {
           if (a.Status === 'online' && b.Status !== 'online') return -1;
           if (a.Status !== 'online' && b.Status === 'online') return 1;
           return 0; // keep order otherwise
-        }),
-      ),
+        })
+      )
     );
   }
 
@@ -137,7 +137,7 @@ export class UserService {
       .pipe(
         tap(() => {
           console.log(`User ${userId} deleted successfully`);
-        }),
+        })
       );
   }
 
@@ -177,7 +177,7 @@ export class UserService {
         }
         // Otherwise just return filtered results
         return filterRes.users;
-      }),
+      })
     );
   }
 
@@ -190,7 +190,7 @@ export class UserService {
       .pipe(
         tap((res: any) => {
           this.unreadsSubject.next(res); //Push to stream
-        }),
+        })
       );
   }
 
@@ -218,7 +218,7 @@ export class UserService {
       .pipe(
         tap(() => {
           this.refreshUnreads();
-        }),
+        })
       );
   }
 
@@ -248,7 +248,26 @@ export class UserService {
         tap(() => {
           this.refreshUnreads(); // refresh local unreads
           console.log('All unreads cleared');
-        }),
+        })
+      );
+  }
+
+  leaveRoom(roomId: string): Observable<any> {
+    const token = this.authStore.getToken();
+    const url = `${this.baseUrl}/relations/room/leave`;
+
+    return this.http
+      .request('DELETE', url, {
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: { roomId },
+      })
+      .pipe(
+        tap(() => {
+          console.log(`User left room ${roomId} successfully`);
+        })
       );
   }
 }

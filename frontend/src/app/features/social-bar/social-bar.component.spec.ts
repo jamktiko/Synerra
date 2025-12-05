@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { User } from '../../core/interfaces/user.model';
 import { ChangeDetectorRef } from '@angular/core';
+import { expect } from '@jest/globals';
 
 describe('SocialBarComponent', () => {
   let component: SocialBarComponent;

@@ -8,6 +8,7 @@ import { ChatService } from '../../../core/services/chat.service';
 import { MessageService } from '../../../core/services/message.service';
 import { UserService } from '../../../core/services/user.service';
 import { UserStore } from '../../../core/stores/user.store';
+import { expect } from '@jest/globals';
 
 describe('ChatComponent', () => {
   let component: ChatComponent;

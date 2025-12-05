@@ -28,16 +28,16 @@
     <div class="players">
       @for (user of users$ | async; track user.UserId) {
       <div class="player-card-wrapper">
-        <button type="button" class="player-card" [class.active]="openDropdownUserId === user.UserId" (click)="toggleDropdown(user.UserId, $event)" 
+        <button type="button" class="player-card" [class.active]="openDropdownUserId === user.UserId" (click)="toggleDropdown(user.UserId, $event)"
           [attr.aria-label]="'Options for ' + user.Username">
-            <img class="acount-icon"
-              [src]="user?.ProfilePicture ? user.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'"
-              alt="Player Avatar" />
-            <div class="player-name">{{ user.Username }}</div>
-            <div class="status" [class.online]="user.Status === 'online'" [class.offline]="user.Status !== 'online'">
-              <span class="status-pulse"></span>
-              <span class="status-dot"></span>
-            </div>
+          <img class="acount-icon"
+            [src]="user?.ProfilePicture ? user.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'"
+            alt="Player Avatar" loading="lazy" />
+          <div class="player-name">{{ user.Username }}</div>
+          <div class="status" [class.online]="user.Status === 'online'" [class.offline]="user.Status !== 'online'">
+            <span class="status-pulse"></span>
+            <span class="status-dot"></span>
+          </div>
         </button>
         
         @if (openDropdownUserId === user.UserId) {
