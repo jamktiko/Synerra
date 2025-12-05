@@ -4,10 +4,8 @@ import { ChatService } from '../../core/services/chat.service';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { User } from '../../core/interfaces/user.model';
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, ElementRef } from '@angular/core';
 import { expect } from '@jest/globals';
-import { ElementRef } from '@angular/core';
-import { mock } from 'node:test';
 
 describe('SocialBarComponent', () => {
   let component: SocialBarComponent;
@@ -15,7 +13,7 @@ describe('SocialBarComponent', () => {
   let mockChatService: jest.Mocked<Partial<ChatService>>;
   let mockRouter: jest.Mocked<Partial<Router>>;
   let mockChangeDetectorRef: jest.Mocked<Partial<ChangeDetectorRef>>;
-  let mockElementRef: jest.Mocked<Partial<ElementRef>>;
+  let mockElementRef: ElementRef;
 
   const mockUsers: User[] = [
     {
@@ -48,16 +46,14 @@ describe('SocialBarComponent', () => {
       navigate: jest.fn().mockReturnValue(Promise.resolve(true)),
     };
 
-    mockElementRef = {
-nativeElement: jest.fn(),
-    }
+    // 🔥 Tärkeä korjaus: oikea DOM-elementti mockiin
+    mockElementRef = new ElementRef(document.createElement('div'));
 
     mockChangeDetectorRef = {
       detectChanges: jest.fn(),
       markForCheck: jest.fn(),
     };
 
-    // Create component instance directly without TestBed
     component = new SocialBarComponent(
       mockFriendService as FriendService,
       mockChatService as ChatService,
@@ -130,8 +126,9 @@ nativeElement: jest.fn(),
 
   it('should close dropdown when clicking outside', () => {
     component.openDropdownUserId = '1';
-    const outsideElement = document.createElement('div');
-    const event = { target: outsideElement } as unknown as MouseEvent;
+
+    const outside = document.createElement('span');
+    const event = { target: outside } as unknown as MouseEvent;
 
     component.onDocumentClick(event);
     expect(component.openDropdownUserId).toBeNull();
@@ -139,11 +136,13 @@ nativeElement: jest.fn(),
 
   it('should not close dropdown when clicking inside social-bar', () => {
     component.openDropdownUserId = '1';
-    const socialBar = document.createElement('div');
-    socialBar.classList.add('social-floating');
-    const insideElement = document.createElement('span');
-    socialBar.appendChild(insideElement);
-    const event = { target: insideElement } as unknown as MouseEvent;
+
+    // Tee sisäinen elementti mockElementRef.root:iin
+    const root = mockElementRef.nativeElement as HTMLElement;
+    const inside = document.createElement('span');
+    root.appendChild(inside);
+
+    const event = { target: inside } as unknown as MouseEvent;
 
     component.onDocumentClick(event);
     expect(component.openDropdownUserId).toBe('1');
