@@ -263,14 +263,7 @@ export class NavbarComponent implements OnInit {
   }
 
   getSubmenuHeight(item: NavItem): string {
-    const collapsedWithoutExpansion =
-      this.isCollapsed && !this.isTemporarilyExpanded;
-
-    if (
-      !item.children ||
-      !this.isGroupExpanded(item) ||
-      collapsedWithoutExpansion
-    ) {
+    if (!item.children || !this.isGroupExpanded(item)) {
       return '0px';
     }
     const rowHeight = 48;

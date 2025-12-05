@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  HostListener,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
@@ -25,46 +26,48 @@ export class SocialBarComponent implements AfterViewInit {
   notificationsOpen = false;
   inlineHost?: ViewContainerRef;
   inlineHostElement?: HTMLElement;
+  openDropdownUserId: string | null = null;
 
   @ViewChild('notificationsHost', { read: ViewContainerRef })
   private notificationsHostRef?: ViewContainerRef;
+
   @ViewChild('notificationsHost', { read: ElementRef })
   private notificationsHostElementRef?: ElementRef<HTMLElement>;
+
   onlineUsers$: Observable<User[]>;
 
   constructor(
     private friendService: FriendService,
     private chatService: ChatService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private elementRef: ElementRef // ← tärkeä HostListenerille
   ) {
+    // Sort online users first
     this.users$ = this.friendService.friends$.pipe(
       map((friends) =>
         [...friends].sort((a, b) => {
-          // Online users first
           if (a.Status === 'online' && b.Status !== 'online') return -1;
           if (a.Status !== 'online' && b.Status === 'online') return 1;
-          return 0; // keep the original order if both same
+          return 0;
         })
       )
     );
+
     this.onlineUsers$ = this.users$.pipe(
       map((friends) => friends.filter((f) => f.Status === 'online'))
     );
   }
 
   ngOnInit() {
-    // Subscribe first to catch updates
     this.friendService.friends$.subscribe((friends) => {
       console.log('Reactive friends:', friends);
     });
 
-    // Trigger initial fetch after subscription
     this.friendService.getFriends().subscribe({
       next: (res) => console.log('Initial fetch complete', res),
       error: (err) => console.error(err),
     });
-    console.log(this.users$);
   }
 
   ngAfterViewInit(): void {
@@ -75,18 +78,50 @@ export class SocialBarComponent implements AfterViewInit {
 
   onNotificationsToggle(open: boolean) {
     this.notificationsOpen = open;
-    if (!open) {
-      this.inlineHost?.clear();
+    if (!open) this.inlineHost?.clear();
+  }
+
+  toggleDropdown(userId: string | undefined, event: Event) {
+    event.stopPropagation();
+    if (!userId) return;
+
+    this.openDropdownUserId =
+      this.openDropdownUserId === userId ? null : userId;
+  }
+
+  openChat(userId: string | undefined) {
+    if (!userId) return;
+    this.chatService.startChat([userId]);
+    this.openDropdownUserId = null;
+  }
+
+  openProfile(userId: string | undefined) {
+    if (!userId) return;
+    this.router.navigate([`dashboard/profile/${userId}`]);
+    this.openDropdownUserId = null;
+  }
+
+  /**
+   * 🔥 Dropdown sulkeutuu aina, kun klikataan komponentin ulkopuolelle.
+   * Tämä toimii myös, kun käyttäjä klikkaa eri ohjelmaa ja palaa takaisin.
+   */
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const clickedInside = this.elementRef.nativeElement.contains(event.target);
+
+    if (!clickedInside && this.openDropdownUserId !== null) {
+      this.openDropdownUserId = null;
     }
   }
+  @HostListener('window:blur')
+onWindowBlur() {
+  this.openDropdownUserId = null;
+}
 
-  userClicked(userId: any) {
-    this.chatService.startChat([userId]);
+@HostListener('window:focus')
+onWindowFocus() {
+  if (this.openDropdownUserId !== null) {
+    this.openDropdownUserId = null;
   }
-
-  nameClicked(user: User, event: Event) {
-    event.stopPropagation();
-    console.log(`Opening profile of ${user.Username}`);
-    this.router.navigate([`dashboard/profile/${user.UserId}`]);
-  }
+}
 }
