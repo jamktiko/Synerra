@@ -30,6 +30,12 @@
   transition: color 0.2s ease;
 }
 
+.notification-bell:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* Badge */
 .badge {
   position: absolute;
@@ -117,6 +123,11 @@
 
 .notification-item:hover {
   background: var(--color-background);
+}
+
+.notification-item:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
 }
 
 .notification-item .avatar {
@@ -281,8 +292,8 @@
 }
 
 .tab:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(242, 104, 13, 0.35);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .tab-icon {
@@ -356,10 +367,14 @@
   margin-left: auto;
 }
 
-.mark-read:hover,
-.mark-read:focus-visible {
+.mark-read:hover {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.12);
+}
+
+.mark-read:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .icon-toggle {

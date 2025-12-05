@@ -57,16 +57,19 @@
           <button type="button" class="card friend-card mb-2 p-2 text-white" (click)="userClicked(friend.UserId)"
             [attr.aria-label]="'Open chat with ' + friend.Username">
             <div class="d-flex align-items-center user-card">
-              <img class="account-icon" [src]="friend.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'"
-                [alt]="friend.Username + ' profile picture'" />
+              <img class="account-icon" [src]="friend.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" />
               <div class="userTextBar">
-                <strong (click)="openProfile(friend.UserId, $event)" class="hover-highlight">
+                <strong tabindex="0"
+                        (click)="openProfile(friend.UserId, $event)"
+                        (keydown.enter)="openProfile(friend.UserId, $event)"
+                        (keydown.space)="openProfile(friend.UserId, $event); $event.preventDefault()"
+                        [attr.aria-label]="'View profile of ' + friend.Username">
                   {{ friend.Username }}
                 </strong><br />
                 <small class="lMessage">{{ friend.Status || 'Offline' }}</small>
               </div>
               <div class="ms-auto ml-2 mr-2">
-                <app-button variant="highlight" label="Chat" size="small" (click)="groupChatClicked(friend.UserId)"
+                <app-button class="mini-button" variant="highlight" label="Chat" size="small" (click)="groupChatClicked(friend.UserId)"
                   [attr.aria-label]="'Start chat with ' + friend.Username"></app-button>
 
               </div>
@@ -83,8 +86,9 @@
           @if (directChats().length > 0) {
           @for (chat of directChats(); track $index) {
           <button type="button" class="card chat-card mb-2 p-2 text-white"
-            (click)="userClicked(chat.Members[0]?.UserId)"
-            [attr.aria-label]="'Open chat with ' + chat.Members[0]?.Username">
+            (click)="userClicked(chat.Members[0]?.UserId)" (keydown.enter)="userClicked(chat.Members[0]?.UserId)"
+               (keydown.space)="userClicked(chat.Members[0]?.UserId); $event.preventDefault()"
+            [attr.aria-label]="'Open chat with ' + chat.Members[0]?.Username" tabindex="0">
             @for (member of chat.Members; track member.UserId) {
             <div class="d-flex align-items-center user-card">
               <img class="account-icon"
@@ -119,21 +123,24 @@
             <div class="d-flex align-items-center">
               <div class="group-avatars">
                 @for (member of group.Members; track member.UserId) {
-                <img class="account-icon" [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'"
-                  [alt]="member.Username + ' profile picture'" />
+                <img class="account-icon" [src]="member.ProfilePicture || 'assets/images/profilePicPlaceHolder.jpg'" />
                 }
               </div>
               <div class="group-usernames">
-                @for (member of group.Members; track member.UserId; let last =
-                $last) {
-                <span class="hover-highlight">
-                  <strong (click)="openProfile(member.UserId, $event)">
+                @for (member of group.Members; track member.UserId; let last = $last) {
+                <span class="username-link">
+                  <strong tabindex="0"
+                          (click)="openProfile(member.UserId, $event)"
+                          (keydown.enter)="openProfile(member.UserId, $event)"
+                          (keydown.space)="openProfile(member.UserId, $event); $event.preventDefault()"
+                          [attr.aria-label]="'View profile of ' + member.Username">
                     {{ member.Username }}
                   </strong>
                 </span>
                 @if (!last) {
-                <span class="comma">,</span>
-                } }
+                <span>, </span>
+                }
+                }
               </div>
               <div class="ms-auto ml-2 mr-2 chat-actions">
                 <app-button variant="highlight" label="Chat" size="small" class="action-buttoni"
@@ -143,7 +150,8 @@
               </div>
             </div>
           </div>
-          } } @else {
+          }
+          } @else {
           <p>No group chats available</p>
           }
         </div>

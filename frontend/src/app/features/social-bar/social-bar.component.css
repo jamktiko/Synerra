@@ -16,7 +16,7 @@
   border: 1px solid rgba(58, 58, 58, 1);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 1);
   z-index: 14000;
-  overflow-y: auto;
+  overflow: hidden;
   margin-right: 2rem;
 }
 
@@ -120,7 +120,8 @@
 
 .friends-container {
   max-height: 80%;
-  overflow-y: auto;
+  overflow-y: visible;
+  overflow-x: visible;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -131,6 +132,11 @@
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+.player-card-wrapper {
+  position: relative;
+  overflow: visible;
+}
+
 .player-card {
   display: flex;
   align-items: center;
@@ -139,12 +145,98 @@
   padding: 0.4rem 0.5rem;
   border-radius: 0;
   transition: background 0.2s ease;
+  width: 100%;
 }
 
 .player-card:hover {
   background: rgba(255, 255, 255, 0.08);
   cursor: pointer;
+  border-radius: 8px 8px 0 0;
 }
+
+.player-card.active {
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+}
+
+.player-card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.dropdown-item:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: auto;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(58, 58, 58, 0.9);
+  border-top: none;
+  border-left: none;
+  border-radius: 0 0 8px 8px;
+  z-index: 15000;
+  overflow: hidden;
+  animation: dropdownSlideIn 0.15s ease-out;
+  padding: 0; 
+  margin-bottom: 6px;
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btn-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  color: var(--color-text-default);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+
+}
+
+.dropdown-item:active {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: none;
+}
+
+.dropdown-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+
 
 .player-name {
   flex: 1;
@@ -153,6 +245,11 @@
   text-overflow: ellipsis;
   color: var(--color-text-default);
 }
+
+.player-card {
+  position: relative;
+}
+
 
 .acount-icon {
   width: 2.5rem;
@@ -259,8 +356,7 @@
   height: 3.625rem;
   width: 100%;
   padding: 0.4rem 0.5rem;
-  border-radius: 0;
-  background: rgba(255, 255, 255, 0.04);
+  background: transparent;
   transition: background 0.2s ease, outline 0.2s ease, outline-offset 0.2s ease;
   border: none;
   color: inherit;
@@ -268,14 +364,6 @@
   cursor: pointer;
 }
 
-.player-card:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.player-card:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
 
 .chatroom-card {
   display: flex;
@@ -329,9 +417,9 @@
 /* For high resolution monitors */
 @media (min-width: 2500px) {
   .social-floating {
-    width: clamp(16rem, 18vw, 26rem); /* larger width */
+    width: clamp(16rem, 18vw, 26rem);
     max-width: 26rem;
-    padding: 1.5rem 1.25rem; /* stronger padding */
+    padding: 1.5rem 1.25rem; 
     border-radius: 16px;
     margin-right: 3rem;
   }

@@ -41,7 +41,11 @@ export class MessagesTabComponent {
     this.chatService.startChat(undefined, roomId);
   }
 
-  openProfile(userId: string, event: MouseEvent) {
+  openProfile(userId: string, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
     this.router.navigate([`/dashboard/profile/${userId}`]);
   }
 

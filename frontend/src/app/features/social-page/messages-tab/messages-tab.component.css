@@ -49,6 +49,12 @@
   color: #e8341d;
 }
 
+.mini-button {
+  min-width: auto !important;
+  padding: 0.25rem 0.5rem !important;
+  font-size: 0.75rem !important;
+}
+
 .conts {
   position: relative;
   flex: 1 1 auto;
@@ -69,7 +75,7 @@
   max-width: 33.3333%;
   display: block !important;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: visible;
   overflow-x: hidden;
 }
 
