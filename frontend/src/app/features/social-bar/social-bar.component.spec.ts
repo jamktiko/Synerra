@@ -6,6 +6,8 @@ import { of } from 'rxjs';
 import { User } from '../../core/interfaces/user.model';
 import { ChangeDetectorRef } from '@angular/core';
 import { expect } from '@jest/globals';
+import { ElementRef } from '@angular/core';
+import { mock } from 'node:test';
 
 describe('SocialBarComponent', () => {
   let component: SocialBarComponent;
@@ -13,6 +15,7 @@ describe('SocialBarComponent', () => {
   let mockChatService: jest.Mocked<Partial<ChatService>>;
   let mockRouter: jest.Mocked<Partial<Router>>;
   let mockChangeDetectorRef: jest.Mocked<Partial<ChangeDetectorRef>>;
+  let mockElementRef: jest.Mocked<Partial<ElementRef>>;
 
   const mockUsers: User[] = [
     {
@@ -45,6 +48,10 @@ describe('SocialBarComponent', () => {
       navigate: jest.fn().mockReturnValue(Promise.resolve(true)),
     };
 
+    mockElementRef = {
+nativeElement: jest.fn(),
+    }
+
     mockChangeDetectorRef = {
       detectChanges: jest.fn(),
       markForCheck: jest.fn(),
@@ -55,7 +62,8 @@ describe('SocialBarComponent', () => {
       mockFriendService as FriendService,
       mockChatService as ChatService,
       mockChangeDetectorRef as ChangeDetectorRef,
-      mockRouter as Router
+      mockRouter as Router,
+      mockElementRef as ElementRef
     );
   });
 
