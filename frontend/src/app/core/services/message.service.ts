@@ -22,6 +22,7 @@ export class MessageService {
     });
   }
 
+  //gets users chat rooms
   getUserRooms(userId: string): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.get<any>(`${this.roomUrl}/user/${userId}/rooms`, {

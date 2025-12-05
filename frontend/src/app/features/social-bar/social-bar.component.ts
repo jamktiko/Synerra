@@ -43,6 +43,7 @@ export class SocialBarComponent implements AfterViewInit {
     private router: Router,
     private elementRef: ElementRef // ← tärkeä HostListenerille
   ) {
+    // gets friends from service
     // Sort online users first
     this.users$ = this.friendService.friends$.pipe(
       map((friends) =>
@@ -53,6 +54,7 @@ export class SocialBarComponent implements AfterViewInit {
         })
       )
     );
+    //get the online friends
 
     this.onlineUsers$ = this.users$.pipe(
       map((friends) => friends.filter((f) => f.Status === 'online'))
@@ -89,6 +91,7 @@ export class SocialBarComponent implements AfterViewInit {
       this.openDropdownUserId === userId ? null : userId;
   }
 
+  // on click open chat
   openChat(userId: string | undefined) {
     if (!userId) return;
     this.chatService.startChat([userId]);
@@ -102,7 +105,7 @@ export class SocialBarComponent implements AfterViewInit {
   }
 
   /**
-   * 🔥 Dropdown sulkeutuu aina, kun klikataan komponentin ulkopuolelle.
+   * Dropdown sulkeutuu aina, kun klikataan komponentin ulkopuolelle.
    * Tämä toimii myös, kun käyttäjä klikkaa eri ohjelmaa ja palaa takaisin.
    */
   @HostListener('document:click', ['$event'])
@@ -114,14 +117,14 @@ export class SocialBarComponent implements AfterViewInit {
     }
   }
   @HostListener('window:blur')
-onWindowBlur() {
-  this.openDropdownUserId = null;
-}
-
-@HostListener('window:focus')
-onWindowFocus() {
-  if (this.openDropdownUserId !== null) {
+  onWindowBlur() {
     this.openDropdownUserId = null;
   }
-}
+
+  @HostListener('window:focus')
+  onWindowFocus() {
+    if (this.openDropdownUserId !== null) {
+      this.openDropdownUserId = null;
+    }
+  }
 }

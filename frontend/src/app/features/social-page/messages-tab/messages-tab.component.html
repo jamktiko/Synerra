@@ -143,10 +143,10 @@
                 }
               </div>
               <div class="ms-auto ml-2 mr-2 chat-actions">
-                <app-button variant="highlight" label="Chat" size="small" (click)="groupChatClicked(group.RoomId)"
-                  aria-label="Start chat with group"></app-button>
-                <app-button variant="highlight" label="Leave" size="small" (click)="leaveRoom(group.RoomId)"
-                  [attr.aria-label]="'Leave room ' + group.RoomId"></app-button>
+                <app-button variant="highlight" label="Chat" size="small" class="action-buttoni"
+                  (click)="groupChatClicked(group.RoomId)" aria-label="Start chat with group"></app-button>
+                <app-button variant="highlight" label="Leave" size="small" class="action-buttoni"
+                  (click)="leaveRoom(group.RoomId)" [attr.aria-label]="'Leave room ' + group.RoomId"></app-button>
               </div>
             </div>
           </div>
