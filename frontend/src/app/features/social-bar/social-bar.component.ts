@@ -38,6 +38,7 @@ export class SocialBarComponent implements AfterViewInit {
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {
+    // gets friends from service
     this.users$ = this.friendService.friends$.pipe(
       map((friends) =>
         [...friends].sort((a, b) => {
@@ -48,6 +49,7 @@ export class SocialBarComponent implements AfterViewInit {
         })
       )
     );
+    //get the online friends
     this.onlineUsers$ = this.users$.pipe(
       map((friends) => friends.filter((f) => f.Status === 'online'))
     );
@@ -80,10 +82,12 @@ export class SocialBarComponent implements AfterViewInit {
     }
   }
 
+  // on click open chat
   userClicked(userId: any) {
     this.chatService.startChat([userId]);
   }
 
+  // when clicking the name open the profile
   nameClicked(user: User, event: Event) {
     event.stopPropagation();
     console.log(`Opening profile of ${user.Username}`);

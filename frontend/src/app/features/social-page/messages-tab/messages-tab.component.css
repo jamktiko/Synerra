@@ -465,5 +465,15 @@ input[type="text"]::placeholder {
 
 .chat-actions {
   display: flex;
+  flex-direction: column;
   gap: 10px;
+}
+
+.chat-actions app-button {
+  flex: 1 1 auto;
+}
+
+.chat-actions app-button .btn {
+  width: 100%;
+  box-sizing: border-box;
 }

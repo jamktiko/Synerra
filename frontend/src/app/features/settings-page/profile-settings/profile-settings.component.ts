@@ -64,6 +64,7 @@ export class ProfileSettingsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // get the user information from userStore
     this.user = this.userStore.getUser();
     this.username = this.user?.Username ?? '';
     this.bio = this.user?.Bio ?? '';
@@ -76,6 +77,7 @@ export class ProfileSettingsComponent implements OnInit {
       : [];
   }
 
+  //when an image file is selected for upload
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -84,7 +86,7 @@ export class ProfileSettingsComponent implements OnInit {
 
       const reader = new FileReader();
       reader.onload = () => {
-        this.previewUrl = reader.result as string;
+        this.previewUrl = reader.result as string; // url for image preview
       };
       reader.readAsDataURL(this.selectedFile);
     } else {
@@ -94,6 +96,7 @@ export class ProfileSettingsComponent implements OnInit {
     }
   }
 
+  //function that uploads the picture to S3 via calling a Lambda function and saves the img url to DynamoDb
   upload() {
     if (!this.selectedFile) return;
 
@@ -108,6 +111,7 @@ export class ProfileSettingsComponent implements OnInit {
     });
   }
 
+  //when the user types on the input validate the username
   onUsernameInput() {
     const pattern = /^[A-Za-z0-9_]{3,20}$/;
     const value = this.username.trim();
@@ -116,17 +120,20 @@ export class ProfileSettingsComponent implements OnInit {
     this.usernameTaken = false;
   }
 
+  //save the username and call a lambda function to update it to backend
   saveUsername() {
     if (!this.user?.UserId) return;
 
     this.userService
       .updateUser(this.user.UserId, { username: this.username })
       .subscribe({
-        next: () => this.setFeedback('username', 'Username updated successfully.'),
+        next: () =>
+          this.setFeedback('username', 'Username updated successfully.'),
         error: () => this.setFeedback('username', 'Failed to update username.'),
       });
   }
 
+  //save the bio and call a lambda function to update it to backend
   saveBio() {
     if (!this.user?.UserId) return;
 
@@ -136,6 +143,7 @@ export class ProfileSettingsComponent implements OnInit {
     });
   }
 
+  //when languages are being selected
   toggleLanguage(code: string) {
     if (this.selectedLanguages.includes(code)) {
       this.selectedLanguages = this.selectedLanguages.filter((c) => c !== code);
@@ -144,25 +152,32 @@ export class ProfileSettingsComponent implements OnInit {
     }
   }
 
+  //save the languages and call a lambda function to update it to backend
   saveLanguages() {
     if (!this.user?.UserId) return;
 
     this.userService
       .updateUser(this.user.UserId, { languages: this.selectedLanguages })
       .subscribe({
-        next: () => this.setFeedback('languages', 'Languages updated successfully.'),
-        error: () => this.setFeedback('languages', 'Failed to update languages.'),
+        next: () =>
+          this.setFeedback('languages', 'Languages updated successfully.'),
+        error: () =>
+          this.setFeedback('languages', 'Failed to update languages.'),
       });
   }
 
+  //when platforms are selected
   togglePlatform(platform: string) {
     if (this.selectedPlatforms.includes(platform)) {
-      this.selectedPlatforms = this.selectedPlatforms.filter((p) => p !== platform);
+      this.selectedPlatforms = this.selectedPlatforms.filter(
+        (p) => p !== platform
+      );
     } else {
       this.selectedPlatforms.push(platform);
     }
   }
 
+  //save the playstyle and platform and call a lambda function to update it to backend
   savePlaystyleAndPlatform() {
     if (!this.user?.UserId) return;
 
@@ -187,6 +202,7 @@ export class ProfileSettingsComponent implements OnInit {
     this.saveBio();
   }
 
+  //function that validates the username
   validateUsername() {
     if (!this.validUsername) {
       this.setFeedback(
@@ -196,9 +212,12 @@ export class ProfileSettingsComponent implements OnInit {
       return;
     }
 
+    //checks if the username is already taken
     this.userService.getUserByUsername(this.username).subscribe({
       next: (res) => {
-        const taken = res?.users?.some((u: any) => u.UserId !== this.user?.UserId);
+        const taken = res?.users?.some(
+          (u: any) => u.UserId !== this.user?.UserId
+        );
         if (taken) {
           this.usernameTaken = true;
           this.setFeedback('username', 'Username is already taken.');

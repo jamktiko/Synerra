@@ -52,8 +52,7 @@ export class UserService {
 
         // Set initial users
         this.usersSubject.next(initialUsers);
-
-        // DEBUG: check if NotificationService works
+        //subscribe to the userStatus updates
         this.notificationService.userStatus$.subscribe({
           next: (statusMsg) => {
             console.log('Received status message from WebSocket:', statusMsg);
@@ -78,6 +77,8 @@ export class UserService {
       error: (err) => console.error('Error fetching users:', err),
     });
   }
+
+  // get all users from backend
   getUsers(): Observable<{ users: User[] }> {
     const token = this.authStore.getToken();
     return this.http
@@ -87,6 +88,7 @@ export class UserService {
       .pipe(tap((res) => this.usersSubject.next(res.users)));
   }
 
+  //gets the logged in user info
   getMe(): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.get(`${this.baseUrl}/me`, {
@@ -96,6 +98,7 @@ export class UserService {
     });
   }
 
+  // gets user by userId
   getUserById(userId: string): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.get(`${this.apiUrl}/${userId}`, {
@@ -105,6 +108,7 @@ export class UserService {
     });
   }
 
+  //get user by username
   getUserByUsername(username: string): Observable<any> {
     const token = this.authStore.getToken();
     const normalizedUsername = username.toLowerCase();
@@ -116,6 +120,7 @@ export class UserService {
     });
   }
 
+  // updates userinfo (allowed fields:'username','profilePicUrl','bio','languages','games','birthday','playstyle','platform', )
   updateUser(userId: string, data: any): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.put(`${this.apiUrl}/update/${userId}`, data, {
@@ -125,6 +130,7 @@ export class UserService {
     });
   }
 
+  //deletes user from DynamoDb and Cognito
   deleteUser(userId: string): Observable<any> {
     const token = this.authStore.getToken();
 
@@ -141,6 +147,7 @@ export class UserService {
       );
   }
 
+  //filters users
   filterUsers(filters: {
     languages?: string[];
     Status?: string;
@@ -150,6 +157,7 @@ export class UserService {
     return this.http.post(`${this.apiUrl}/filter`, filters);
   }
 
+  // username search and filters combined
   getUsersByUsernameAndFilters(filters: {
     username?: string;
     languages?: string[];
@@ -181,6 +189,7 @@ export class UserService {
     );
   }
 
+  //gets unread messages for user from database
   getUnreadMessages(): Observable<any> {
     const token = this.authStore.getToken();
     return this.http
@@ -208,6 +217,7 @@ export class UserService {
     this.getUnreadMessages().subscribe();
   }
 
+  // marks chatroom messages as read when joining a chatroom
   markRoomMessagesAsRead(roomId: string): Observable<any> {
     const token = this.authStore.getToken();
     console.log('MARK AS READ CALLED: ', roomId);
@@ -222,6 +232,7 @@ export class UserService {
       );
   }
 
+  // gets chat rooms of a user
   getUserRooms(userId: string): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.get(`${this.apiUrl}/${userId}/rooms`, {
@@ -235,6 +246,7 @@ export class UserService {
     this.getUsers().subscribe(); // triggers next() via the tap
   }
 
+  // clears all unread messages
   clearAllUnreads(): Observable<any> {
     const token = this.authStore.getToken();
     console.log('CLEAR ALL UNREADS CALLED');
@@ -252,6 +264,7 @@ export class UserService {
       );
   }
 
+  // leaves a group chat
   leaveRoom(roomId: string): Observable<any> {
     const token = this.authStore.getToken();
     const url = `${this.baseUrl}/relations/room/leave`;

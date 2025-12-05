@@ -43,7 +43,7 @@ export class FindPlayersComponent implements OnInit {
     private userService: UserService,
     private route: ActivatedRoute,
     private userStore: UserStore,
-    private friendService: FriendService,
+    private friendService: FriendService
   ) {
     // Sets up a reactive watcher that updates user
     effect(() => {
@@ -58,10 +58,10 @@ export class FindPlayersComponent implements OnInit {
       map((users) => {
         if (!this.user) return users;
         return users.filter((u) => u.PK !== this.user?.PK);
-      }),
+      })
     );
     this.onlineUsers$ = this.users$.pipe(
-      map((users) => users.filter((user) => user.Status === 'online')),
+      map((users) => users.filter((user) => user.Status === 'online'))
     );
     this.users$.subscribe((users) => {
       this.filteredUsers$.next(users);
@@ -104,6 +104,7 @@ export class FindPlayersComponent implements OnInit {
       this.onFiltersChanged(initialGameFilter);
     });
 
+    //gets friends from friendService
     this.friendService.getFriends().subscribe({
       next: (users) => {
         this.friends = users;
@@ -114,6 +115,7 @@ export class FindPlayersComponent implements OnInit {
       },
     });
 
+    // gets friendRequest that the user has sent
     this.friendService.getOutgoingPendingRequests().subscribe({
       next: (requests) => {
         // Keep only receiver IDs with status PENDING
@@ -124,6 +126,7 @@ export class FindPlayersComponent implements OnInit {
       error: (err) => console.error('Failed to fetch sent requests', err),
     });
 
+    // gets friendRequest that the user is receiving
     this.friendService.pendingRequests$.subscribe({
       next: (requests: FriendRequest[]) => {
         // Keep only sender IDs with status PENDING
@@ -149,21 +152,21 @@ export class FindPlayersComponent implements OnInit {
           // username filter
           if (username) {
             candidates = candidates.filter((u) =>
-              u.Username_Lower?.includes(username.toLowerCase()),
+              u.Username_Lower?.includes(username.toLowerCase())
             );
           }
 
           //language filter
           if (languages && languages.length > 0) {
             candidates = candidates.filter((u) =>
-              u.Languages?.some((lang) => languages.includes(lang)),
+              u.Languages?.some((lang) => languages.includes(lang))
             );
           }
 
           //game filter
           if (games && games.length > 0) {
             candidates = candidates.filter((u) =>
-              u.PlayedGames?.some((pg) => games.includes(pg.gameId)),
+              u.PlayedGames?.some((pg) => games.includes(pg.gameId))
             );
           }
 
@@ -180,7 +183,7 @@ export class FindPlayersComponent implements OnInit {
           // Platform filter
           if (platform && platform.length > 0) {
             candidates = candidates.filter((u) =>
-              u.Platform?.some((p: string) => platform.includes(p)),
+              u.Platform?.some((p: string) => platform.includes(p))
             );
           }
 
@@ -190,7 +193,7 @@ export class FindPlayersComponent implements OnInit {
           }
 
           return candidates;
-        }),
+        })
       )
       .subscribe((filtered) => {
         // Emit filtered users to the BehaviorSubject
