@@ -38,7 +38,7 @@ If you want the app to work you need an AWS Account for the backend configuratio
   - Add Google and enter the **Client ID** and **Client Secret** from your Google project.
 - **App Client settings:**
   - Callback URL: `https://abcd1234.cloudfront.net/auth/callback` or `localhost:4200/auth/callback`
-  - Signout URL: `https://abcd1234.cloudfront.net/login`'
+  - Signout URL: `https://abcd1234.cloudfront.net/login` or `localhost:4200/Login`
 - **Managed Login**
   - Add custom style
 
@@ -95,7 +95,7 @@ serverless deploy
 
 ## Testing
 
-The app has built-in unit and end-to-end -tests
+The app has built-in unit and end-to-end -tests.
 
 ### Frontend unit tests:
 
