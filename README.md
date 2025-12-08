@@ -42,7 +42,7 @@ If you want the Google login to work on your own AWS host, you need to set up yo
 
 #### Google Cloud Console
 
-Setting up the Google API client ID is easy and you can esily achieve this by following the part 1 of this guide:
+Setting up the Google API client ID is easy and can be easily achieved by following the part 1 of this guide:
 https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
 
 - **Authorized JavaScript origins:**
@@ -56,7 +56,7 @@ https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
   - Add Google and enter the **Client ID** and **Client Secret** from your Google project.
 - **App Client settings:**
   - Callback URL: `https://abcd1234.cloudfront.net/auth/callback` or `localhost:4200/auth/callback`
-  - Signout URL: `https://abcd1234.cloudfront.net/login`'
+  - Signout URL: `https://abcd1234.cloudfront.net/login` or `localhost:4200/Login`
 - **Managed Login**
   - Add custom style
 
@@ -78,7 +78,7 @@ serverless deploy
 
 ## Testing
 
-The app has built-in unit and end-to-end -tests
+The app has built-in unit and end-to-end tests.
 
 ### Frontend unit tests:
 
