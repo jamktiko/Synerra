@@ -27,17 +27,32 @@
   <div class="friends-container" [class.shifted]="notificationsOpen">
     <div class="players">
       @for (user of users$ | async; track user.UserId) {
-      <button type="button" class="player-card" (click)="userClicked(user.UserId)" 
-        [attr.aria-label]="'Open chat with ' + user.Username">
+      <div class="player-card-wrapper">
+        <button type="button" class="player-card" [class.active]="openDropdownUserId === user.UserId" (click)="toggleDropdown(user.UserId, $event)"
+          [attr.aria-label]="'Options for ' + user.Username">
           <img class="acount-icon"
             [src]="user?.ProfilePicture ? user.ProfilePicture : 'assets/images/profilePicPlaceHolder.jpg'"
-            alt="Player Avatar" />
-          <div class="player-name hover-highlight" (click)="nameClicked(user, $event)">{{ user.Username }}</div>
+            alt="Player Avatar" loading="lazy" />
+          <div class="player-name">{{ user.Username }}</div>
           <div class="status" [class.online]="user.Status === 'online'" [class.offline]="user.Status !== 'online'">
             <span class="status-pulse"></span>
             <span class="status-dot"></span>
           </div>
-      </button>
+        </button>
+        
+        @if (openDropdownUserId === user.UserId) {
+        <div class="dropdown-menu" (click)="$event.stopPropagation()" style="display: block !important; visibility: visible !important; position: relative !important;">
+          <button type="button" class="dropdown-item" (click)="openChat(user.UserId)">
+            <span class="dropdown-icon"><img src="assets/svg/NoMessage.svg" class="btn-icon" alt="Send Message"></span>
+            <span>Send Message</span>
+          </button>
+          <button type="button" class="dropdown-item" (click)="openProfile(user.UserId)">
+            <span class="dropdown-icon"><img src="assets/svg/Acount.svg" class="btn-icon" alt="Go to Profile"></span>
+            <span>View Profile</span>
+          </button>
+        </div>
+        }
+      </div>
       }
     </div>
   </div>

@@ -169,7 +169,8 @@
 }
 
 @media (hover: hover) {
-  .card:hover .fav-button {
+  .card:hover .fav-button,
+  .card:focus-within .fav-button {
     opacity: 1;
     pointer-events: auto;
   }
@@ -182,6 +183,15 @@
 }
 
 .fav-button:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 12px rgba(232, 52, 29, 0.8);
+  text-shadow: 0 0 12px rgba(232, 52, 29, 0.8);
+}
+
+.fav-button:focus-visible {
+  outline: 3px solid var(--color-highlight) !important;
+  outline-offset: 3px !important;
+  z-index: 10;
   transform: scale(1.15);
   box-shadow: 0 0 12px rgba(232, 52, 29, 0.8);
   text-shadow: 0 0 12px rgba(232, 52, 29, 0.8);

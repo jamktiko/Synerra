@@ -26,7 +26,7 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private authStore: AuthStore,
-    private notificationService: NotificationService,
+    private notificationService: NotificationService
   ) {
     this.initUsersOnlineStatus();
     // Make users$ always sorted with online users first
@@ -36,8 +36,8 @@ export class UserService {
           if (a.Status === 'online' && b.Status !== 'online') return -1;
           if (a.Status !== 'online' && b.Status === 'online') return 1;
           return 0; // keep order otherwise
-        }),
-      ),
+        })
+      )
     );
   }
 
@@ -52,8 +52,7 @@ export class UserService {
 
         // Set initial users
         this.usersSubject.next(initialUsers);
-
-        // DEBUG: check if NotificationService works
+        //subscribe to the userStatus updates
         this.notificationService.userStatus$.subscribe({
           next: (statusMsg) => {
             console.log('Received status message from WebSocket:', statusMsg);
@@ -78,6 +77,8 @@ export class UserService {
       error: (err) => console.error('Error fetching users:', err),
     });
   }
+
+  // get all users from backend
   getUsers(): Observable<{ users: User[] }> {
     const token = this.authStore.getToken();
     return this.http
@@ -87,6 +88,7 @@ export class UserService {
       .pipe(tap((res) => this.usersSubject.next(res.users)));
   }
 
+  //gets the logged in user info
   getMe(): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.get(`${this.baseUrl}/me`, {
@@ -96,6 +98,7 @@ export class UserService {
     });
   }
 
+  // gets user by userId
   getUserById(userId: string): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.get(`${this.apiUrl}/${userId}`, {
@@ -105,6 +108,7 @@ export class UserService {
     });
   }
 
+  //get user by username
   getUserByUsername(username: string): Observable<any> {
     const token = this.authStore.getToken();
     const normalizedUsername = username.toLowerCase();
@@ -116,6 +120,7 @@ export class UserService {
     });
   }
 
+  // updates userinfo (allowed fields:'username','profilePicUrl','bio','languages','games','birthday','playstyle','platform', )
   updateUser(userId: string, data: any): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.put(`${this.apiUrl}/update/${userId}`, data, {
@@ -125,6 +130,7 @@ export class UserService {
     });
   }
 
+  //deletes user from DynamoDb and Cognito
   deleteUser(userId: string): Observable<any> {
     const token = this.authStore.getToken();
 
@@ -137,10 +143,11 @@ export class UserService {
       .pipe(
         tap(() => {
           console.log(`User ${userId} deleted successfully`);
-        }),
+        })
       );
   }
 
+  //filters users
   filterUsers(filters: {
     languages?: string[];
     Status?: string;
@@ -150,6 +157,7 @@ export class UserService {
     return this.http.post(`${this.apiUrl}/filter`, filters);
   }
 
+  // username search and filters combined
   getUsersByUsernameAndFilters(filters: {
     username?: string;
     languages?: string[];
@@ -177,10 +185,11 @@ export class UserService {
         }
         // Otherwise just return filtered results
         return filterRes.users;
-      }),
+      })
     );
   }
 
+  //gets unread messages for user from database
   getUnreadMessages(): Observable<any> {
     const token = this.authStore.getToken();
     return this.http
@@ -190,7 +199,7 @@ export class UserService {
       .pipe(
         tap((res: any) => {
           this.unreadsSubject.next(res); //Push to stream
-        }),
+        })
       );
   }
 
@@ -208,6 +217,7 @@ export class UserService {
     this.getUnreadMessages().subscribe();
   }
 
+  // marks chatroom messages as read when joining a chatroom
   markRoomMessagesAsRead(roomId: string): Observable<any> {
     const token = this.authStore.getToken();
     console.log('MARK AS READ CALLED: ', roomId);
@@ -218,10 +228,11 @@ export class UserService {
       .pipe(
         tap(() => {
           this.refreshUnreads();
-        }),
+        })
       );
   }
 
+  // gets chat rooms of a user
   getUserRooms(userId: string): Observable<any> {
     const token = this.authStore.getToken();
     return this.http.get(`${this.apiUrl}/${userId}/rooms`, {
@@ -235,6 +246,7 @@ export class UserService {
     this.getUsers().subscribe(); // triggers next() via the tap
   }
 
+  // clears all unread messages
   clearAllUnreads(): Observable<any> {
     const token = this.authStore.getToken();
     console.log('CLEAR ALL UNREADS CALLED');
@@ -248,7 +260,27 @@ export class UserService {
         tap(() => {
           this.refreshUnreads(); // refresh local unreads
           console.log('All unreads cleared');
-        }),
+        })
+      );
+  }
+
+  // leaves a group chat
+  leaveRoom(roomId: string): Observable<any> {
+    const token = this.authStore.getToken();
+    const url = `${this.baseUrl}/relations/room/leave`;
+
+    return this.http
+      .request('DELETE', url, {
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: { roomId },
+      })
+      .pipe(
+        tap(() => {
+          console.log(`User left room ${roomId} successfully`);
+        })
       );
   }
 }

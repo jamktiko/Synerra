@@ -49,6 +49,12 @@
   color: #e8341d;
 }
 
+.mini-button {
+  min-width: auto !important;
+  padding: 0.25rem 0.5rem !important;
+  font-size: 0.75rem !important;
+}
+
 .conts {
   position: relative;
   flex: 1 1 auto;
@@ -69,7 +75,8 @@
   max-width: 33.3333%;
   display: block !important;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: visible;
+  overflow-x: hidden;
 }
 
 /* Tabs container */
@@ -460,4 +467,19 @@ input[type="text"]::placeholder {
   .card {
     margin-right: 0.5rem;
   }
+}
+
+.chat-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-actions app-button {
+  flex: 1 1 auto;
+}
+
+.chat-actions app-button .btn {
+  width: 100%;
+  box-sizing: border-box;
 }
