@@ -1,50 +1,42 @@
-# Synerra Jest-yksikkötestaussuunnitelma v0.02a
+# Synerra Jest Unit Testing Plan v0.02a
 
-## Testauksen tavoitteet
+## Testing Goals
 
-Varmennetaan, että sovellus toimii odotetusti huomioiden toiminnallisuus, käytettävyys ja saavutettavuus.
+Ensure the application works as expected, considering functionality, usability, and accessibility.
 
-### Testitasot
+### Objectives
 
-- **Yksikkötestit (Unit tests):** Testataan yksittäisiä komponentteja, pipeja ja palveluita Angularin Jestillä.
-- **Integraatiotestit:** Testataan, miten useat osat toimivat yhdessä (esim. komponentti + AWS palvelu).
-- **Manuaalinen käyttötestaus:** Testataan, että käyttöliittymä toimii selaimessa oikein (erityisesti kriittiset polut kuten kirjautuminen tai lomakkeiden lähetys).
-- **End-to-end testit (E2E):** Suoritetaan Cypressillä.
+- Every component has at least one Jest test
+- Key services and data flows are tested with mocked values
 
-### Tavoitteet
+### Tools
 
-- Jokaisella komponentilla on vähintään yksi Jest-testi.
-- Tärkeimmät palvelut (services) ja datavirrat testataan mockatuilla arvoilla.
-
-### Työkalut
-
-- Testauskehys: **Jest**
-- Yksikkötestaus: **Angular Jest**
-- End-to-end: **Cypress**
-- Integraatiotestaus: **LocalStack/SAM testit Lambdoille**
-- Angularin testausympäristö: `@angular-builders/jest`
-- Mockaus: `jest-mock` tai Angularin `TestBed`
-- HUOM.
-  - Backendissä mockaus on usein välttämätöntä, koska palvelut käyttävät ulkoisia järjestelmiä, kuten AWS Lambdaa, S3:sta ja RDS:ää. Ilman mockeja nämä testit olisivat hitaita, epävakaita ja aiheuttaisivat kustannuksia pilvipalvelujen kutsuista. Mockit mahdollistavat backend-logiikan testaamisen turvallisesti ja edullisesti.
-  - Frontendissä mockausta vältetään, koska sen tarkoitus on kuvata todellista käyttäjäkokemusta mahdollisimman tarkasti. Liiallinen mockaus vääristää todellista vuorovaikutusta ja johtaa helposti testeihin, jotka menevät läpi vaikka sovellus ei oikeasti toimisi.
-  - Frontend-testauksen painopiste on käyttäytymisen ja rakenteen varmistamisessa – siinä, että komponentit reagoivat oikein tilamuutoksiin, näyttävät oikeat elementit ja toimivat yhdessä todellisten palvelukutsujen tai mockatun backend-rajapinnan kanssa.
+- Testing framework: **Jest**
+- Unit testing: **Angular Jest**
+- Backend: **Jest tests for Lambdas**
+- Angular testing environment: `@angular-builders/jest`
+- Mocking: `jest-mock` or Angular's `TestBed`
+- **IMPORTANT:**
+  - Backend mocking is often necessary because services use external systems like AWS Lambda, S3, and RDS. Without mocks, these tests would be slow, unstable, and costly due to cloud service calls. Mocks enable safe and cost-effective testing of backend logic.
+  - Frontend mocking should be minimized because its purpose is to represent the actual user experience as accurately as possible. Excessive mocking distorts real interaction and easily leads to tests that pass even when the application doesn't actually work.
+  - Frontend testing focuses on verifying behavior and structure – ensuring components respond correctly to state changes, display the right elements, and work together with real service calls or mocked backend APIs.
 
 ---
 
-## Testien suorittaminen ja konfigurointi
+## Running and Configuring Tests
 
-### 1. Jest ja Angularin esivalmistelut
+### 1. Jest and Angular Setup
 
-#### Pakettien asennus
+#### Package Installation
 
 ```bash
 npm install --save-dev jest@29.7.0 ts-jest@29.2.5 jest-preset-angular@14.4.2 jest-environment-jsdom@29.7.0
 npm install --save-dev zone.js @angular/core @angular/common --legacy-peer-deps
 ```
 
-**Huom:** `--legacy-peer-deps` ohittaa versioristiriidat asennuksessa.
+**Note:** `--legacy-peer-deps` bypasses version conflicts during installation.
 
-#### Projektirakenne
+#### Project Structure
 
 ```
 Synerra_Git/
@@ -53,8 +45,8 @@ Synerra_Git/
  │   ├─ node_modules/
  │   ├─ src/
  │   ├─ package.json
- │   ├─ jest.config.js       ← Jest-konfiguraatio
- │   ├─ setup-jest.ts       ← Angularin testausympäristön alustus
+ │   ├─ jest.config.js       ← Jest configuration
+ │   ├─ setup-jest.ts       ← Angular test environment setup
  │   └─ tsconfig.json
  └─ ...
 ```
@@ -91,9 +83,9 @@ module.exports = {
 };
 ```
 
-#### angular.json konfiguraatio
+#### angular.json Configuration
 
-Vaihdetaan Karma ja Jasmine -viittaukset Jestiin:
+Replace Karma and Jasmine references with Jest:
 
 ```json
 "test": {
@@ -104,27 +96,27 @@ Vaihdetaan Karma ja Jasmine -viittaukset Jestiin:
 }
 ```
 
-**Huom:** Poistetaan myös `package.json`-tiedostosta kaikki Karma- ja Jasmine-viittaukset.
+**Note:** Also remove all Karma and Jasmine references from `package.json`.
 
 ---
 
-## Testien ajaminen
+## Running Tests
 
 ```bash
-# Aja kaikki testit
+# Run all tests
 npm test
 
-# Aja testit watch-tilassa (automaattinen uudelleenajo)
+# Run tests in watch mode (automatic re-run)
 npm run test:watch
 
-# Aja testit kattavuusraportin kanssa
+# Run tests with coverage report
 npm run test:coverage
 
-# Avaa coverage-raportti selaimessa (macOS)
+# Open coverage report in browser (macOS)
 open coverage/lcov-report/index.html
 ```
 
-### Yksittäisen komponentin testaaminen
+### Testing a Single Component
 
 ```bash
 cd src/app/features/dashboard-page/dashboard
@@ -133,13 +125,13 @@ npx jest dashboard.component.spec.ts
 
 ---
 
-## Yksikkötestaukset komponenteille
+## Unit Testing for Components
 
-### Mockien lisääminen testeihin
+### Adding Mocks to Tests
 
-Kun komponentti käyttää HTTP-palveluita tai routingia, lisää tarvittavat mockit `.spec.ts`-tiedostoon.
+When a component uses HTTP services or routing, add necessary mocks to the `.spec.ts` file.
 
-#### Esimerkki 1: HttpClient-mock
+#### Example 1: HttpClient Mock
 
 ```typescript
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -154,11 +146,11 @@ describe('DashboardComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         DashboardComponent,
-        HttpClientTestingModule, // ← HTTP-mock
+        HttpClientTestingModule, // ← HTTP mock
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DashboardComponent);
+    fixture = TestBed.createCreate(DashboardComponent);
     component = fixture.componentInstance;
   });
 
@@ -168,7 +160,7 @@ describe('DashboardComponent', () => {
 });
 ```
 
-#### Esimerkki 2: ActivatedRoute-mock
+#### Example 2: ActivatedRoute Mock
 
 ```typescript
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -205,63 +197,63 @@ describe('ChatPageComponent', () => {
 
 ---
 
-## Testausfilosofia: Miksi ILMAN mockeja?
+## Testing Philosophy: Why WITHOUT Mocks?
 
-### Kent C. Dodds ja Testing Library -filosofia
+### Kent C. Dodds and Testing Library Philosophy
 
 > **"The more your tests resemble the way your software is used, the more confidence they can give you."**
 >
 > — Kent C. Dodds
 
-Tässä projektissa noudatamme modernia testausfilosofiaa, jossa **minimoidaan mockien käyttö** ja keskitytään **käyttäytymisen testaamiseen toteutuksen sijaan**.
+In this project, we follow modern testing philosophy that **minimizes the use of mocks** and focuses on **testing behavior instead of implementation**.
 
-### Ongelmat mockeissa
+### Problems with Mocks
 
-#### 1. Testaat toteutusta, et käyttäytymistä
+#### 1. You Test Implementation, Not Behavior
 
-Mockit sitovat testit komponentin **sisäiseen toteutukseen**. Jos refaktoroit koodin (muutat toteutuksen mutta käyttäytyminen pysyy samana), testit hajoavat turhaan.
+Mocks tie tests to the component's **internal implementation**. If you refactor the code (change implementation but behavior stays the same), tests break unnecessarily.
 
-**Esimerkki huonosta testistä:**
+**Example of a bad test:**
 
 ```typescript
-// ❌ HUONO: Testataan että service kutsuttiin
-it('pitäisi kutsua GameService', () => {
+// ❌ BAD: Testing that service was called
+it('should call GameService', () => {
   const spy = jest.spyOn(gameService, 'listGames');
   component.ngOnInit();
-  expect(spy).toHaveBeenCalled(); // ← Tämä on TOTEUTUSDETAILI!
+  expect(spy).toHaveBeenCalled(); // ← This is an IMPLEMENTATION DETAIL!
 });
 ```
 
-**Miksi tämä on huono?**
+**Why is this bad?**
 
-- Jos myöhemmin vaihdat `listGames()` metodin toiseen (esim. `getGames()`), testi hajoaa
-- Testi ei kerro mitään siitä, toimiiko komponentti oikein
-- Testi on sidottu implementation detailiin
+- If you later change `listGames()` to another method (e.g., `getGames()`), the test breaks
+- The test doesn't tell you if the component works correctly
+- The test is tied to an implementation detail
 
-#### 2. False confidence (Väärä luottamus)
+#### 2. False Confidence
 
-Mockit palauttavat **mitä sinä haluat**, eivät mitä **oikea koodi palauttaa**. Testit voivat mennä läpi vaikka oikea sovellus on rikki.
+Mocks return **what you want**, not what the **real code returns**. Tests can pass even when the actual application is broken.
 
-**Esimerkki:**
+**Example:**
 
 ```typescript
-// ❌ Mock palauttaa aina onnistumisen
+// ❌ Mock always returns success
 mockGameService.listGames.mockReturnValue(of([game1, game2]));
 
-// Testit menevät läpi, mutta...
-// ...oikea GameService voi olla rikki
-// ...oikea HTTP-kutsu voi epäonnistua
-// ...oikea data voi olla väärässä formaatissa
+// Tests pass, but...
+// ...the real GameService might be broken
+// ...the real HTTP call might fail
+// ...the real data might be in wrong format
 ```
 
-#### 3. Vaikea ylläpitää
+#### 3. Difficult to Maintain
 
-Joka kerta kun muutat koodia, joudut muuttamaan myös mockeja. Testit muuttuvat monimutkaisemmiksi kuin itse koodi.
+Every time you change code, you have to change mocks too. Tests become more complex than the code itself.
 
-**Esimerkki:**
+**Example:**
 
 ```typescript
-// ❌ Monimutkainen mock-setup
+// ❌ Complex mock setup
 beforeEach(() => {
   mockGameService = {
     listGames: jest.fn().mockReturnValue(of(mockGames)),
@@ -271,27 +263,27 @@ beforeEach(() => {
     setUser: jest.fn((user) => userSignal.set(user)),
   };
   mockUserService = { getMe: jest.fn() };
-  // ...ja näitä täytyy päivittää joka refaktoroinnin jälkeen
+  // ...and these need updating after every refactoring
 });
 ```
 
-#### 4. Testaat mockeja, et oikeaa koodia
+#### 4. You Test Mocks, Not Real Code
 
-Mockit ohittavat oikean logiikan kokonaan. Et testaa sitä koodia, joka ajetaan tuotannossa.
+Mocks bypass the real logic entirely. You're not testing the code that runs in production.
 
 ---
 
-### Ratkaisu: Pure Function Testing
+### Solution: Pure Function Testing
 
-Testaamme **suoraan komponentin metodeja** ilman mockeja, keskittyen **input → output** -logiikkaan.
+We test **component methods directly** without mocks, focusing on **input → output** logic.
 
-#### Hyvä testi: Pure Function
+#### Good Test: Pure Function
 
 ```typescript
-// ✅ HYVÄ: Testataan filterUserGames() -metodin logiikkaa
-describe('filterUserGames() - Suodatuslogiikka', () => {
+// ✅ GOOD: Testing filterUserGames() method logic
+describe('filterUserGames() - Filtering Logic', () => {
   beforeEach(() => {
-    // Asetetaan test data SUORAAN komponenttiin
+    // Set test data DIRECTLY on component
     component.sortedGames = [
       { PK: 'GAME#cs2', Name: 'Counter-Strike 2', Popularity: 100 },
       { PK: 'GAME#lol', Name: 'League of Legends', Popularity: 95 },
@@ -299,7 +291,7 @@ describe('filterUserGames() - Suodatuslogiikka', () => {
     ];
   });
 
-  it('pitäisi suodattaa pelit käyttäjän pelaamien mukaan', () => {
+  it('should filter games based on user games', () => {
     // INPUT
     component.userGames = [
       { gameId: 'cs2', gameName: 'Counter-Strike 2' },
@@ -317,77 +309,77 @@ describe('filterUserGames() - Suodatuslogiikka', () => {
 });
 ```
 
-**Miksi tämä on hyvä?**
+**Why is this good?**
 
-- ✅ Testaa todellista logiikkaa (suodatus, järjestäminen)
-- ✅ Ei sidottu toteutukseen (voit refaktoroida vapaasti)
-- ✅ Yksinkertainen ja luettava
-- ✅ Testaa käyttäytymistä: "Kun annan nämä pelit ja nämä käyttäjän pelit, saan nämä suodatetut pelit"
+- ✅ Tests real logic (filtering, sorting)
+- ✅ Not tied to implementation (you can refactor freely)
+- ✅ Simple and readable
+- ✅ Tests behavior: "When I give these games and these user games, I get these filtered games"
 
 ---
 
-### Mitä testataan ILMAN mockeja?
+### What to Test WITHOUT Mocks?
 
-#### 1. Komponentin logiikka (Pure Functions)
+#### 1. Component Logic (Pure Functions)
 
 ```typescript
-// Testaa metodeja jotka muuntavat dataa
-- filterUserGames(): suodattaa pelejä
-- applyFiltersAndSort(): järjestää ja suodattaa
-- onSearchChange(): käsittelee hakua
+// Test methods that transform data
+- filterUserGames(): filters games
+- applyFiltersAndSort(): sorts and filters
+- onSearchChange(): handles search
 ```
 
-#### 2. Komponentin tila
+#### 2. Component State
 
 ```typescript
-// Testaa että komponentin state päivittyy oikein
+// Test that component state updates correctly
 expect(component.filteredGames).toEqual([...]);
 expect(component.selectedGenre).toBe('FPS');
 ```
 
-#### 3. Edge caset
+#### 3. Edge Cases
 
 ```typescript
-// Testaa reunatapaukset
-- Tyhjät arrayt
-- Undefined arvot
-- Virheelliset formaatit
+// Test boundary conditions
+- Empty arrays
+- Undefined values
+- Invalid formats
 ```
 
-#### 4. UI-renderöinti
+#### 4. UI Rendering
 
 ```typescript
-// Testaa DOM-elementtejä
+// Test DOM elements
 const button = fixture.debugElement.query(By.css('.login-button'));
 expect(button).toBeTruthy();
 ```
 
 ---
 
-### Mitä EI testata yksikkötesteissä?
+### What NOT to Test in Unit Tests?
 
-#### ❌ Serviceiden kutsumista
+#### ❌ Service Calls
 
 ```typescript
-// ❌ ÄLÄ testaa
+// ❌ DON'T test
 expect(gameService.listGames).toHaveBeenCalled();
 ```
 
-**Miksi ei?** Tämä on toteutusdetaili. Jos vaihdat servicen toiseen, testi hajoaa turhaan.
+**Why not?** This is an implementation detail. If you switch to a different service, the test breaks unnecessarily.
 
-#### ❌ HTTP-kutsuja
+#### ❌ HTTP Calls
 
 ```typescript
-// ❌ ÄLÄ testaa yksikkötesteissä
+// ❌ DON'T test in unit tests
 mockHttp.get('/api/games').subscribe(...);
 ```
 
-**Miksi ei?** HTTP-kutsut testataan **integraatiotesteissä** tai **E2E-testeissä**.
+**Why not?** HTTP calls are tested in **integration tests** or **E2E tests**.
 
-#### ❌ Angular lifecyclejä (ngOnInit, ngOnDestroy)
+#### ❌ Angular Lifecycles (ngOnInit, ngOnDestroy)
 
 ```typescript
-// ❌ ÄLÄ testaa
+// ❌ DON'T test
 it('should call loadGames on ngOnInit', () => {
   const spy = jest.spyOn(component, 'loadGames');
   component.ngOnInit();
@@ -395,54 +387,126 @@ it('should call loadGames on ngOnInit', () => {
 });
 ```
 
-**Miksi ei?** Lifecycle-hookit ovat Angularin sisäistä toimintaa. Testaa sen sijaan mitä ne **tekevät**, ei että ne **kutsutaan**.
+**Why not?** Lifecycle hooks are Angular's internal workings. Instead, test **what they do**, not **that they're called**.
 
 ---
 
-### Oikeat riippuvuudet testeissä
+### Real Dependencies in Tests
 
-Käytämme **oikeita serviceitä** testeissa, mutta **mockataan HTTP**:
+We use **real services** in tests, but **mock HTTP**:
 
 ```typescript
 await TestBed.configureTestingModule({
   imports: [DashboardComponent],
   providers: [
-    provideHttpClient(), // ← OIKEA HttpClient
-    provideHttpClientTesting(), // ← HTTP mockattu testeihin
+    provideHttpClient(), // ← REAL HttpClient
+    provideHttpClientTesting(), // ← HTTP mocked for tests
   ],
   schemas: [NO_ERRORS_SCHEMA],
 }).compileComponents();
 ```
 
-**Miksi näin?**
+**Why this approach?**
 
-- ✅ Komponentti käyttää **oikeita serviceitä**
-- ✅ HTTP-kutsut mockataan automaattisesti
-- ✅ Ei tarvitse ylläpitää monimutkaisia mock-objekteja
-
----
-
-### Yhteenveto: Testausstrategia
-
-| Mitä testataan          | Miten testataan                | Miksi                       |
-| ----------------------- | ------------------------------ | --------------------------- |
-| **Komponentin metodit** | Suoraan, ilman mockeja         | Testaa todellista logiikkaa |
-| **Datan muunnokset**    | Input → Output                 | Testaa käyttäytymistä       |
-| **Edge caset**          | Tyhjät arvot, undefined        | Varmista robustisuus        |
-| **UI-renderöinti**      | DOM-kyselyt                    | Testaa käyttöliittymää      |
-| **Servicet**            | OIKEAT servicet, HTTP mockattu | Testaa integraatiota        |
-
-### Lopputulos
-
-- **Vähemmän mockeja** = Vähemmän ylläpitoa
-- **Parempi luottamus** = Testit testaavat oikeaa koodia
-- **Helpompi refaktorointi** = Testit eivät hajoa turhaan
-- **Selkeämmät testit** = Input → Output on helppo ymmärtää
+- ✅ Component uses **real services**
+- ✅ HTTP calls are automatically mocked
+- ✅ No need to maintain complex mock objects
 
 ---
 
-## Yhteenveto
+### Summary: Testing Strategy
 
-Jest-testausympäristö on nyt näiden ohjeiden perusteella konfiguroitu Angular-projektiin. Testit voidaan ajaa `npm test` komennolla, ja kattavuusraportti generoidaan `npm run test:coverage` komennolla.
+| What to Test            | How to Test                | Why                      |
+| ----------------------- | -------------------------- | ------------------------ |
+| **Component Methods**   | Directly, without mocks    | Tests real logic         |
+| **Data Transformations** | Input → Output            | Tests behavior           |
+| **Edge Cases**          | Empty values, undefined    | Ensures robustness       |
+| **UI Rendering**        | DOM queries                | Tests user interface     |
+| **Services**            | REAL services, HTTP mocked | Tests integration        |
 
-Testausfilosofiamme perustuu Kent C. Doddsin opetuksiin: testaamme **käyttäytymistä toteutuksen sijaan** ja minimoimme mockien käytön. Tämä tekee testeistä ylläpidettävämpiä, luotettavampia ja helpompia ymmärtää.
+### End Result
+
+- **Fewer mocks** = Less maintenance
+- **Better confidence** = Tests test real code
+- **Easier refactoring** = Tests don't break unnecessarily
+- **Clearer tests** = Input → Output is easy to understand
+
+---
+
+## Additional Testing Patterns
+
+### Testing Signals (Angular 17+)
+
+```typescript
+describe('Signal Updates', () => {
+  it('should update signal value correctly', () => {
+    // Arrange
+    component.userSignal.set(null);
+    
+    // Act
+    component.userSignal.set({ userId: '123', username: 'testuser' });
+    
+    // Assert
+    expect(component.userSignal()).toEqual({ userId: '123', username: 'testuser' });
+  });
+});
+```
+
+### Testing Async Operations
+
+```typescript
+describe('Async Data Loading', () => {
+  it('should handle async data correctly', async () => {
+    // Arrange
+    const testData = [{ id: 1, name: 'Test' }];
+    
+    // Act
+    await component.loadData();
+    
+    // Assert
+    expect(component.data).toEqual(testData);
+  });
+});
+```
+
+### Testing Error Handling
+
+```typescript
+describe('Error Handling', () => {
+  it('should handle errors gracefully', () => {
+    // Arrange
+    component.data = null;
+    
+    // Act
+    const result = component.processData();
+    
+    // Assert
+    expect(result).toBeNull();
+    expect(component.errorMessage).toBe('Data not available');
+  });
+});
+```
+
+---
+
+## Summary
+
+The Jest testing environment is now configured for the Angular project following these guidelines. Tests can be run with `npm test`, and a coverage report can be generated with `npm run test:coverage`.
+
+Our testing philosophy is based on Kent C. Dodds' teachings: we test **behavior instead of implementation** and minimize the use of mocks. This makes tests more maintainable, reliable, and easier to understand.
+
+### Key Principles
+
+1. **Test behavior, not implementation** - Focus on what the code does, not how it does it
+2. **Minimize mocks** - Use real dependencies whenever possible
+3. **Test like a user** - Write tests that resemble how the software is actually used
+4. **Keep tests simple** - Complex tests are hard to maintain and understand
+5. **Focus on confidence** - Tests should make you confident the code works
+
+### Benefits
+
+- ✅ More reliable tests that catch real bugs
+- ✅ Less brittle tests that don't break during refactoring
+- ✅ Easier to understand and maintain
+- ✅ Better representation of actual usage
+- ✅ Higher confidence in code quality

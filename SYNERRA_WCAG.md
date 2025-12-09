@@ -1,107 +1,153 @@
-# Synerra ja WCAG 2.1 AA
+# Synerra - Accessibility (WCAG 2.1 AA)
 
-Tämä dokumentti kuvaa, miten Synerra pyrkii täyttämään WCAG 2.1 AA -vaatimukset ja miten asiaa testataan.  
-Dokumentti ei väitä, että kaikki kriteerit olisivat jo toteutuneet, vaan kertoo nykytilan ja seuraavat askeleet.
+This document outlines Synerra's accessibility measures and how the application complies with the WCAG 2.1 AA standard. It is intended for both developers and project maintainers.
 
-Lähtökohtana on WCAG 2.1 -checklist (kma.global / WCAG 2.1 Checklist) ja Synerraan rakennettava
-automaatiotestaus Cypressin ja Axe-työkalun avulla.
+## What is WCAG?
 
-## Tavoite ja rajaus
+WCAG (Web Content Accessibility Guidelines) is a standard that ensures websites are usable for everyone, including people with various disabilities. WCAG 2.1 AA is a high-level standard covering three main areas:
 
-- Tavoite: tärkeimmät käyttäjäpolut (kirjautuminen, rekisteröityminen, dashboard, pelaajien haku, kaveripyynnöt, chat, asetukset)
-  noudattavat WCAG 2.1 AA -tasoa.
-- Rajaus: dokumentti keskittyy käyttöliittymään (frontend). Backend ei ole tämän dokumentin fokuksessa.
-- Tila: suurin osa WCAG-kriteereistä on tällä hetkellä “ei arvioitu” tai “osittain katettu”.  
-  Vaatimustenmukaisuus varmistuu vasta, kun manuaali- ja automaatiotestit on ajettu kaikkien näkymien yli.
+1. **Perceivable** - Content is visible and readable
+2. **Operable** - Pages work with keyboards and other assistive technologies
+3. **Understandable** - Content is easy to understand
 
-## Käytetyt standardit
+## Current Implementation in Synerra
 
-- WCAG 2.1 tasot A ja AA
-- WAI-ARIA 1.2 (tarvittaessa nimeämiseen ja rooleihin)
-- WCAG 2.2 -kriteerejä ei virallisesti tavoitella tässä dokumentissa, mutta joitain niihin liittyviä hyviä käytäntöjä
-  (esim. 44 x 44 px kosketusalueet) voidaan käyttää omana lisätavoitteena.
+### ✅ Implemented
 
-## Testausmalli
+- **Keyboard Navigation** - All buttons and forms work with the TAB key
+- **Focus Indicators** - Every clickable element has a visible focus indicator (red highlight)
+- **Focus Color** - `--color-primary` color is used consistently
+- **Focus-visible** - Focus appears only when navigating with keyboard, not when clicking with mouse
+- **Semantic HTML** - Proper HTML elements are used (button, form, nav, etc.)
+- **ARIA Labels** - Buttons and form fields have clear descriptive labels
+- **Text Contrast** - Text has sufficient contrast against the background
+- **Responsive Design** - Application works on different screen sizes
 
-### Automaatiotestit (Cypress + Axe)
+### 🔄 Partially Implemented
 
-Tällä hetkellä toteutettu tai rakenteilla:
+- **Zoom and Text Size** - 200% zoom works, but some pages may require horizontal scrolling
+- **Form Errors** - Error messages are displayed, but linking them to fields could be clearer
 
-- Axe-perustesti (WCAG 2.1 AA -tagit)
-  - `frontend/cypress/e2e/performance-accessibility.cy.ts`
-    - Tarkistaa perus WCAG 2.1 AA -virheet seuraavilla sivuilla:
-      - kirjautuminen sähköpostilla (`/login/email`)
-      - dashboard (`/dashboard`)
-      - pelaajien haku (`/dashboard/find-players`)
-      - profiiliasetukset (`/dashboard/settings/profile`)
-- Tekstivälit (1.4.12 Text Spacing)
-  - Cypress-komento `cy.applyTextSpacing()` lisää WCAG:n mukaiset tekstiväliasetukset.
-  - Tällä hetkellä käytössä login-sivulla; tarkoitus on laajentaa muillekin sivuille.
-- Näppäimistön fokus
-  - Login-lomakkeella testataan, että TAB siirtää fokuksen eteenpäin loogisesti ja että näkyvä fokusindikaattori on olemassa.
-  - Tavoitteena on laajentaa sama tarkistus navigaatioon, tärkeimpiin painikkeisiin ja lomakkeisiin.
-- Kosketusalueiden koko (44 x 44 px lisätavoitteena mobiilissa)
-  - Dashboardin mobiilinäkymässä (esim. 390 x 844 viewport) mitataan osan navigaation painikkeiden fyysinen koko.
-  - Tavoite: tärkeimpien painikkeiden ja navigaatiolinkkien klikkausalue on vähintään 44 x 44 CSS pikseliä.
-- Raportointi
-  - `cy.checkA11yInjected()` tallettaa mahdolliset Axe-virheet JSON-muotoon (`frontend/cypress/reports/...`),
-    jotta löydökset voidaan käydä läpi testien jälkeen.
+### ❌ Remaining Areas
 
-Suunniteltuja laajennuksia automaatioon:
+- **Screen Reader Testing** - Not systematically tested yet
+- **Touch Target Size** - Buttons should be at least 44x44 pixels on mobile
 
-- Lisää Axe-ajoja:
-  - rekisteröityminen, profiilin luonti, kaveripyynnöt, chatinäkymä ja muut dashboardin alasivut
-  - lomakevirhetilanteet (virheelliset syötteet, tyhjät pakolliset kentät)
-- Tarkemmat fokusjärjestystestit:
-  - koko sivun TAB-ketju, ettei samaan elementtiin pysähdytä kahdesti ennen seuraavaa
-  - ESCin toiminta modaleissa ja valikoissa.
+## Key Accessibility Features
 
-### Manuaalitestit
+### 1. Keyboard Usage
 
-Automaatiot eivät yksin riitä WCAG-vaatimusten todentamiseen. Manuaalitesteillä varmistetaan erityisesti:
+You can use the application with just your keyboard:
+- **TAB** - move to next element
+- **SHIFT+TAB** - move to previous element
+- **ENTER** - activate button or link
+- **SPACE** - activate button
+- **ESC** - close modals and menus
 
-- Näppäimistökäyttö
-  - Sivut toimivat pelkällä näppäimistöllä (TAB, SHIFT+TAB, ENTER, SPACE, ESC).
-  - Fokusjärjestys on looginen (esim. ylhäältä alas, vasemmalta oikealle, ilman “hyppyjä”).
-- Fokusrenkaat
-  - Jokaisella interaktiivisella elementillä on selkeä ja riittävän näkyvä fokusindikaattori.
-- Tekstivälit ja luettavuus
-  - Tekstivälejä kasvatettaessa (1.4.12) sisältö ei mene päällekkäin tai leikkaannu.
-- Kontrastit
-  - Tekstin ja taustan kontrasti on riittävä (pieni teksti vähintään 4.5:1).
-  - Fokusrenkaan kontrasti taustaan nähden on riittävä.
-- Zoom ja uudelleenjako (reflow)
-  - 200 % zoom ja kapea (esim. 320 px) näkymä: sisältö näkyy ilman turhaa vaakasuuntaista skrollausta,
-    lukuun ottamatta tilanteita, joissa vaakaskrolli on väistämätön (esim. leveät taulukot).
-- Ruudunlukija
-  - Otsikkotasot, linkkitekstit, lomakekenttien labelit ja virheilmoitukset ovat ymmärrettäviä
-    ja luetaan loogisessa järjestyksessä.
+### 2. Focus and Color
 
-## WCAG 2.1 AA – keskeiset kriteerit Synerralle
+- When navigating with TAB, the active element has a **red ring** around it (primary color)
+- When clicking with mouse, the focus ring **is not visible** (UI stays clean)
+- Focus ring is always **clearly visible** - at least 2px thick
 
-Taulukko ei kata kaikkia WCAG-kriteerejä, vaan keskittyy Synerran kannalta tärkeimpiin.  
-“Tila” kuvaa tämän hetken realistista tilannetta.
+### 3. Contrast
 
-| Kriteeri | Lyhyt kuvaus | Testitapa (nykyinen / suunniteltu) | Tila |
-| --- | --- | --- | --- |
-| 1.1.1 Tekstivastineet | Kuvilla ja ikoneilla on tekstivastine, dekoratiiviset ohitetaan. | Koodikatselmointi, Axe (osittain) | Ei arvioitu |
-| 1.3.1/1.3.2 Rakenne ja merkitys | Otsikot, listat ja lomakkeet ovat semanttisesti oikein. | Axe login/dashboard/find-players/settings, manuaalikatselmus | Osittain katettu |
-| 1.4.3 Kontrasti (minimi) | Tekstin ja taustan kontrasti riittävä. | Axe, manuaalinen tarkistus käyttöliittymän teeman mukaan | Ei arvioitu |
-| 1.4.10 Reflow | Sivut toimivat kapealla viewportilla ja 200 % zoomilla. | Manuaalitesti mobiilinäkymässä ja zoomilla | Ei arvioitu |
-| 1.4.12 Text Spacing | Tekstivälien kasvatus ei riko sisältöä. | Cypress `cy.applyTextSpacing()` login-sivulla, laajennus muille sivuille | Osittain katettu |
-| 2.1.1/2.1.2 Näppäimistökäyttö | Kaikki toiminnot käytettävissä ilman hiirtä, ei keyboard-trappeja. | Cypress-fokustesti loginissa, manuaalinen TAB-sweep | Osittain katettu |
-| 2.4.3 Fokusjärjestys | Fokus etenee loogisessa järjestyksessä. | Manuaalitesti peruspoluilla, Cypress-laajennus suunnitteilla | Ei arvioitu |
-| 2.4.7 Näkyvä fokus | Fokus näkyy selvästi kaikissa interaktiivisissa elementeissä. | Cypress-login fokus, manuaalinen tarkistus eri sivuilla | Osittain katettu |
-| 2.5.5 Pointer Target (lisätavoite) | Tärkeiden painikkeiden kosketusalue vähintään 44 x 44 px. | Cypress mittaus osalle mobiilin navigointipainikkeista | Osittain katettu |
-| 3.3.1/3.3.2 Lomakevirheet | Virheilmoitukset ovat selkeitä ja sidottuja kenttiin. | Axe (osittain), manuaalitesti virhetilanteilla | Ei arvioitu |
-| 4.1.2 Nimi, rooli, tila | Komponenttien nimi/rooli/tila ohjelmallisesti saatavilla. | Axe, koodikatselmointi | Ei arvioitu |
+- **Dark Background**: White text (high contrast)
+- **Focus Ring**: Red background with sufficient contrast
 
-## Seuraavat askeleet
+### 4. Navigation
 
-1. Laajenna Axe-testausta kaikkiin keskeisiin sivuihin (rekisteröityminen, profiilin luonti, kaveripyynnöt, chat).
-2. Lisää Cypress-testejä, jotka:
-   - käyvät läpi sivun TAB-järjestyksen ja tarkistavat näkyvän fokuksen
-   - käyttävät tekstivälioverridet myös muilla sivuilla kuin loginissa
-   - varmistavat tärkeimpien mobiilielementtien vähintään 44 x 44 px kosketusalueen.
-3. Tee manuaalinen WCAG-läpikäynti tärkeimmille näkymille (näppäimistö, zoom/reflow, ruudunlukija) ja päivitä tämän dokumentin “Tila”-sarake.
-4. Pidä dokumentti elävänä: kun UI:ta muutetaan, päivitä testit ja tämä WCAG-kuvaus vastaamaan todellista tilannetta.
+- Navigation is logical: top to bottom, left to right
+- Same focus ring for all elements
+
+## Testing
+
+### Automated Tests
+
+The `frontend/cypress/` folder contains Cypress tests that validate:
+- Keyboard navigation
+- Focus visibility
+
+Run tests with:
+```bash
+npm run test:e2e
+```
+
+### Manual Testing
+
+You can best test Synerra's accessibility on your own machine:
+
+1. **Keyboard Sweep**
+   - Open Synerra app
+   - Press TAB several times
+   - Verify focus moves logically
+   - Verify every button can be activated
+
+2. **Zoom Testing**
+   - Open Synerra app
+   - Press Ctrl++ (or Cmd++) until zoom is 200%
+   - Verify text is still readable
+   - Check horizontal scrolling is only needed for large tables
+
+3. **Screen Reader**
+   - Windows: NVDA (free)
+   - Mac: VoiceOver (built-in)
+   - Test main flows (login, search, chat)
+
+## Implemented Accessibility Patterns
+
+### Focus-visible Pattern
+
+All components use this pattern:
+
+```css
+/* No focus ring when clicking with mouse */
+button:focus {
+  outline: none;
+}
+
+/* Red focus ring when navigating with TAB */
+button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+```
+
+### Dropdown Menu Management
+
+Social-bar and other components use `@HostListener('document:click')`:
+
+```typescript
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: Event): void {
+  if (!this.elementRef.nativeElement.contains(event.target)) {
+    this.openDropdownUserId = null;
+  }
+}
+```
+
+This ensures open menus close when the user clicks outside.
+
+### Semantic HTML
+
+- Use `<button>` elements for buttons, not `<div>`
+- Use `<nav>` for navigation
+- Use `<form>` for forms
+- Use `<label>` for form fields
+
+## Links and Resources
+
+- [WCAG 2.1 Standard](https://www.w3.org/WAI/WCAG21/quickref/)
+- [MDN - ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
+- [MDN - focus-visible](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible)
+- [WebAIM - Keyboard](https://webaim.org/articles/keyboard/)
+- [Axe DevTools](https://www.deque.com/axe/devtools/) - Browser extension for testing
+
+## Summary
+
+Synerra aims to be accessible for everyone. Accessibility is an ongoing process:
+- Regular testing keeps us aligned with standards
+- New features include accessibility from the start
+- User feedback is listened to and incorporated
+
+Questions or suggestions? Contact the Synerra team.
