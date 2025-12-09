@@ -9,11 +9,9 @@ import { switchMap } from 'rxjs/operators';
 export class ProfileService {
   private baseUrl = `${environment.AWS_BASE_URL}/user`;
 
-  constructor(
-    private http: HttpClient,
-    private authStore: AuthStore,
-  ) {}
+  constructor(private http: HttpClient, private authStore: AuthStore) {}
 
+  // uploads profile picture (converts to base64 and sends the image to S3 via calling a lambda function),imageurl is saved in DynamoDb
   uploadProfilePicture(file: File): Observable<any> {
     const token = this.authStore.getToken();
 
@@ -29,10 +27,11 @@ export class ProfileService {
             Authorization: `${token}`,
           },
         });
-      }),
+      })
     );
   }
 
+  //function that does the conversion
   private convertFileToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();

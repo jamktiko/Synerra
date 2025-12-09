@@ -42,7 +42,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   constructor(
     private gameService: GameService,
     private userStore: UserStore,
-    private userService: UserService,
+    private userService: UserService
   ) {
     effect(() => {
       const user = this.userStore.user();
@@ -59,7 +59,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.loadgames();
   }
 
-  // 🔥🔥 ADD DRAG-TO-SCROLL HERE 🔥🔥
   ngAfterViewInit(): void {
     // Existing code
     setTimeout(() => this.resetRows(), 60);
@@ -73,7 +72,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // 🔥🔥 DRAG-TO-SCROLL LOGIC 🔥🔥
+  // drag to scroll logic
   private enableDragScroll(el: HTMLElement) {
     let isDown = false;
     let startX = 0;
@@ -104,8 +103,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       el.scrollLeft = scrollLeft - walk;
     });
   }
-  // 🔥 END OF ADDED CODE 🔥
 
+  // gets time of day to greet the user
   setGreeting() {
     const hour = new Date().getHours();
     if (hour >= 5 && hour < 12) this.greeting = 'Good morning';
@@ -114,6 +113,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     else this.greeting = 'Good night';
   }
 
+  //loads the games on dashboard from gameService
   loadgames() {
     this.gameService.listGames().subscribe({
       next: (res) => {
@@ -129,10 +129,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // filters the games by popularity
   filterUserGames() {
     const userGameIds = new Set(this.userGames.map((g) => g.gameId));
     this.filteredGames = this.sortedGames.filter((game) =>
-      userGameIds.has(game.PK.replace(/^GAME#/, '')),
+      userGameIds.has(game.PK.replace(/^GAME#/, ''))
     );
     this.filteredGames.sort((a, b) => b.Popularity - a.Popularity);
 

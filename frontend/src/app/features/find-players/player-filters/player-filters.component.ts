@@ -78,6 +78,7 @@ export class PlayerFiltersComponent implements OnInit {
       });
   }
 
+  //loads the games from gameservice
   private loadGames(): void {
     this.gameService.listGames().subscribe({
       next: (res) => {
@@ -92,6 +93,7 @@ export class PlayerFiltersComponent implements OnInit {
     });
   }
 
+  //when the filters change
   onFilterChange(): void {
     this.filtersChanged.emit({ ...this.filters });
   }
@@ -100,7 +102,7 @@ export class PlayerFiltersComponent implements OnInit {
     this.openDropdown = this.openDropdown === type ? null : type;
   }
 
-  // PÄIVITETTY: Asettaa myös label-tekstin
+  // when the status filter is changed
   onStatusChange(value: string): void {
     this.filters.Status = value;
     if (value === 'online') {
@@ -114,6 +116,7 @@ export class PlayerFiltersComponent implements OnInit {
     this.openDropdown = null;
   }
 
+  // when language filter is selected
   onLanguageToggle(event: Event, lang: string): void {
     const checked = (event.target as HTMLInputElement).checked;
     this.filters.languages = checked
@@ -122,6 +125,7 @@ export class PlayerFiltersComponent implements OnInit {
     this.onFilterChange();
   }
 
+  //when gamefilter is selected
   onGameToggle(event: Event, gameId: string): void {
     const checked = (event.target as HTMLInputElement).checked;
     this.filters.games = checked
@@ -130,12 +134,14 @@ export class PlayerFiltersComponent implements OnInit {
     this.onFilterChange();
   }
 
+  //when playstyle filter is changed
   onPlaystyleChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
     this.filters.playstyle = value;
     this.onFilterChange();
   }
 
+  //when platform filter is changed
   onPlatformToggle(event: Event, platform: string): void {
     const checked = (event.target as HTMLInputElement).checked;
     this.filters.platform = checked

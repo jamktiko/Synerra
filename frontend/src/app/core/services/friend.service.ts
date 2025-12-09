@@ -28,7 +28,7 @@ export class FriendService {
   constructor(
     private http: HttpClient,
     private authStore: AuthStore,
-    private notificationService: NotificationService,
+    private notificationService: NotificationService
   ) {
     this.initFriendsOnlineStatus();
   }
@@ -61,6 +61,8 @@ export class FriendService {
       });
     });
   }
+
+  // sends friend request to target user by userId
   sendFriendRequest(targetUserId: string): Observable<any> {
     const jwt = this.authStore.getToken();
 
@@ -73,16 +75,17 @@ export class FriendService {
         },
         {
           headers: { Authorization: `${jwt}` },
-        },
+        }
       )
       .pipe(
         tap(() => {
           //  Refresh pending requests after sending a new one
           this.refreshPendingRequests();
-        }),
+        })
       );
   }
 
+  //accepts friend request from target user by userId
   acceptFriendRequest(targetUserId: string): Observable<any> {
     const jwt = this.authStore.getToken();
 
@@ -90,22 +93,23 @@ export class FriendService {
       .post(
         `${this.friendsUrl}/friendrequest`,
         { targetUserId, action: 'ACCEPT' },
-        { headers: { Authorization: `${jwt}` } },
+        { headers: { Authorization: `${jwt}` } }
       )
       .pipe(
         tap(() => {
           // Remove from pending requests reactively
           const current = this.pendingRequestsSubject.value.filter(
-            (r) => r.PK !== `USER#${targetUserId}`,
+            (r) => r.PK !== `USER#${targetUserId}`
           );
           this.pendingRequestsSubject.next(current);
 
           // Refresh friends list reactively
           this.getFriends().subscribe();
-        }),
+        })
       );
   }
 
+  //declines friendrequest from targetuser by userId
   declineFriendRequest(targetUserId: string): Observable<any> {
     const jwt = this.authStore.getToken();
     console.log('DECLINE REQUEST CALLED: ', targetUserId);
@@ -118,19 +122,20 @@ export class FriendService {
         },
         {
           headers: { Authorization: `${jwt}` },
-        },
+        }
       )
       .pipe(
         tap(() => {
           //  Remove from pending requests reactively
           const current = this.pendingRequestsSubject.value.filter(
-            (r: any) => r.PK !== `USER#${targetUserId}`,
+            (r: any) => r.PK !== `USER#${targetUserId}`
           );
           this.pendingRequestsSubject.next(current);
-        }),
+        })
       );
   }
 
+  //deletes friend relation by target userID
   deleteFriend(targetUserId: string): Observable<any> {
     const jwt = this.authStore.getToken() ?? '';
 
@@ -142,6 +147,7 @@ export class FriendService {
       .pipe(tap(() => this.getFriends().subscribe()));
   }
 
+  ///gets friends of a user
   getFriends(): Observable<User[]> {
     const jwt = this.authStore.getToken();
     return this.http
@@ -153,7 +159,7 @@ export class FriendService {
           // Only push the users array into the BehaviorSubject
           this.friendsSubject.next(res.users || []);
         }),
-        map((res) => res.users || []),
+        map((res) => res.users || [])
       );
   }
 
@@ -167,7 +173,7 @@ export class FriendService {
       .pipe(
         tap((res: any) => {
           this.pendingRequestsSubject.next(res.pendingRequests || []);
-        }),
+        })
       );
   }
 
@@ -189,22 +195,23 @@ export class FriendService {
         tap((res: any) => {
           // Remove cleared requests from pendingRequestsSubject
           const updated = this.pendingRequestsSubject.value.filter(
-            (r: any) => r.PK !== `USER#${targetUserId}`,
+            (r: any) => r.PK !== `USER#${targetUserId}`
           );
           this.pendingRequestsSubject.next(updated);
 
           console.log(
             `Cleared ${
               res.deletedCount || 0
-            } accepted/declined requests from ${targetUserId}`,
+            } accepted/declined requests from ${targetUserId}`
           );
-        }),
+        })
       );
   }
   clearAllRequests(): void {
     this.pendingRequestsSubject.next([]); // Clear the array
   }
 
+  //gets friends requests the user has sent
   getOutgoingPendingRequests(): Observable<any[]> {
     const jwt = this.authStore.getToken();
     return this.http
@@ -217,7 +224,7 @@ export class FriendService {
         tap((res) => {
           console.log('Outgoing pending requests:', res.pendingRequests);
         }),
-        map((res) => res.pendingRequests || []),
+        map((res) => res.pendingRequests || [])
       );
   }
 }
