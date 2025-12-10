@@ -132,7 +132,7 @@ npm run test
   - Jest
   - AWS SDK
 
-### Copyright © 2025 Lauri Halinen, Leevi Kesänen, Tommi Hallila, Jussi Haverinen, Aleksi Mehtonen
+## Copyright © 2025 Lauri Halinen, Leevi Kesänen, Tommi Hallila, Jussi Haverinen, Aleksi Mehtonen
 
 This repository contains code and materials developed as part of a student project. It is intended for educational purposes only.
 
